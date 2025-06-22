@@ -1,0 +1,17 @@
+# 统一使用 LF 换行符
+* text=auto eol=lf
+
+# 确保 shell 脚本使用 LF 换行符并保持可执行权限
+*.sh text eol=lf
+.husky/* text eol=lf
+
+# 二进制文件不进行换行符转换
+*.webp binary
+*.png binary
+*.jpg binary
+*.gif binary
+*.ico binary
+*.zip binary
+*.ttf binary
+*.woff binary
+*.woff2 binary 

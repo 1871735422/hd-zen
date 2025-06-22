@@ -1,32 +1,124 @@
-说明前端项目的基本信息。
-# 项目名称
+# Lumizen Web
 
-> 项目描述
+## 项目概述
 
-## 安装
+慧灯禅修网站 - 基于 Next.js 和 @mui/material 构建
+
+## 技术栈
+
+- **框架**: Next.js 15
+- **UI 库**: @mui/material 7
+- **语言**: TypeScript 5
+- **构建工具**: Turbopack
+- **包管理器**: pnpm
+- **代码规范**: ESLint + Prettier
+- **Git 钩子**: Husky + lint-staged
+
+## 主要功能
+
+-
+
+## 环境要求
+
+- Node.js 版本需 >= v20，前往 [Node.js 官网](https://nodejs.org) 安装
+- 使用 pnpm 作为包管理工具
 
 ```bash
-npm install
+npm install -g pnpm
 ```
 
-## 运行
+## 开发指南
+
+### 安装依赖
 
 ```bash
-npm run dev
+pnpm install
 ```
 
-## 构建
+### 启动开发服务器
 
 ```bash
-npm run build
+pnpm dev
 ```
 
-## 测试
+### 构建生产版本
 
 ```bash
-npm run test
+pnpm build
 ```
 
-## 许可证
+### 启动生产服务器
 
-[MIT](LICENSE)
+```bash
+pnpm start
+```
+
+### 代码检查
+
+```bash
+# ESLint 检查
+pnpm lint
+
+# ESLint 自动修复
+pnpm lint:fix
+
+# TypeScript 类型检查
+pnpm type-check
+
+# Prettier 格式化
+pnpm format
+```
+
+### VS Code 配置
+
+项目已包含 `.vscode` 配置，包含推荐的插件和编辑器设置。首次打开项目时，VS Code 会提示安装推荐的插件：
+
+- ESLint - 代码检查
+- Prettier - 代码格式化
+- GitLens - Git 增强功能
+
+## 贡献指南
+
+### Git 提交规范
+
+遵循 [常规提交规范](http://localhost:60093/public/hd-Gitea/src/branch/main/常规提交.md)，示例：
+
+```bash
+git commit -m "feat(dashboard): 新增数据统计面板"
+git commit -m "fix(login): 修复用户登录时密码验证问题"
+git commit -m "style(ui): 优化按钮样式和布局"
+```
+
+### Windows 环境特别说明
+
+#### Git 配置
+
+1. 确保 Git 配置了正确的换行符处理：
+
+```bash
+git config --global core.autocrlf false
+```
+
+### 贡献流程
+
+1. 日常开发：在功能分支上进行频繁提交
+2. 功能完成：更新 CHANGELOG.md 和 README.md
+3. 提交 PR：将完整功能（包括代码和文档更新）作为一个 PR 提交
+4. 代码审查：进行代码审查并合并到主分支
+
+### 文档更新
+
+- 提交 PR 前，请更新 CHANGELOG.md（参考[如何维护更新日志](http://localhost:60093/public/hd-Gitea/src/branch/main/如何维护更新日志.md)）
+- 提交 PR 前，请更新 README.md
+
+## 常见问题解决
+
+1. husky 脚本无法执行：
+
+   - 使用管理员权限运行终端
+   - 检查 `.husky` 目录下的文件执行权限
+
+2. 换行符问题：
+   - 确保已执行 `git config --global core.autocrlf false`
+   - 重新克隆仓库
+   - 或执行 `git add . --renormalize`
