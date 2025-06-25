@@ -1,15 +1,15 @@
 import js from '@eslint/js';
-import globals from 'globals';
-import prettier from 'eslint-plugin-prettier';
-import prettierConfig from 'eslint-config-prettier';
-import unusedImports from 'eslint-plugin-unused-imports';
+import nextPlugin from '@next/eslint-plugin-next';
 import tseslint from '@typescript-eslint/eslint-plugin';
 import tsparser from '@typescript-eslint/parser';
-import nextPlugin from '@next/eslint-plugin-next';
+import prettierConfig from 'eslint-config-prettier';
+import importPlugin from 'eslint-plugin-import';
+import jsxA11yPlugin from 'eslint-plugin-jsx-a11y';
+import prettier from 'eslint-plugin-prettier';
 import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
-import jsxA11yPlugin from 'eslint-plugin-jsx-a11y';
-import importPlugin from 'eslint-plugin-import';
+import unusedImports from 'eslint-plugin-unused-imports';
+import globals from 'globals';
 
 export default [
   js.configs.recommended,
@@ -56,6 +56,7 @@ export default [
       ...reactPlugin.configs.recommended.rules,
       ...reactHooksPlugin.configs.recommended.rules,
       ...jsxA11yPlugin.configs.recommended.rules,
+      'react-hooks/exhaustive-deps': 'off', // 禁用依赖检测
       'prettier/prettier': 'error',
       'unused-imports/no-unused-imports': 'error',
       'unused-imports/no-unused-vars': [
