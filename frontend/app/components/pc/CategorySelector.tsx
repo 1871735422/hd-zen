@@ -1,26 +1,30 @@
 'use client';
 
 import { ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { usePathname, useRouter } from 'next/navigation';
 
 interface CategorySelectorProps {
   categories: string[];
   selectedCategory: string;
-  onCategoryChange: (
-    event: React.MouseEvent<HTMLElement>,
-    newCategory: string | null
-  ) => void;
 }
 
 export default function CategorySelector({
   categories,
   selectedCategory,
-  onCategoryChange,
 }: CategorySelectorProps) {
+  const router = useRouter();
+  const pathname = usePathname();
   return (
     <ToggleButtonGroup
       value={selectedCategory}
       exclusive
-      onChange={onCategoryChange}
+      onChange={(_, value) => {
+        if (value) {
+          router.push(
+            `/${pathname.split('/')[1]}/${categories.indexOf(value) + 1}`
+          );
+        }
+      }}
       aria-label='reference categories'
       sx={{
         display: 'flex',
@@ -29,7 +33,7 @@ export default function CategorySelector({
         borderRadius: '80px',
         background: 'rgba(255, 255, 255, 0.7)',
         backdropFilter: 'blur(300px)',
-        mb: 4,
+        mb: 2,
         '& .MuiToggleButtonGroup-grouped': {
           borderRadius: '20px !important',
           mx: 1,

@@ -1,5 +1,7 @@
+'use client';
 import VideocamIcon from '@mui/icons-material/Videocam';
 import { Box, Button, Card, CardContent, Typography } from '@mui/material';
+import { usePathname, useRouter } from 'next/navigation';
 
 interface ReferenceCardProps {
   item: {
@@ -11,8 +13,14 @@ interface ReferenceCardProps {
 }
 
 export default function CourseCard({ item }: ReferenceCardProps) {
+  const router = useRouter();
+  const pathname = usePathname();
+
   return (
     <Card
+      onClick={() => {
+        router.push(`${pathname}/lesson${item.id}`);
+      }}
       sx={{
         borderRadius: 4,
         position: 'relative',

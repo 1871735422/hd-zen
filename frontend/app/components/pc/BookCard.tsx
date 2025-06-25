@@ -1,20 +1,33 @@
+'use client';
 import { CardMedia } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Image from 'next/image';
+import { usePathname, useRouter } from 'next/navigation';
 import React from 'react';
 import { NAV_COLOR } from '../../constants';
 
 interface BookCardProps {
+  idx: number;
   title: string;
   description: string;
   cover: string;
 }
 
-const BookCard: React.FC<BookCardProps> = ({ title, description, cover }) => {
+const BookCard: React.FC<BookCardProps> = ({
+  idx,
+  title,
+  description,
+  cover,
+}) => {
+  const router = useRouter();
+  const pathname = usePathname();
   return (
     <Card
+      onClick={() => {
+        router.push(`/${pathname.split('/')[1]}/${idx + 1}`);
+      }}
       sx={{
         width: 200,
         height: '300px',

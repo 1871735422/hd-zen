@@ -2,6 +2,19 @@ export const NAV_COLOR = 'rgba(70, 114, 166, 1)'; // MAIN_BLUE_COLOR
 export const TEXT_COLOR = 'rgba(68, 68, 68, 1)';
 export const LINK_COLOR = 'rgba(42, 130, 228, 1)';
 
+export const lessonItems = [
+  { id: 1, title: '介绍慧灯禅修' },
+  { id: 2, title: '入坐与出坐' },
+  { id: 3, title: '人身难得' },
+  { id: 4, title: '寿命无常' },
+  { id: 5, title: '轮回过患' },
+  { id: 6, title: '因果不虚' },
+  { id: 7, title: '解脱利益与依止上师' },
+  { id: 8, title: '如何学密' },
+  { id: 9, title: '金刚上师与灌顶' },
+  { id: 10, title: '前行念诵仪轨 · 开显解脱道' },
+];
+
 // 菜单数据结构
 export const menuData = [
   {

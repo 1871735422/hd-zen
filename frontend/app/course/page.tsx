@@ -28,9 +28,10 @@ async function CoursePage() {
           width: '62%',
         }}
       >
-        {bookItems.map(item => (
+        {bookItems.map((item, idx) => (
           <BookCard
-            key={item.id}
+            key={idx}
+            idx={idx}
             title={item.title}
             description={item.description}
             cover={`${siteFileUrl}/${item.id}/${item.cover}?thumb=100x0`}
