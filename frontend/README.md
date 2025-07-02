@@ -47,6 +47,18 @@ pnpm dev
 pnpm build
 ```
 
+#### 构建说明
+- output: 'standalone'：  
+独立部署（包含所有依赖），不会限制页面的渲染方式。
+
+可以在同一个 Next.js 项目中：
+   + 某些页面用 SSG（静态生成，默认或 force-cache）
+   + 某些页面用 SSR（cache: 'no-store' 或 dynamic = 'force-dynamic'）
+   + 某些页面用 ISR（next: { revalidate: 秒数 }）
+   + 某些页面用 CSR（客户端渲染，直接用 useEffect 获取数据）
+- output: 'export'：  
+只能生成纯静态文件（SSG），不支持 SSR、ISR、API 路由等动态特性，只能静态托管。
+
 ### 启动生产服务器
 
 ```bash
