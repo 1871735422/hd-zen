@@ -13,6 +13,7 @@ import globals from 'globals';
 
 export default [
   js.configs.recommended,
+    nextPlugin.configs.recommended,
   {
     files: ['**/*.{js,jsx,ts,tsx}'],
     languageOptions: {
