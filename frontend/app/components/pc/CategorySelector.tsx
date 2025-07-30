@@ -6,11 +6,13 @@ import { usePathname, useRouter } from 'next/navigation';
 interface CategorySelectorProps {
   categories: string[];
   selectedCategory: string;
+  courseIds?: string[]; // Add course IDs array
 }
 
 export default function CategorySelector({
   categories,
   selectedCategory,
+  courseIds = [],
 }: CategorySelectorProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -20,9 +22,14 @@ export default function CategorySelector({
       exclusive
       onChange={(_, value) => {
         if (value) {
-          router.push(
-            `/${pathname.split('/')[1]}/${categories.indexOf(value) + 1}`
-          );
+          const categoryIndex = categories.indexOf(value);
+          const courseId = courseIds[categoryIndex];
+          if (courseId) {
+            router.push(`/${pathname.split('/')[1]}/${courseId}`);
+          } else {
+            // Fallback to index-based routing if courseId not available
+            router.push(`/${pathname.split('/')[1]}/${categoryIndex + 1}`);
+          }
         }
       }}
       aria-label='reference categories'

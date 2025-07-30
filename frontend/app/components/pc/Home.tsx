@@ -1,13 +1,21 @@
 import { Box, Typography } from '@mui/material';
 import React from 'react';
-import { pb } from '../../api';
+import { getCourses } from '../../api';
 import CourseCarousel, { CardData } from './CourseCarousel';
 
 const TITLE_COLOR = 'rgba(64, 90, 133, 1)';
 const DESC_TEXT_COLOR = 'rgba(59, 77, 115, 1)';
 
 const Home: React.FC = async () => {
-  const { items: cards } = await pb.collection('courses').getList(1, 10);
+  const { items: courses } = await getCourses();
+  
+  // Transform courses to CardData format for the carousel
+  const carouselData: CardData[] = courses.map(course => ({
+    id: course.id,
+    title: course.title,
+    description: course.description || '探索佛法智慧，开启心灵之旅',
+    imageUrl: course.cover ? `https://zen.huidengzg.com/api/files/courses/${course.id}/${course.cover}` : '/images/default-course.jpg'
+  }));
 
   return (
     <Box>
@@ -48,7 +56,7 @@ const Home: React.FC = async () => {
           </Typography>
         </Box>
       </Box>
-      <CourseCarousel cards={cards as unknown as CardData[]} />
+      <CourseCarousel cards={carouselData} />
     </Box>
   );
 };

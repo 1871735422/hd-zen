@@ -2,7 +2,7 @@
 import { useBreadcrumb } from '@/app/components/pc/AppBreadcrumbs';
 import LessonMeta from '@/app/components/pc/LessonMeta';
 import LessonSidebar from '@/app/components/pc/LessonSidebar';
-import { lessonItems } from '@/app/constants';
+import { getCourseTopicsByCourse, getCourseTopicById } from '@/app/api';
 import { Box, Container } from '@mui/material';
 import { usePathname, useRouter } from 'next/navigation';
 import { use, useEffect, useState } from 'react';
@@ -12,24 +12,46 @@ const LessonLayout = ({
   params,
 }: {
   children: React.ReactNode;
-  params: Promise<{ lesson: string }>;
+  params: Promise<{ slug: string; lesson: string }>;
 }) => {
   const { setExtraBreadcrumb } = useBreadcrumb();
   const pathname = usePathname();
   const router = useRouter();
   const segments = pathname.split('/').filter(Boolean);
-  const tab = segments[3];
+  const tab = segments[4]; // Adjusted for new route structure
   const [selected, setSelected] = useState(tab);
+  const [currentTopic, setCurrentTopic] = useState<any>(null);
+  const [courseTopics, setCourseTopics] = useState<any[]>([]);
   const resolvedParams = use(params);
-  const lessonId = parseInt(resolvedParams.lesson.replace('lesson', ''));
-  const lessonTitle =
-    lessonItems.find(item => item.id === lessonId)?.title || '';
+  const courseId = resolvedParams.slug;
+  const topicId = resolvedParams.lesson;
+
+  // Load current topic and course topics
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const [topic, topicsResult] = await Promise.all([
+          getCourseTopicById(topicId),
+          getCourseTopicsByCourse(courseId)
+        ]);
+        
+        setCurrentTopic(topic);
+        setCourseTopics(topicsResult.items);
+      } catch (error) {
+        // Handle error silently - user will see empty state
+      }
+    };
+
+    loadData();
+  }, [courseId, topicId]);
 
   useEffect(() => {
-    setExtraBreadcrumb({
-      label: lessonTitle,
-    });
-  }, [lessonTitle]);
+    if (currentTopic) {
+      setExtraBreadcrumb({
+        label: currentTopic.article_title || currentTopic.title,
+      });
+    }
+  }, [currentTopic, setExtraBreadcrumb]);
 
   useEffect(() => {
     if (selected === undefined) return;
@@ -42,7 +64,7 @@ const LessonLayout = ({
 
     const basePath = `/${segments.slice(0, 3).join('/')}/${selected}`;
     router.replace(basePath);
-  }, [selected]);
+  }, [selected, pathname, router]);
 
   return (
     <Container
@@ -69,11 +91,11 @@ const LessonLayout = ({
         }}
       >
         <LessonMeta
-          title={lessonTitle}
-          tags={['tag1', 'tag2']}
-          description='Lesson description goes here.'
+          title={currentTopic?.article_title || currentTopic?.title || '课程'}
+          tags={currentTopic?.tags ? currentTopic.tags.split(',').map((tag: string) => tag.trim()) : []}
+          description={currentTopic?.article_introtext || currentTopic?.description || '课程描述'}
           author='作者：慈诚罗珠堪布'
-          date={'2016年5月01日'}
+          date={currentTopic?.created ? new Date(currentTopic.created).toLocaleDateString('zh-CN') : ''}
         />
         {children}
       </Box>

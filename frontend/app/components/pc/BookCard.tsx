@@ -13,6 +13,7 @@ interface BookCardProps {
   title: string;
   description: string;
   cover: string;
+  courseId?: string;
 }
 
 const BookCard: React.FC<BookCardProps> = ({
@@ -20,13 +21,18 @@ const BookCard: React.FC<BookCardProps> = ({
   title,
   description,
   cover,
+  courseId,
 }) => {
   const router = useRouter();
   const pathname = usePathname();
   return (
     <Card
       onClick={() => {
-        router.push(`/${pathname.split('/')[1]}/${idx + 1}`);
+        // Use courseId if available, otherwise fall back to idx-based routing
+        const targetPath = courseId 
+          ? `/${pathname.split('/')[1]}/${courseId}` 
+          : `/${pathname.split('/')[1]}/${idx + 1}`;
+        router.push(targetPath);
       }}
       sx={{
         width: 200,

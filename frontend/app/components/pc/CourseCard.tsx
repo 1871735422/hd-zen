@@ -10,16 +10,23 @@ interface ReferenceCardProps {
     description: string;
     isQa?: boolean;
   };
+  topicId?: string;
+  courseId?: string;
 }
 
-export default function CourseCard({ item }: ReferenceCardProps) {
+export default function CourseCard({ item, topicId, courseId }: ReferenceCardProps) {
   const router = useRouter();
   const pathname = usePathname();
 
   return (
     <Card
       onClick={() => {
-        router.push(`${pathname}/lesson${item.id}`);
+        // Use topicId if available for direct navigation to topic
+        if (topicId && courseId) {
+          router.push(`/course/${courseId}/${topicId}`);
+        } else {
+          router.push(`${pathname}/lesson${item.id}`);
+        }
       }}
       sx={{
         borderRadius: 4,

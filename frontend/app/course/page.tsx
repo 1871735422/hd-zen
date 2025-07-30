@@ -1,11 +1,9 @@
 import { Box, Container } from '@mui/material';
-import { pb } from '../api';
+import { getCourses, getCourseImageUrl } from '../api';
 import BookCard from '../components/pc/BookCard';
 
 async function CoursePage() {
-  const { items: bookItems } = await pb.collection('courses').getList(1, 10);
-  const siteFileUrl =
-    process.env.NEXT_PUBLIC_SITE_URL + '/api/files/pbc_955655590';
+  const { items: courses } = await getCourses();
 
   return (
     <Container
@@ -28,13 +26,14 @@ async function CoursePage() {
           width: '62%',
         }}
       >
-        {bookItems.map((item, idx) => (
+        {courses.map((course, idx) => (
           <BookCard
-            key={idx}
+            key={course.id}
             idx={idx}
-            title={item.title}
-            description={item.description}
-            cover={`${siteFileUrl}/${item.id}/${item.cover}?thumb=100x0`}
+            title={course.title}
+            description={course.description || ''}
+            cover={getCourseImageUrl(course, true)}
+            courseId={course.id}
           />
         ))}
       </Box>

@@ -4,7 +4,7 @@ import AppBreadcrumbs, {
 import CategorySelector from '@/app/components/pc/CategorySelector';
 import { Container, Typography } from '@mui/material';
 import { notFound } from 'next/navigation';
-import { pb } from '../../api';
+import { getCourseById, getCourses } from '../../api';
 
 export default async function CourseLayout({
   children,
@@ -14,19 +14,25 @@ export default async function CourseLayout({
   params: Promise<{ slug: string }>;
 }>) {
   const { slug } = await params;
-  const { items: bookItems } = await pb.collection('courses').getList(1, 10);
-  const categories = bookItems.map(item => item.title);
-
-  const idx = parseInt(slug, 10);
-  if (isNaN(idx) || idx < 1 || idx > categories.length) {
+  
+  // Get the current course and all courses
+  const [course, coursesResult] = await Promise.all([
+    getCourseById(slug),
+    getCourses()
+  ]);
+  
+  if (!course) {
     notFound();
   }
-  const selectedCategory = categories[idx - 1];
+
+  const categories = coursesResult.items.map(item => item.title);
+  const courseIds = coursesResult.items.map(item => item.id);
+  const selectedCategory = course.title;
 
   const breadcrumbItems = [
     { label: '首页', href: '/' },
     { label: '慧灯禅修课', href: '/course' },
-    { label: selectedCategory, href: `/course/${slug}` },
+    { label: course.title, href: `/course/${slug}` },
   ];
 
   return (
@@ -49,6 +55,7 @@ export default async function CourseLayout({
         <CategorySelector
           categories={categories}
           selectedCategory={selectedCategory}
+          courseIds={courseIds}
         />
         <AppBreadcrumbs items={breadcrumbItems} useContext={true} />
         {children}

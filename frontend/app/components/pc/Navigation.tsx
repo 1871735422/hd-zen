@@ -6,13 +6,15 @@ import {
   MenuList,
   Paper,
   Popper,
+  CircularProgress,
 } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import { usePathname, useRouter } from 'next/navigation';
 import React, { useMemo, useRef, useState } from 'react';
-import { menuData, NAV_COLOR, TEXT_COLOR } from '../../constants';
+import { NAV_COLOR, TEXT_COLOR } from '../../constants';
+import { useDynamicMenu } from '../../hooks/useDynamicMenu';
 
 const Navigation: React.FC = () => {
   const router = useRouter();
@@ -20,6 +22,9 @@ const Navigation: React.FC = () => {
   const [open, setOpen] = React.useState(false);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const buttonRefs = useRef<(HTMLElement | null)[]>([]);
+  
+  // Use dynamic menu hook
+  const { menuData, loading } = useDynamicMenu();
 
   // 使用 useMemo 来缓存当前选中状态的计算结果
   const currentSelectedIndex = useMemo(() => {
@@ -52,6 +57,15 @@ const Navigation: React.FC = () => {
       setSelectedIndex(idx);
     }
   };
+
+  // Show loading state
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', flex: 6, justifyContent: 'center', alignItems: 'center' }}>
+        <CircularProgress size={20} sx={{ color: NAV_COLOR }} />
+      </Box>
+    );
+  }
 
   return (
     <Box sx={{ display: 'flex', flex: 6, justifyContent: 'space-between' }}>
