@@ -1,6 +1,9 @@
 import VideoPlayer from '@/app/components/pc/VideoPlayer';
 import { getCourseTopicById, getTopicMediaByTopic } from '@/app/api';
 import { notFound } from 'next/navigation';
+import { Fragment } from 'react';
+import MediaDownloadButton from '@/app/components/pc/MediaDownloadButton';
+import { Box } from '@mui/material';
 
 interface LessonPageProps {
   params: Promise<{ slug: string; lesson: string }>;
@@ -21,27 +24,30 @@ const LessonPage = async ({ params }: LessonPageProps) => {
   }
 
   const topicMedia = topicMediaResult.items;
-  
-  // Get the primary media (first one or one with video)
-  const primaryMedia = topicMedia.find(tm => tm.media?.url_hd) || topicMedia[0];
-  
-  // Determine video source - prefer topic's direct URL, then media URL
-  const videoSrc = topic.url || 
-                   primaryMedia?.media?.url_hd || 
-                   primaryMedia?.media?.high_quality_url ||
-                   ''; // Fallback to empty string
-  
-  // Determine poster image
-  const posterImage = primaryMedia?.media?.url_image || 
-                     primaryMedia?.media?.image1_url || 
-                     'https://img.js.design/assets/img/67dd3b8c27277df4377fc09e.jpg';
 
   return (
-    <VideoPlayer
-      poster={posterImage}
-      title={topic.article_title || topic.title}
-      src={videoSrc}
-    />
+    <>
+      <Box sx={{
+        display: 'flex',
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+      }}>
+        <MediaDownloadButton
+          mediaType="video"
+          downloadUrls={topicMedia.map(media => media.media?.url_downmp4 || '')}
+        />
+      </Box>
+      {topicMedia.map((media) => (
+        <Fragment key={media.id}>
+          <VideoPlayer
+            poster={media.media?.url_image || media.media?.image1_url || ''}
+            title={media.media?.title || ''}
+            src={media.media?.url_hd || media.media?.high_quality_url || ''}
+          />
+        </Fragment>
+      ))}
+
+    </>
   );
 };
 

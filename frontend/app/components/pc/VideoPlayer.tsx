@@ -24,11 +24,11 @@ export default function VideoPlayer({ poster, src, title }: VideoPlayerProps) {
       sx={{
         overflow: 'hidden',
         position: 'relative',
-        mb: 3,
+        mb: 5,
       }}
     >
       {title && (
-        <Typography variant='h6' fontWeight={500}>
+        <Typography variant='body1' fontWeight={500} my={2}>
           {title}
         </Typography>
       )}
