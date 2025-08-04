@@ -1,13 +1,14 @@
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import SearchIcon from '@mui/icons-material/Search';
+import { TextField } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Link from 'next/link';
 import React from 'react';
-import { NAV_COLOR, TEXT_COLOR } from '../../constants';
+import { NAV_COLOR } from '../../constants';
+import { STANDARD_TEXT_COLOR } from '../../constants/colors';
+import LogoIcon from '../icons/LogoIcon';
+import SearchIcon from '../icons/SearchIcon';
 import Navigation from './Navigation';
 
 const Header: React.FC = () => {
@@ -15,19 +16,19 @@ const Header: React.FC = () => {
     <AppBar
       position='static'
       sx={{
-        background: '#fff',
+        background: 'transparent',
         boxShadow: 'none',
-        height: 76,
-        width: 1920,
+        height: { xs: 60, sm: 68, md: 76 },
+        width: '100%',
         maxWidth: '100%',
         justifyContent: 'center',
       }}
+      component='header'
     >
       <Toolbar
         sx={{
-          minHeight: 76,
-          width: '100%',
-          mx: 'auto',
+          background: '#fff',
+          minHeight: { xs: 60, sm: 68, md: 76 },
           display: 'flex',
           justifyContent: 'space-between',
         }}
@@ -35,17 +36,22 @@ const Header: React.FC = () => {
         {/* Logo */}
         <Box
           sx={{
+            width: '180px',
+            height: '50px',
             display: 'flex',
             alignItems: 'center',
-            flex: 2,
             justifyContent: 'center',
             cursor: 'pointer',
           }}
         >
-          <IconButton size='large' edge='start' color='inherit' sx={{ mr: 1 }}>
-            <AccountCircle sx={{ fontSize: 40, color: NAV_COLOR }} />
-          </IconButton>
-          <Typography variant='h6' sx={{ color: TEXT_COLOR, fontWeight: 600 }}>
+          <LogoIcon />
+          <Typography
+            sx={{
+              color: STANDARD_TEXT_COLOR,
+              fontWeight: 400,
+              fontSize: { xs: '1rem', sm: '1.125rem', md: '24px' },
+            }}
+          >
             <Link href='/'>慧灯禅修</Link>
           </Typography>
         </Box>
@@ -56,31 +62,44 @@ const Header: React.FC = () => {
         {/* 搜索框 */}
         <Box
           sx={{
+            width: '240px',
             display: 'flex',
             alignItems: 'center',
-            flex: 4,
             justifyContent: 'center',
+            mr: { xs: 0, sm: 1, md: 2, lg: 3, xl: 4 },
           }}
         >
-          <Box
-            component='input'
-            type='text'
+          <TextField
+            variant='outlined'
+            size='small'
             placeholder=''
             sx={{
-              width: 180,
-              height: 32,
-              border: '1px solid #cfd8dc',
-              borderRadius: 2,
-              px: 2,
-              fontSize: 16,
-              color: TEXT_COLOR,
-              outline: 'none',
-              '&:focus': {
-                borderColor: NAV_COLOR,
+              width: { xs: 120, sm: 150, md: 180 },
+              height: { xs: 28, md: 30 },
+              '& .MuiOutlinedInput-root': {
+                height: { xs: 28, sm: 30, md: 32 },
+                fontSize: { xs: 14, sm: 15, md: 16 },
+                color: STANDARD_TEXT_COLOR,
+                borderRadius: 2,
+                px: { xs: 1, sm: 1.5, md: 2 },
+                backgroundColor: 'transparent',
+                '& fieldset': {
+                  borderColor: '#cfd8dc',
+                },
+                '&:hover fieldset': {
+                  borderColor: NAV_COLOR,
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: NAV_COLOR,
+                },
+              },
+              '& input': {
+                p: 0,
+                height: '100%',
               },
             }}
           />
-          <SearchIcon sx={{ color: NAV_COLOR, fontSize: 24, ml: 1 }} />
+          <SearchIcon />
         </Box>
       </Toolbar>
     </AppBar>

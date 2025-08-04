@@ -1,6 +1,6 @@
+import { getCourseById, getCourseTopicsByCourse } from '@/app/api';
 import CourseCard from '@/app/components/pc/CourseCard';
-import { getCourseTopicsByCourse, getCourseById } from '@/app/api';
-import { Container, Grid, Typography, Box } from '@mui/material';
+import { Box, Container, Grid, Typography } from '@mui/material';
 import { notFound } from 'next/navigation';
 
 interface CoursePageProps {
@@ -10,8 +10,6 @@ interface CoursePageProps {
 export default async function CoursePage({ params }: CoursePageProps) {
   const resolvedParams = await params;
   const courseId = resolvedParams.slug;
-  
-  console.log('Course page loading for courseId:', courseId);
 
   try {
     // Fetch course details and topics
@@ -43,17 +41,6 @@ export default async function CoursePage({ params }: CoursePageProps) {
           py: 4,
         }}
       >
-        {/* Course Header */}
-        <Box sx={{ mb: 4, textAlign: 'center' }}>
-          <Typography variant='h4' component='h1' sx={{ mb: 2, color: 'white', fontWeight: 'bold' }}>
-            {course.title}
-          </Typography>
-          {course.description && (
-            <Typography variant='body1' sx={{ color: 'rgba(255, 255, 255, 0.9)' }}>
-              {course.description}
-            </Typography>
-          )}
-        </Box>
 
         {/* Course Topics Grid */}
         <Grid container spacing={4}>
@@ -63,7 +50,7 @@ export default async function CoursePage({ params }: CoursePageProps) {
                 item={{
                   id: index + 1, // For display purposes
                   title: topic.article_title || topic.title,
-                  description: topic.article_introtext || topic.description || 
+                  description: topic.article_introtext || topic.description ||
                     `${topic.article_title} - 了解更多关于这个话题的详细内容。`,
                 }}
                 topicId={topic.id}

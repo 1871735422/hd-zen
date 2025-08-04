@@ -29,8 +29,8 @@ const BookCard: React.FC<BookCardProps> = ({
     <Card
       onClick={() => {
         // Use courseId if available, otherwise fall back to idx-based routing
-        const targetPath = courseId 
-          ? `/${pathname.split('/')[1]}/${courseId}` 
+        const targetPath = courseId
+          ? `/${pathname.split('/')[1]}/${courseId}`
           : `/${pathname.split('/')[1]}/${idx + 1}`;
         router.push(targetPath);
       }}

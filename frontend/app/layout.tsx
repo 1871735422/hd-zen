@@ -17,22 +17,18 @@ export default function RootLayout({
       <body>
         <AppRouterCacheProvider options={{ enableCssLayer: true }}>
           <MuiThemeProvider>
-            <div>
-              <Header />
-              <main>
-                <Container
-                  sx={{
-                    minHeight: '80vh',
-                    background: '#f9f9f9',
-                    p: '0 !important',
-                  }}
-                  maxWidth='xl'
-                >
-                  {children}
-                </Container>
-              </main>
-              <Footer />
-            </div>
+            <Header />
+            <Container
+              maxWidth={false}
+              component='main'
+              sx={{
+                p: { xs: 0, sm: 0, md: 0, lg: 0 },
+                m: { xs: 0, sm: 0, md: 0, lg: 0 },
+              }}
+            >
+              {children}
+            </Container>
+            <Footer />
           </MuiThemeProvider>
         </AppRouterCacheProvider>
       </body>

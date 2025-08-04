@@ -1,5 +1,5 @@
 import { Box, Container } from '@mui/material';
-import { getCourses, getCourseImageUrl } from '../api';
+import { getCourseImageUrl, getCourses } from '../api';
 import BookCard from '../components/pc/BookCard';
 
 async function CoursePage() {

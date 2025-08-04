@@ -1,5 +1,4 @@
 export const NAV_COLOR = 'rgba(70, 114, 166, 1)'; // MAIN_BLUE_COLOR
-export const TEXT_COLOR = 'rgba(68, 68, 68, 1)';
 export const LINK_COLOR = 'rgba(42, 130, 228, 1)';
 
 export const lessonItems = [

@@ -5,11 +5,16 @@ const Footer: React.FC = () => {
       display='flex'
       justifyContent='center'
       alignItems='center'
-      height={45}
+      height={{ xs: 35, sm: 40, md: 45 }}
       width='100%'
       bgcolor={'rgba(127, 173, 235, 1)'}
+      sx={{ px: { xs: 1, sm: 2 } }}
     >
-      <Typography color='white'>
+      <Typography
+        color='white'
+        fontSize={{ xs: 12, sm: 14, md: 16 }}
+        textAlign='center'
+      >
         &nbsp; {new Date().getFullYear()} &nbsp;慧灯禅修 - By Huidengchanxiu
       </Typography>
     </Box>

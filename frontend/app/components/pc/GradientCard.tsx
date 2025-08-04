@@ -17,24 +17,30 @@ const GradientCard: React.FC<GradientCardProps> = ({
   return (
     <Box
       sx={{
-        p: 1,
-        pb: 0,
-        height: `${280 + idx * 40}px`,
+        px: { xs: 0.5, sm: 1 },
+        mt: `${(1 - idx) * 10}px`,
+        height: {
+          xs: `${200 + idx * 20}px`,
+          sm: `${240 + idx * 30}px`,
+          md: `${280 + idx * 40}px`
+        },
         background: gradient,
-        borderRadius: '16px 16px 0 0',
+        borderRadius: '30px 30px 0 0',
         display: 'flex',
         flexDirection: 'column',
+        alignContent: 'flex-start',
         boxShadow: '0 4px 20px rgba(0,0,0,0.05)',
         cursor: 'pointer',
-        width: 220,
+        width: { xs: 160, sm: 180, md: 220, lg: 260 },
+        flexShrink: 0,
       }}
     >
       <Typography
         variant='h1'
-        fontSize={20}
+        fontSize={{ xs: 16, sm: 18, md: 20 }}
         fontWeight={500}
         textAlign='center'
-        my={2}
+        my={{ xs: 1, sm: 1.5, md: 2 }}
       >
         {title}
       </Typography>
@@ -42,22 +48,22 @@ const GradientCard: React.FC<GradientCardProps> = ({
         bgcolor='white'
         sx={{
           height: '100%',
-          pb: 2,
+          pb: { xs: 1, sm: 1.5, md: 2 },
           borderRadius: '16px 16px 0 0',
         }}
       >
         <Typography
-          fontSize={14}
+          fontSize={{ xs: 12, sm: 13, md: 14 }}
           color='text.secondary'
           sx={{
             m: 0,
-            p: 2,
+            p: { xs: 1, sm: 1.5, md: 2 },
             pb: 0,
             display: '-webkit-box',
             WebkitBoxOrient: 'vertical',
-            WebkitLineClamp: 6 + idx * 2, // 严格限制12行
+            WebkitLineClamp: { xs: 4 + idx, sm: 5 + idx, md: 6 + idx * 2 },
             overflow: 'hidden',
-            lineHeight: 1.8,
+            lineHeight: 1.6,
           }}
         >
           {description}
