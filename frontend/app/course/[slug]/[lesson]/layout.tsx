@@ -1,8 +1,11 @@
 'use client';
-import { useBreadcrumb } from '@/app/components/pc/AppBreadcrumbs';
+import { getCourseTopicById, getCourseTopicsByCourse } from '@/app/api';
+import AppBreadcrumbs, {
+  BreadcrumbProvider,
+  useBreadcrumb,
+} from '@/app/components/pc/AppBreadcrumbs';
 import LessonMeta from '@/app/components/pc/LessonMeta';
 import LessonSidebar from '@/app/components/pc/LessonSidebar';
-import { getCourseTopicsByCourse, getCourseTopicById } from '@/app/api';
 import { Box, Container } from '@mui/material';
 import { usePathname, useRouter } from 'next/navigation';
 import { use, useEffect, useState } from 'react';
@@ -32,9 +35,9 @@ const LessonLayout = ({
       try {
         const [topic, topicsResult] = await Promise.all([
           getCourseTopicById(topicId),
-          getCourseTopicsByCourse(courseId)
+          getCourseTopicsByCourse(courseId),
         ]);
-        
+
         setCurrentTopic(topic);
         setCourseTopics(topicsResult.items);
       } catch (error) {
@@ -66,40 +69,65 @@ const LessonLayout = ({
     router.replace(basePath);
   }, [selected, pathname, router]);
 
+  const breadcrumbItems = [
+    { label: '首页', href: '/' },
+    { label: '慧灯禅修课', href: '/course' },
+    {
+      label: courseTopics.find(topic => topic.id === topicId)?.title,
+      href: `/course/${courseId}`,
+    },
+  ];
+
   return (
-    <Container
-      sx={{
-        position: 'relative',
-        display: 'flex',
-        flexDirection: 'row',
-        gap: 2,
-        p: '0 0 0 60px !important',
-      }}
-    >
-      <LessonSidebar selected={selected} onSelect={setSelected} />
-      <Box
+    <BreadcrumbProvider>
+      <Container
         sx={{
-          backgroundColor: 'white',
-          width: '100%',
-          height: '100%',
-          overflow: 'hidden',
-          px: '120px',
-          pt: 2,
-          pb: 5,
-          mb: 5,
-          borderRadius: 5,
+          position: 'relative',
+          display: 'flex',
+          flexDirection: 'row',
+          gap: 2,
+          p: '0 0 0 60px !important',
         }}
       >
-        <LessonMeta
-          title={currentTopic?.article_title || currentTopic?.title || '课程'}
-          tags={currentTopic?.tags ? currentTopic.tags.split(',').map((tag: string) => tag.trim()) : []}
-          description={currentTopic?.article_introtext || currentTopic?.description || '课程描述'}
-          author='作者：慈诚罗珠堪布'
-          date={currentTopic?.created ? new Date(currentTopic.created).toLocaleDateString('zh-CN') : ''}
-        />
-        {children}
-      </Box>
-    </Container>
+        <AppBreadcrumbs items={breadcrumbItems} useContext={true} />
+
+        <LessonSidebar selected={selected} onSelect={setSelected} />
+        <Box
+          sx={{
+            backgroundColor: 'white',
+            width: '100%',
+            height: '100%',
+            overflow: 'hidden',
+            px: '120px',
+            pt: 2,
+            pb: 5,
+            mb: 5,
+            borderRadius: 5,
+          }}
+        >
+          <LessonMeta
+            title={currentTopic?.article_title || currentTopic?.title || '课程'}
+            tags={
+              currentTopic?.tags
+                ? currentTopic.tags.split(',').map((tag: string) => tag.trim())
+                : []
+            }
+            description={
+              currentTopic?.article_introtext ||
+              currentTopic?.description ||
+              '课程描述'
+            }
+            author='作者：慈诚罗珠堪布'
+            date={
+              currentTopic?.created
+                ? new Date(currentTopic.created).toLocaleDateString('zh-CN')
+                : ''
+            }
+          />
+          {children}
+        </Box>
+      </Container>
+    </BreadcrumbProvider>
   );
 };
 

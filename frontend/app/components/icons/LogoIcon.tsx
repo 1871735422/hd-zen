@@ -3,8 +3,8 @@ import { SvgIcon } from '@mui/material';
 const LogoIcon = () => (
   <SvgIcon
     sx={{
-      width: { xs: 20, sm: 22, md: 24 },
-      height: { xs: 20, sm: 22, md: 24 },
+      width: { xs: 24, sm: 30, md: 36 },
+      height: { xs: 24, sm: 30, md: 36 },
       mx: 1.5,
       cursor: 'pointer',
     }}

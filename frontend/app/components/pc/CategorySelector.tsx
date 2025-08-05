@@ -35,7 +35,8 @@ export default function CategorySelector({
       aria-label='reference categories'
       sx={{
         display: 'flex',
-        justifyContent: 'center',
+        justifyContent: 'space-between',
+        px: 6,
         flexWrap: 'wrap',
         borderRadius: '80px',
         background: 'rgba(255, 255, 255, 0.7)',

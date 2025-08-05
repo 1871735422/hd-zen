@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getCourses, getCategories } from '../api';
-import { Course, Category } from '../types/models';
+import { getCategories, getCourses } from '../api';
 
 export interface MenuItem {
   label: string;
@@ -15,12 +14,12 @@ export const useDynamicMenu = () => {
 
   useEffect(() => {
     let mounted = true;
-    
+
     const loadMenuData = async () => {
       try {
         setLoading(true);
         setError(null);
-        
+
         // Get courses and categories
         const [coursesResult, categoriesResult] = await Promise.all([
           getCourses(),
@@ -31,6 +30,9 @@ export const useDynamicMenu = () => {
 
         const courses = coursesResult.items;
         const categories = categoriesResult.items;
+
+        // 需要改为动态获取
+        // console.log(categories);
 
         // Build dynamic menu structure
         const dynamicMenu: MenuItem[] = [
@@ -67,8 +69,8 @@ export const useDynamicMenu = () => {
             path: '/download',
           },
           {
-            label: '问题征集',
-            path: '/questionnaire',
+            label: '不懂就问',
+            path: '/ask',
           },
         ];
 
@@ -76,7 +78,7 @@ export const useDynamicMenu = () => {
       } catch (err) {
         console.error('Error loading menu data:', err);
         if (!mounted) return;
-        
+
         setError(err instanceof Error ? err.message : 'Failed to load menu');
         // Fallback to static menu if API fails
         setMenuData([
@@ -125,7 +127,7 @@ export const useDynamicMenu = () => {
     };
 
     loadMenuData();
-    
+
     return () => {
       mounted = false;
     };

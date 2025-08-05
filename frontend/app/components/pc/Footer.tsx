@@ -12,8 +12,8 @@ const Footer: React.FC = () => {
     >
       <Typography
         color='white'
-        fontSize={{ xs: 12, sm: 14, md: 16 }}
         textAlign='center'
+        variant='body1'
       >
         &nbsp; {new Date().getFullYear()} &nbsp;慧灯禅修 - By Huidengchanxiu
       </Typography>

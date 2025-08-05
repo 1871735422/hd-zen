@@ -103,7 +103,6 @@ const Navigation: React.FC = () => {
               sx={{
                 color: isSelected ? NAV_COLOR : STANDARD_TEXT_COLOR,
                 fontWeight: isSelected ? 700 : 500,
-                fontSize: { xs: 14, sm: 16, md: 18 },
                 background: 'transparent',
                 '&:hover': {
                   color: NAV_COLOR,
@@ -135,7 +134,6 @@ const Navigation: React.FC = () => {
                           sx={{
                             borderRadius: '0 0 5px 5px',
                             borderTop: '1px solid #cfd8dc',
-                            fontSize: { xs: 14, sm: 16, md: 18 },
                           }}
                           onMouseLeave={() => handleClose()}
                         >
@@ -143,12 +141,12 @@ const Navigation: React.FC = () => {
                             <MenuItem
                               key={child.label}
                               sx={{
+                                fontSize: 14,
                                 color:
                                   child.path === pathname
                                     ? NAV_COLOR
                                     : STANDARD_TEXT_COLOR,
                                 fontWeight: child.path === pathname ? 700 : 500,
-                                fontSize: { xs: 13, sm: 14, md: 16 },
                                 '&:hover': {
                                   color: NAV_COLOR,
                                   background: 'rgba(70, 114, 166, 0.08)',

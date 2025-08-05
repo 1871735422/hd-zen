@@ -1,4 +1,4 @@
-import { Box, Container } from '@mui/material';
+import { Container, Grid } from '@mui/material';
 import { getCourseImageUrl, getCourses } from '../api';
 import BookCard from '../components/pc/BookCard';
 
@@ -7,23 +7,24 @@ async function CoursePage() {
 
   return (
     <Container
+      maxWidth={false}
       sx={{
         display: 'flex',
         flexWrap: 'wrap',
         justifyContent: 'center',
-        alignItems: 'center',
-        height: '100vh',
         width: '100%',
+        mx: 0,
+        pt: 6,
+        pb: 12,
       }}
     >
-      <Box
-        sx={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: 3,
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          width: '62%',
+      <Grid
+        container
+        spacing={6}
+        justifyContent='center'
+        alignItems='center'
+        width={{
+          lg: '60%',
         }}
       >
         {courses.map((course, idx) => (
@@ -36,7 +37,7 @@ async function CoursePage() {
             courseId={course.id}
           />
         ))}
-      </Box>
+      </Grid>
     </Container>
   );
 }

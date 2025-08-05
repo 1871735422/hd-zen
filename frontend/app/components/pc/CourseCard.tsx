@@ -1,7 +1,13 @@
-'use client';
 import VideocamIcon from '@mui/icons-material/Videocam';
-import { Box, Button, Card, CardContent, Typography } from '@mui/material';
-import { usePathname, useRouter } from 'next/navigation';
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Link,
+  Typography,
+} from '@mui/material';
+import { HELPER_TEXT_COLOR } from '../../constants/colors';
 
 interface ReferenceCardProps {
   item: {
@@ -14,84 +20,90 @@ interface ReferenceCardProps {
   courseId?: string;
 }
 
-export default function CourseCard({ item, topicId, courseId }: ReferenceCardProps) {
-  const router = useRouter();
-  const pathname = usePathname();
-
+export default function CourseCard({
+  item,
+  topicId,
+  courseId,
+}: ReferenceCardProps) {
   return (
-    <Card
-      onClick={() => {
-        // Use topicId if available for direct navigation to topic
-        if (topicId && courseId) {
-          router.push(`/course/${courseId}/${topicId}`);
-        } else {
-          router.push(`${pathname}/lesson${item.id}`);
-        }
-      }}
+    <Link
+      href={`/course/${courseId}/${topicId}/lesson${item.id}`}
       sx={{
-        borderRadius: 4,
-        position: 'relative',
-        boxShadow: '0 4px 20px rgba(0,0,0,0.05)',
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        px: 1,
-        mb: 2,
-        zoom: item.isQa ? 0.8 : 1,
+        textDecoration: 'none',
       }}
     >
-      <Typography variant='h6' p={2} fontWeight='bold'>
-        {item.title}
-      </Typography>
-      <Box
+      <Card
         sx={{
-          position: 'absolute',
-          top: 0,
-          right: 0,
-          background:
-            'linear-gradient(222.06deg, rgba(255, 168, 184, 1) 0%, rgba(255, 106, 114, 1) 69.37%)',
-          color: 'white',
-          px: 2,
-          py: 0.5,
-          borderTopRightRadius: '16px',
-          borderBottomLeftRadius: '16px',
-        }}
-      >
-        {item.isQa ? <VideocamIcon /> : item.id}
-      </Box>
-      <CardContent
-        sx={{
-          px: 2,
-          textAlign: 'left',
-          flexGrow: 1,
+          borderRadius: 4,
+          position: 'relative',
+          boxShadow: '0 4px 20px rgba(0,0,0,0.05)',
+          height: '100%',
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'space-between',
+          px: 1,
+          zoom: item.isQa ? 0.8 : 1,
         }}
       >
-        <div>
-          <Typography variant='body2' color='text.secondary' sx={{ mb: 2 }}>
-            {item.description}
-          </Typography>
-        </div>
-        <Button
-          variant='outlined'
+        <Typography variant='h6' p={2} fontWeight='bold' pb={0}>
+          {item.title}
+        </Typography>
+        <Box
           sx={{
-            borderRadius: '20px',
-            mx: 2,
+            position: 'absolute',
+            top: 0,
+            right: 0,
+            background:
+              'linear-gradient(222.06deg, rgba(255, 168, 184, 1) 0%, rgba(255, 106, 114, 1) 69.37%)',
+            color: 'white',
+            px: 2,
             py: 0.5,
-            px: 0,
-            borderColor: 'rgba(154, 189, 230, 1)',
-            color: 'rgba(154, 189, 230, 1)',
-            '&:hover': {
-              borderColor: '#0041ad',
-              backgroundColor: 'rgba(0, 82, 217, 0.04)',
-            },
+            borderTopRightRadius: '16px',
+            borderBottomLeftRadius: '16px',
           }}
         >
-          {item.isQa ? '观看视频' : '点击进入'}
-        </Button>
-      </CardContent>
-    </Card>
+          {item.isQa ? <VideocamIcon /> : item.id}
+        </Box>
+        <CardContent
+          sx={{
+            textAlign: 'left',
+            flexGrow: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+          }}
+        >
+          <Typography
+            color={HELPER_TEXT_COLOR}
+            sx={{
+              display: '-webkit-box',
+              WebkitBoxOrient: 'vertical',
+              WebkitLineClamp: 2,
+              overflow: 'hidden',
+              fontSize: 11,
+              pb: 2,
+            }}
+          >
+            {item.description}
+          </Typography>
+          <Button
+            variant='outlined'
+            sx={{
+              borderRadius: '20px',
+              mx: 2,
+              py: 0.5,
+              px: 0,
+              borderColor: 'rgba(154, 189, 230, 1)',
+              color: 'rgba(154, 189, 230, 1)',
+              '&:hover': {
+                borderColor: '#0041ad',
+                backgroundColor: 'rgba(0, 82, 217, 0.04)',
+              },
+            }}
+          >
+            {item.isQa ? '观看视频' : '点击进入'}
+          </Button>
+        </CardContent>
+      </Card>
+    </Link>
   );
 }

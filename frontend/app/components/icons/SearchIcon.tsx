@@ -3,8 +3,8 @@ import { SvgIcon } from '@mui/material';
 const SearchIcon = () => (
   <SvgIcon
     sx={{
-      width: { xs: 20, sm: 22, md: 24 },
-      height: { xs: 20, sm: 22, md: 24 },
+      width: 16,
+      height: 16,
       ml: 1,
       cursor: 'pointer',
       filter:

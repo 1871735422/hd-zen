@@ -18,7 +18,7 @@ const Header: React.FC = () => {
       sx={{
         background: 'transparent',
         boxShadow: 'none',
-        height: { xs: 60, sm: 68, md: 76 },
+        minHeight: { xl: 70 },
         width: '100%',
         maxWidth: '100%',
         justifyContent: 'center',
@@ -28,7 +28,6 @@ const Header: React.FC = () => {
       <Toolbar
         sx={{
           background: '#fff',
-          minHeight: { xs: 60, sm: 68, md: 76 },
           display: 'flex',
           justifyContent: 'space-between',
         }}
@@ -45,13 +44,7 @@ const Header: React.FC = () => {
           }}
         >
           <LogoIcon />
-          <Typography
-            sx={{
-              color: STANDARD_TEXT_COLOR,
-              fontWeight: 400,
-              fontSize: { xs: '1rem', sm: '1.125rem', md: '24px' },
-            }}
-          >
+          <Typography variant='h6' sx={{ color: STANDARD_TEXT_COLOR }}>
             <Link href='/'>慧灯禅修</Link>
           </Typography>
         </Box>
@@ -80,7 +73,7 @@ const Header: React.FC = () => {
                 height: { xs: 28, sm: 30, md: 32 },
                 fontSize: { xs: 14, sm: 15, md: 16 },
                 color: STANDARD_TEXT_COLOR,
-                borderRadius: 2,
+                borderRadius: 1,
                 px: { xs: 1, sm: 1.5, md: 2 },
                 backgroundColor: 'transparent',
                 '& fieldset': {

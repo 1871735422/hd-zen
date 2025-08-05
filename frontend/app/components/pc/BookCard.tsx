@@ -1,10 +1,8 @@
-'use client';
-import { CardMedia } from '@mui/material';
+import { CardMedia, Link } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Image from 'next/image';
-import { usePathname, useRouter } from 'next/navigation';
 import React from 'react';
 import { NAV_COLOR } from '../../constants';
 
@@ -17,28 +15,19 @@ interface BookCardProps {
 }
 
 const BookCard: React.FC<BookCardProps> = ({
-  idx,
   title,
   description,
   cover,
   courseId,
 }) => {
-  const router = useRouter();
-  const pathname = usePathname();
   return (
     <Card
-      onClick={() => {
-        // Use courseId if available, otherwise fall back to idx-based routing
-        const targetPath = courseId
-          ? `/${pathname.split('/')[1]}/${courseId}`
-          : `/${pathname.split('/')[1]}/${idx + 1}`;
-        router.push(targetPath);
-      }}
       sx={{
         width: 200,
         height: '300px',
         display: 'flex',
         flexDirection: 'column',
+        justifyContent: 'center',
         borderRadius: '24px',
         border: '1px solid #e3f2fd', // light blue
         boxShadow: 'none',
@@ -72,72 +61,75 @@ const BookCard: React.FC<BookCardProps> = ({
           mt: 1.5,
           color: 'text.secondary',
           textAlign: 'left',
-          fontSize: '14px',
           WebkitBoxOrient: 'vertical',
-          WebkitLineClamp: 10,
+          // WebkitLineClamp: 10,
           overflow: 'hidden',
           pb: 0,
         },
       }}
     >
-      <CardMedia
-        className='book-card-media'
-        sx={{
-          height: '192px',
-          position: 'relative',
-          overflow: 'hidden',
-          transition:
-            'max-height 0.4s ease-in-out, opacity 0.4s 0.2s ease-in-out, margin 0.4s ease-in-out',
-        }}
-      >
-        <Image
-          src={cover}
-          alt={title}
-          fill
-          sizes='200px'
-          style={{
-            objectFit: 'cover',
-          }}
-          priority={false}
-        />
-      </CardMedia>
-      <CardContent
-        sx={{
-          backgroundColor: '#fff',
-          transition: 'background-color 0.3s ease-in-out',
-          padding: 2,
-          flexGrow: 1,
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
-        <Typography
+      <Link href={`/course/${courseId}`}>
+        <CardMedia
+          className='book-card-media'
           sx={{
-            color: NAV_COLOR,
-            fontWeight: 'bold',
-            textAlign: 'center',
-            lineHeight: 1.3,
-            fontSize: '16px',
-          }}
-        >
-          {title}
-        </Typography>
-        <Typography
-          className='description-normal'
-          sx={{
-            mt: 1.5,
-            color: 'text.secondary',
-            textAlign: 'left',
-            fontSize: '14px',
-            WebkitBoxOrient: 'vertical',
-            WebkitLineClamp: 2,
+            height: '192px',
+            position: 'relative',
             overflow: 'hidden',
+            transition:
+              'max-height 0.4s ease-in-out, opacity 0.4s 0.2s ease-in-out, margin 0.4s ease-in-out',
           }}
         >
-          {description}
-        </Typography>
-        <Typography className='description-hover'>{description}</Typography>
-      </CardContent>
+          <Image
+            src={cover}
+            alt={title}
+            fill
+            sizes='200px'
+            style={{
+              objectFit: 'cover',
+            }}
+            priority={false}
+          />
+        </CardMedia>
+        <CardContent
+          sx={{
+            backgroundColor: '#fff',
+            transition: 'background-color 0.3s ease-in-out',
+            padding: 2,
+            flexGrow: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            mt: 2,
+          }}
+        >
+          <Typography
+            sx={{
+              color: NAV_COLOR,
+              fontWeight: 'bold',
+              textAlign: 'center',
+            }}
+          >
+            {title}
+          </Typography>
+          <Typography
+            fontSize={11}
+            className='description-normal'
+            sx={{
+              mt: 1.5,
+              color: 'text.secondary',
+              textAlign: 'left',
+              WebkitBoxOrient: 'vertical',
+              WebkitLineClamp: 2,
+              overflow: 'hidden',
+              lineHeight: 1.5,
+            }}
+          >
+            {description}
+          </Typography>
+          <Typography fontSize={11} className='description-hover'>
+            {description}
+          </Typography>
+        </CardContent>
+      </Link>
     </Card>
   );
 };

@@ -1,4 +1,3 @@
-import AppBreadcrumbs from '@/app/components/pc/AppBreadcrumbs';
 import CategorySelector from '@/app/components/pc/CategorySelector';
 import CourseCard from '@/app/components/pc/CourseCard';
 import { Container, Grid, Typography } from '@mui/material';
@@ -34,22 +33,8 @@ export default async function ReferencePage({
     { id: 10, title: '前行念诵仪轨 · 开显解脱道' },
   ];
 
-  const breadcrumbItems = [
-    { label: '首页', href: '/' },
-    { label: '禅修课问答', href: '/qa' },
-    { label: selectedCategory },
-  ];
-
   return (
-    <Container
-      maxWidth='lg'
-      sx={{
-        backgroundImage: 'url(/images/sun-bg@2x.webp)',
-        backgroundSize: 'cover',
-        backgroundRepeat: 'no-repeat',
-        backgroundPosition: 'center',
-      }}
-    >
+    <Container maxWidth='lg'>
       <Typography variant='h1' fontWeight={600} fontSize={24} pt={5}>
         禅修课问答
       </Typography>
@@ -60,7 +45,6 @@ export default async function ReferencePage({
         categories={categories}
         selectedCategory={selectedCategory}
       />
-      <AppBreadcrumbs items={breadcrumbItems} />
       <Grid container spacing={4}>
         {cardItems.map(item => (
           <Grid key={item.id} size={{ xs: 12, sm: 6, md: 4 }}>

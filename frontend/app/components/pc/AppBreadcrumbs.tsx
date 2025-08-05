@@ -51,11 +51,12 @@ export default function AppBreadcrumbs({
       {finalItems.map((item, index) => {
         const isLast = index === finalItems.length - 1;
         return isLast ? (
-          <Typography key={index} color='text.primary'>
+          <Typography variant='subtitle2' key={index} color='text.primary'>
             {item.label}
           </Typography>
         ) : (
           <Link
+            variant='subtitle2'
             key={index}
             component={NextLink}
             href={item.href || ''}
