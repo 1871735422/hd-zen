@@ -1,8 +1,9 @@
 import CategorySelector from '@/app/components/pc/CategorySelector';
 import CourseCard from '@/app/components/pc/CourseCard';
-import { Container, Grid, Typography } from '@mui/material';
+import { Box, Container, Grid, Typography } from '@mui/material';
 import { notFound } from 'next/navigation';
 import { pb } from '../../api';
+import Reference from '../../components/icons/Reference';
 
 export default async function ReferencePage({
   params,
@@ -35,9 +36,9 @@ export default async function ReferencePage({
 
   return (
     <Container maxWidth='lg'>
-      <Typography variant='h1' fontWeight={600} fontSize={24} pt={5}>
-        禅修课问答
-      </Typography>
+      <Box>
+        <Reference/>
+      </Box>
       <Typography variant='body1' color='rgba(127, 173, 235, 1)' p={2}>
         这里随便写一点，禅修课问答的简介，写的什么呢，就是。这里随便写一点，学修参考资料的简介
       </Typography>

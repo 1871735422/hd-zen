@@ -1,13 +1,7 @@
-import VideocamIcon from '@mui/icons-material/Videocam';
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Link,
-  Typography,
-} from '@mui/material';
+import { Box, Card, CardContent, Link, Typography } from '@mui/material';
 import { HELPER_TEXT_COLOR } from '../../constants/colors';
+import { CourseActionButton } from './';
+import CornerBadge from './CornerBadge';
 
 interface ReferenceCardProps {
   item: {
@@ -37,32 +31,26 @@ export default function CourseCard({
           borderRadius: 4,
           position: 'relative',
           boxShadow: '0 4px 20px rgba(0,0,0,0.05)',
-          height: '100%',
           display: 'flex',
           flexDirection: 'column',
           px: 1,
           zoom: item.isQa ? 0.8 : 1,
         }}
       >
-        <Typography variant='h6' p={2} fontWeight='bold' pb={0}>
-          {item.title}
-        </Typography>
-        <Box
+        <Typography
+          variant='h6'
           sx={{
-            position: 'absolute',
-            top: 0,
-            right: 0,
-            background:
-              'linear-gradient(222.06deg, rgba(255, 168, 184, 1) 0%, rgba(255, 106, 114, 1) 69.37%)',
-            color: 'white',
-            px: 2,
-            py: 0.5,
-            borderTopRightRadius: '16px',
-            borderBottomLeftRadius: '16px',
+            p: 2,
+            pb: 0,
+            pl: 6, // 为徽章留出空间
+            pt: 3, // 调整顶部间距
+            fontSize: '1.1rem',
+            fontWeight: 600,
           }}
         >
-          {item.isQa ? <VideocamIcon /> : item.id}
-        </Box>
+          {item.title}
+        </Typography>
+        <CornerBadge content={item.isQa ? undefined : item.id} />
         <CardContent
           sx={{
             textAlign: 'left',
@@ -72,36 +60,33 @@ export default function CourseCard({
             justifyContent: 'space-between',
           }}
         >
-          <Typography
-            color={HELPER_TEXT_COLOR}
+          <Box
             sx={{
-              display: '-webkit-box',
-              WebkitBoxOrient: 'vertical',
-              WebkitLineClamp: 2,
+              height: '30.8px',
               overflow: 'hidden',
-              fontSize: 11,
               pb: 2,
             }}
           >
-            {item.description}
-          </Typography>
-          <Button
-            variant='outlined'
-            sx={{
-              borderRadius: '20px',
-              mx: 2,
-              py: 0.5,
-              px: 0,
-              borderColor: 'rgba(154, 189, 230, 1)',
-              color: 'rgba(154, 189, 230, 1)',
-              '&:hover': {
-                borderColor: '#0041ad',
-                backgroundColor: 'rgba(0, 82, 217, 0.04)',
-              },
-            }}
-          >
+            <Typography
+              color={HELPER_TEXT_COLOR}
+              sx={{
+                display: '-webkit-box',
+                WebkitBoxOrient: 'vertical',
+                WebkitLineClamp: 2,
+                overflow: 'hidden',
+                fontSize: 11,
+                lineHeight: 1.4,
+                textOverflow: 'ellipsis',
+                wordBreak: 'break-word',
+                height: '100%',
+              }}
+            >
+              {item.description.replace(/<[^>]*>/g, '')}
+            </Typography>
+          </Box>
+          <CourseActionButton>
             {item.isQa ? '观看视频' : '点击进入'}
-          </Button>
+          </CourseActionButton>
         </CardContent>
       </Card>
     </Link>

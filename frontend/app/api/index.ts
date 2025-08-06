@@ -1,22 +1,22 @@
 import PocketBase from 'pocketbase';
-import { 
-  Category, 
-  Course, 
-  CourseTopic, 
-  Media, 
-  TopicMedia, 
-  PaginatedResponse 
+import {
+  Category,
+  Course,
+  CourseTopic,
+  Media,
+  PaginatedResponse,
+  TopicMedia
 } from '../types/models';
 
-// Initialize PocketBase
-export const pb = new PocketBase('https://zen.huidengzg.com');
+// Initialize PocketBase using environment variable
+export const pb = new PocketBase(process.env.NEXT_PB_URL as string);
 
 // Configure PocketBase to prevent auto-cancellation
 pb.autoCancellation(false);
 
 // Configuration
 export const config = {
-  apiUrl: 'https://zen.huidengzg.com',
+  apiUrl: process.env.NEXT_PB_URL as string,
   defaultPageSize: 50,
   requestTimeout: 10000, // 10 seconds
 } as const;
@@ -142,7 +142,7 @@ const mapRecordToTopicMedia = (record: any): TopicMedia => ({
 // API Functions
 export const getCategories = async (): Promise<PaginatedResponse<Category>> => {
   try {
-    const result = await pb.collection('categories').getList(1, 500, {
+    const result = await pb.collection('navMenu').getList(1, 10, {
       sort: 'displayOrder',
       requestKey: null, // Disable auto-cancellation
     });
@@ -169,7 +169,7 @@ export const getCourses = async (): Promise<PaginatedResponse<Course>> => {
       expand: 'categoryId',
       requestKey: null, // Disable auto-cancellation
     });
-    
+
     const mappedCourses = result.map(mapRecordToCourse);
 
     return {
@@ -219,7 +219,7 @@ export const getCourseTopics = async (): Promise<PaginatedResponse<CourseTopic>>
     sort: 'ordering',
     expand: 'courseId',
   });
-  
+
   const mappedCourseTopics = result.map(mapRecordToCourseTopic);
 
   return {
@@ -239,7 +239,7 @@ export const getCourseTopicsByCourse = async (courseId: string): Promise<Paginat
       expand: 'courseId',
       requestKey: null, // Disable auto-cancellation
     });
-    
+
     return {
       ...result,
       items: result.items.map(mapRecordToCourseTopic),
@@ -250,7 +250,7 @@ export const getCourseTopicsByCourse = async (courseId: string): Promise<Paginat
     try {
       const allTopics = await getCourseTopics();
       const filteredTopics = allTopics.items.filter(topic => topic.courseId === courseId);
-      
+
       return {
         items: filteredTopics,
         totalItems: filteredTopics.length,
@@ -302,7 +302,7 @@ export const getTopicMediaByTopic = async (topicId: string): Promise<PaginatedRe
       filter: `topicId = "${topicId}"`,
       expand: 'topicId,mediaId',
     });
-    
+
     return {
       ...result,
       items: result.items.map(mapRecordToTopicMedia),
@@ -311,7 +311,7 @@ export const getTopicMediaByTopic = async (topicId: string): Promise<PaginatedRe
     // If filter fails, get all and filter client-side
     const allTopicMedia = await getTopicMedia();
     const filteredMedia = allTopicMedia.items.filter(tm => tm.topicId === topicId);
-    
+
     return {
       items: filteredMedia,
       totalItems: filteredMedia.length,

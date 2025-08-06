@@ -2,6 +2,7 @@
 
 import { ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { usePathname, useRouter } from 'next/navigation';
+import { sharedButtonStyles } from '../shared/ButtonStyles';
 
 interface CategorySelectorProps {
   categories: string[];
@@ -43,20 +44,16 @@ export default function CategorySelector({
         backdropFilter: 'blur(300px)',
         mb: 2,
         '& .MuiToggleButtonGroup-grouped': {
-          borderRadius: '20px !important',
+          ...sharedButtonStyles,
           mx: 1,
           my: 1,
-          border: 'none',
-          textTransform: 'none',
           padding: '5px 20px',
           color: '#333',
+          border: 'none',
           '&.Mui-selected': {
             background:
-              'linear-gradient(90deg, rgba(70, 134, 207, 1) 0%, rgba(170, 207, 250, 1) 100%)',
+              'linear-gradient(90deg, rgb(70, 135, 207) 0%,rgb(169, 206, 250) 100%)',
             color: 'white',
-            '&:hover': {
-              backgroundColor: '#0041ad',
-            },
           },
         },
       }}

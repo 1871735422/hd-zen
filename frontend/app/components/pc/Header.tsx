@@ -5,13 +5,20 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Link from 'next/link';
 import React from 'react';
+import { pb } from '../../api';
 import { NAV_COLOR } from '../../constants';
 import { STANDARD_TEXT_COLOR } from '../../constants/colors';
 import LogoIcon from '../icons/LogoIcon';
 import SearchIcon from '../icons/SearchIcon';
-import Navigation from './Navigation';
+import { Menu } from './MenuItem';
+import NavigationMenu from './NavigationMenu';
 
-const Header: React.FC = () => {
+const Header: React.FC = async () => {
+  const menuData = await pb.collection('navMenu').getFullList({
+    filter: `isActive = true`,
+    sort: 'displayOrder',
+  }) as Menu[];
+
   return (
     <AppBar
       position='static'
@@ -50,7 +57,7 @@ const Header: React.FC = () => {
         </Box>
 
         {/* 菜单 */}
-        <Navigation />
+        <NavigationMenu menuData={menuData} />
 
         {/* 搜索框 */}
         <Box

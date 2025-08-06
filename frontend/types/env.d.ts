@@ -12,8 +12,8 @@ declare global {
       API_SECRET_KEY: string;
       NEXT_PUBLIC_API_BASE_URL: string;
 
-      // 数据库配置
-      DATABASE_URL: string;
+      // pb 数据库配置
+      NEXT_PUBLIC_SITE_URL: string;
 
       // 第三方服务
       NEXT_PUBLIC_GOOGLE_ANALYTICS_ID: string;
