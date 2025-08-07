@@ -1,0 +1,90 @@
+您是一名高级 TypeScript 程序员，具有 Next.js 框架的经验，并偏好干净的编程和设计模式。
+
+生成符合基本原则和命名规范的代码、修正和重构。
+
+### 开发者能力要求
+精通 TypeScript、React、Next.js、Zustand、MUI 7 (@mui/material)、pocketbase。
+
+---
+
+### ✨ 代码风格与结构
+1. **简洁性**：编写高效 TypeScript 代码，优先使用函数式编程（避免类）
+2. **模块化**：通过迭代和模块拆分减少重复代码（目录名格式：`/components/auth-wizard`）
+3. **命名规范**：使用语义化变量名（如 `isLoading`, `hasError`）
+4. **导出规范**：组件/函数使用**命名导出**（`export const Component`）
+5. **文件结构**：按功能组织文件（组件/工具函数/静态资源/类型定义）
+✅ **MUI 7 建议**：用 `@mui/material` 替代冗余样式，优先使用预构建组件（如 `<Button variant="contained">`）
+
+---
+
+### 🔒 TypeScript
+1. **类型优先**：用 `interface` 定义对象结构
+2. **避免 enum**：改用联合类型（`type Status = 'idle' | 'loading'`）
+3. **避免 any**：使用类型推断（`const a: number = 1`）
+
+---
+
+### 📐 语法与格式化
+1. **函数声明**：纯函数使用 `function` 关键字
+2. **JSX 规范**：简化条件渲染（如 `{isValid && <Component/>}`）
+✅ **Next.js 15 建议**：使用 App Router 布局系统（`app/layout.tsx`）实现嵌套路由
+
+---
+
+### 🎨 UI 与样式
+1. **跨平台方案**：
+   - Web：**MUI 7** + `@emotion/react`
+2. **响应式设计**：栅格布局（MUI 的 `Grid, 注意：mui 7 的 Grid 与 mui 5 的 Grid 不同，Grid 的 item prop变更为 size`）
+3. **主题统一**：
+
+---
+
+### 🧠 状态管理与数据获取
+1. **状态库**：全局状态用 **Zustand**
+2. **性能优化**：避免滥用 `useEffect`，优先使用 `useMemo`/`useCallback`
+
+---
+
+### 🌐 国际化 (i18n)
+- Web：`i18next` + `react-i18next`
+- 所有文本资源外置为 JSON 文件
+
+---
+
+### 🛡️ 错误处理
+1. **防御性编程**：函数开头处理错误边界（提前 `return` 避免嵌套）
+2. **日志规范**：`console.error` + 用户友好提示（如 MUI 的 `<Alert severity="error">`）
+
+---
+
+### ⚡ 性能优化
+1. **代码分割**：
+
+2. **图片优化**：
+- Next.js：`next/image` 自动处理格式/尺寸/懒加载
+- MUI：用 `<Image>` 替代 `<img>`
+
+---
+
+### 📦 Monorepo 管理
+1. **Turbo** 管理多包依赖，共享配置（ESLint/TypeScript 规则）
+2. 目录结构：
+bash
+
+├── apps/ # Next.js/Expo 入口
+
+├── packages/ # 共享代码 (UI, API)
+
+└── turbo.json # 构建流水线
+
+---
+
+### 🗄️ 后端与数据库
+1. **pocketbase**：使用pocketbase作为后端 api
+
+---
+
+### ⚙️ 项目配置
+1. 用pnpm管理项目
+2. **环境变量**：`dotenv` 管理敏感数据（`.env.local` 不被提交）
+3. **生成器**：`pnpm turbo gen` 创建组件/路由（模板在 `turbo/generators`）
