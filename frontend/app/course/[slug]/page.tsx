@@ -1,4 +1,4 @@
-import { getCourseById, getCourseTopicsByCourse } from '@/app/api';
+import { getCourseByDisplayOrder, getCourseTopicsByCourse } from '@/app/api';
 import CourseCard from '@/app/components/pc/CourseCard';
 import { Box, Container, Grid, Typography } from '@mui/material';
 import { notFound } from 'next/navigation';
@@ -9,17 +9,14 @@ interface CoursePageProps {
 
 export default async function CoursePage({ params }: CoursePageProps) {
   const resolvedParams = await params;
-  const courseId = resolvedParams.slug;
+  const displayOrder = resolvedParams.slug;
 
   try {
     // Fetch course details and topics
-    const [course, courseTopicsResult] = await Promise.all([
-      getCourseById(courseId),
-      getCourseTopicsByCourse(courseId)
-    ]);
+    const course = await getCourseByDisplayOrder(displayOrder);
+    const courseId = course?.id || '';
+    const courseTopicsResult = await getCourseTopicsByCourse(courseId);
 
-    console.log('Course found:', course?.title || 'null');
-    console.log('Course topics count:', courseTopicsResult.items.length);
 
     // If course is not found, show not found
     if (!course) {
@@ -41,7 +38,6 @@ export default async function CoursePage({ params }: CoursePageProps) {
           py: 4,
         }}
       >
-
         {/* Course Topics Grid */}
         <Grid container spacing={4}>
           {courseTopics.map((topic, index) => (
@@ -49,9 +45,8 @@ export default async function CoursePage({ params }: CoursePageProps) {
               <CourseCard
                 item={{
                   id: index + 1, // For display purposes
-                  title: topic.article_title || topic.title,
-                  description: topic.article_introtext || topic.description ||
-                    `${topic.article_title} - 了解更多关于这个话题的详细内容。`,
+                  title: topic.article_title || topic.title || '',
+                  description: topic.article_introtext || topic.description || '',
                 }}
                 topicId={topic.id}
                 courseId={courseId}
@@ -64,7 +59,7 @@ export default async function CoursePage({ params }: CoursePageProps) {
         {courseTopics.length === 0 && (
           <Box sx={{ textAlign: 'center', py: 8 }}>
             <Typography variant='h6' sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
-              此课程暂无可用的主题内容
+              此课程暂无内容
             </Typography>
           </Box>
         )}
@@ -72,21 +67,5 @@ export default async function CoursePage({ params }: CoursePageProps) {
     );
   } catch (error) {
     console.error('Error loading course:', error);
-    // Instead of calling notFound(), let's render an error state
-    return (
-      <Container maxWidth='lg' sx={{ py: 4 }}>
-        <Box sx={{ textAlign: 'center' }}>
-          <Typography variant='h4' component='h1' sx={{ mb: 2 }}>
-            加载课程时出错
-          </Typography>
-          <Typography variant='body1' sx={{ mb: 2 }}>
-            课程ID: {courseId}
-          </Typography>
-          <Typography variant='body2' sx={{ color: 'error.main' }}>
-            错误信息: {error instanceof Error ? error.message : '未知错误'}
-          </Typography>
-        </Box>
-      </Container>
-    );
   }
 }

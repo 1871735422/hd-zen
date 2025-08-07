@@ -5,7 +5,7 @@
  * 提供统一的渐变蓝色hover/active效果
  */
 export const sharedButtonStyles = {
-  borderRadius: '20px',
+  borderRadius: '25px',
   textTransform: 'none' as const, // 阻止浏览器自动将文本转换为大写
   fontWeight: 500,
   fontSize: '14px',

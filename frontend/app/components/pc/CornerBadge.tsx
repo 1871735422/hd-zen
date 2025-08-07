@@ -1,79 +1,63 @@
-import VideocamIcon from '@mui/icons-material/Videocam';
 import { Box, Typography } from '@mui/material';
-import BadgeIcon from '../icons/BadgeIcon';
+import VideoIcon from '../icons/VideoIcon';
 
 interface CornerBadgeProps {
   content?: string | number;
-  size?: 'small' | 'medium' | 'large';
 }
 
-export default function CornerBadge({ content, size = 'medium' }: CornerBadgeProps) {
+export default function CornerBadge({ content }: CornerBadgeProps) {
   const sizeConfig = {
-    small: {
-      width: 32,
-      height: 20,
-      fontSize: 10,
-    },
     medium: {
-      width: 40,
-      height: 25,
-      fontSize: 12,
+      width: 60,
+      height: 36,
     },
     large: {
-      width: 48,
-      height: 30,
-      fontSize: 14,
+      width: 80,
+      height: 60,
     },
   };
 
-  const config = sizeConfig[size];
+  const config = sizeConfig[content ? 'medium' : 'large'];
 
   return (
     <Box
       sx={{
         position: 'absolute',
-        top: 0,
+        top: -1,
         right: 0,
         width: config.width,
         height: config.height,
         display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
         zIndex: 1,
+        background: 'url(/images/course-badge.png) no-repeat center center',
+        backgroundSize: content ? 'contain' : '100% 100%',
+        backgroundPosition: '0 0',
       }}
     >
-      <BadgeIcon size={size} />
-      <Box
-        sx={{
-          position: 'absolute',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: '100%',
-          height: '100%',
-        }}
-      >
-        {content ? (
-          <Typography
-            sx={{
-              fontSize: config.fontSize,
-              fontWeight: 'bold',
-              color: 'white',
-              lineHeight: 1,
-              textAlign: 'center',
-            }}
-          >
-            {content}
-          </Typography>
-        ) : (
-          <VideocamIcon
-            sx={{
-              fontSize: config.fontSize + 2,
-              color: 'white',
-            }}
-          />
-        )}
-      </Box>
+      {content ? (
+        <Typography
+          sx={{
+            position: 'absolute',
+            top: 6,
+            right: '35%',
+            fontSize: 14,
+            fontWeight: 'bold',
+            color: 'white',
+          }}
+        >
+          {content}
+        </Typography>
+      ) : (
+        <VideoIcon
+          sx={{
+            position: 'absolute',
+            top: '20%',
+            right: '25%',
+            fontSize: 24,
+            color: 'white',
+          }}
+        />
+      )}
     </Box>
   );
 }

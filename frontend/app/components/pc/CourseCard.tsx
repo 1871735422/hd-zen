@@ -21,14 +21,14 @@ export default function CourseCard({
 }: ReferenceCardProps) {
   return (
     <Link
-      href={`/course/${courseId}/${topicId}/lesson${item.id}`}
+      href={item.isQa ? `/qa/${item.id}` : `/course/${courseId}/${topicId}/lesson${item.id}`}
       sx={{
         textDecoration: 'none',
       }}
     >
       <Card
         sx={{
-          borderRadius: 4,
+          borderRadius: '25px',
           position: 'relative',
           boxShadow: '0 4px 20px rgba(0,0,0,0.05)',
           display: 'flex',

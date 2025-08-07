@@ -3,17 +3,16 @@ import CourseCard from '@/app/components/pc/CourseCard';
 import { Box, Container, Grid, Typography } from '@mui/material';
 import { notFound } from 'next/navigation';
 import { pb } from '../../api';
-import Reference from '../../components/icons/Reference';
 
-export default async function ReferencePage({
+export default async function QaPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
 
-  const { items: bookItems } = await pb.collection('courses').getList(1, 10);
-  const categories = bookItems.map(item => item.title);
+  const { items: questionItems } = await pb.collection('questions').getList(1, 10);
+  const categories = questionItems.map(item => item.title);
 
   const idx = parseInt(slug, 10);
   if (isNaN(idx) || idx < 1 || idx > categories.length) {
@@ -21,39 +20,29 @@ export default async function ReferencePage({
   }
   const selectedCategory = categories[idx - 1];
 
-  const cardItems = [
-    { id: 1, title: '介绍慧灯禅修' },
-    { id: 2, title: '入坐与出坐' },
-    { id: 3, title: '人身难得' },
-    { id: 4, title: '寿命无常' },
-    { id: 5, title: '轮回过患' },
-    { id: 6, title: '因果不虚' },
-    { id: 7, title: '解脱利益与依止上师' },
-    { id: 8, title: '如何学密' },
-    { id: 9, title: '金刚上师与灌顶' },
-    { id: 10, title: '前行念诵仪轨 · 开显解脱道' },
-  ];
-
   return (
     <Container maxWidth='lg'>
-      <Box>
-        <Reference/>
+      <Box sx={{ pt: 5, pb: 8 }}>
+        <Typography
+          variant='h1'
+          sx={{ fontSize: '2.5rem', fontWeight: 700, color: 'white' }}
+        >
+          问答
+        </Typography>
       </Box>
-      <Typography variant='body1' color='rgba(127, 173, 235, 1)' p={2}>
-        这里随便写一点，禅修课问答的简介，写的什么呢，就是。这里随便写一点，学修参考资料的简介
-      </Typography>
       <CategorySelector
         categories={categories}
         selectedCategory={selectedCategory}
       />
       <Grid container spacing={4}>
-        {cardItems.map(item => (
+        {questionItems.map(item => (
           <Grid key={item.id} size={{ xs: 12, sm: 6, md: 4 }}>
             <CourseCard
               item={{
-                id: item.id,
+                id: parseInt(item.id, 10),
                 title: item.title,
-                description: `三个差别是佛法的基础知识。本课介绍了学佛三个目标的差别，即外教和佛教的差别、世间法和出世间法的差别… `,
+                description: item.content,
+                isQa: true,
               }}
             />
           </Grid>

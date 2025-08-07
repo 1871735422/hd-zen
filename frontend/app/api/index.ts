@@ -204,12 +204,12 @@ export const getCoursesByCategory = async (categoryId: string): Promise<Paginate
   };
 };
 
-export const getCourseById = async (id: string): Promise<Course | null> => {
+export const getCourseByDisplayOrder = async (displayOrder: string): Promise<Course | null> => {
   try {
-    const record = await pb.collection('courses').getFirstListItem(`id="${id}"`);
+    const record = await pb.collection('courses').getFirstListItem(`displayOrder="${displayOrder}"`);
     return mapRecordToCourse(record);
   } catch (error) {
-    console.error(`Error fetching course ${id}:`, error);
+    console.error(`Error fetching course ${displayOrder}:`, error);
     return null;
   }
 };
@@ -233,7 +233,7 @@ export const getCourseTopics = async (): Promise<PaginatedResponse<CourseTopic>>
 
 export const getCourseTopicsByCourse = async (courseId: string): Promise<PaginatedResponse<CourseTopic>> => {
   try {
-    const result = await pb.collection('courseTopics').getList(1, 500, {
+    const result = await pb.collection('courseTopics').getList(1, 50, {
       filter: `courseId = "${courseId}"`,
       sort: 'ordering',
       expand: 'courseId',

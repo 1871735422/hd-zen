@@ -1,7 +1,7 @@
 import CategorySelector from '@/app/components/pc/CategorySelector';
 import { Box, Container } from '@mui/material';
 import { notFound } from 'next/navigation';
-import { getCourseById, getCourses } from '../../api';
+import { getCourseByDisplayOrder, getCourses } from '../../api';
 import CourseIcon from '../../components/icons/Course';
 
 export default async function CourseLayout({
@@ -15,7 +15,7 @@ export default async function CourseLayout({
 
   // Get the current course and all courses
   const [course, coursesResult] = await Promise.all([
-    getCourseById(slug),
+    getCourseByDisplayOrder(slug),
     getCourses(),
   ]);
 
@@ -24,7 +24,7 @@ export default async function CourseLayout({
   }
 
   const categories = coursesResult.items.map(item => item.title);
-  const courseIds = coursesResult.items.map(item => item.id);
+  const courseOrders = coursesResult.items.map(item => item.displayOrder + '');
   const selectedCategory = course.title;
 
   return (
@@ -41,7 +41,7 @@ export default async function CourseLayout({
       <CategorySelector
         categories={categories}
         selectedCategory={selectedCategory}
-        courseIds={courseIds}
+        courseIds={courseOrders}
       />
       {children}
     </Container>

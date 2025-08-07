@@ -1,7 +1,6 @@
-import AppBreadcrumbs from '@/app/components/pc/AppBreadcrumbs';
 import CategorySelector from '@/app/components/pc/CategorySelector';
 import CourseCard from '@/app/components/pc/CourseCard';
-import { Container, Grid, Typography } from '@mui/material';
+import { Box, Container, Grid, Typography } from '@mui/material';
 import { notFound } from 'next/navigation';
 
 const categories = [
@@ -37,12 +36,6 @@ export default async function ReferencePage({
     { id: 10, title: '前行念诵仪轨 · 开显解脱道' },
   ];
 
-  const breadcrumbItems = [
-    { label: '首页', href: '/' },
-    { label: '学修参考资料', href: '/reference' },
-    { label: selectedCategory },
-  ];
-
   return (
     <Container
       maxWidth='lg'
@@ -53,17 +46,18 @@ export default async function ReferencePage({
         backgroundPosition: 'center',
       }}
     >
-      <Typography variant='h1' fontWeight={600} fontSize={24} pt={5}>
-        学修参考资料
-      </Typography>
-      <Typography variant='body1' color='rgba(127, 173, 235, 1)' p={2}>
-        这里随便写一点，学修参考资料的简介，写的什么呢，就是。这里随便写一点，学修参考资料的简介
-      </Typography>
+      <Box sx={{ pt: 5, pb: 8 }}>
+        <Typography
+          variant='h1'
+          sx={{ fontSize: '2.5rem', fontWeight: 700, color: 'white' }}
+        >
+          学修参考资料
+        </Typography>
+      </Box>
       <CategorySelector
         categories={categories}
         selectedCategory={selectedCategory}
       />
-      <AppBreadcrumbs items={breadcrumbItems} />
       <Grid container spacing={4}>
         {cardItems.map(item => (
           <Grid key={item.id} size={{ xs: 12, sm: 6, md: 4 }}>
