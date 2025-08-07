@@ -14,10 +14,10 @@ import { Menu } from './MenuItem';
 import NavigationMenu from './NavigationMenu';
 
 const Header: React.FC = async () => {
-  const menuData = await pb.collection('navMenu').getFullList({
+  const menuData = (await pb.collection('navMenu').getFullList({
     filter: `isActive = true`,
     sort: 'displayOrder',
-  }) as Menu[];
+  })) as Menu[];
 
   return (
     <AppBar
