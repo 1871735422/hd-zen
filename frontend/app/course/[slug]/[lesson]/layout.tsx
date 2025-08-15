@@ -1,10 +1,8 @@
 'use client';
-import { getCourseTopicById, getCourseTopicsByCourse } from '@/app/api';
 import AppBreadcrumbs, {
   BreadcrumbProvider,
   useBreadcrumb,
 } from '@/app/components/pc/AppBreadcrumbs';
-import LessonMeta from '@/app/components/pc/LessonMeta';
 import LessonSidebar from '@/app/components/pc/LessonSidebar';
 import { Box, Container } from '@mui/material';
 import { usePathname, useRouter } from 'next/navigation';
@@ -28,25 +26,6 @@ const LessonLayout = ({
   const resolvedParams = use(params);
   const courseId = resolvedParams.slug;
   const topicId = resolvedParams.lesson;
-
-  // Load current topic and course topics
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        const [topic, topicsResult] = await Promise.all([
-          getCourseTopicById(topicId),
-          getCourseTopicsByCourse(courseId),
-        ]);
-
-        setCurrentTopic(topic);
-        setCourseTopics(topicsResult.items);
-      } catch (error) {
-        // Handle error silently - user will see empty state
-      }
-    };
-
-    loadData();
-  }, [courseId, topicId]);
 
   useEffect(() => {
     if (currentTopic) {
@@ -81,49 +60,27 @@ const LessonLayout = ({
   return (
     <BreadcrumbProvider>
       <Container
+        maxWidth={false}
         sx={{
-          position: 'relative',
           display: 'flex',
-          flexDirection: 'row',
-          gap: 2,
-          p: '0 0 0 60px !important',
+          flexDirection: 'column',
+          padding: '0 !important',
+          ml: 0,
         }}
       >
         <AppBreadcrumbs items={breadcrumbItems} useContext={true} />
-
-        <LessonSidebar selected={selected} onSelect={setSelected} />
         <Box
           sx={{
-            backgroundColor: 'white',
+            position: 'relative',
             width: '100%',
             height: '100%',
             overflow: 'hidden',
-            px: '120px',
-            pt: 2,
             pb: 5,
             mb: 5,
             borderRadius: 5,
           }}
         >
-          <LessonMeta
-            title={currentTopic?.article_title || currentTopic?.title || '课程'}
-            tags={
-              currentTopic?.tags
-                ? currentTopic.tags.split(',').map((tag: string) => tag.trim())
-                : []
-            }
-            description={
-              currentTopic?.article_introtext ||
-              currentTopic?.description ||
-              '课程描述'
-            }
-            author='作者：慈诚罗珠堪布'
-            date={
-              currentTopic?.created
-                ? new Date(currentTopic.created).toLocaleDateString('zh-CN')
-                : ''
-            }
-          />
+          <LessonSidebar selected={selected} onSelect={setSelected} />
           {children}
         </Box>
       </Container>

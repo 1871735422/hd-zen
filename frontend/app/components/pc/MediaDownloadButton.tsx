@@ -1,14 +1,14 @@
 'use client';
-import React from 'react';
-import { Button, Box, Typography, Theme, SxProps } from '@mui/material';
-import { 
-  Download, 
-  Videocam, 
-  PictureAsPdf, 
-  MenuBook, 
-  Headphones,   
-  MusicNote 
+import {
+  Download,
+  Headphones,
+  MenuBook,
+  MusicNote,
+  PictureAsPdf,
+  Videocam
 } from '@mui/icons-material';
+import { Box, Button, SxProps, Theme, Typography } from '@mui/material';
+import React from 'react';
 
 export type MediaType = 'pdf' | 'epub' | 'audiobook' | 'audio' | 'video';
 
@@ -27,8 +27,7 @@ const MediaDownloadButton: React.FC<MediaDownloadButtonProps> = ({
   size = 'medium',
   sx
 }) => {
-  console.log(downloadUrls);
-  
+
   const getSizeStyles = () => {
     switch (size) {
       case 'small':
@@ -102,7 +101,7 @@ const MediaDownloadButton: React.FC<MediaDownloadButtonProps> = ({
       document.body.removeChild(link);
     });
   }
-  
+
   return (
     <Button
       disabled={disabled}
@@ -138,21 +137,21 @@ const MediaDownloadButton: React.FC<MediaDownloadButtonProps> = ({
           justifyContent: 'center',
         }}
       >
-        <IconComponent 
-          sx={{ 
+        <IconComponent
+          sx={{
             fontSize: sizeStyles.width * 0.4,
             position: 'relative',
             zIndex: 1
-          }} 
+          }}
         />
-        <Download 
-          sx={{ 
+        <Download
+          sx={{
             fontSize: sizeStyles.width * 0.15,
             position: 'absolute',
             top: '25%',
             left: '50%',
             zIndex: 2
-          }} 
+          }}
         />
       </Box>
       <Typography
@@ -171,4 +170,4 @@ const MediaDownloadButton: React.FC<MediaDownloadButtonProps> = ({
   );
 };
 
-export default MediaDownloadButton; 
+export default MediaDownloadButton;

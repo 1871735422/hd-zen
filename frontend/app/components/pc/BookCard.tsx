@@ -11,14 +11,13 @@ interface BookCardProps {
   title: string;
   description: string;
   cover: string;
-  courseId?: string;
 }
 
 const BookCard: React.FC<BookCardProps> = ({
   title,
   description,
   cover,
-  courseId,
+  idx
 }) => {
   return (
     <Card
@@ -62,13 +61,13 @@ const BookCard: React.FC<BookCardProps> = ({
           color: 'text.secondary',
           textAlign: 'left',
           WebkitBoxOrient: 'vertical',
-          // WebkitLineClamp: 10,
+          // WebkitLineClamp: 10,·
           overflow: 'hidden',
           pb: 0,
         },
       }}
     >
-      <Link href={`/course/${courseId}`}>
+      <Link href={`/course/${idx}`}>
         <CardMedia
           className='book-card-media'
           sx={{
