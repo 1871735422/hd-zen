@@ -48,8 +48,6 @@ export default async function CoursePage({ params }: CoursePageProps) {
                   title: topic.article_title || topic.title || '',
                   description: topic.article_introtext || topic.description || '',
                 }}
-                topicId={topic.id}
-                courseId={courseId}
               />
             </Grid>
           ))}

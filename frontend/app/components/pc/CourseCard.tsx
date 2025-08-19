@@ -10,18 +10,14 @@ interface ReferenceCardProps {
     description: string;
     isQa?: boolean;
   };
-  topicId?: string;
-  courseId?: string;
 }
 
 export default function CourseCard({
-  item,
-  topicId,
-  courseId,
+  item
 }: ReferenceCardProps) {
   return (
     <Link
-      href={item.isQa ? `/qa/${item.id}` : `/course/${courseId}/${topicId}/lesson${item.id}`}
+      href={item.isQa ? `/qa/${item.id}` : `/course/${item.id}/lesson${item.id}`}
       sx={{
         textDecoration: 'none',
       }}
