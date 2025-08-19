@@ -20,12 +20,10 @@ export default async function CoursePage({ params }: CoursePageProps) {
 
     // If course is not found, show not found
     if (!course) {
-      console.log('Course not found, calling notFound()');
       notFound();
     }
 
     const courseTopics = courseTopicsResult.items;
-    console.log('Rendering course page for:', course.title);
 
     return (
       <Container
@@ -44,10 +42,12 @@ export default async function CoursePage({ params }: CoursePageProps) {
             <Grid key={topic.id} size={{ xs: 12, sm: 6, md: 4 }}>
               <CourseCard
                 item={{
-                  id: index + 1, // For display purposes
+                  idx: index + 1, // For display purposes
                   title: topic.article_title || topic.title || '',
                   description: topic.article_introtext || topic.description || '',
                 }}
+                topicId={topic.id}
+                courseOrder={topic.ordering+''}
               />
             </Grid>
           ))}

@@ -34,7 +34,6 @@ async function CoursePage() {
             title={course.title}
             description={course.description || ''}
             cover={getCourseImageUrl(course, true)}
-            courseId={course.id}
           />
         ))}
       </Grid>

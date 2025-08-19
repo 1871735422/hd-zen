@@ -5,19 +5,24 @@ import CornerBadge from './CornerBadge';
 
 interface ReferenceCardProps {
   item: {
-    id: number;
+    idx: number;
     title: string;
     description: string;
     isQa?: boolean;
   };
+  topicId:string;
+  courseOrder?: string;
 }
 
 export default function CourseCard({
-  item
+  item,
+  courseOrder,
+  topicId
 }: ReferenceCardProps) {
+
   return (
     <Link
-      href={item.isQa ? `/qa/${item.id}` : `/course/${item.id}/lesson${item.id}`}
+      href={item.isQa ? `/qa/${item.idx}` : `/course/${courseOrder}/${topicId}`}
       sx={{
         textDecoration: 'none',
       }}
@@ -36,29 +41,27 @@ export default function CourseCard({
         <Typography
           variant='h6'
           sx={{
-            p: 2,
-            pb: 0,
-            pl: 6, // 为徽章留出空间
-            pt: 3, // 调整顶部间距
-            fontSize: '1.1rem',
-            fontWeight: 600,
+            px: 2,
+            pt: 3,
+            fontSize: 18,
+            fontWeight: 500,
+            minHeight: 60,
           }}
         >
           {item.title}
         </Typography>
-        <CornerBadge content={item.isQa ? undefined : item.id} />
+        <CornerBadge content={item.isQa ? undefined : item.idx} />
         <CardContent
           sx={{
             textAlign: 'left',
-            flexGrow: 1,
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'space-between',
+            pt:0
           }}
         >
           <Box
             sx={{
-              height: '30.8px',
+              height: 30,
               overflow: 'hidden',
               pb: 2,
             }}
@@ -71,7 +74,7 @@ export default function CourseCard({
                 WebkitLineClamp: 2,
                 overflow: 'hidden',
                 fontSize: 11,
-                lineHeight: 1.4,
+                lineHeight: 1.5,
                 textOverflow: 'ellipsis',
                 wordBreak: 'break-word',
                 height: '100%',
