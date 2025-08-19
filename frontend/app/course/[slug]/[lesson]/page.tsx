@@ -4,79 +4,102 @@ import VideoPlayer from '@/app/components/pc/VideoPlayer';
 import { Box } from '@mui/material';
 import { notFound } from 'next/navigation';
 import { Fragment } from 'react';
+import AudioPage from '../../../components/pc/AudioPage';
 import LessonMeta from '../../../components/pc/LessonMeta';
+import LessonSidebar from '../../../components/pc/LessonSidebar';
+import ReadingPage from '../../../components/pc/ReadingPage';
 
 interface LessonPageProps {
   params: Promise<{ slug: string; lesson: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-const LessonPage = async ({ params }: LessonPageProps) => {
+const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
   const resolvedParams = await params;
-  const topicId = resolvedParams.lesson;
+  const { tab: selectedKey } = await searchParams;
+  const courseOrder = resolvedParams.slug;
+  const lessonOrder = resolvedParams.lesson;
+  // console.log({ courseOrder, lessonOrder ,selectedKey});
 
   // Fetch topic details and associated media
-  const { items: topicMedia } = await getTopicMediaByTopic(topicId);
-
-  console.log({ topicMedia });
+  const { items: topicMedia } = await getTopicMediaByTopic('m0e40evoc9p2c7z');
 
   if (!topicMedia) {
     notFound();
   }
 
-  return (
-    <Box
-      sx={{
-        backgroundColor: 'white',
-        ml: '5%',
-        px: 20,
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 2,
-      }}
-    >
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'flex-end',
-          alignItems: 'center',
-          flexDirection: 'column',
-        }}
-      >
-        <LessonMeta
-          title={topicMedia[0]?.media!.title}
-          tags={
-            topicMedia[0]?.media!.tags
-              ? topicMedia[0].media.tags
-                  .split(',')
-                  .map((tag: string) => tag.trim())
-              : []
-          }
-          description={topicMedia[0]?.media!.summary ?? ''}
-          author='作者：慈诚罗珠堪布'
-          date={
-            topicMedia[0]?.media!.created
-              ? new Date(topicMedia[0].media.created).toLocaleDateString(
-                  'zh-CN'
-                )
-              : ''
-          }
-        />
+  const TabRender = () => {
+    if (selectedKey === 'audio') return <AudioPage topicMedia={topicMedia} />;
+    if (selectedKey === 'reading') return <ReadingPage topicMedia={topicMedia} />;
+
+    return (
+      <>
         <MediaDownloadButton
           sx={{ alignSelf: 'flex-end' }}
           mediaType='video'
           downloadUrls={topicMedia.map(media => media.media?.url_downmp4 || '')}
         />
-      </Box>
-      {topicMedia.map(media => (
-        <Fragment key={media.id}>
-          <VideoPlayer
-            poster={media.media?.url_image || media.media?.image1_url || ''}
-            title={media.media?.title || ''}
-            src={media.media?.url_hd || media.media?.high_quality_url || ''}
+        {topicMedia.map(media => (
+          <Fragment key={media.id}>
+            <VideoPlayer
+              poster={media.media?.url_image || media.media?.image1_url || ''}
+              title={media.media?.title || ''}
+              src={media.media?.url_hd || media.media?.high_quality_url || ''}
+            />
+          </Fragment>
+        ))}
+      </>
+    );
+  };
+
+  return (
+    <>
+      <LessonSidebar
+        selectedKey={selectedKey?.toString() ?? ''}
+        path={`/course/${courseOrder}/${lessonOrder}`}
+      />
+      <Box
+        sx={{
+          backgroundColor: 'white',
+          ml: '5%',
+          pl: 17,
+          pr: 20,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 2,
+        }}
+      >
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+            flexDirection: 'column',
+          }}
+        >
+          <LessonMeta
+            title={topicMedia[0]?.media!.title}
+            tags={
+              topicMedia[0]?.media!.tags
+                ? topicMedia[0].media.tags
+                    .split(',')
+                    .map((tag: string) => tag.trim())
+                : []
+            }
+            description={topicMedia[0]?.media!.summary ?? ''}
+            author='作者：慈诚罗珠堪布'
+            date={
+              topicMedia[0]?.media!.created
+                ? new Date(topicMedia[0].media.created).toLocaleDateString(
+                    'zh-CN'
+                  )
+                : ''
+            }
           />
-        </Fragment>
-      ))}
-    </Box>
+        </Box>
+        <TabRender />
+      </Box>
+    </>
   );
 };
 

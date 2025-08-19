@@ -1,59 +1,40 @@
-'use client';
 import AppBreadcrumbs, {
   BreadcrumbProvider,
-  useBreadcrumb,
 } from '@/app/components/pc/AppBreadcrumbs';
-import LessonSidebar from '@/app/components/pc/LessonSidebar';
 import { Box, Container } from '@mui/material';
-import { usePathname, useRouter } from 'next/navigation';
-import { use, useEffect, useState } from 'react';
+import {
+  getCategories,
+  getCourseByDisplayOrder,
+  getCourseTopicsByCourse,
+} from '../../../api';
 
-const LessonLayout = ({
+const LessonLayout = async ({
   children,
   params,
 }: {
   children: React.ReactNode;
   params: Promise<{ slug: string; lesson: string }>;
 }) => {
-  const { setExtraBreadcrumb } = useBreadcrumb();
-  const pathname = usePathname();
-  const router = useRouter();
-  const segments = pathname.split('/').filter(Boolean);
-  const tab = segments[4]; // Adjusted for new route structure
-  const [selected, setSelected] = useState(tab);
-  const [currentTopic, setCurrentTopic] = useState<any>(null);
-  const [courseTopics, setCourseTopics] = useState<any[]>([]);
-  const resolvedParams = use(params);
-  const courseId = resolvedParams.slug;
-  const topicId = resolvedParams.lesson;
-
-  useEffect(() => {
-    if (currentTopic) {
-      setExtraBreadcrumb({
-        label: currentTopic.article_title || currentTopic.title,
-      });
-    }
-  }, [currentTopic, setExtraBreadcrumb]);
-
-  useEffect(() => {
-    if (selected === undefined) return;
-
-    const segments = pathname.split('/').filter(Boolean);
-
-    if (selected === 'qa') {
-      return router.replace(`/qa/${segments[1]}/${segments[2]}`);
-    }
-
-    const basePath = `/${segments.slice(0, 3).join('/')}/${selected}`;
-    router.replace(basePath);
-  }, [selected, pathname, router]);
+  const resolvedParams = await params;
+  const courseOrder = resolvedParams.slug;
+  const lessonOrder = resolvedParams.lesson.replace('lesson', '');
+  const course = await getCourseByDisplayOrder(courseOrder);
+  const courseId = course?.id || '';
+  const { items: courseTopics } = await getCourseTopicsByCourse(courseId);
+  const lessonCrumbLabel =
+    courseTopics.find(topic => topic.ordering + '' === lessonOrder)?.title ??
+    '';
+  const menuData = await getCategories('慧灯禅修课');
+  const lessonName =
+    menuData[0].subMenu?.find(item => item.slug === lessonOrder)?.name ?? '';
 
   const breadcrumbItems = [
     { label: '首页', href: '/' },
     { label: '慧灯禅修课', href: '/course' },
+    { label: lessonName, href: `/course/${courseOrder}` },
     {
-      label: courseTopics.find(topic => topic.id === topicId)?.title,
-      href: `/course/${courseId}`,
+      label: lessonCrumbLabel,
+      href: `/course/${courseOrder}/lesson${lessonOrder}`,
     },
   ];
 
@@ -80,7 +61,6 @@ const LessonLayout = ({
             borderRadius: 5,
           }}
         >
-          <LessonSidebar selected={selected} onSelect={setSelected} />
           {children}
         </Box>
       </Container>

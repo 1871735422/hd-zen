@@ -1,5 +1,5 @@
 'use client';
-import { Breadcrumbs, Link, Typography } from '@mui/material';
+import { Breadcrumbs, Link } from '@mui/material';
 import NextLink from 'next/link';
 import React, { createContext, useCallback, useContext, useState } from 'react';
 import { LINK_COLOR } from '../../constants';
@@ -49,12 +49,7 @@ export default function AppBreadcrumbs({
       }}
     >
       {finalItems.map((item, index) => {
-        const isLast = index === finalItems.length - 1;
-        return isLast ? (
-          <Typography variant='subtitle2' key={index} color='text.primary'>
-            {item.label}
-          </Typography>
-        ) : (
+        return (
           <Link
             variant='subtitle2'
             key={index}

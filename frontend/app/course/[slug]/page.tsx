@@ -17,7 +17,6 @@ export default async function CoursePage({ params }: CoursePageProps) {
     const courseId = course?.id || '';
     const courseTopicsResult = await getCourseTopicsByCourse(courseId);
 
-
     // If course is not found, show not found
     if (!course) {
       notFound();
@@ -38,16 +37,15 @@ export default async function CoursePage({ params }: CoursePageProps) {
       >
         {/* Course Topics Grid */}
         <Grid container spacing={4}>
-          {courseTopics.map((topic, index) => (
+          {courseTopics.map((topic) => (
             <Grid key={topic.id} size={{ xs: 12, sm: 6, md: 4 }}>
               <CourseCard
                 item={{
-                  idx: index + 1, // For display purposes
+                  idx: topic.ordering,
                   title: topic.article_title || topic.title || '',
                   description: topic.article_introtext || topic.description || '',
                 }}
-                topicId={topic.id}
-                courseOrder={topic.ordering+''}
+                courseOrder={course.displayOrder}
               />
             </Grid>
           ))}

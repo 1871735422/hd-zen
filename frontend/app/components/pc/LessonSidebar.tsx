@@ -1,8 +1,3 @@
-'use client';
-import ArticleIcon from '@mui/icons-material/Article';
-import GraphicEqOutlinedIcon from '@mui/icons-material/GraphicEqOutlined';
-import OndemandVideoIcon from '@mui/icons-material/OndemandVideo';
-import QuizIcon from '@mui/icons-material/Quiz';
 import {
   Box,
   List,
@@ -12,28 +7,44 @@ import {
   ListItemText,
   Typography,
 } from '@mui/material';
-
-const items = [
-  { key: '', label: '视频', icon: <OndemandVideoIcon /> },
-  { key: 'audio', label: '音频', icon: <GraphicEqOutlinedIcon /> },
-  { key: 'reading', label: '文字', icon: <ArticleIcon /> },
-  { key: 'qa', label: '问答', icon: <QuizIcon /> },
-];
+import CharIcon from '../icons/CharIcon';
+import QaIcon from '../icons/QaIcon';
+import VideoCamIcon from '../icons/VideoCamIcon';
+import WaveIcon from '../icons/WaveIcon';
 
 export interface LessonSidebarProps {
-  selected: string;
-  onSelect: (key: string) => void;
+  path: string;
+  selectedKey: string;
 }
 
 const activeColor = 'rgba(86, 137, 204, 1)';
 
-export default function LessonSidebar({
-  selected,
-  onSelect,
+export default async function LessonSidebar({
+  path,
+  selectedKey,
 }: LessonSidebarProps) {
-  const defaultSelected = items.find(item => item.key === selected)
-    ? selected
-    : '';
+  const items = [
+    {
+      key: '',
+      label: '视频',
+      icon: <VideoCamIcon isActive={selectedKey === ''} />,
+    },
+    {
+      key: 'audio',
+      label: '音频',
+      icon: <WaveIcon isActive={selectedKey === 'audio'} />,
+    },
+    {
+      key: 'reading',
+      label: '文字',
+      icon: <CharIcon isActive={selectedKey === 'reading'} />,
+    },
+    { key: 'qa', label: '问答', icon: <QaIcon /> },
+  ];
+
+  const defaultSelected =
+    items.find(item => item.key === selectedKey)?.key || '';
+
   return (
     <Box
       sx={{
@@ -83,6 +94,12 @@ export default function LessonSidebar({
               }}
             >
               <Box
+                component={'a'}
+                href={
+                  item.key === 'qa'
+                    ? path.replace('course', 'qa')
+                    : `${path}${item.key ? '?tab=' + item.key : ''}`
+                }
                 sx={{
                   width: 100,
                   height: 100,
@@ -91,7 +108,6 @@ export default function LessonSidebar({
                 }}
               >
                 <ListItemButton
-                  onClick={() => onSelect(item.key)}
                   selected={isSelected}
                   sx={{
                     flexDirection: 'column',

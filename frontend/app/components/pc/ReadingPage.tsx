@@ -1,16 +1,14 @@
 import { getCourseTopicById } from '@/app/api';
-import { Box, Typography, Paper, Divider } from '@mui/material';
+import { Box, Divider, Paper, Typography } from '@mui/material';
 import { notFound } from 'next/navigation';
+import { TopicMedia } from '../../types/models';
 
 interface ReadingPageProps {
-  params: Promise<{ slug: string; lesson: string }>;
+  topicMedia: TopicMedia[];
 }
 
-export default async function ReadingPage({ params }: ReadingPageProps) {
-  const resolvedParams = await params;
-  const topicId = resolvedParams.lesson;
-
-  const topic = await getCourseTopicById(topicId);
+export default async function ReadingPage({ topicMedia }: ReadingPageProps) {
+  const topic = await getCourseTopicById('m0e40evoc9p2c7z');
 
   if (!topic) {
     notFound();
@@ -39,9 +37,9 @@ export default async function ReadingPage({ params }: ReadingPageProps) {
           <Typography variant='h6' sx={{ mb: 2, color: '#1976d2' }}>
             课程简介
           </Typography>
-          <Typography 
-            variant='body1' 
-            sx={{ 
+          <Typography
+            variant='body1'
+            sx={{
               lineHeight: 1.8,
               fontSize: '1.1rem',
               color: '#333'
@@ -58,9 +56,9 @@ export default async function ReadingPage({ params }: ReadingPageProps) {
             课程内容
           </Typography>
           <Divider sx={{ mb: 3 }} />
-          <Typography 
-            variant='body1' 
-            sx={{ 
+          <Typography
+            variant='body1'
+            sx={{
               lineHeight: 2,
               fontSize: '1rem',
               color: '#444',
@@ -77,9 +75,9 @@ export default async function ReadingPage({ params }: ReadingPageProps) {
           <Typography variant='h6' sx={{ mb: 2, color: '#f57c00' }}>
             内容总结
           </Typography>
-          <Typography 
-            variant='body1' 
-            sx={{ 
+          <Typography
+            variant='body1'
+            sx={{
               lineHeight: 1.8,
               fontSize: '1rem',
               color: '#333'
@@ -125,10 +123,10 @@ export default async function ReadingPage({ params }: ReadingPageProps) {
           <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
             {topic.url_downmp3 && (
               <Box>
-                <a 
-                  href={topic.url_downmp3} 
+                <a
+                  href={topic.url_downmp3}
                   download
-                  style={{ 
+                  style={{
                     textDecoration: 'none',
                     color: '#1976d2',
                     display: 'flex',
@@ -142,10 +140,10 @@ export default async function ReadingPage({ params }: ReadingPageProps) {
             )}
             {topic.url_downpdf && (
               <Box>
-                <a 
-                  href={topic.url_downpdf} 
+                <a
+                  href={topic.url_downpdf}
                   download
-                  style={{ 
+                  style={{
                     textDecoration: 'none',
                     color: '#1976d2',
                     display: 'flex',
