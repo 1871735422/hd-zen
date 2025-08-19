@@ -17,23 +17,23 @@ export const transformTopicsToLessonItems = (topics: CourseTopic[]) => {
 // Get available content types for a topic
 export const getTopicContentTypes = (topic: CourseTopic) => {
   const contentTypes = [];
-  
+
   if (topic.url || topic.hasVideo) {
     contentTypes.push({ key: '', label: '视频', available: true });
   }
-  
+
   if (topic.url_mp3 || topic.hasAudio) {
     contentTypes.push({ key: 'audio', label: '音频', available: true });
   }
-  
+
   if (topic.article_fulltext || topic.hasText) {
     contentTypes.push({ key: 'reading', label: '文字', available: true });
   }
-  
+
   if (topic.hasQA) {
     contentTypes.push({ key: 'qa', label: '问答', available: true });
   }
-  
+
   return contentTypes;
 };
 
@@ -43,13 +43,27 @@ export const generateCourseBreadcrumbs = (course: any, topic?: CourseTopic) => {
     { label: '慧灯禅修课', href: '/course' },
     { label: course?.title || '课程', href: `/course/${course?.id}` },
   ];
-  
+
   if (topic) {
     breadcrumbs.push({
       label: topic.article_title || topic.title,
       href: `/course/${course?.id}/${topic.id}`,
     });
   }
-  
+
   return breadcrumbs;
 };
+
+export function formatDate(input: string): string {
+  // 拆分日期字符串
+  const [year, month, day] = input.split('/');
+
+  // 月份处理：直接转换为数字去除前导零
+  const monthFormatted = parseInt(month).toString();
+
+  // 日期处理：保证两位数显示
+  const dayFormatted = day.padStart(2, '0');
+
+  // 拼接中文格式
+  return `${year}年${monthFormatted}月${dayFormatted}日`;
+}

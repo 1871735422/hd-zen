@@ -1,4 +1,5 @@
 import PocketBase from 'pocketbase';
+import { Menu } from '../components/pc/MenuItem';
 import {
   Category,
   Course,
@@ -140,25 +141,21 @@ const mapRecordToTopicMedia = (record: any): TopicMedia => ({
 });
 
 // API Functions
-export const getCategories = async (): Promise<PaginatedResponse<Category>> => {
+export const getCategories = async (name?: string): Promise<Array<Menu>> => {
   try {
-    const result = await pb.collection('navMenu').getList(1, 10, {
+    const result = await pb.collection('navMenu').getFullList({
       sort: 'displayOrder',
-      requestKey: null, // Disable auto-cancellation
+      filter: `isActive = true ${name ? '&& name = "' + name + '"' : ''}`,
     });
-    return {
-      ...result,
-      items: result.items.map(mapRecordToCategory),
-    };
+
+    return result.map(({ name, slug, subMenu }) => {
+      return {
+        name, slug, subMenu
+      }
+    })
   } catch (error) {
     console.error('Error fetching categories:', error);
-    return {
-      items: [],
-      totalItems: 0,
-      totalPages: 1,
-      page: 1,
-      perPage: 0,
-    };
+    return [];
   }
 };
 
