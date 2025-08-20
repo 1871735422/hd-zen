@@ -44,9 +44,10 @@ const MediaDownloadButton: React.FC<MediaDownloadButtonProps> = ({
         };
       default:
         return {
-          width: 64,
-          height: 64,
-          fontSize: '0.6rem'
+          width: 60,
+          height: 60,
+          fontSize: '0.5rem',
+          pt:1
         };
     }
   };

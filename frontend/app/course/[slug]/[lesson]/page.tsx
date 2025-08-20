@@ -62,8 +62,8 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
         sx={{
           backgroundColor: 'white',
           ml: '5%',
-          pl: 17,
-          pr: 20,
+          pl: 14,
+          pr: 18,
           display: 'flex',
           flexDirection: 'column',
           gap: 2,
