@@ -1,18 +1,11 @@
 import { SvgIcon, SxProps } from '@mui/material';
 
-const QaIcon = ({
-  sx,
-  isActive = false,
-}: {
-  sx?: SxProps;
-  isActive?: boolean;
-}) => (
+const QaIcon = ({ sx }: { sx?: SxProps }) => (
   <SvgIcon
     sx={{
-      width: 24,
-      height: 24,
+      width: 20,
+      height: 20,
       cursor: 'pointer',
-      '&:hover': { opacity: 0.8 },
       ...sx,
     }}
     children={

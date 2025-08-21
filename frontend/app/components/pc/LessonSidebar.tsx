@@ -3,7 +3,6 @@ import {
   List,
   ListItem,
   ListItemButton,
-  ListItemIcon,
   ListItemText,
   Typography,
 } from '@mui/material';
@@ -17,8 +16,6 @@ export interface LessonSidebarProps {
   selectedKey: string;
 }
 
-const activeColor = 'rgba(86, 137, 204, 1)';
-
 export default async function LessonSidebar({
   path,
   selectedKey,
@@ -27,17 +24,20 @@ export default async function LessonSidebar({
     {
       key: '',
       label: '视频',
-      icon: <VideoCamIcon isActive={selectedKey === ''} />,
+      icon: <VideoCamIcon />,
+      color: '#82B2E8',
     },
     {
       key: 'audio',
       label: '音频',
-      icon: <WaveIcon isActive={selectedKey === 'audio'} />,
+      icon: <WaveIcon />,
+      color: 'rgba(175, 183, 240, 1)',
     },
     {
       key: 'reading',
       label: '文字',
-      icon: <CharIcon isActive={selectedKey === 'reading'} />,
+      icon: <CharIcon />,
+      color: 'rgba(199, 143, 227, 1)',
     },
     { key: 'qa', label: '问答', icon: <QaIcon /> },
   ];
@@ -53,7 +53,6 @@ export default async function LessonSidebar({
         left: 0,
         zIndex: 1000,
         width: 80,
-        minHeight: 500,
         background:
           'linear-gradient(180deg, rgba(157, 208, 250, 1) 0%, rgba(255, 166, 224, 1) 99.96%)',
         borderTopRightRadius: 10,
@@ -68,7 +67,7 @@ export default async function LessonSidebar({
     >
       {/* 顶部相关资料 */}
 
-      <Typography sx={{ color: '#fff', fontWeight: 500, fontSize: 16, mt: 2 }}>
+      <Typography sx={{ color: '#fff', mt: 2 ,fontSize:13}}>
         相关资料
       </Typography>
       <List
@@ -90,7 +89,6 @@ export default async function LessonSidebar({
               sx={{
                 mb: idx !== items.length - 1 ? 1 : 0,
                 width: '100%',
-                justifyContent: 'flex-start',
               }}
             >
               <Box
@@ -102,7 +100,7 @@ export default async function LessonSidebar({
                 }
                 sx={{
                   width: 100,
-                  height: 100,
+                  height: 80,
                   borderLeft: isSelected ? '8px solid transparent' : 'none',
                   boxSizing: 'border-box',
                 }}
@@ -110,34 +108,67 @@ export default async function LessonSidebar({
                 <ListItemButton
                   selected={isSelected}
                   sx={{
-                    flexDirection: 'column',
-                    transition: 'all 0.2s',
+                    height: 46,
+                    p: 0,
+                    alignItems: 'center',
                     background: isSelected ? 'white !important' : 'transparent',
                     borderRadius: isSelected ? '40px 0 0 40px' : 'none',
                     borderRight: isSelected ? '8px solid #fff' : 'none',
+                    position: 'relative',
+                    '&:before': isSelected
+                      ? {
+                          position: 'absolute',
+                          top: -25,
+                          right: -8,
+                          content: '""',
+                          background: '#fff',
+                          height: 25,
+                          aspectRatio: 1,
+                          WebkitMask:
+                            'radial-gradient(100% 100% at 0% 0%, transparent 0 100%, white 100%)', // 正方形角在右下
+                          mask: 'radial-gradient(100% 100% at 0% 0%, transparent 0 100%, white 100%)', // 正方形角在右下
+                        }
+                      : {},
+                    '&:after': isSelected
+                      ? {
+                          position: 'absolute',
+                          bottom: -25,
+                          right: -8,
+                          content: '""',
+                          background: '#fff',
+                          height: 25,
+                          aspectRatio: 1,
+                          WebkitMask:
+                            'radial-gradient(100% 100% at 0% 100%, transparent 0 100%, white 100%)', // 正方形角在右上
+                          mask: 'radial-gradient(100% 100% at 0% 100%, transparent 0 100%, white 100%)', // 正方形角在右上
+                        }
+                      : {},
                   }}
                 >
-                  <ListItemIcon
+                  <Box
                     sx={{
-                      minWidth: 0,
-                      color: isSelected ? activeColor : '#fff',
-                      fontSize: 24,
+                      width: '100%',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      color: isSelected ? item.color : '#fff',
                     }}
                   >
                     {item.icon}
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={
-                      <Typography
-                        fontWeight={isSelected ? 700 : 500}
-                        color={isSelected ? activeColor : '#fff'}
-                        fontSize={14}
-                        textAlign='center'
-                      >
-                        {item.label}
-                      </Typography>
-                    }
-                  />
+                    <ListItemText
+                      sx={{ m: 0 }}
+                      primary={
+                        <Typography
+                          fontWeight={isSelected ? 600 : 'inherit'}
+                          textAlign='center'
+                          fontSize={12}
+                        >
+                          {item.label}
+                        </Typography>
+                      }
+                    />
+                  </Box>
                 </ListItemButton>
               </Box>
             </ListItem>
