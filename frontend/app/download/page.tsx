@@ -1,30 +1,29 @@
 'use client';
 
-import AudiotrackIcon from '@mui/icons-material/Audiotrack';
-import HeadsetIcon from '@mui/icons-material/Headset';
-import MenuBookIcon from '@mui/icons-material/MenuBook';
-import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
-import VideocamIcon from '@mui/icons-material/Videocam';
 import {
   Avatar,
   Box,
   Container,
   Grid,
-  Paper,
   styled,
   Typography,
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import Image from 'next/image';
+import AudioDownIcon from '../components/icons/AudioDownIcon';
+import EpubDownIcon from '../components/icons/EpubDownIcon';
+import HeadphoneIcon from '../components/icons/HeadphoneIcon';
+import PdfDownIcon from '../components/icons/PdfDownIcon';
+import VideoDownIcon from '../components/icons/VideoDownIcon';
 import { downloadItems, NAV_COLOR } from '../constants';
+import { MAIN_BLUE_COLOR, STANDARD_TEXT_COLOR } from '../constants/colors';
 
 const fileTypes = [
-  { key: 'pdf', name: 'PDF', icon: <PictureAsPdfIcon /> },
-  { key: 'epub', name: 'EPUB', icon: <MenuBookIcon /> },
-  { key: 'audiobook', name: '有声书', icon: <HeadsetIcon /> },
-  { key: 'audio', name: '音频', icon: <AudiotrackIcon /> },
-  { key: 'video', name: '视频', icon: <VideocamIcon /> },
+  { key: 'pdf', name: 'PDF', icon: <PdfDownIcon /> },
+  { key: 'epub', name: 'EPUB', icon: <EpubDownIcon /> },
+  { key: 'audiobook', name: '有声书', icon: <HeadphoneIcon /> },
+  { key: 'audio', name: '音频', icon: <AudioDownIcon /> },
+  { key: 'video', name: '视频', icon: <VideoDownIcon /> },
 ];
 
 const FileIconContainer = styled(Box)({
@@ -32,18 +31,10 @@ const FileIconContainer = styled(Box)({
   flexDirection: 'column',
   alignItems: 'center',
   justifyContent: 'center',
-  color: '#E91E63', // A pink color similar to the screenshot
-});
-
-const IconWrapper = styled(Box)({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  width: 48,
-  height: 48,
-  backgroundColor: 'rgba(233, 30, 99, 0.1)',
-  borderRadius: '12px',
-  marginBottom: 4,
+  color: 'rgba(255, 168, 184, 1)',
+  '&:hover': {
+    color: 'rgba(255, 94, 124, 1)',
+  },
 });
 
 function DownloadPage() {
@@ -61,16 +52,11 @@ function DownloadPage() {
     >
       <Container maxWidth='lg' sx={{ position: 'relative', zIndex: 1 }}>
         <Box sx={{ display: 'flex', justifyContent: 'flex-start', my: 4 }}>
-          <Image
-            src='/images/下载@2x.webp'
-            alt='下载'
-            width={220}
-            height={88}
-            priority
-          />
+          <Typography variant='h3' color='rgba(102, 158, 222, 1)'>
+            下载
+          </Typography>
         </Box>
-        <Paper
-          elevation={4}
+        <Box
           sx={{
             bgcolor: 'rgba(255, 255, 255, 0.7)',
             backdropFilter: 'blur(10px)',
@@ -79,22 +65,17 @@ function DownloadPage() {
           }}
         >
           {!isMobile && (
-            <Grid
-              container
-              spacing={2}
-              alignItems='center'
-              sx={{ pb: 2, color: 'text.secondary' }}
-            >
-              <Grid size={{ md: 5 }}>
+            <Grid container spacing={2} alignItems='center' px={4} pb={1}>
+              <Grid size={4}>
                 <Typography
                   variant='subtitle1'
                   align='left'
-                  sx={{ pl: 8, color: NAV_COLOR, fontWeight: '500' }}
+                  sx={{ pl: 8, color: NAV_COLOR, fontWeight: '600' }}
                 >
                   文件名
                 </Typography>
               </Grid>
-              <Grid size={{ md: 7 }} pr={2.5}>
+              <Grid size={8}>
                 <Grid container spacing={1} textAlign='center'>
                   {fileTypes.map(ft => (
                     <Grid
@@ -104,7 +85,7 @@ function DownloadPage() {
                     >
                       <Typography
                         variant='subtitle1'
-                        sx={{ fontWeight: '500', color: NAV_COLOR }}
+                        sx={{ fontWeight: '600', color: NAV_COLOR }}
                       >
                         {ft.name}
                       </Typography>
@@ -114,76 +95,73 @@ function DownloadPage() {
               </Grid>
             </Grid>
           )}
-
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             {downloadItems.map(item => (
-              <Paper
+              <Grid
                 key={item.id}
-                component='article'
-                elevation={2}
-                sx={{
-                  p: 2,
-                  borderRadius: '12px',
-                  transition: 'box-shadow 0.3s',
-                  '&:hover': { boxShadow: 6 },
-                }}
+                container
+                alignItems='center'
+                spacing={2}
+                bgcolor={'#fff'}
+                borderRadius={'20px'}
+                px={4}
+                pt={1.5}
+                pb={1.2}
               >
-                <Grid container alignItems='center' spacing={2}>
-                  <Grid
-                    size={{ xs: 12, md: 5 }}
-                    sx={{ display: 'flex', alignItems: 'center', gap: 2 }}
+                <Grid
+                  size={4}
+                  sx={{ display: 'flex', alignItems: 'center', gap: 2 }}
+                >
+                  <Avatar
+                    sx={{
+                      bgcolor: MAIN_BLUE_COLOR,
+                      width: 26,
+                      height: 26,
+                      display: { xs: 'none', sm: 'flex' },
+                    }}
                   >
-                    <Avatar
-                      sx={{
-                        bgcolor: 'primary.main',
-                        width: 40,
-                        height: 40,
-                        display: { xs: 'none', sm: 'flex' },
-                      }}
+                    <Typography variant='body2'>{item.id}</Typography>
+                  </Avatar>
+                  <Box>
+                    <Typography
+                      variant='body1'
+                      fontWeight='medium'
+                      color={STANDARD_TEXT_COLOR}
                     >
-                      {item.id}
-                    </Avatar>
-                    <Box>
-                      <Typography variant='body1' fontWeight='medium'>
-                        {item.title}
-                      </Typography>
-                      <Typography variant='body2' color='text.secondary'>
-                        {item.date}
-                      </Typography>
-                    </Box>
-                  </Grid>
-                  <Grid size={{ xs: 12, md: 7 }}>
-                    <Grid container spacing={1} textAlign='center'>
-                      {fileTypes.map(ft => (
-                        <Grid
-                          size={{ xs: 'auto' }}
-                          key={ft.key}
-                          sx={{ minWidth: 60, flexGrow: 1 }}
-                        >
-                          {isMobile && (
-                            <Typography
-                              variant='caption'
-                              color='text.secondary'
-                              sx={{ display: 'block', mb: 0.5 }}
-                            >
-                              {ft.name}
-                            </Typography>
-                          )}
-                          <FileIconContainer>
-                            <IconWrapper>{ft.icon}</IconWrapper>
-                            <Typography variant='caption'>
-                              {item.files[ft.key as keyof typeof item.files]}
-                            </Typography>
-                          </FileIconContainer>
-                        </Grid>
-                      ))}
-                    </Grid>
+                      {item.title}
+                    </Typography>
+                  </Box>
+                </Grid>
+                <Grid size={8}>
+                  <Grid container spacing={1} textAlign='center'>
+                    {fileTypes.map(ft => (
+                      <Grid
+                        size={'auto' }
+                        key={ft.key}
+                        sx={{ minWidth: 60, flexGrow: 1 }}
+                      >
+                        {isMobile && (
+                          <Typography
+                            variant='caption'
+                            color='text.secondary'
+                          >
+                            {ft.name}
+                          </Typography>
+                        )}
+                        <FileIconContainer>
+                          {ft.icon}
+                          <Typography variant='caption' pt={.3}>
+                            {item.files[ft.key as keyof typeof item.files]}
+                          </Typography>
+                        </FileIconContainer>
+                      </Grid>
+                    ))}
                   </Grid>
                 </Grid>
-              </Paper>
+              </Grid>
             ))}
           </Box>
-        </Paper>
+        </Box>
       </Container>
     </Box>
   );

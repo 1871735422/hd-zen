@@ -2,7 +2,6 @@
 import { Breadcrumbs, Link } from '@mui/material';
 import NextLink from 'next/link';
 import React, { createContext, useCallback, useContext, useState } from 'react';
-import { LINK_COLOR } from '../../constants';
 
 export interface BreadcrumbItem {
   label: string;
@@ -40,7 +39,7 @@ export default function AppBreadcrumbs({
     <Breadcrumbs
       aria-label='breadcrumb'
       sx={{
-        color: LINK_COLOR,
+        color: 'rgba(42, 130, 228, 1)',
         mb: 1,
         pl: { xs: 2, sm: 0 },
         '& .MuiBreadcrumbs-separator': {

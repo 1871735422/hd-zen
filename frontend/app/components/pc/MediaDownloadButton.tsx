@@ -1,14 +1,10 @@
 'use client';
-import {
-  Download,
-  Headphones,
-  MenuBook,
-  MusicNote,
-  PictureAsPdf,
-  Videocam
-} from '@mui/icons-material';
-import { Box, Button, SxProps, Theme, Typography } from '@mui/material';
+import { Button, SxProps, Theme, Typography } from '@mui/material';
 import React from 'react';
+import AudioDownIcon from '../icons/AudioDownIcon';
+import EpubDownIcon from '../icons/EpubDownIcon';
+import PdfDownIcon from '../icons/PdfDownIcon';
+import VideoDownIcon from '../icons/VideoDownIcon';
 
 export type MediaType = 'pdf' | 'epub' | 'audiobook' | 'audio' | 'video';
 
@@ -25,29 +21,28 @@ const MediaDownloadButton: React.FC<MediaDownloadButtonProps> = ({
   downloadUrls,
   disabled = false,
   size = 'medium',
-  sx
+  sx,
 }) => {
-
   const getSizeStyles = () => {
     switch (size) {
       case 'small':
         return {
           width: 40,
           height: 40,
-          fontSize: '0.5rem'
+          fontSize: '0.5rem',
         };
       case 'large':
         return {
           width: 80,
           height: 80,
-          fontSize: '0.75rem'
+          fontSize: '0.75rem',
         };
       default:
         return {
           width: 60,
           height: 60,
-          fontSize: '0.5rem',
-          pt:1
+          fontSize: '0.55rem',
+          pt: 1,
         };
     }
   };
@@ -56,33 +51,28 @@ const MediaDownloadButton: React.FC<MediaDownloadButtonProps> = ({
     switch (type) {
       case 'pdf':
         return {
-          icon: PictureAsPdf,
-          label: 'PDF'
+          icon: PdfDownIcon,
+          label: 'PDF',
         };
       case 'epub':
         return {
-          icon: MenuBook,
-          label: 'EPUB'
-        };
-      case 'audiobook':
-        return {
-          icon: Headphones,
-          label: '有声书'
+          icon: EpubDownIcon,
+          label: 'EPUB',
         };
       case 'audio':
         return {
-          icon: MusicNote,
-          label: '音频'
+          icon: AudioDownIcon,
+          label: '音频',
         };
       case 'video':
         return {
-          icon: Videocam,
-          label: '视频'
+          icon: VideoDownIcon,
+          label: '视频',
         };
       default:
         return {
-          icon: Download,
-          label: '下载'
+          icon: VideoDownIcon,
+          label: '下载',
         };
     }
   };
@@ -101,7 +91,7 @@ const MediaDownloadButton: React.FC<MediaDownloadButtonProps> = ({
       link.click();
       document.body.removeChild(link);
     });
-  }
+  };
 
   return (
     <Button
@@ -127,42 +117,27 @@ const MediaDownloadButton: React.FC<MediaDownloadButtonProps> = ({
           color: 'rgba(255, 255, 255, 0.5)',
         },
         transition: 'all 0.2s ease-in-out',
-        ...sx
+        ...sx,
       }}
     >
-      <Box
+      <IconComponent
         sx={{
           position: 'relative',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
+          fontSize: sizeStyles.width * 0.4,
+          zIndex: 1,
         }}
-      >
-        <IconComponent
-          sx={{
-            fontSize: sizeStyles.width * 0.4,
-            position: 'relative',
-            zIndex: 1
-          }}
-        />
-        <Download
-          sx={{
-            fontSize: sizeStyles.width * 0.15,
-            position: 'absolute',
-            top: '25%',
-            left: '50%',
-            zIndex: 2
-          }}
-        />
-      </Box>
+      />
       <Typography
-        variant="caption"
+        variant='caption'
         sx={{
           fontSize: sizeStyles.fontSize,
           fontWeight: 500,
           lineHeight: 1,
           textAlign: 'center',
-          marginTop: -0.7,
+          marginTop: '-2px',
         }}
       >
         {mediaInfo.label}下载
