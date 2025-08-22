@@ -30,12 +30,16 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
 
   const TabRender = () => {
     if (selectedKey === 'audio') return <AudioPage topicMedia={topicMedia} />;
-    if (selectedKey === 'reading') return <ReadingPage topicMedia={topicMedia} />;
+    if (selectedKey === 'reading')
+      return <ReadingPage topicMedia={topicMedia} />;
 
     return (
       <>
         <MediaDownloadButton
-          sx={{ alignSelf: 'flex-end' }}
+          sx={{
+            alignSelf: 'flex-end',
+            my: -3,
+          }}
           mediaType='video'
           downloadUrls={topicMedia.map(media => media.media?.url_downmp4 || '')}
         />
@@ -67,6 +71,8 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
           display: 'flex',
           flexDirection: 'column',
           gap: 2,
+          pb:5,
+          borderRadius: 5,
         }}
       >
         <Box

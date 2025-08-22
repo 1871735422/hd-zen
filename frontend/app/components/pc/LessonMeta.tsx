@@ -95,7 +95,8 @@ export default function LessonMeta({
         <Typography
           variant='subtitle2'
           color='rgba(153, 153, 153, 1)'
-          sx={{ fontSize: 16 }}
+          fontFamily={'"Microsoft Yahei", "Hiragino Sans GB"'}
+          fontSize={14}
         >
           作者：{author?.replace('作者：', '')} &nbsp;&nbsp; {formatDate(date)}
         </Typography>
