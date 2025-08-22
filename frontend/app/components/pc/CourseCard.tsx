@@ -13,14 +13,14 @@ interface ReferenceCardProps {
   courseOrder?: number;
 }
 
-export default function CourseCard({
-  item,
-  courseOrder,
-}: ReferenceCardProps) {
-
+export default function CourseCard({ item, courseOrder }: ReferenceCardProps) {
   return (
     <Link
-      href={item.isQa ? `/qa/${item.idx}` : `/course/${courseOrder}/lesson${item.idx}`}
+      href={
+        item.isQa
+          ? `/qa/${item.idx}`
+          : `/course/${courseOrder}/lesson${item.idx}`
+      }
       sx={{
         textDecoration: 'none',
       }}
@@ -33,17 +33,16 @@ export default function CourseCard({
           display: 'flex',
           flexDirection: 'column',
           px: 1,
-          zoom: item.isQa ? 0.8 : 1,
         }}
       >
         <Typography
-          variant='h6'
           sx={{
-            px: 2,
-            pt: 3,
-            fontSize: 18,
+            pl: 2,
+            pt: 2,
+            pr:4,
             fontWeight: 500,
             minHeight: 60,
+            fontSize: item.isQa ? 14 : 18,
           }}
         >
           {item.title}
@@ -54,7 +53,7 @@ export default function CourseCard({
             textAlign: 'left',
             display: 'flex',
             flexDirection: 'column',
-            pt:0
+            pt: 0,
           }}
         >
           <Box

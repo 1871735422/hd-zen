@@ -3,8 +3,8 @@ import { SvgIcon, SxProps } from '@mui/material';
 const VideoIcon = ({ sx }: { sx?: SxProps }) => (
   <SvgIcon
     sx={{
-      width: 24,
-      height: 24,
+      width: 18,
+      height: 18,
       cursor: 'pointer',
       '&:hover': { opacity: 0.8 },
       ...sx,

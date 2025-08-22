@@ -30,8 +30,8 @@ export default function CornerBadge({ content }: CornerBadgeProps) {
         display: 'flex',
         zIndex: 1,
         background: 'url(/images/course-badge.png) no-repeat center center',
-        backgroundSize: content ? 'contain' : '100% 100%',
-        backgroundPosition: '0 0',
+        backgroundSize: content ? 'contain' : '70% 70%',
+        backgroundPosition: '100% 5%',
       }}
     >
       {content ? (
@@ -51,9 +51,9 @@ export default function CornerBadge({ content }: CornerBadgeProps) {
         <VideoIcon
           sx={{
             position: 'absolute',
-            top: '20%',
-            right: '25%',
-            fontSize: 24,
+            top: '13%',
+            right: '18%',
+            fontSize: 14,
             color: 'white',
           }}
         />
