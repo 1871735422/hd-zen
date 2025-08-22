@@ -6,8 +6,7 @@ import Typography from '@mui/material/Typography';
 import Link from 'next/link';
 import React from 'react';
 import { getCategories } from '../../api';
-import { NAV_COLOR } from '../../constants';
-import { STANDARD_TEXT_COLOR } from '../../constants/colors';
+import { MAIN_BLUE_COLOR, STANDARD_TEXT_COLOR } from '../../constants/colors';
 import LogoIcon from '../icons/LogoIcon';
 import SearchIcon from '../icons/SearchIcon';
 import NavigationMenu from './NavigationMenu';
@@ -83,10 +82,10 @@ const Header: React.FC = async () => {
                   borderColor: '#cfd8dc',
                 },
                 '&:hover fieldset': {
-                  borderColor: NAV_COLOR,
+                  borderColor: MAIN_BLUE_COLOR,
                 },
                 '&.Mui-focused fieldset': {
-                  borderColor: NAV_COLOR,
+                  borderColor: MAIN_BLUE_COLOR,
                 },
               },
               '& input': {
