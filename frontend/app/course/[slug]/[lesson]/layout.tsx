@@ -18,6 +18,8 @@ const LessonLayout = async ({
   const resolvedParams = await params;
   const courseOrder = resolvedParams.slug;
   const lessonOrder = resolvedParams.lesson.replace('lesson', '');
+  // console.log({courseOrder,lessonOrder});
+
   const course = await getCourseByDisplayOrder(courseOrder);
   const courseId = course?.id || '';
   const { items: courseTopics } = await getCourseTopicsByCourse(courseId);
@@ -25,13 +27,13 @@ const LessonLayout = async ({
     courseTopics.find(topic => topic.ordering + '' === lessonOrder)?.title ??
     '';
   const menuData = await getCategories('慧灯禅修课');
-  const lessonName =
-    menuData[0].subMenu?.find(item => item.slug === lessonOrder)?.name ?? '';
+  const courseName =
+    menuData[0].subMenu?.find(item => item.slug === courseOrder)?.name ?? '';
 
   const breadcrumbItems = [
     { label: '首页', href: '/' },
     { label: '慧灯禅修课', href: '/course' },
-    { label: lessonName, href: `/course/${courseOrder}` },
+    { label: courseName, href: `/course/${courseOrder}` },
     {
       label: lessonCrumbLabel,
       href: `/course/${courseOrder}/lesson${lessonOrder}`,

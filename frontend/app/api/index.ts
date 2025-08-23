@@ -280,24 +280,14 @@ export const getCourseTopicById = async (topicId: string): Promise<CourseTopic |
   }
 };
 
-export const getTopicMedia = async (): Promise<PaginatedResponse<TopicMedia>> => {
-  const result = await pb.collection('topicMedia').getFullList({
-    expand: 'topicId,mediaId',
-  });
-  return {
-    items: result.map(mapRecordToTopicMedia),
-    totalItems: result.length,
-    totalPages: 1,
-    page: 1,
-    perPage: result.length,
-  };
-};
-
-export const getTopicMediaByTopic = async (topicId: string): Promise<PaginatedResponse<TopicMedia>> => {
+export const getTopicMediaByOrder = async (courseOrder: string, lessonOrder: string): Promise<PaginatedResponse<TopicMedia> | null> => {
   try {
-    const result = await pb.collection('topicMedia').getList(1, 500, {
-      filter: `topicId = "${topicId}"`,
-      expand: 'topicId,mediaId',
+    const result = await pb.collection('topicMedia').getList(1, 10, {
+      filter: [
+        'topicId.courseId.displayOrder = ' + courseOrder,
+        'topicId.ordering = ' + lessonOrder,
+      ].join(' && '),
+      expand: 'topicId, mediaId, topicId.courseId',
     });
 
     return {
@@ -305,17 +295,8 @@ export const getTopicMediaByTopic = async (topicId: string): Promise<PaginatedRe
       items: result.items.map(mapRecordToTopicMedia),
     };
   } catch (error) {
-    // If filter fails, get all and filter client-side
-    const allTopicMedia = await getTopicMedia();
-    const filteredMedia = allTopicMedia.items.filter(tm => tm.topicId === topicId);
-
-    return {
-      items: filteredMedia,
-      totalItems: filteredMedia.length,
-      totalPages: 1,
-      page: 1,
-      perPage: filteredMedia.length,
-    };
+    console.error(error);
+    return null;
   }
 };
 

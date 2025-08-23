@@ -1,9 +1,9 @@
-import { getTopicMediaByTopic } from '@/app/api';
 import MediaDownloadButton from '@/app/components/pc/MediaDownloadButton';
 import VideoPlayer from '@/app/components/pc/VideoPlayer';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { notFound } from 'next/navigation';
 import { Fragment } from 'react';
+import { getTopicMediaByOrder } from '../../../api';
 import AudioPage from '../../../components/pc/AudioPage';
 import LessonMeta from '../../../components/pc/LessonMeta';
 import LessonSidebar from '../../../components/pc/LessonSidebar';
@@ -18,11 +18,9 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
   const resolvedParams = await params;
   const { tab: selectedKey } = await searchParams;
   const courseOrder = resolvedParams.slug;
-  const lessonOrder = resolvedParams.lesson;
-  // console.log({ courseOrder, lessonOrder ,selectedKey});
-
-  // Fetch topic details and associated media
-  const { items: topicMedia } = await getTopicMediaByTopic('m0e40evoc9p2c7z');
+  const lessonOrder = resolvedParams.lesson?.replace('lesson', '');
+  const res = await getTopicMediaByOrder(courseOrder, lessonOrder);
+  const topicMedia = res?.items;
 
   if (!topicMedia) {
     notFound();
@@ -33,6 +31,10 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
     if (selectedKey === 'reading')
       return <ReadingPage topicMedia={topicMedia} />;
 
+    const downloadUrls = topicMedia
+      .map(media => media.media?.url_downmp4)
+      .filter(url => url !== undefined);
+
     return (
       <>
         <MediaDownloadButton
@@ -41,15 +43,19 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
             my: -3,
           }}
           mediaType='video'
-          downloadUrls={topicMedia.map(media => media.media?.url_downmp4 || '')}
+          downloadUrls={downloadUrls}
         />
         {topicMedia.map(media => (
           <Fragment key={media.id}>
-            <VideoPlayer
-              poster={media.media?.url_image || media.media?.image1_url || ''}
-              title={media.media?.title || ''}
-              src={media.media?.url_hd || media.media?.high_quality_url || ''}
-            />
+            {media.media?.url_hd ? (
+              <VideoPlayer
+                poster={media.media?.url_image || media.media?.image1_url || ''}
+                title={media.media?.title || ''}
+                src={media.media?.url_hd}
+              />
+            ) : (
+              <Typography>视频资源不可用：{media.media?.title} </Typography>
+            )}
           </Fragment>
         ))}
       </>
@@ -60,7 +66,7 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
     <>
       <LessonSidebar
         selectedKey={selectedKey?.toString() ?? ''}
-        path={`/course/${courseOrder}/${lessonOrder}`}
+        path={`/course/${courseOrder}/lesson${lessonOrder}`}
       />
       <Box
         sx={{
@@ -71,7 +77,7 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
           display: 'flex',
           flexDirection: 'column',
           gap: 2,
-          pb:5,
+          pb: 5,
           borderRadius: 5,
         }}
       >

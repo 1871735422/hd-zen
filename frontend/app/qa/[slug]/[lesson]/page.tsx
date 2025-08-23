@@ -1,4 +1,4 @@
-import { getTopicMediaByTopic } from '@/app/api';
+import { getTopicMediaByOrder } from '@/app/api';
 import MediaDownloadButton from '@/app/components/pc/MediaDownloadButton';
 import VideoPlayer from '@/app/components/pc/VideoPlayer';
 import { Box } from '@mui/material';
@@ -17,11 +17,9 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
   const resolvedParams = await params;
   const { tab: selectedKey } = await searchParams;
   const courseOrder = resolvedParams.slug;
-  const lessonOrder = resolvedParams.lesson;
-  // console.log({ courseOrder, lessonOrder ,selectedKey});
-
-  // Fetch topic details and associated media
-  const { items: topicMedia } = await getTopicMediaByTopic('m0e40evoc9p2c7z');
+  const lessonOrder = resolvedParams.lesson?.replace('lesson', '');
+  const res = await getTopicMediaByOrder(courseOrder, lessonOrder);
+  const topicMedia = res?.items;
 
   if (!topicMedia) {
     notFound();

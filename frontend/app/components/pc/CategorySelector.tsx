@@ -31,6 +31,8 @@ export default function CategorySelector({
             // Fallback to index-based routing if courseId not available
             router.push(`/${pathname.split('/')[1]}/${categoryIndex + 1}`);
           }
+        } else if (pathname.includes('lesson')) {
+          router.push(pathname.slice(0, pathname.lastIndexOf('/')));
         }
       }}
       aria-label='reference categories'
