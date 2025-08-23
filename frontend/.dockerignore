@@ -1,0 +1,10 @@
+.next
+node_modules
+pnpm-store
+.git
+.gitignore
+Dockerfile
+docker-compose.yml
+*.log
+dist
+coverage
