@@ -39,7 +39,7 @@ export default function CourseCard({ item, courseOrder }: ReferenceCardProps) {
           sx={{
             pl: 2,
             pt: 2,
-            pr:4,
+            pr: 4,
             fontWeight: 500,
             minHeight: 60,
             fontSize: item.isQa ? 14 : 18,

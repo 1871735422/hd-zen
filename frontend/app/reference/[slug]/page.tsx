@@ -1,6 +1,7 @@
 import CategorySelector from '@/app/components/pc/CategorySelector';
 import CourseCard from '@/app/components/pc/CourseCard';
-import { Box, Container, Grid, Typography } from '@mui/material';
+import TitleBanner from '@/app/components/shared/TitleBanner';
+import { Container, Grid, Typography } from '@mui/material';
 import { notFound } from 'next/navigation';
 
 const categories = [
@@ -37,28 +38,32 @@ export default async function ReferencePage({
   ];
 
   return (
-    <Container
-      maxWidth='lg'
-      sx={{
-        backgroundImage: 'url(/images/sun-bg@2x.webp)',
-        backgroundSize: 'cover',
-        backgroundRepeat: 'no-repeat',
-        backgroundPosition: 'center',
-      }}
-    >
-      <Box sx={{ pt: 5, pb: 8 }}>
-        <Typography
-          variant='h1'
-          sx={{ fontSize: '2.5rem', fontWeight: 700, color: 'white' }}
-        >
-          学修参考资料
-        </Typography>
-      </Box>
+    <Container maxWidth='lg'>
+      <TitleBanner title='学修参考资料' />
+      <Typography
+        sx={{
+          color: 'rgba(127, 173, 235, 1)',
+          mt: -6,
+          mb: 6,
+          px: 2,
+        }}
+      >
+        本栏目提供加行修法的必修资料：《大圆满前行引导文》
+        <br />
+        辅助参考资料：《前行备忘录》《菩提道次第广论》《稻杆经》《大圆满心性修息》
+      </Typography>
       <CategorySelector
         categories={categories}
         selectedCategory={selectedCategory}
       />
-      <Grid container spacing={4}>
+      <Grid
+        container
+        spacing={4}
+        sx={{
+          mt: 6,
+          mb: 16,
+        }}
+      >
         {cardItems.map(item => (
           <Grid key={item.id} size={{ xs: 12, sm: 6, md: 4 }}>
             <CourseCard

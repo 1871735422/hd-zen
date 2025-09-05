@@ -10,11 +10,7 @@ const Footer: React.FC = () => {
       bgcolor={'rgba(127, 173, 235, 1)'}
       sx={{ px: { xs: 1, sm: 2 } }}
     >
-      <Typography
-        color='white'
-        textAlign='center'
-        variant='body1'
-      >
+      <Typography color='white' textAlign='center' variant='body1'>
         &nbsp; {new Date().getFullYear()} &nbsp;慧灯禅修 - By Huidengchanxiu
       </Typography>
     </Box>

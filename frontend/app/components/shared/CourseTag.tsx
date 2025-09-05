@@ -12,17 +12,13 @@ interface CourseTagProps extends ChipProps {
 }
 
 const StyledChip = styled(Chip, {
-  shouldForwardProp: (prop) => prop !== 'active',
+  shouldForwardProp: prop => prop !== 'active',
 })<CourseTagProps>(({ theme, active }) => ({
   borderRadius: '20px',
-  height:'auto',
+  height: 'auto',
   border: 'none',
-  backgroundColor: active
-    ? theme.palette.primary.main
-    : '#fff',
-  color: active
-    ? '#fff'
-    : '#8BA2B0',
+  backgroundColor: active ? theme.palette.primary.main : '#fff',
+  color: active ? '#fff' : '#8BA2B0',
   '&:hover': {
     backgroundColor: active
       ? theme.palette.primary.dark
@@ -30,15 +26,11 @@ const StyledChip = styled(Chip, {
     cursor: 'pointer',
   },
   '& .MuiChip-label': {
-    padding: '3px 8px'
-  }
+    padding: '3px 8px',
+  },
 }));
 
-const CourseTag: React.FC<CourseTagProps> = ({
-  active = false,
-  variant,
-  ...rest
-}) => {
+const CourseTag: React.FC<CourseTagProps> = ({ active = false, ...rest }) => {
   return (
     <StyledChip
       active={active}

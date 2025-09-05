@@ -67,7 +67,7 @@ export default async function LessonSidebar({
     >
       {/* 顶部相关资料 */}
 
-      <Typography sx={{ color: '#fff', mt: 2 ,fontSize:13}}>
+      <Typography sx={{ color: '#fff', mt: 2, fontSize: 13 }}>
         相关资料
       </Typography>
       <List

@@ -38,7 +38,13 @@ export const getTopicContentTypes = (topic: CourseTopic) => {
 };
 
 // Generate course navigation breadcrumbs
-export const generateCourseBreadcrumbs = (course: any, topic?: CourseTopic) => {
+export const generateCourseBreadcrumbs = (
+  course: {
+    id: string;
+    title?: string;
+  },
+  topic?: CourseTopic
+) => {
   const breadcrumbs = [
     { label: '慧灯禅修课', href: '/course' },
     { label: course?.title || '课程', href: `/course/${course?.id}` },
@@ -55,6 +61,8 @@ export const generateCourseBreadcrumbs = (course: any, topic?: CourseTopic) => {
 };
 
 export function formatDate(input: string): string {
+  if (!input) return '';
+
   // 拆分日期字符串
   const [year, month, day] = input.split('/');
 
@@ -62,7 +70,7 @@ export function formatDate(input: string): string {
   const monthFormatted = parseInt(month).toString();
 
   // 日期处理：保证两位数显示
-  const dayFormatted = day.padStart(2, '0');
+  const dayFormatted = day?.padStart(2, '0');
 
   // 拼接中文格式
   return `${year}年${monthFormatted}月${dayFormatted}日`;

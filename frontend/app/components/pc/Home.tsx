@@ -10,10 +10,10 @@ const Home: React.FC = async () => {
   const { items: courses } = await getCourses();
 
   // Transform courses to CardData format for the carousel
-  const carouselData: CardData[] = courses.map(course => ({
-    id: course.id,
+  const carouselData: CardData[] = courses.map((course, idx) => ({
+    id: (idx + 1).toString(),
     title: course.title,
-    description: course.description || '探索佛法智慧，开启心灵之旅',
+    description: course.description || '',
     imageUrl: course.cover
       ? `https://zen.huidengzg.com/api/files/courses/${course.id}/${course.cover}`
       : '/images/default-course.jpg',

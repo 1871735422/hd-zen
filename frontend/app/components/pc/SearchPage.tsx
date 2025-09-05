@@ -44,8 +44,8 @@ const resultFilter = [
 const SearchPage = () => {
   const searchParams = useSearchParams();
   const queryText = searchParams.get('query');
-  const model = searchParams.get('model');
-  const category = searchParams.get('category');
+  const _model = searchParams.get('model');
+  const _category = searchParams.get('category');
   const [modelSelected, setModelSelected] = useState(searchModels[1].value);
   const [cate, setCate] = useState(searchCates[0].value);
   const [sort, setSort] = useState(resultSort[0].value);
@@ -110,7 +110,9 @@ const SearchPage = () => {
               },
             }}
           />
-          <IconButton children={<ClearIcon />} sx={{ height: 20 }} />
+          <IconButton sx={{ height: 20 }} aria-label='clear'>
+            <ClearIcon />
+          </IconButton>
           <Button
             sx={{
               background:
@@ -182,7 +184,7 @@ const SearchPage = () => {
                 paddingRight: 20,
               }}
             >
-              {searchCates.map((item, idx) => (
+              {searchCates.map(item => (
                 <option key={item.value} value={item.value}>
                   {item.name}
                 </option>

@@ -57,9 +57,7 @@ export default function AudioPage({ topicMedia, courseTopic }: AudioPageProps) {
             >
               <AudioPlayer src={item?.url_mp3 ?? ''} />
               {bookUrls && bookUrls.length > 0 ? (
-                <Box
-                display={'flex'}
-                >
+                <Box display={'flex'}>
                   <MediaDownloadButton
                     mediaType='pdf'
                     downloadUrls={bookUrls}

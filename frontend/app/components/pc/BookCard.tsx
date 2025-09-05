@@ -17,7 +17,7 @@ const BookCard: React.FC<BookCardProps> = ({
   title,
   description,
   cover,
-  idx
+  idx,
 }) => {
   return (
     <Card

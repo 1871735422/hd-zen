@@ -3,7 +3,6 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { Box } from '@mui/material';
 import Button from '@mui/material/Button';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import React from 'react';
 import { NAV_COLOR } from '../../constants';
 import { STANDARD_TEXT_COLOR } from '../../constants/colors';
@@ -19,12 +18,10 @@ interface MenuItemProps {
 }
 const MenuItemComponent: React.FC<MenuItemProps> = ({ item }) => {
   const hasChildren = !!item.subMenu;
-  const pathname = usePathname();
-  const isSelected = pathname.startsWith(`/${item.slug}`);
 
   const buttonSx = {
-    color: isSelected ? NAV_COLOR : STANDARD_TEXT_COLOR,
-    fontWeight: isSelected ? 700 : 500,
+    color: STANDARD_TEXT_COLOR,
+    fontWeight: 500,
     '&:hover': {
       color: NAV_COLOR,
       background: 'rgba(70, 114, 166, 0.08)',
@@ -75,9 +72,6 @@ const MenuItemComponent: React.FC<MenuItemProps> = ({ item }) => {
         >
           {item.subMenu &&
             item.subMenu.map((subItem: Menu) => {
-              const isSubSelected = pathname.startsWith(
-                `/${item.slug}/${subItem.slug}`
-              );
               return (
                 <Link
                   key={subItem.name}
@@ -87,8 +81,8 @@ const MenuItemComponent: React.FC<MenuItemProps> = ({ item }) => {
                   <Button
                     sx={{
                       fontSize: 14,
-                      color: isSubSelected ? NAV_COLOR : STANDARD_TEXT_COLOR,
-                      fontWeight: isSubSelected ? 700 : 500,
+                      color: STANDARD_TEXT_COLOR,
+                      fontWeight: 500,
                       padding: '8px 16px',
                       width: '100%',
                       justifyContent: 'flex-start',

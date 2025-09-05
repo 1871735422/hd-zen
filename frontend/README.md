@@ -140,5 +140,4 @@ git config --global core.autocrlf false
    - 或执行 `git add . --renormalize`
 
 3. Windows 下 pnpm build 可能会报错，需到设置 打开 开发人员选项
-  > `pnpm and output standalone return EPERM: operation not permitted, symlink`
-   [https://github.com/vercel/next.js/discussions/52244](https://github.com/vercel/next.js/discussions/52244)
+   > `pnpm and output standalone return EPERM: operation not permitted, symlink` > [https://github.com/vercel/next.js/discussions/52244](https://github.com/vercel/next.js/discussions/52244)

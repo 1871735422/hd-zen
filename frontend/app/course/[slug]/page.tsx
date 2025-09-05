@@ -28,22 +28,19 @@ export default async function CoursePage({ params }: CoursePageProps) {
       <Container
         maxWidth='lg'
         sx={{
-          backgroundImage: 'url(/images/sun-bg@2x.webp)',
-          backgroundSize: 'cover',
-          backgroundRepeat: 'no-repeat',
-          backgroundPosition: 'center',
           py: 4,
         }}
       >
         {/* Course Topics Grid */}
         <Grid container spacing={4}>
-          {courseTopics.map((topic) => (
+          {courseTopics.map(topic => (
             <Grid key={topic.id} size={{ xs: 12, sm: 6, md: 4 }}>
               <CourseCard
                 item={{
                   idx: topic.ordering,
                   title: topic.article_title || topic.title || '',
-                  description: topic.article_introtext || topic.description || '',
+                  description:
+                    topic.article_introtext || topic.description || '',
                 }}
                 courseOrder={course.displayOrder}
               />

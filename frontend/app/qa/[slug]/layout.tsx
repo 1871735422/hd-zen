@@ -1,8 +1,8 @@
 import CategorySelector from '@/app/components/pc/CategorySelector';
-import { Box, Container, Typography } from '@mui/material';
+import { Container } from '@mui/material';
 import { notFound } from 'next/navigation';
 import { getCourseByDisplayOrder, getCourses } from '../../api';
-import { MAIN_BLUE_COLOR } from '../../constants/colors';
+import TitleBanner from '@/app/components/shared/TitleBanner';
 
 export default async function CourseLayout({
   children,
@@ -35,9 +35,7 @@ export default async function CourseLayout({
         px: { lg: 25 },
       }}
     >
-      <Box sx={{ pt: 5, pb: 8 }}>
-       <Typography fontSize={39} color={MAIN_BLUE_COLOR}>禅修课问答</Typography>
-      </Box>
+      <TitleBanner title='禅修课问答' />
       <CategorySelector
         categories={categories}
         selectedCategory={selectedCategory}

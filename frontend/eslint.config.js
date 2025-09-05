@@ -13,9 +13,14 @@ import globals from 'globals';
 
 export default [
   js.configs.recommended,
-    nextPlugin.configs.recommended,
   {
     files: ['**/*.{js,jsx,ts,tsx}'],
+    plugins: {
+      '@next/next': nextPlugin,
+    },
+    rules: {
+      ...nextPlugin.configs.recommended.rules,
+    },
     languageOptions: {
       globals: {
         ...globals.browser,
@@ -72,7 +77,7 @@ export default [
       '@typescript-eslint/no-unused-vars': 'off',
       '@typescript-eslint/no-explicit-any': 'warn',
       'prefer-const': 'error',
-      'no-console': 'warn',
+      'no-console': 'off',
       'no-debugger': 'error',
       'no-undef': 'error',
 

@@ -33,7 +33,7 @@ export default async function QaPage({ params }: CoursePageProps) {
       <Container
         maxWidth='lg'
         sx={{
-          backgroundImage: 'url(/images/sun-bg@2x.webp)',
+          backgroundImage: 'url(/images/course-lesson-bg.jpg)',
           backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat',
           backgroundPosition: 'center',
@@ -48,7 +48,7 @@ export default async function QaPage({ params }: CoursePageProps) {
             borderRadius: 5,
             py: 0,
             mb: 5,
-            height: 'fit-content'
+            height: 'fit-content',
           }}
         >
           <Grid size={3}>

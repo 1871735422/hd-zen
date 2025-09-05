@@ -20,42 +20,41 @@ const GradientCard: React.FC<GradientCardProps> = ({
   title,
   description,
 }) => {
-
   return (
     <Link href={`/course/${id}`} style={{ textDecoration: 'none' }}>
       <Grid
         size={2}
         sx={{
-        px: 0.5,
-        mt: `${(1 - idx) * 10}px`,
-        height: {
-          xs: `${200 + idx * 20}px`,
-          sm: `${240 + idx * 30}px`,
-          md: `${280 + idx * 40}px`,
-        },
-        borderRadius: '30px 30px 0 0',
-        display: 'flex',
-        flexDirection: 'column',
-        alignContent: 'flex-start',
-        cursor: 'pointer',
-        width: { xs: 160, sm: 180, md: 200, lg: 210 },
-        flexShrink: 0,
-        color: INNER_TEXT_COLOR,
-        background: `url(/images/card${idx + 1}.png) no-repeat center center`,
-        backgroundSize: '100% 100%',
-        '&:hover': {
-          color:
-            idx <= 3
-              ? HOVER_TEXT_COLOR
-              : idx === 4
-                ? HOVER_TEXT_COLOR_2
-                : HOVER_TEXT_COLOR_3,
-          background: 'rgba(124, 134, 236, 0.3)',
-          transform: 'scale(1.1)',
-          transition: 'transform 0.5s ease-in-out',
-        },
-        zIndex: 10,
-              }}
+          px: 0.5,
+          mt: `${(1 - idx) * 10}px`,
+          height: {
+            xs: `${200 + idx * 20}px`,
+            sm: `${240 + idx * 30}px`,
+            md: `${280 + idx * 40}px`,
+          },
+          borderRadius: '30px 30px 0 0',
+          display: 'flex',
+          flexDirection: 'column',
+          alignContent: 'flex-start',
+          cursor: 'pointer',
+          width: { xs: 160, sm: 180, md: 200, lg: 210 },
+          flexShrink: 0,
+          color: INNER_TEXT_COLOR,
+          background: `url(/images/card${idx + 1}.png) no-repeat center center`,
+          backgroundSize: '100% 100%',
+          '&:hover': {
+            color:
+              idx <= 3
+                ? HOVER_TEXT_COLOR
+                : idx === 4
+                  ? HOVER_TEXT_COLOR_2
+                  : HOVER_TEXT_COLOR_3,
+            background: 'rgba(124, 134, 236, 0.3)',
+            transform: 'scale(1.1)',
+            transition: 'transform 0.5s ease-in-out',
+          },
+          zIndex: 10,
+        }}
       >
         <Typography
           variant='h1'

@@ -44,6 +44,7 @@ export default function CourseActionButton({
   return (
     <StyledCourseActionButton
       className={isActive ? 'Mui-active' : ''}
+      variant={variant}
       sx={sx}
       {...props}
     >

@@ -55,18 +55,24 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
   const [expanded, setExpanded] = useState(false);
   const contentRef = useRef<HTMLDivElement | null>(null);
   const [isOverflowing, setIsOverflowing] = useState(true);
-  let height = 120;
+  const height = 120;
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+
     const el = contentRef.current;
     if (!el) return;
+
     const check = () => {
       setIsOverflowing(el.scrollHeight > height + 4); // 余量
     };
     check();
-    const ro = new ResizeObserver(check);
-    ro.observe(el);
-    return () => ro.disconnect();
+
+    if (typeof ResizeObserver !== 'undefined') {
+      const ro = new ResizeObserver(check);
+      ro.observe(el);
+      return () => ro.disconnect();
+    }
   }, [height, content, expanded]);
 
   return (
@@ -175,27 +181,25 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
         sx={{ mt: 1 }}
         spacing={1}
       >
-        {1 && (
-          <Button
-            size='small'
-            onClick={() => setExpanded(v => !v)}
-            aria-label={expanded ? 'collapse' : 'expand'}
+        <Button
+          size='small'
+          onClick={() => setExpanded(v => !v)}
+          aria-label={expanded ? 'collapse' : 'expand'}
+          sx={{
+            alignSelf: 'center',
+            display: 'flex',
+            flexDirection: 'column',
+            color: 'rgba(84, 161, 209, 1)',
+          }}
+        >
+          {expanded ? '折叠' : '展开'}
+          <ExpandMoreIcon
             sx={{
-              alignSelf: 'center',
-              display: 'flex',
-              flexDirection: 'column',
-              color: 'rgba(84, 161, 209, 1)',
+              transform: expanded ? 'rotate(180deg)' : 'none',
+              transition: 'transform 200ms',
             }}
-          >
-            {expanded ? '折叠' : '展开'}
-            <ExpandMoreIcon
-              sx={{
-                transform: expanded ? 'rotate(180deg)' : 'none',
-                transition: 'transform 200ms',
-              }}
-            />
-          </Button>
-        )}
+          />
+        </Button>
         <Stack
           direction='row'
           spacing={1}

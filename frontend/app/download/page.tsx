@@ -17,6 +17,7 @@ import PdfDownIcon from '../components/icons/PdfDownIcon';
 import VideoDownIcon from '../components/icons/VideoDownIcon';
 import { downloadItems, NAV_COLOR } from '../constants';
 import { MAIN_BLUE_COLOR, STANDARD_TEXT_COLOR } from '../constants/colors';
+import TitleBanner from '../components/shared/TitleBanner';
 
 const fileTypes = [
   { key: 'pdf', name: 'PDF', icon: <PdfDownIcon /> },
@@ -44,18 +45,13 @@ function DownloadPage() {
   return (
     <Box
       sx={{
-        py: 5,
         px: { xs: 2, sm: 3 },
-        background: 'url(/images/sun-bg@2x.webp)',
+        background: 'url(/images/course-lesson-bg.jpg)',
         backgroundSize: 'contain',
       }}
     >
       <Container maxWidth='lg' sx={{ position: 'relative', zIndex: 1 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'flex-start', my: 4 }}>
-          <Typography variant='h3' color='rgba(102, 158, 222, 1)'>
-            下载
-          </Typography>
-        </Box>
+        <TitleBanner title='下载' />
         <Box
           sx={{
             bgcolor: 'rgba(255, 255, 255, 0.7)',
@@ -136,21 +132,18 @@ function DownloadPage() {
                   <Grid container spacing={1} textAlign='center'>
                     {fileTypes.map(ft => (
                       <Grid
-                        size={'auto' }
+                        size={'auto'}
                         key={ft.key}
                         sx={{ minWidth: 60, flexGrow: 1 }}
                       >
                         {isMobile && (
-                          <Typography
-                            variant='caption'
-                            color='text.secondary'
-                          >
+                          <Typography variant='caption' color='text.secondary'>
                             {ft.name}
                           </Typography>
                         )}
                         <FileIconContainer>
                           {ft.icon}
-                          <Typography variant='caption' pt={.3}>
+                          <Typography variant='caption' pt={0.3}>
                             {item.files[ft.key as keyof typeof item.files]}
                           </Typography>
                         </FileIconContainer>

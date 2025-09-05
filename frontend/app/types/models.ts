@@ -44,7 +44,7 @@ export interface Media extends BaseModel {
   summary?: string;
   tags?: string;
   assetId?: string;
-  
+
   // Legacy fields for backward compatibility
   resourceId?: string;
   intro_text?: string;
@@ -65,7 +65,7 @@ export interface Media extends BaseModel {
 export interface CourseTopic extends BaseModel {
   courseId: string;
   course?: Course;
-  
+
   // New schema fields
   article_title: string;
   article_alias: string;
@@ -83,7 +83,7 @@ export interface CourseTopic extends BaseModel {
   url_pdfsize?: string;
   content_id?: string;
   asset_id?: string;
-  
+
   // Legacy fields for backward compatibility
   title: string;
   description?: string;

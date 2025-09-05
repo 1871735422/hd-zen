@@ -4,7 +4,10 @@ interface BadgeIconProps extends SvgIconProps {
   size?: 'small' | 'medium' | 'large';
 }
 
-export default function BadgeIcon({ size = 'medium', ...props }: BadgeIconProps) {
+export default function BadgeIcon({
+  size = 'medium',
+  ...props
+}: BadgeIconProps) {
   const sizeConfig = {
     small: { width: 32, height: 20 },
     medium: { width: 40, height: 25 },
@@ -15,7 +18,7 @@ export default function BadgeIcon({ size = 'medium', ...props }: BadgeIconProps)
 
   return (
     <SvgIcon
-      viewBox="0 0 127.129 77"
+      viewBox='0 0 127.129 77'
       sx={{
         width: config.width,
         height: config.height,
@@ -24,14 +27,21 @@ export default function BadgeIcon({ size = 'medium', ...props }: BadgeIconProps)
       {...props}
     >
       <defs>
-        <linearGradient id="badge-gradient" x1="127.129" y1="13.86" x2="33.053" y2="77" gradientUnits="userSpaceOnUse">
-          <stop offset="0" stopColor="#FFA8B8" />
-          <stop offset="0.6937" stopColor="#FF6A72" />
+        <linearGradient
+          id='badge-gradient'
+          x1='127.129'
+          y1='13.86'
+          x2='33.053'
+          y2='77'
+          gradientUnits='userSpaceOnUse'
+        >
+          <stop offset='0' stopColor='#FFA8B8' />
+          <stop offset='0.6937' stopColor='#FF6A72' />
         </linearGradient>
       </defs>
       <path
-        fill="url(#badge-gradient)"
-        d="M0 0L102.129 0C115.936 0 127.129 11.1929 127.129 25L127.129 77L0 77L0 0Z"
+        fill='url(#badge-gradient)'
+        d='M0 0L102.129 0C115.936 0 127.129 11.1929 127.129 25L127.129 77L0 77L0 0Z'
       />
     </SvgIcon>
   );

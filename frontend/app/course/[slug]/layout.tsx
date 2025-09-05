@@ -1,8 +1,8 @@
 import CategorySelector from '@/app/components/pc/CategorySelector';
-import { Box, Container } from '@mui/material';
+import { Container } from '@mui/material';
 import { notFound } from 'next/navigation';
 import { getCourseByDisplayOrder, getCourses } from '../../api';
-import CourseIcon from '../../components/icons/Course';
+import TitleBanner from '@/app/components/shared/TitleBanner';
 
 export default async function CourseLayout({
   children,
@@ -35,9 +35,7 @@ export default async function CourseLayout({
         px: { lg: 25 },
       }}
     >
-      <Box sx={{ pt: 5, pb: 8 }}>
-        <CourseIcon />
-      </Box>
+      <TitleBanner title={'慧灯禅修课'} />
       <CategorySelector
         categories={categories}
         selectedCategory={selectedCategory}
