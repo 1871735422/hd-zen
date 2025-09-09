@@ -67,6 +67,8 @@ export default async function ReferencePage({
         {cardItems.map(item => (
           <Grid key={item.id} size={{ xs: 12, sm: 6, md: 4 }}>
             <CourseCard
+              courseOrder={1}
+              slug='reference'
               item={{
                 idx: item.id,
                 title: item.title,

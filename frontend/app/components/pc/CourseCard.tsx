@@ -8,18 +8,21 @@ interface ReferenceCardProps {
     idx: number;
     title: string;
     description: string;
-    isQa?: boolean;
   };
+  slug: 'course' | 'qa' | 'reference';
   courseOrder?: number;
 }
 
-export default function CourseCard({ item, courseOrder }: ReferenceCardProps) {
+export default function CourseCard({
+  item,
+  courseOrder,
+  slug,
+}: ReferenceCardProps) {
+  const isQa = slug === 'qa';
   return (
     <Link
       href={
-        item.isQa
-          ? `/qa/${item.idx}`
-          : `/course/${courseOrder}/lesson${item.idx}`
+        isQa ? `/qa/${item.idx}` : `/${slug}/${courseOrder}/lesson${item.idx}`
       }
       sx={{
         textDecoration: 'none',
@@ -42,12 +45,12 @@ export default function CourseCard({ item, courseOrder }: ReferenceCardProps) {
             pr: 4,
             fontWeight: 500,
             minHeight: 60,
-            fontSize: item.isQa ? 14 : 18,
+            fontSize: isQa ? 14 : 18,
           }}
         >
           {item.title}
         </Typography>
-        <CornerBadge content={item.isQa ? undefined : item.idx} />
+        <CornerBadge content={isQa ? undefined : item.idx} />
         <CardContent
           sx={{
             textAlign: 'left',
@@ -81,7 +84,7 @@ export default function CourseCard({ item, courseOrder }: ReferenceCardProps) {
             </Typography>
           </Box>
           <CourseActionButton>
-            {item.isQa ? '观看视频' : '点击进入'}
+            {isQa ? '观看视频' : '点击进入'}
           </CourseActionButton>
         </CardContent>
       </Card>

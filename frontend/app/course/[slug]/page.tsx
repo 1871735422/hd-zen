@@ -43,6 +43,7 @@ export default async function CoursePage({ params }: CoursePageProps) {
                     topic.article_introtext || topic.description || '',
                 }}
                 courseOrder={course.displayOrder}
+                slug='course'
               />
             </Grid>
           ))}

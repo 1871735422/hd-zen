@@ -63,9 +63,9 @@ export default async function QaPage({ params }: CoursePageProps) {
                     title: topic.article_title || topic.title || '',
                     description:
                       topic.article_introtext || topic.description || '',
-                    isQa: true,
                   }}
                   courseOrder={course.displayOrder}
+                  slug='qa'
                 />
               </Grid>
             ))}
