@@ -100,7 +100,7 @@ export default function AudioPlayer({ src }: AudioPlayerProps) {
       sx={{
         display: 'flex',
         alignItems: 'center',
-        width: '100%',
+        width: '90%',
         backgroundColor: 'rgba(242, 248, 255, 0.75)',
         borderRadius: 999,
         px: 2,

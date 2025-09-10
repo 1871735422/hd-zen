@@ -1,3 +1,4 @@
+'use client';
 import MediaDownloadButton from '@/app/components/pc/MediaDownloadButton';
 import { Box, Paper, Typography } from '@mui/material';
 import { Fragment } from 'react';
@@ -36,7 +37,6 @@ export default function AudioPage({ topicMedia, courseTopic }: AudioPageProps) {
 
   return (
     <Box sx={{ py: 3, gap: 2 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}></Box>
       <Box
         sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 2 }}
       >
@@ -51,6 +51,7 @@ export default function AudioPage({ topicMedia, courseTopic }: AudioPageProps) {
               sx={{
                 display: 'flex',
                 alignItems: 'center',
+                justifyContent: 'space-between',
                 mb: 3,
                 gap: 1,
               }}

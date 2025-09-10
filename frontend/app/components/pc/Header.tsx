@@ -15,6 +15,7 @@ const Header: React.FC = async () => {
 
   return (
     <AppBar
+      id='back-to-top-anchor'
       position='static'
       sx={{
         background: 'transparent',
