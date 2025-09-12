@@ -9,7 +9,7 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import BookExpandIcon from '../icons/BookExpandIcon';
 import BookIcon from '../icons/BookIcon';
 
@@ -54,27 +54,186 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
   style,
 }) => {
   const [expanded, setExpanded] = useState(false);
-  const contentRef = useRef<HTMLDivElement | null>(null);
+  const [contentElement, setContentElement] = useState<HTMLDivElement | null>(
+    null
+  );
   const [isOverflowing, setIsOverflowing] = useState(true);
   const height = 120;
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    const el = contentRef.current;
-    if (!el) return;
+    if (!contentElement) return;
 
     const check = () => {
-      setIsOverflowing(el.scrollHeight > height + 4); // 余量
+      setIsOverflowing(contentElement.scrollHeight > height + 4); // 余量
     };
     check();
 
     if (typeof ResizeObserver !== 'undefined') {
       const ro = new ResizeObserver(check);
-      ro.observe(el);
+      ro.observe(contentElement);
       return () => ro.disconnect();
     }
-  }, [height, content, expanded]);
+  }, [height, content, expanded, contentElement]);
+
+  // 服务端渲染时返回默认状态
+  if (typeof window === 'undefined') {
+    return (
+      <Box
+        style={style}
+        sx={{
+          width: '100%',
+          borderRadius: 2,
+          boxShadow: 0,
+          pt: 2,
+        }}
+      >
+        <Stack direction='row' alignItems='center' spacing={1.25}>
+          {typeof index === 'number' && (
+            <Box
+              sx={{
+                minWidth: 22,
+                height: 22,
+                borderRadius: '50%',
+                bgcolor: 'rgba(86, 137, 204, 1)',
+                color: 'primary.contrastText',
+                fontWeight: 500,
+                fontSize: 14,
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flex: '0 0 auto',
+              }}
+              aria-label={`index-${index}`}
+            >
+              {index}
+            </Box>
+          )}
+          <Typography
+            variant='h6'
+            sx={{
+              fontSize: { xs: 16, sm: 18 },
+              fontWeight: 700,
+              color: 'rgba(86, 137, 204, 1)',
+              flex: 1,
+              lineHeight: 1.4,
+            }}
+          >
+            {title}
+          </Typography>
+
+          <Button
+            size='small'
+            sx={{
+              color: 'rgba(194, 194, 194, 1)',
+            }}
+            variant='text'
+            startIcon={<BookIcon />}
+          >
+            {type}
+          </Button>
+        </Stack>
+
+        <Box
+          sx={{
+            position: 'relative',
+            mt: 1.25,
+            color: 'text.secondary',
+            fontSize: { xs: 14, sm: 15 },
+            lineHeight: 1.8,
+            overflow: 'hidden',
+            maxHeight: `${height}px`,
+            pr: 0.5,
+          }}
+        >
+          <Box
+            component='div'
+            sx={{ '& mark': { px: 0.25, borderRadius: 0.5 } }}
+            dangerouslySetInnerHTML={{
+              __html:
+                keywords && keywords.length > 0
+                  ? escapeHtml(content).replace(
+                      buildKeywordRegex(keywords) ?? /$^/,
+                      m =>
+                        `<mark style="color: rgba(255, 94, 124, 1);background: transparent">${m}</mark>`
+                    )
+                  : content,
+            }}
+          />
+        </Box>
+
+        <Stack
+          direction='column'
+          alignItems='center'
+          justifyContent='space-between'
+          sx={{ mt: 1 }}
+          spacing={1}
+        >
+          <Button
+            size='small'
+            aria-label='expand'
+            sx={{
+              alignSelf: 'center',
+              display: 'flex',
+              flexDirection: 'column',
+              color: 'rgba(84, 161, 209, 1)',
+            }}
+          >
+            展开
+            <ExpandMoreIcon
+              sx={{
+                transform: 'none',
+                transition: 'transform 200ms',
+              }}
+            />
+          </Button>
+          <Stack
+            direction='row'
+            spacing={1}
+            alignItems='center'
+            sx={{
+              width: '100%',
+              display: 'flex',
+              justifyContent: 'space-between',
+            }}
+          >
+            {from && (
+              <Typography variant='body2' sx={{ color: 'text.disabled' }}>
+                来源：{from}
+              </Typography>
+            )}
+            {url && (
+              <Tooltip title='查看原文' arrow>
+                <MuiLink
+                  href={url}
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  underline='hover'
+                  sx={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    color: 'rgba(130, 178, 232, 1)',
+                  }}
+                >
+                  <BookExpandIcon />
+                  <Typography
+                    sx={{
+                      ml: 0.5,
+                      fontSize: 13,
+                      color: 'rgba(130, 178, 232, 1)',
+                    }}
+                  >
+                    查看原文
+                  </Typography>
+                </MuiLink>
+              </Tooltip>
+            )}
+          </Stack>
+        </Stack>
+      </Box>
+    );
+  }
 
   return (
     <Box
@@ -133,7 +292,7 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
       </Stack>
 
       <Box
-        ref={contentRef}
+        ref={el => setContentElement(el as HTMLDivElement | null)}
         sx={{
           position: 'relative',
           mt: 1.25,

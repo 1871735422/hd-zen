@@ -73,13 +73,28 @@ export function BreadcrumbProvider({
 }) {
   const [extraBreadcrumb, setExtraBreadcrumbState] =
     useState<BreadcrumbItem | null>(null);
+  const [isClient, setIsClient] = useState(false);
 
-  const setExtraBreadcrumb = useCallback((item: BreadcrumbItem | null) => {
-    setExtraBreadcrumbState(item);
+  // 确保只在客户端运行
+  React.useEffect(() => {
+    setIsClient(true);
   }, []);
 
+  const setExtraBreadcrumb = useCallback(
+    (item: BreadcrumbItem | null) => {
+      if (!isClient) return;
+      setExtraBreadcrumbState(item);
+    },
+    [isClient]
+  );
+
+  // 服务端渲染时返回默认值
+  const contextValue = isClient
+    ? { extraBreadcrumb, setExtraBreadcrumb }
+    : { extraBreadcrumb: null, setExtraBreadcrumb: () => {} };
+
   return (
-    <BreadcrumbContext.Provider value={{ extraBreadcrumb, setExtraBreadcrumb }}>
+    <BreadcrumbContext.Provider value={contextValue}>
       {children}
     </BreadcrumbContext.Provider>
   );

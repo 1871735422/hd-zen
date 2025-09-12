@@ -1,6 +1,6 @@
 'use client';
 import { Box, IconButton, Slider, Typography } from '@mui/material';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import PauseIcon from '../icons/PauseIcon';
 import PlayIcon from '../icons/PlayIcon';
 import SpeakerIcon from '../icons/SpeakerIcon';
@@ -20,43 +20,101 @@ function formatTime(totalSeconds: number): string {
 }
 
 export default function AudioPlayer({ src }: AudioPlayerProps) {
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [isClient, setIsClient] = useState(false);
+
+  // 确保只在客户端运行
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   // Recreate audio when src changes
   useEffect(() => {
-    const audio = new Audio(src);
-    audioRef.current = audio;
-    audio.preload = 'metadata';
-    audio.addEventListener('loadedmetadata', () => {
-      setDuration(audio.duration || 0);
+    if (!isClient) return;
+
+    const audioElement = new Audio(src);
+    setAudio(audioElement);
+    audioElement.preload = 'metadata';
+    audioElement.addEventListener('loadedmetadata', () => {
+      setDuration(audioElement.duration || 0);
     });
-    audio.addEventListener('timeupdate', () => {
-      setCurrentTime(audio.currentTime || 0);
+    audioElement.addEventListener('timeupdate', () => {
+      setCurrentTime(audioElement.currentTime || 0);
     });
-    audio.addEventListener('ended', () => {
+    audioElement.addEventListener('ended', () => {
       setIsPlaying(false);
     });
     return () => {
-      audio.pause();
-      audio.src = '';
-      audioRef.current = null;
+      audioElement.pause();
+      audioElement.src = '';
+      setAudio(null);
       setIsPlaying(false);
       setCurrentTime(0);
       setDuration(0);
     };
-  }, [src]);
+  }, [src, isClient]);
 
   const progress = useMemo(() => {
     if (!duration || duration <= 0) return 0;
     return Math.min(100, Math.max(0, (currentTime / duration) * 100));
   }, [currentTime, duration]);
 
+  // 服务端渲染时返回静态内容
+  if (!isClient) {
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          width: '90%',
+          backgroundColor: 'rgba(242, 248, 255, 0.75)',
+          borderRadius: 999,
+          px: 2,
+          py: 1,
+          gap: 1.5,
+        }}
+      >
+        <IconButton aria-label='play' size='small' disabled>
+          <PlayIcon />
+        </IconButton>
+
+        <Typography
+          variant='body2'
+          color='text.secondary'
+          sx={{ minWidth: 40, textAlign: 'right' }}
+        >
+          0:00
+        </Typography>
+
+        <Box
+          sx={{
+            flex: 1,
+            height: 8,
+            backgroundColor: 'rgba(0,0,0,0.1)',
+            borderRadius: 4,
+          }}
+        />
+
+        <Typography
+          variant='body2'
+          color='text.secondary'
+          sx={{ minWidth: 52, textAlign: 'left' }}
+        >
+          0:00
+        </Typography>
+
+        <IconButton aria-label='mute' size='small' disabled>
+          <SpeakerIcon />
+        </IconButton>
+      </Box>
+    );
+  }
+
   const togglePlay = () => {
-    const audio = audioRef.current;
     if (!audio) return;
     if (isPlaying) {
       audio.pause();
@@ -71,7 +129,6 @@ export default function AudioPlayer({ src }: AudioPlayerProps) {
 
   const handleSliderChange = (_: Event, value: number | number[]) => {
     const v = Array.isArray(value) ? value[0] : value;
-    const audio = audioRef.current;
     if (!audio || !Number.isFinite(duration) || duration <= 0) return;
     const nextTime = (v / 100) * duration;
     setCurrentTime(nextTime);
@@ -82,14 +139,12 @@ export default function AudioPlayer({ src }: AudioPlayerProps) {
     value: number | number[]
   ) => {
     const v = Array.isArray(value) ? value[0] : value;
-    const audio = audioRef.current;
     if (!audio || !Number.isFinite(duration) || duration <= 0) return;
     const nextTime = (v / 100) * duration;
     audio.currentTime = nextTime;
   };
 
   const toggleMute = () => {
-    const audio = audioRef.current;
     if (!audio) return;
     audio.muted = !audio.muted;
     setIsMuted(audio.muted);

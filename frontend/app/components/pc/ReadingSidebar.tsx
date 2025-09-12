@@ -1,6 +1,15 @@
 'use client';
 import { Button, Stack } from '@mui/material';
-import React, { useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
+
+// 全局函数类型声明
+declare global {
+  interface Window {
+    handleModeChange?: (mode: 'paged' | 'full') => void;
+    onModeChange?: (mode: 'paged' | 'full') => void;
+  }
+}
 
 interface ReadingSidebarProps {
   defaultMode?: 'paged' | 'full';
@@ -10,11 +19,21 @@ export default function ReadingSidebar({
   defaultMode = 'paged',
 }: ReadingSidebarProps) {
   const [mode, setMode] = useState<'paged' | 'full'>(defaultMode);
+  const [isClient, setIsClient] = useState(false);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // 确保只在客户端运行
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const defaultBg = 'rgba(237, 246, 252, 1)';
   const activeBg = 'rgba(130, 178, 232, 1)';
 
   const handleIncreaseFont = () => {
+    if (typeof window === 'undefined') return;
+
     const elements = document.querySelectorAll('.reading-content');
     elements.forEach(element => {
       const currentSize = parseInt(getComputedStyle(element).fontSize);
@@ -24,6 +43,8 @@ export default function ReadingSidebar({
   };
 
   const handleDecreaseFont = () => {
+    if (typeof window === 'undefined') return;
+
     const elements = document.querySelectorAll('.reading-content');
     elements.forEach(element => {
       const currentSize = parseInt(getComputedStyle(element).fontSize);
@@ -35,25 +56,39 @@ export default function ReadingSidebar({
   const handleToggleMode = (next: 'paged' | 'full') => {
     setMode(next);
     // 调用全局函数来切换模式
-    if (typeof window !== 'undefined' && (window as any).handleModeChange) {
-      (window as any).handleModeChange(next);
+    if (typeof window !== 'undefined' && window.handleModeChange) {
+      window.handleModeChange(next);
     }
   };
 
+  const handleEnterReadingMode = () => {
+    if (typeof window === 'undefined') return;
+
+    // 添加readingMode参数到当前URL
+    const currentParams = new URLSearchParams(searchParams.toString());
+    currentParams.set('readingMode', 'true');
+    router.push(`?${currentParams.toString()}`);
+  };
+
   // 监听全局模式变化，同步本地状态
-  React.useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const handleGlobalModeChange = (newMode: 'paged' | 'full') => {
-        setMode(newMode);
-      };
+  useEffect(() => {
+    if (!isClient) return;
 
-      (window as any).onModeChange = handleGlobalModeChange;
+    const handleGlobalModeChange = (newMode: 'paged' | 'full') => {
+      setMode(newMode);
+    };
 
-      return () => {
-        delete (window as any).onModeChange;
-      };
-    }
-  }, []);
+    window.onModeChange = handleGlobalModeChange;
+
+    return () => {
+      delete window.onModeChange;
+    };
+  }, [isClient]);
+
+  // 服务端渲染时返回空内容
+  if (!isClient) {
+    return null;
+  }
 
   return (
     <Stack
@@ -71,19 +106,19 @@ export default function ReadingSidebar({
       }}
     >
       <Button
-        onClick={() => handleToggleMode('full')}
+        onClick={handleEnterReadingMode}
         disableElevation
         sx={{
           width: 60,
           height: 60,
           borderRadius: '50%',
-          bgcolor: mode === 'full' ? activeBg : defaultBg,
-          color: mode === 'full' ? '#fff' : '#2F7AD5',
+          bgcolor: activeBg,
+          color: '#fff',
           fontSize: 12,
           lineHeight: 1.15,
           minWidth: 0,
           textAlign: 'center',
-          '&:hover': { bgcolor: mode === 'full' ? activeBg : defaultBg },
+          '&:hover': { bgcolor: activeBg, opacity: 0.8 },
         }}
       >
         阅读

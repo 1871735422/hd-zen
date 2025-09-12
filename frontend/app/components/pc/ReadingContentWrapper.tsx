@@ -8,6 +8,13 @@ interface ReadingContentProps {
   fullText?: string;
 }
 
+// 定义 window 对象的扩展接口
+interface WindowWithReadingControls extends Window {
+  onModeChange?: (mode: 'paged' | 'full') => void;
+  handleIncreaseFont?: () => void;
+  handleDecreaseFont?: () => void;
+}
+
 export default function ReadingContent({
   introText,
   fullText,
@@ -177,8 +184,11 @@ export default function ReadingContent({
     setCurrentPage(1); // 切换模式时重置到第一页
 
     // 通知 ReadingSidebar 状态变化
-    if (typeof window !== 'undefined' && (window as any).onModeChange) {
-      (window as any).onModeChange(newMode);
+    if (
+      typeof window !== 'undefined' &&
+      (window as WindowWithReadingControls).onModeChange
+    ) {
+      (window as WindowWithReadingControls).onModeChange!(newMode);
     }
   };
 
@@ -203,9 +213,11 @@ export default function ReadingContent({
 
   // 将字体控制函数暴露到全局，供 ReadingSidebar 调用
   if (typeof window !== 'undefined') {
-    (window as any).handleIncreaseFont = handleIncreaseFont;
-    (window as any).handleDecreaseFont = handleDecreaseFont;
-    (window as any).handleModeChange = handleModeChange;
+    (window as WindowWithReadingControls).handleIncreaseFont =
+      handleIncreaseFont;
+    (window as WindowWithReadingControls).handleDecreaseFont =
+      handleDecreaseFont;
+    (window as WindowWithReadingControls).handleModeChange = handleModeChange;
   }
 
   // 如果不在客户端，不渲染任何内容（让服务端内容显示）

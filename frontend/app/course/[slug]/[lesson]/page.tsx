@@ -16,7 +16,8 @@ interface LessonPageProps {
 
 const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
   const resolvedParams = await params;
-  const { tab: selectedKey } = await searchParams;
+  const resolvedSearchParams = await searchParams;
+  const { tab: selectedKey } = resolvedSearchParams;
   const courseOrder = resolvedParams.slug;
   const lessonOrder = resolvedParams.lesson?.replace('lesson', '');
   const res = await getTopicMediaByOrder(courseOrder, lessonOrder);
@@ -28,8 +29,12 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
 
   const TabRender = () => {
     if (selectedKey === 'audio') return <AudioPage topicMedia={topicMedia} />;
-    if (selectedKey === 'reading')
-      return <ReadingPage topicMedia={topicMedia} />;
+    if (selectedKey === 'reading') {
+      const isReadingMode = resolvedSearchParams.readingMode === 'true';
+      return (
+        <ReadingPage topicMedia={topicMedia} isReadingMode={isReadingMode} />
+      );
+    }
 
     const downloadUrls = topicMedia
       .map(media => media.media?.url_downmp4)
