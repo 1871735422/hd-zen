@@ -16,10 +16,14 @@ export default [
   {
     files: ['**/*.{js,jsx,ts,tsx}'],
     plugins: {
+      '@typescript-eslint': tseslint,
+      prettier,
+      'unused-imports': unusedImports,
       '@next/next': nextPlugin,
-    },
-    rules: {
-      ...nextPlugin.configs.recommended.rules,
+      react: reactPlugin,
+      'react-hooks': reactHooksPlugin,
+      'jsx-a11y': jsxA11yPlugin,
+      import: importPlugin,
     },
     languageOptions: {
       globals: {
@@ -46,22 +50,13 @@ export default [
         },
       },
     },
-    plugins: {
-      '@typescript-eslint': tseslint,
-      prettier,
-      'unused-imports': unusedImports,
-      '@next/next': nextPlugin,
-      react: reactPlugin,
-      'react-hooks': reactHooksPlugin,
-      'jsx-a11y': jsxA11yPlugin,
-      import: importPlugin,
-    },
     rules: {
       ...tseslint.configs.recommended.rules,
       ...prettierConfig.rules,
       ...reactPlugin.configs.recommended.rules,
       ...reactHooksPlugin.configs.recommended.rules,
       ...jsxA11yPlugin.configs.recommended.rules,
+      ...nextPlugin.configs.recommended.rules,
       'react-hooks/exhaustive-deps': 'off', // 禁用依赖检测
       'prettier/prettier': 'error',
       'unused-imports/no-unused-imports': 'error',
@@ -80,12 +75,6 @@ export default [
       'no-console': 'off',
       'no-debugger': 'error',
       'no-undef': 'error',
-
-      // Next.js rules
-      '@next/next/no-html-link-for-pages': 'error',
-      '@next/next/no-img-element': 'warn',
-      '@next/next/no-sync-scripts': 'error',
-      '@next/next/no-typos': 'warn',
 
       // React rules
       'react/no-unknown-property': 'off',
