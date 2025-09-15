@@ -6,7 +6,6 @@ import { notFound } from 'next/navigation';
 import { Fragment } from 'react';
 import AudioPage from '../../../components/pc/AudioPage';
 import LessonMeta from '../../../components/pc/LessonMeta';
-import ReadingPage from '../../../components/pc/ReadingPage';
 
 interface LessonPageProps {
   params: Promise<{ slug: string; lesson: string }>;
@@ -29,8 +28,6 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
 
   const TabRender = () => {
     if (selectedKey === 'audio') return <AudioPage topicMedia={topicMedia} />;
-    if (selectedKey === 'reading')
-      return <ReadingPage topicMedia={topicMedia} />;
 
     return (
       <>

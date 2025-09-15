@@ -1,7 +1,5 @@
-import { getCourseTopicById } from '@/app/api';
 import { Box, Paper, Typography } from '@mui/material';
-import { notFound } from 'next/navigation';
-import { TopicMedia } from '../../types/models';
+import { CourseTopic, TopicMedia } from '../../types/models';
 import Article from '../shared/Article';
 import ScrollTop from '../shared/ScrollTop';
 import AudioPage from './AudioPage';
@@ -10,19 +8,17 @@ import ReadingModePage from './ReadingModePage';
 import ReadingSidebar from './ReadingSidebar';
 
 interface ReadingPageProps {
+  topic: CourseTopic;
   topicMedia: TopicMedia[];
   isReadingMode?: boolean;
 }
 
 export default async function ReadingPage({
+  topic,
   topicMedia,
   isReadingMode = false,
 }: ReadingPageProps) {
-  const topic = await getCourseTopicById('m0e40evoc9p2c7z');
-
-  if (!topic) {
-    notFound();
-  }
+  const topicTags = topicMedia[0]?.media?.tags;
 
   const hasContent = topic.article_fulltext || topic.article_introtext;
 
@@ -38,7 +34,7 @@ export default async function ReadingPage({
 
   // 如果是阅读模式，渲染专门的阅读模式组件
   if (isReadingMode) {
-    const tags = topic.tags ? topic.tags.split(',').map(tag => tag.trim()) : [];
+    const tags = topicTags ? topicTags.map(tag => tag.trim()) : [];
     const content = `${topic.article_introtext || ''}${topic.article_fulltext || ''}`;
 
     return (

@@ -3,12 +3,12 @@
 import PocketBase from 'pocketbase';
 import { Menu } from '../components/pc/MenuItem';
 import {
-  Category,
-  Course,
-  CourseTopic,
-  Media,
-  PaginatedResponse,
-  TopicMedia,
+    Category,
+    Course,
+    CourseTopic,
+    Media,
+    PaginatedResponse,
+    TopicMedia,
 } from '../types/models';
 
 // Initialize PocketBase using environment variable
@@ -305,6 +305,28 @@ export const getCourseTopicById = async (
     const record = await pb.collection('courseTopics').getOne(topicId, {
       expand: 'courseId',
     });
+    return mapRecordToCourseTopic(record);
+  } catch (error) {
+    // Handle error silently in server-side context
+    return null;
+  }
+};
+
+export const getCourseTopicByOrder = async (
+  courseOrder: string,
+  lessonOrder: string
+): Promise<CourseTopic | null> => {
+  try {
+    const record = await pb.collection('courseTopics').getFirstListItem(
+      [
+        'courseId.displayOrder = ' + courseOrder,
+        'ordering = ' + lessonOrder,
+      ].join(' && '),
+      {
+        expand: 'courseId',
+      }
+    );
+
     return mapRecordToCourseTopic(record);
   } catch (error) {
     // Handle error silently in server-side context

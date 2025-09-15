@@ -1,9 +1,10 @@
 import MediaDownloadButton from '@/app/components/pc/MediaDownloadButton';
 import VideoPlayer from '@/app/components/pc/VideoPlayer';
+import NotFound from '@/app/not-found';
 import { Box, Typography } from '@mui/material';
 import { notFound } from 'next/navigation';
 import { Fragment } from 'react';
-import { getTopicMediaByOrder } from '../../../api';
+import { getCourseTopicByOrder, getTopicMediaByOrder } from '../../../api';
 import AudioPage from '../../../components/pc/AudioPage';
 import LessonMeta from '../../../components/pc/LessonMeta';
 import LessonSidebar from '../../../components/pc/LessonSidebar';
@@ -20,8 +21,16 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
   const { tab: selectedKey } = resolvedSearchParams;
   const courseOrder = resolvedParams.slug;
   const lessonOrder = resolvedParams.lesson?.replace('lesson', '');
-  const res = await getTopicMediaByOrder(courseOrder, lessonOrder);
-  const topicMedia = res?.items;
+
+  // 总是需要获取 topicMedia 数据
+  const topicMediaRes = await getTopicMediaByOrder(courseOrder, lessonOrder);
+  const topicMedia = topicMediaRes?.items;
+
+  // 仅在 reading tab 时获取 topic 数据
+  const topic =
+    selectedKey === 'reading'
+      ? await getCourseTopicByOrder(courseOrder, lessonOrder)
+      : null;
 
   if (!topicMedia) {
     notFound();
@@ -32,9 +41,17 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
   const TabRender = () => {
     if (selectedKey === 'audio') return <AudioPage topicMedia={topicMedia} />;
     if (selectedKey === 'reading') {
+      if (!topic) {
+        return <NotFound />;
+      }
+
       const isReadingMode = resolvedSearchParams.readingMode === 'true';
       return (
-        <ReadingPage topicMedia={topicMedia} isReadingMode={isReadingMode} />
+        <ReadingPage
+          topic={topic}
+          topicMedia={topicMedia}
+          isReadingMode={isReadingMode}
+        />
       );
     }
 
