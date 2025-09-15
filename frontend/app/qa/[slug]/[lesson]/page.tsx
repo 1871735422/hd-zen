@@ -25,6 +25,8 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
     notFound();
   }
 
+  const topicTags = topicMedia[0]?.media?.tags;
+
   const TabRender = () => {
     if (selectedKey === 'audio') return <AudioPage topicMedia={topicMedia} />;
     if (selectedKey === 'reading')
@@ -66,11 +68,7 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
         <LessonMeta
           title={topicMedia[0]?.media!.title}
           tags={
-            topicMedia[0]?.media!.tags
-              ? topicMedia[0].media.tags
-                  .split(',')
-                  .map((tag: string) => tag.trim())
-              : []
+            topicTags?.length ? topicTags.map((tag: string) => tag.trim()) : []
           }
           description={topicMedia[0]?.media!.summary ?? ''}
           author='作者：慈诚罗珠堪布'
