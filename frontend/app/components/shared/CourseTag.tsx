@@ -30,10 +30,16 @@ const StyledChip = styled(Chip, {
   },
 }));
 
-const CourseTag: React.FC<CourseTagProps> = ({ active = false, ...rest }) => {
+const CourseTag: React.FC<CourseTagProps> = ({
+  active = false,
+  label,
+  ...rest
+}) => {
   return (
     <StyledChip
+      onClick={() => console.log(label)}
       active={active}
+      label={label}
       variant={active ? 'filled' : 'outlined'}
       {...rest}
     />

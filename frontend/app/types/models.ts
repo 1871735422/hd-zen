@@ -42,7 +42,7 @@ export interface Media extends BaseModel {
   url_downmp3?: string;
   mp3_size?: string;
   summary?: string;
-  tags?: string;
+  tags?: string[];
   assetId?: string;
 
   // Legacy fields for backward compatibility

@@ -18,8 +18,6 @@ export default function LessonMeta({
   author,
   date,
 }: LessonMetaProps) {
-  const tagList = tags[0]?.split('、');
-
   return (
     <Box sx={{ mt: 3 }}>
       <Typography
@@ -32,72 +30,71 @@ export default function LessonMeta({
       >
         {title}
       </Typography>
-      {description ||
-        (tagList?.length && (
-          <Box
-            sx={{
-              backgroundImage: 'url(/images/course-desc-bg.webp)',
-              backgroundPositionY: '40%',
-              borderRadius: 6,
-              p: 3,
-              boxShadow: '0 2px 16px 0 rgba(0,0,0,0.06)',
-              position: 'relative',
-              backdropFilter: 'blur(12px)',
-              WebkitBackdropFilter: 'blur(12px)',
-              overflow: 'hidden',
-              border: '1px solid #e3eaf2',
-            }}
-          >
-            {tagList && (
-              <Stack
-                direction='row'
-                spacing={1}
-                mb={1}
-                alignItems='center'
-                flexWrap='wrap'
-              >
-                <Typography
-                  variant='subtitle1'
-                  color='rgba(102, 102, 102, 1)'
-                  fontWeight={500}
-                  sx={{ fontSize: 16 }}
-                >
-                  标签：
-                </Typography>
-                {tagList.map((tag, idx) => (
-                  <Fragment key={idx}>
-                    <CourseTag label={tag} />
-                  </Fragment>
-                ))}
-              </Stack>
-            )}
-            <Box display='flex' alignItems='flex-start'>
+      {description && (
+        <Box
+          sx={{
+            backgroundImage: 'url(/images/course-desc-bg.webp)',
+            backgroundPositionY: '40%',
+            borderRadius: 6,
+            p: 3,
+            boxShadow: '0 2px 16px 0 rgba(0,0,0,0.06)',
+            position: 'relative',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+            overflow: 'hidden',
+            border: '1px solid #e3eaf2',
+          }}
+        >
+          {tags && (
+            <Stack
+              direction='row'
+              spacing={1}
+              mb={1}
+              alignItems='center'
+              flexWrap='wrap'
+            >
               <Typography
                 variant='subtitle1'
                 color='rgba(102, 102, 102, 1)'
                 fontWeight={500}
-                sx={{ fontSize: 16, minWidth: 60 }}
+                sx={{ fontSize: 16 }}
               >
-                问题：
+                标签：
               </Typography>
-              <Typography
-                variant='body1'
-                color='rgba(102, 102, 102, 1)'
-                sx={{
-                  fontSize: 16,
-                  lineHeight: 1.7,
-                  display: '-webkit-box',
-                  WebkitBoxOrient: 'vertical',
-                  WebkitLineClamp: 2,
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                }}
-              >
-                {description}
-              </Typography>
-            </Box>
+              {tags.map((tag, idx) => (
+                <Fragment key={idx}>
+                  <CourseTag label={tag} />
+                </Fragment>
+              ))}
+            </Stack>
+          )}
+          <Box display='flex' alignItems='flex-start'>
+            <Typography
+              variant='subtitle1'
+              color='rgba(102, 102, 102, 1)'
+              fontWeight={500}
+              sx={{ fontSize: 16, minWidth: 60 }}
+            >
+              问题：
+            </Typography>
+            <Typography
+              variant='body1'
+              color='rgba(102, 102, 102, 1)'
+              sx={{
+                fontSize: 16,
+                lineHeight: 1.7,
+                display: '-webkit-box',
+                WebkitBoxOrient: 'vertical',
+                WebkitLineClamp: 2,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+              }}
+            >
+              {description}
+            </Typography>
           </Box>
-        ))}
+        </Box>
+      )}
       <Box mt={1} mb={2}>
         <Typography
           variant='subtitle2'
