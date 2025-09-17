@@ -3,44 +3,28 @@ import Chip, { ChipProps } from '@mui/material/Chip';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
-interface CourseTagProps extends ChipProps {
-  /**
-   * active = true 时显示填充（filled）样式
-   * active = false 时显示描边（outlined）样式
-   */
-  active?: boolean;
-}
-
-const StyledChip = styled(Chip, {
-  shouldForwardProp: prop => prop !== 'active',
-})<CourseTagProps>(({ theme, active }) => ({
+const StyledChip = styled(Chip)(() => ({
   borderRadius: '20px',
   height: 'auto',
   border: 'none',
-  backgroundColor: active ? theme.palette.primary.main : '#fff',
-  color: active ? '#fff' : '#8BA2B0',
+  backgroundColor: '#fff',
+  color: '#8BA2B0',
+  cursor: 'pointer',
   '&:hover': {
-    backgroundColor: active
-      ? theme.palette.primary.dark
-      : theme.palette.action.hover,
-    cursor: 'pointer',
+    color: '#fff',
+    backgroundColor: '#A5C9F2',
   },
   '& .MuiChip-label': {
     padding: '3px 8px',
   },
 }));
 
-const CourseTag: React.FC<CourseTagProps> = ({
-  active = false,
-  label,
-  ...rest
-}) => {
+const CourseTag: React.FC<ChipProps> = ({ label, ...rest }) => {
   return (
     <StyledChip
       onClick={() => console.log(label)}
-      active={active}
       label={label}
-      variant={active ? 'filled' : 'outlined'}
+      variant={'filled'}
       {...rest}
     />
   );

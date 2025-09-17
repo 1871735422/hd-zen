@@ -1,11 +1,37 @@
 'use client';
 import { Box, Button, IconButton, Stack } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import LineSpaceDecreaseIcon from '../icons/LineSpaceDecreaseIcon';
+import LineSpaceIncreaseIcon from '../icons/LineSpaceIncreaseIcon';
 import SettingIcon from '../icons/SettingIcon';
 import {
-  BACKGROUND_THEMES,
   BackgroundTheme,
+  READING_THEMES,
   useReadingMode,
 } from './ReadingModeProvider';
+
+// 可复用的圆形按钮样式
+const CircleButton = styled(Button)(() => ({
+  width: 36,
+  height: 36,
+  minWidth: 0,
+  borderRadius: '50%',
+  fontSize: '16px',
+  '&:hover': {
+    opacity: 0.8,
+  },
+}));
+
+// 主题颜色选择按钮
+const ThemeColorButton = styled(Button)(() => ({
+  width: 12,
+  height: 12,
+  minWidth: 0,
+  borderRadius: '50%',
+  '&:hover': {
+    opacity: 0.8,
+  },
+}));
 
 interface ReadingModeSidebarProps {
   onExitReadingMode?: () => void;
@@ -21,205 +47,219 @@ export default function ReadingModeSidebar({
     decreaseFontSize,
     increaseLineSpacing,
     decreaseLineSpacing,
+    toggleSidebar,
+    toggleFontWeight,
   } = useReadingMode();
 
-  const sidebarBg = 'rgba(248, 248, 248, 0.95)';
-  const buttonBg = 'rgba(255, 255, 255, 0.8)';
-  const activeBg = 'rgba(66, 66, 66, 1)';
-  const textColor = 'rgba(66, 66, 66, 1)';
-  const activeTextColor = 'rgba(255, 255, 255, 1)';
+  const sidebarBg = READING_THEMES[state.backgroundTheme].sidebar_bg;
+  const sidebarText = READING_THEMES[state.backgroundTheme].sidebar_text;
+  const sidebarBackBg = READING_THEMES[state.backgroundTheme].sidebar_back_bg;
+  const buttonBg = READING_THEMES[state.backgroundTheme].sidebar_btn_bg;
 
   const backgroundThemes: {
     theme: BackgroundTheme;
     color: string;
     label: string;
   }[] = [
-    { theme: 'white', color: BACKGROUND_THEMES.white, label: '白色' },
-    { theme: 'gray', color: BACKGROUND_THEMES.gray, label: '灰色' },
-    { theme: 'dark', color: BACKGROUND_THEMES.dark, label: '深色' },
-    { theme: 'green', color: BACKGROUND_THEMES.green, label: '护眼' },
+    { theme: 'white', color: READING_THEMES.white.main, label: '白' },
+    { theme: 'gray', color: READING_THEMES.gray.main, label: '棕' },
+    { theme: 'dark', color: READING_THEMES.dark.main, label: '黑' },
+    { theme: 'green', color: READING_THEMES.green.main, label: '绿' },
   ];
 
   return (
     <Box
       sx={{
-        position: 'fixed',
-        right: 0,
-        top: '50%',
-        transform: 'translateY(-50%)',
-        width: 60,
-        backgroundColor: sidebarBg,
-        borderRadius: '30px 0 0 30px',
-        padding: '20px 0',
+        position: 'absolute',
+        right: '-45px',
+        top: '40px',
         zIndex: 1000,
-        boxShadow: '0 0 20px rgba(0, 0, 0, 0.1)',
-        borderLeft: '3px solid rgba(66, 66, 66, 0.1)',
       }}
     >
-      <Stack spacing={3} alignItems='center'>
-        {/* 设置图标 */}
-        <IconButton sx={{ color: 'green' }}>
-          <SettingIcon />
-        </IconButton>
-        {/* 背景色选择器 */}
-        <Stack spacing={1} alignItems='center'>
-          {backgroundThemes.map(({ theme, color, label }) => (
-            <Button
-              key={theme}
-              onClick={() => setBackgroundTheme(theme)}
+      {/* 主工具栏 - 根据收起状态调整高度 */}
+      <Box
+        sx={{
+          width: 45,
+          zIndex: 1000,
+          backgroundColor: sidebarBg,
+          borderRadius: '0 20px 20px 0',
+          padding: state.sidebarCollapsed ? '5px 0' : '6px 0',
+          height: state.sidebarCollapsed ? 40 : 'auto',
+          boxShadow: `0px 2px 4px ${sidebarBg.replace('1)', '0.25)')}`,
+          display: 'flex',
+          alignItems: state.sidebarCollapsed ? 'center' : 'flex-start',
+          justifyContent: 'center',
+          transition: 'all 0.3s ease',
+        }}
+      >
+        {state.sidebarCollapsed ? (
+          /* 收起状态 - 仅显示设置按钮 */
+          <IconButton
+            onClick={toggleSidebar}
+            sx={{
+              color: sidebarText,
+              borderRadius: '15px',
+              width: 30,
+              height: 30,
+              '&:hover': {
+                opacity: 0.8,
+              },
+            }}
+          >
+            <SettingIcon />
+          </IconButton>
+        ) : (
+          /* 展开状态 - 垂直排列所有按钮 */
+          <Stack
+            alignItems='center'
+            sx={{
+              '& .MuiButton-text': {
+                color: sidebarText,
+                backgroundColor: buttonBg,
+              },
+            }}
+          >
+            {/* 设置按钮 */}
+            <IconButton
+              onClick={toggleSidebar}
               sx={{
-                width: 32,
-                height: 32,
-                minWidth: 0,
-                borderRadius: '50%',
-                backgroundColor: color,
-                border:
-                  state.backgroundTheme === theme
-                    ? `2px solid ${activeBg}`
-                    : '2px solid transparent',
+                width: 40,
+                height: 40,
+                color: sidebarText,
                 '&:hover': {
                   opacity: 0.8,
                 },
               }}
-              title={label}
-            />
-          ))}
-        </Stack>
+            >
+              <SettingIcon />
+            </IconButton>
 
-        {/* 字体大小调整 */}
-        <Stack spacing={1} alignItems='center'>
-          <Button
-            onClick={increaseFontSize}
-            sx={{
-              width: 40,
-              height: 40,
-              minWidth: 0,
-              borderRadius: '50%',
-              backgroundColor: buttonBg,
-              color: textColor,
-              fontSize: '16px',
-              fontWeight: 'bold',
-              '&:hover': {
+            {/* 四个颜色选择框 - 框在一起有单独背景 */}
+            <Box
+              sx={{
                 backgroundColor: buttonBg,
-                opacity: 0.8,
-              },
-            }}
-            title='增大字体'
-          >
-            A+
-          </Button>
+                borderRadius: '20px',
+                padding: '12px',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '6px',
+              }}
+            >
+              {backgroundThemes.map(({ theme, color, label }) => (
+                <ThemeColorButton
+                  key={theme}
+                  onClick={() => setBackgroundTheme(theme)}
+                  sx={{
+                    backgroundColor: `${color} !important`,
+                    border:
+                      state.backgroundTheme === theme
+                        ? `1px solid ${sidebarText}`
+                        : 'none',
+                  }}
+                  title={label}
+                />
+              ))}
+            </Box>
 
-          <Button
-            onClick={decreaseFontSize}
-            sx={{
-              width: 40,
-              height: 40,
-              minWidth: 0,
-              borderRadius: '50%',
-              backgroundColor: buttonBg,
-              color: textColor,
-              fontSize: '16px',
-              fontWeight: 'bold',
-              '&:hover': {
-                backgroundColor: buttonBg,
-                opacity: 0.8,
-              },
-            }}
-            title='减小字体'
-          >
-            A-
-          </Button>
+            {/* 字体大小调整 */}
+            <Stack spacing={0.8} alignItems='center'>
+              <CircleButton onClick={increaseFontSize} title='增大字体'>
+                A+
+              </CircleButton>
 
-          <Button
-            sx={{
-              width: 40,
-              height: 40,
-              minWidth: 0,
-              borderRadius: '50%',
-              backgroundColor: buttonBg,
-              color: textColor,
-              fontSize: '16px',
-              fontWeight: 'bold',
-              '&:hover': {
-                backgroundColor: buttonBg,
-                opacity: 0.8,
-              },
-            }}
-            title='默认字体'
-          >
-            B
-          </Button>
-        </Stack>
+              <CircleButton onClick={decreaseFontSize} title='减小字体'>
+                A-
+              </CircleButton>
 
-        {/* 行间距调整 */}
-        <Stack spacing={1} alignItems='center'>
-          <Button
-            onClick={increaseLineSpacing}
-            sx={{
-              width: 40,
-              height: 40,
-              minWidth: 0,
-              borderRadius: '50%',
-              backgroundColor: buttonBg,
-              color: textColor,
-              fontSize: '16px',
-              '&:hover': {
-                backgroundColor: buttonBg,
-                opacity: 0.8,
-              },
-            }}
-            title='增加行间距'
-          >
-            ⇅
-          </Button>
+              <CircleButton
+                onClick={toggleFontWeight}
+                sx={{
+                  fontWeight: state.fontWeight === 'bold' ? 'bold' : 'normal',
+                  backgroundColor:
+                    state.fontWeight === 'bold' ? sidebarText : buttonBg,
+                  color: state.fontWeight === 'bold' ? sidebarBg : sidebarText,
+                }}
+                title='字体加粗'
+              >
+                B
+              </CircleButton>
+            </Stack>
 
-          <Button
-            onClick={decreaseLineSpacing}
-            sx={{
-              width: 40,
-              height: 40,
-              minWidth: 0,
-              borderRadius: '50%',
-              backgroundColor: buttonBg,
-              color: textColor,
-              fontSize: '16px',
-              '&:hover': {
-                backgroundColor: buttonBg,
-                opacity: 0.8,
-              },
-            }}
-            title='减少行间距'
-          >
-            ⇅
-          </Button>
-        </Stack>
+            {/* 行间距调整 */}
+            <Stack spacing={0.8} alignItems='center'>
+              <CircleButton
+                onClick={increaseLineSpacing}
+                title='增加行间距'
+                sx={{
+                  '& .MuiSvgIcon-root': {
+                    fontSize: '1em',
+                  },
+                }}
+              >
+                <LineSpaceIncreaseIcon />
+              </CircleButton>
 
-        {/* 返回按钮 */}
+              <CircleButton
+                onClick={decreaseLineSpacing}
+                title='减少行间距'
+                sx={{
+                  '& .MuiSvgIcon-root': {
+                    fontSize: '1em',
+                  },
+                }}
+              >
+                <LineSpaceDecreaseIcon />
+              </CircleButton>
+            </Stack>
+          </Stack>
+        )}
+      </Box>
+
+      {/* 返回按钮 - 独立于边栏下方 */}
+      <Box sx={{ position: 'relative' }}>
         <Button
-          onClick={onExitReadingMode}
           sx={{
-            width: 50,
-            height: 50,
+            width: 40,
+            height: 57,
             minWidth: 0,
-            borderRadius: '50%',
-            backgroundColor: activeBg,
-            color: activeTextColor,
-            fontSize: '12px',
+            pt: 1,
+            borderRadius: '0 0 20px 0',
+            backgroundColor: sidebarBackBg,
+            color: sidebarText,
+            fontSize: '13px',
             fontWeight: 'bold',
             writingMode: 'vertical-rl',
             textOrientation: 'mixed',
             transition: 'all 0.3s ease',
+            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+            marginTop: -1,
+            zIndex: -1,
+            pointerEvents: 'none',
             '&:hover': {
-              backgroundColor: activeBg,
               opacity: 0.8,
-              transform: 'scale(1.05)',
             },
           }}
           title='退出阅读模式'
         >
           返回
         </Button>
-      </Stack>
+        {/* 透明的点击层 */}
+        <Box
+          onClick={onExitReadingMode}
+          sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: 40,
+            height: 57,
+            zIndex: 1,
+            cursor: 'pointer',
+            backgroundColor: 'transparent',
+          }}
+          title='退出阅读模式'
+        />
+      </Box>
     </Box>
   );
 }

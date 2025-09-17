@@ -1,5 +1,4 @@
 import { Stack, Typography } from '@mui/material';
-import React from 'react';
 
 interface TitleBannerProps {
   title: string;
@@ -7,7 +6,15 @@ interface TitleBannerProps {
 }
 function TitleBanner({ title, subTitle }: TitleBannerProps) {
   return (
-    <Stack sx={{ pt: 4, mb: 6, flexDirection: 'row', alignItems: 'flex-end' }}>
+    <Stack
+      sx={{
+        pt: 4,
+        mb: 6,
+        flexDirection: 'row',
+        alignItems: 'flex-end',
+        cursor: 'pointer',
+      }}
+    >
       <Typography
         variant='h2'
         className='fz-quanfu'

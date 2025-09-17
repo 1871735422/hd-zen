@@ -1,13 +1,16 @@
 'use client';
 import { createContext, ReactNode, useContext, useState } from 'react';
+import { READING_THEMES, ReadingTheme } from '../../constants/colors';
 
-export type BackgroundTheme = 'white' | 'gray' | 'dark' | 'green';
+export type BackgroundTheme = ReadingTheme;
 
 export interface ReadingModeState {
   backgroundTheme: BackgroundTheme;
   fontSize: number;
   lineSpacing: number;
   mode: 'paged' | 'full';
+  sidebarCollapsed: boolean; // 侧边栏收起状态
+  fontWeight: 'normal' | 'bold'; // 字体粗细
 }
 
 interface ReadingModeContextType {
@@ -20,24 +23,21 @@ interface ReadingModeContextType {
   decreaseFontSize: () => void;
   increaseLineSpacing: () => void;
   decreaseLineSpacing: () => void;
+  toggleSidebar: () => void; // 切换侧边栏收起状态
+  toggleFontWeight: () => void; // 切换字体粗细
 }
 
 const ReadingModeContext = createContext<ReadingModeContextType | undefined>(
   undefined
 );
 
-const BACKGROUND_THEMES = {
-  white: 'rgba(255, 255, 255, 1)',
-  gray: 'rgba(219, 206, 191, 1)',
-  dark: 'rgba(66, 66, 66, 1)',
-  green: 'rgba(242, 250, 240, 1)',
-} as const;
-
 const DEFAULT_STATE: ReadingModeState = {
   backgroundTheme: 'white',
   fontSize: 16,
   lineSpacing: 1.8,
   mode: 'paged',
+  sidebarCollapsed: false,
+  fontWeight: 'normal',
 };
 
 interface ReadingModeProviderProps {
@@ -87,6 +87,20 @@ export function ReadingModeProvider({ children }: ReadingModeProviderProps) {
     }));
   };
 
+  const toggleSidebar = () => {
+    setState(prev => ({
+      ...prev,
+      sidebarCollapsed: !prev.sidebarCollapsed,
+    }));
+  };
+
+  const toggleFontWeight = () => {
+    setState(prev => ({
+      ...prev,
+      fontWeight: prev.fontWeight === 'normal' ? 'bold' : 'normal',
+    }));
+  };
+
   const value: ReadingModeContextType = {
     state,
     setBackgroundTheme,
@@ -97,6 +111,8 @@ export function ReadingModeProvider({ children }: ReadingModeProviderProps) {
     decreaseFontSize,
     increaseLineSpacing,
     decreaseLineSpacing,
+    toggleSidebar,
+    toggleFontWeight,
   };
 
   return (
@@ -114,4 +130,4 @@ export function useReadingMode() {
   return context;
 }
 
-export { BACKGROUND_THEMES };
+export { READING_THEMES };

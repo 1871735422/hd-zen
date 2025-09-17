@@ -4,7 +4,6 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import ReadingModeContainer from './ReadingModeContainer';
 import { ReadingModeProvider } from './ReadingModeProvider';
-import ReadingModeSidebar from './ReadingModeSidebar';
 
 interface ReadingModePageProps {
   title: string;
@@ -106,8 +105,8 @@ export default function ReadingModePage({
           author={author}
           date={date}
           content={content}
+          onExitReadingMode={handleExitReadingMode}
         />
-        <ReadingModeSidebar onExitReadingMode={handleExitReadingMode} />
       </Box>
     </ReadingModeProvider>
   );
