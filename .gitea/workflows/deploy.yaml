@@ -31,10 +31,10 @@ jobs:
         run: corepack enable pnpm
 
       - name: 安装依赖
-        run: pnpm install --frozen-lockfile
+        run: cd frontend && pnpm install --frozen-lockfile
 
       - name: 构建项目
-        run: pnpm build
+        run: cd frontend && pnpm build
         env:
           NODE_ENV: production
 
@@ -45,10 +45,9 @@ jobs:
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           source: |
-            .next/
-            public/
-            package.json
-            next.config.ts
+            frontend/.next/standalone/
+            frontend/.next/static/
+            frontend/public/
           target: "/opt/hd-zen-web/"
 
       - name: 重启服务
@@ -60,10 +59,7 @@ jobs:
           script: |
             cd /opt/hd-zen-web
 
-            # 安装生产依赖
-            npm install --production --no-optional
-
             # 重启 PM2 服务
-            pm2 restart hd-zen-web || pm2 start server.js --name hd-zen-web --port 3011
+            pm2 restart hd-zen-web || pm2 start .next/standalone/server.js --name hd-zen-web --port 3011
 
             echo "✅ 部署完成"
