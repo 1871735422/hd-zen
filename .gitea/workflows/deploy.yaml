@@ -19,10 +19,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 检出代码
-        uses: actions/checkout@v4
+        uses: http://localhost:60093/hd/checkout@v4
 
       - name: 设置 Node.js
-        uses: actions/setup-node@v4
+        uses: http://localhost:60093/hd/setup-node@v4
         with:
           node-version: '24'
           cache: 'pnpm'
@@ -59,7 +59,7 @@ jobs:
           script: |
             cd /opt/hd-zen-web
 
-            # 重启 PM2 服务
-            pm2 restart hd-zen-web || pm2 start .next/standalone/server.js --name hd-zen-web --port 3011
+            # 重新加载 PM2 服务（零停机时间）
+            pm2 reload hd-zen-web || pm2 start .next/standalone/server.js --name hd-zen-web --port 3011
 
             echo "✅ 部署完成"
