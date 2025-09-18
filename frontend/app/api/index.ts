@@ -393,12 +393,15 @@ export const getTopicMediaByOrder = async (
   lessonOrder: string
 ): Promise<PaginatedResponse<TopicMedia> | null> => {
   try {
+    // 增加超时时间和错误处理
     const result = await pb.collection('topicMedia').getList(1, 10, {
       filter: [
         'topicId.courseId.displayOrder = ' + courseOrder,
         'topicId.ordering = ' + lessonOrder,
       ].join(' && '),
       expand: 'topicId, mediaId, topicId.courseId',
+      requestKey: null, // Disable auto-cancellation
+      timeout: 30000, // 30秒超时
     });
 
     return {
@@ -406,8 +409,39 @@ export const getTopicMediaByOrder = async (
       items: result.items.map(mapRecordToTopicMedia),
     };
   } catch (error) {
-    console.error(error);
-    return null;
+    console.error(
+      `Error fetching topicMedia for course ${courseOrder}, lesson ${lessonOrder}:`,
+      error
+    );
+
+    // 尝试简化查询作为降级方案
+    try {
+      console.log(
+        `Trying simplified query for course ${courseOrder}, lesson ${lessonOrder}`
+      );
+      const simplifiedResult = await pb
+        .collection('topicMedia')
+        .getList(1, 10, {
+          filter: [
+            'topicId.courseId.displayOrder = ' + courseOrder,
+            'topicId.ordering = ' + lessonOrder,
+          ].join(' && '),
+          expand: 'mediaId', // 只展开 mediaId，减少查询复杂度
+          requestKey: null,
+          timeout: 15000, // 15秒超时
+        });
+
+      return {
+        ...simplifiedResult,
+        items: simplifiedResult.items.map(mapRecordToTopicMedia),
+      };
+    } catch (fallbackError) {
+      console.error(
+        `Fallback query also failed for course ${courseOrder}, lesson ${lessonOrder}:`,
+        fallbackError
+      );
+      return null;
+    }
   }
 };
 

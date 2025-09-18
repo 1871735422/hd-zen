@@ -24,13 +24,29 @@ export async function generateStaticParams() {
     const { items: courses } = await getCourses();
     const allParams = [];
 
-    for (const course of courses) {
+    // 限制处理的课程数量，避免构建时间过长
+    const maxCourses = Math.min(courses.length, 10);
+
+    for (let i = 0; i < maxCourses; i++) {
+      const course = courses[i];
       try {
-        // 获取每个课程的课时数据
-        const { items: topics } = await getCourseTopicsByCourse(course.id);
+        // 添加超时控制
+        const timeoutPromise = new Promise((_, reject) =>
+          setTimeout(() => reject(new Error('Timeout')), 10000)
+        );
+
+        const topicsPromise = getCourseTopicsByCourse(course.id);
+        const { items: topics } = (await Promise.race([
+          topicsPromise,
+          timeoutPromise,
+        ])) as any;
+
+        // 限制每个课程的课时数量
+        const maxTopics = Math.min(topics.length, 20);
 
         // 为每个课时生成参数
-        for (const topic of topics) {
+        for (let j = 0; j < maxTopics; j++) {
+          const topic = topics[j];
           allParams.push({
             slug: course.displayOrder.toString(),
             lesson: `lesson${topic.ordering}`,
@@ -46,7 +62,9 @@ export async function generateStaticParams() {
       }
     }
 
-    console.log(`Generated ${allParams.length} lesson params`);
+    console.log(
+      `Generated ${allParams.length} lesson params (limited to ${maxCourses} courses)`
+    );
     return allParams;
   } catch (error) {
     console.error('Error generating static params for lessons:', error);
