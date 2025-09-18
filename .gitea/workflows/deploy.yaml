@@ -29,28 +29,20 @@ jobs:
       - name: 安装 pnpm
         run: corepack enable pnpm
 
-      - name: 缓存 pnpm 依赖
-        uses: https://gitea.com/actions/cache@v4
-        with:
-          path: |
-            ~/.pnpm-store
-            frontend/node_modules
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('frontend/package.json') }}-${{ hashFiles('frontend/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-${{ hashFiles('frontend/package.json') }}-
-            ${{ runner.os }}-pnpm-
-        timeout-minutes: 5
-
       - name: 安装依赖
-        run: cd frontend && pnpm install --frozen-lockfile
-        env:
-          NODE_NO_WARNINGS: 1
+        run: |
+          cd frontend
+          export NODE_NO_WARNINGS=1
+          pnpm install --frozen-lockfile
 
       - name: 构建项目
-        run: cd frontend && pnpm build
-        env:
-          NODE_ENV: production
-          NODE_NO_WARNINGS: 1
+        run: |
+          cd frontend
+          export NODE_ENV=production
+          export NODE_NO_WARNINGS=1
+          # 从 Gitea actions 变量中读取 NEXT_PB_URL
+          export NEXT_PB_URL="${{ vars.NEXT_PB_URL }}"
+          pnpm build
 
       - name: 上传构建产物到服务器
         uses: https://gitee.com/actions-mirror/scp-action@master
