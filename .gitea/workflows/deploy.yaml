@@ -57,7 +57,7 @@ jobs:
           target: "/opt/hd-zen-web/"
 
       - name: 重启服务
-        uses: https://gitea.com/nanqic/ssh-action@v1.2.2
+        uses: https://gitea.com/nanqic/ssh-action@v1.2.3
         with:
           host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEPLOY_USER }}
