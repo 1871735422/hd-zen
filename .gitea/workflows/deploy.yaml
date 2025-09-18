@@ -39,13 +39,25 @@ jobs:
         run: |
           cd frontend
           export NEXT_PB_URL="${{ vars.NEXT_PB_URL }}"
+          export NEXT_PB_AUTH="${{ vars.NEXT_PB_AUTH }}"
           echo "🔍 验证 API 连接: $NEXT_PB_URL"
           
-          # 测试 API 连接
-          if curl -f -s "$NEXT_PB_URL/api/collections/courses/records" > /dev/null; then
-            echo "✅ API 连接正常"
+          # 测试 API 连接（带认证）
+          if [ -n "$NEXT_PB_AUTH" ]; then
+            AUTH_USER=$(echo $NEXT_PB_AUTH | cut -d: -f1)
+            AUTH_PASS=$(echo $NEXT_PB_AUTH | cut -d: -f2)
+            if curl -f -s -u "$AUTH_USER:$AUTH_PASS" "$NEXT_PB_URL/api/collections/courses/records" > /dev/null; then
+              echo "✅ API 连接正常（带认证）"
+            else
+              echo "❌ API 连接失败，但继续构建"
+            fi
           else
-            echo "❌ API 连接失败，但继续构建"
+            echo "⚠️ 未设置认证信息，尝试无认证连接"
+            if curl -f -s "$NEXT_PB_URL/api/collections/courses/records" > /dev/null; then
+              echo "✅ API 连接正常（无认证）"
+            else
+              echo "❌ API 连接失败，但继续构建"
+            fi
           fi
 
       - name: 构建项目
@@ -54,9 +66,11 @@ jobs:
           export NODE_ENV=production
           export NODE_NO_WARNINGS=1
           export NEXT_PB_URL="${{ vars.NEXT_PB_URL }}"
+          export NEXT_PB_AUTH="${{ vars.NEXT_PB_AUTH }}"
           
           echo "🚀 开始构建..."
           echo "NEXT_PB_URL: $NEXT_PB_URL"
+          echo "NEXT_PB_AUTH: ${NEXT_PB_AUTH:0:10}..." # 只显示前10个字符
           
           pnpm build
           

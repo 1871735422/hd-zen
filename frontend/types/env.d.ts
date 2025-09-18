@@ -15,6 +15,7 @@ declare global {
       // pb 数据库配置
       NEXT_PUBLIC_SITE_URL: string;
       NEXT_PB_URL: string;
+      NEXT_PB_AUTH: string; // username:password 格式
 
       // 第三方服务
       NEXT_PUBLIC_GOOGLE_ANALYTICS_ID: string;

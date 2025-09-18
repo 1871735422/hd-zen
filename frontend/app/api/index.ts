@@ -18,6 +18,14 @@ export const pb = new PocketBase(pbUrl);
 // Configure PocketBase to prevent auto-cancellation
 pb.autoCancellation(false);
 
+// Configure Basic Auth for PocketBase
+if (process.env.NEXT_PB_AUTH) {
+  const auth = process.env.NEXT_PB_AUTH.split(':');
+  if (auth.length === 2) {
+    pb.authStore.save(auth[0], auth[1]);
+  }
+}
+
 // Configuration
 export const config = {
   apiUrl: pbUrl,
