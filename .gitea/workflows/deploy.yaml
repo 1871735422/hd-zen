@@ -39,7 +39,7 @@ jobs:
         run: |
           cd frontend
           export NEXT_PB_URL="${{ vars.NEXT_PB_URL }}"
-          export NEXT_PB_AUTH="${{ vars.NEXT_PB_AUTH }}"
+          export NEXT_PB_AUTH="${{ secrets.NEXT_PB_AUTH }}"
           echo "🔍 验证 API 连接: $NEXT_PB_URL"
           
           # 测试 API 连接（带认证）
