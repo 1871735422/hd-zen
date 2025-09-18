@@ -39,7 +39,7 @@ jobs:
           NODE_ENV: production
 
       - name: 上传构建产物到服务器
-        uses: appleboy/scp-action@v0.1.7
+        uses: https://gitee.com/actions-mirror/scp-action@master
         with:
           host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEPLOY_USER }}
@@ -51,7 +51,7 @@ jobs:
           target: "/opt/hd-zen-web/"
 
       - name: 重启服务
-        uses: appleboy/ssh-action@v1.0.3
+        uses: https://gitee.com/mirrors_appleboy/ssh-action@master
         with:
           host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEPLOY_USER }}
