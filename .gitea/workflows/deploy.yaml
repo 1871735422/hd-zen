@@ -71,9 +71,9 @@ jobs:
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           script: |
-            cd /opt/hd-zen-web
+            cd /opt/hd-zen-web/frontend
 
             # 重新加载 PM2 服务（零停机时间）
-            pm2 reload hd-zen-web || pm2 start .next/standalone/server.js --name hd-zen-web --port 3011
+            pm2 reload hd-zen-web || PORT=3011 pm2 start .next/standalone/server.js --name hd-zen-web
 
             echo "✅ 部署完成"

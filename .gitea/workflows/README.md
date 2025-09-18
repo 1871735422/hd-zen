@@ -90,16 +90,20 @@ export NO_PROXY=localhost,127.0.0.1
 curl -fsSL https://deb.nodesource.com/setup_24.x | sudo -E bash -
 sudo apt-get install -y nodejs
 
+- 或使用 nvm 安装
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+
+
 # 安装 PM2
 sudo npm install -g pm2
 
 # 创建部署目录
-sudo mkdir -p /opt/hd-zen-web
+sudo mkdir -p /opt/hd-zen-web/frontend
 sudo chown $USER:$USER /opt/hd-zen-web
 
 # 首次启动服务（可选）
-cd /opt/hd-zen-web
-# 上传文件后运行：pm2 start .next/standalone/server.js --name hd-zen-web --port 3011
+cd /opt/hd-zen-web/frontend
+# 上传文件后运行：PORT=3011 pm2 start .next/standalone/server.js --name hd-zen-web
 ```
 
 ### 5. PM2 服务管理
@@ -107,7 +111,7 @@ cd /opt/hd-zen-web
 #### 基本 PM2 命令
 ```bash
 # 启动服务
-pm2 start .next/standalone/server.js --name hd-zen-web --port 3011
+PORT=3011 pm2 start .next/standalone/server.js --name hd-zen-web
 
 # 查看所有进程
 pm2 list

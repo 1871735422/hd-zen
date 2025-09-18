@@ -5,9 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build",
+    "build": "next build && cp -r .next/static .next/standalone/.next/ && cp -r public .next/standalone/",
     "start": "next start",
     "serve": "node .next/standalone/server.js",
+    "check-production": "./scripts/check-production.sh",
     "build:image": "docker buildx build --platform linux/amd64 -t hd-zen-web:latest .",
     "save": "docker save hd-zen-web:latest -o hd-zen-web.tar && gzip hd-zen-web.tar",
     "upload": "scp hd-zen-web.tar.gz root@zenweb.huidengzg.com:/opt/docker-images/",
