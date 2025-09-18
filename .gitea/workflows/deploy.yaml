@@ -45,7 +45,7 @@ jobs:
           pnpm build
 
       - name: 上传构建产物到服务器
-        uses: https://gitee.com/actions-mirror/scp-action@master
+        uses: https://gitea.com/nanqic/scp-action@v1.0.0
         with:
           host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEPLOY_USER }}
@@ -57,7 +57,7 @@ jobs:
           target: "/opt/hd-zen-web/"
 
       - name: 重启服务
-        uses: https://gitee.com/mirrors_appleboy/ssh-action@master
+        uses: https://gitea.com/nanqic/ssh-action@v1.2.2
         with:
           host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEPLOY_USER }}
