@@ -25,10 +25,19 @@ jobs:
         uses: https://gitea.com/actions/setup-node@v4
         with:
           node-version: '24'
-          cache: 'pnpm'
 
       - name: 安装 pnpm
         run: corepack enable pnpm
+
+      - name: 缓存 pnpm 依赖
+        uses: https://gitea.com/actions/cache@v4
+        with:
+          path: |
+            ~/.pnpm-store
+            frontend/node_modules
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('frontend/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
 
       - name: 安装依赖
         run: cd frontend && pnpm install --frozen-lockfile
