@@ -5,6 +5,7 @@ import {
 } from '@/app/api';
 import { Container, Grid } from '@mui/material';
 import QaSidebar from '../../components/pc/QaSidebar';
+import CourseCard from '@/app/components/pc/CourseCard';
 
 // 15分钟缓存
 export const revalidate = 900;
@@ -40,9 +41,10 @@ export default async function QaPage({ params, searchParams }: QaPageProps) {
     // Fetch course details and topics
     const courseTopics = (await getCourseTopicsByDisplayOrder(displayOrder))
       ?.items;
-    const questions = await getQuestionsByOrder(displayOrder, lessonOrder);
+    const questions = (await getQuestionsByOrder(displayOrder, lessonOrder))
+      ?.items;
 
-    console.log({ courseTopics });
+    // console.log({ courseTopics });
     console.log(questions);
     // console.log(questions.items[0]);
 
@@ -81,22 +83,30 @@ export default async function QaPage({ params, searchParams }: QaPageProps) {
               selectedIdx={Number(lessonOrder) - 1}
             />
           </Grid>
-          {/* <Grid container spacing={4} sx={{ px: 3, py: 4 }} size={9}>
-            {courseTopics.map(topic => (
-              <Grid key={topic.id} size={{ xs: 12, sm: 6, md: 4 }}>
+          <Grid
+            container
+            spacing={4}
+            sx={{
+              px: 3,
+              py: 4,
+              height: 'fit-content',
+            }}
+            size={9}
+          >
+            {questions.map(question => (
+              <Grid key={question.id} size={{ xs: 12, sm: 6, md: 4 }}>
                 <CourseCard
                   item={{
-                    idx: topic.ordering,
-                    title: topic.article_title || topic.title || '',
-                    description:
-                      topic.article_introtext || topic.description || '',
+                    idx: Number(lessonOrder),
+                    title: question.title || '',
+                    description: question.description || '',
                   }}
-                  courseOrder={course.displayOrder}
+                  courseOrder={Number(displayOrder)}
                   slug='qa'
                 />
               </Grid>
             ))}
-          </Grid> */}
+          </Grid>
         </Grid>
       </Container>
     );

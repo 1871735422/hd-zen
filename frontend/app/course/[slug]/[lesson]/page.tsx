@@ -74,12 +74,7 @@ export async function generateStaticParams() {
     return allParams;
   } catch (error) {
     console.error('Error generating static params for lessons:', error);
-    // 返回一些默认参数，避免完全失败
-    return [
-      { slug: '1', lesson: 'lesson1' },
-      { slug: '2', lesson: 'lesson1' },
-      { slug: '3', lesson: 'lesson1' },
-    ];
+    return [];
   }
 }
 

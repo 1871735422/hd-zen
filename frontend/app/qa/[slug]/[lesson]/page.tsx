@@ -1,16 +1,17 @@
 import {
-  getTopicMediaByOrder,
   getCourses,
   getCourseTopicsByCourse,
+  getQuestionsByOrder,
+  getAnswerMediaByOrder,
 } from '@/app/api';
 import { CourseTopic } from '@/app/types/models';
-import MediaDownloadButton from '@/app/components/pc/MediaDownloadButton';
-import VideoPlayer from '@/app/components/pc/VideoPlayer';
-import { Box } from '@mui/material';
+import { Grid, Container, Box, Typography } from '@mui/material';
 import { notFound } from 'next/navigation';
+import QaSidebar from '@/app/components/pc/QaSidebar';
+import LessonMeta from '@/app/components/pc/LessonMeta';
+import VideoPlayer from '@/app/components/pc/VideoPlayer';
+import MediaDownloadButton from '@/app/components/pc/MediaDownloadButton';
 import { Fragment } from 'react';
-import AudioPage from '../../../components/pc/AudioPage';
-import LessonMeta from '../../../components/pc/LessonMeta';
 
 // 15分钟缓存
 export const revalidate = 900;
@@ -70,12 +71,7 @@ export async function generateStaticParams() {
     return allParams;
   } catch (error) {
     console.error('Error generating static params for QA lessons:', error);
-    // 返回一些默认参数，避免完全失败
-    return [
-      { slug: '1', lesson: 'lesson1' },
-      { slug: '2', lesson: 'lesson1' },
-      { slug: '3', lesson: 'lesson1' },
-    ];
+    return [];
   }
 }
 
@@ -86,72 +82,129 @@ interface LessonPageProps {
 
 const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
   const resolvedParams = await params;
-  const { tab: selectedKey } = await searchParams;
+  const resolvedSearchParams = await searchParams;
+  const questionOrder =
+    typeof resolvedSearchParams.tab === 'string' && resolvedSearchParams.tab
+      ? resolvedSearchParams.tab.replace('question', '')
+      : '1';
   const courseOrder = resolvedParams.slug;
   const lessonOrder = resolvedParams.lesson?.replace('lesson', '');
-  const res = await getTopicMediaByOrder(courseOrder, lessonOrder);
-  const topicMedia = res?.items;
 
-  if (!topicMedia) {
+  // 获取问题和答案
+  const questionsRes = await getQuestionsByOrder(courseOrder, lessonOrder);
+  const answerMediaRes = await getAnswerMediaByOrder(
+    courseOrder,
+    lessonOrder,
+    questionOrder
+  );
+
+  const questions = questionsRes?.items || [];
+  // console.log(questions);
+  console.log('answerMediaRes', answerMediaRes);
+
+  if (!questions.length) {
     notFound();
   }
 
-  const topicTags = topicMedia[0]?.media?.tags;
-
-  const TabRender = () => {
-    if (selectedKey === 'audio') return <AudioPage topicMedia={topicMedia} />;
-
-    return (
-      <>
-        <MediaDownloadButton
-          sx={{
-            alignSelf: 'flex-end',
-            my: -3,
-          }}
-          mediaType='video'
-          downloadUrls={topicMedia.map(media => media.media?.url_downmp4 || '')}
-        />
-        {topicMedia.map(media => (
-          <Fragment key={media.id}>
-            <VideoPlayer
-              poster={media.media?.url_image || media.media?.image1_url || ''}
-              title={media.media?.title || ''}
-              src={media.media?.url_hd || media.media?.high_quality_url || ''}
-            />
-          </Fragment>
-        ))}
-      </>
-    );
-  };
-
   return (
-    <>
-      <Box
+    <Container
+      maxWidth='lg'
+      sx={{
+        backgroundImage: 'url(/images/course-lesson-bg.jpg)',
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center',
+        py: 4,
+        px: '0 !important',
+      }}
+    >
+      <Grid
+        container
         sx={{
-          display: 'flex',
-          justifyContent: 'flex-end',
-          alignItems: 'center',
-          flexDirection: 'column',
+          backgroundColor: '#fff',
+          borderRadius: 5,
+          py: 0,
+          mb: 5,
+          height: 'fit-content',
         }}
       >
-        <LessonMeta
-          title={topicMedia[0]?.media!.title}
-          tags={
-            topicTags?.length ? topicTags.map((tag: string) => tag.trim()) : []
-          }
-          description={topicMedia[0]?.media!.summary ?? ''}
-          author='作者：慈诚罗珠堪布'
-          date={
-            topicMedia[0]?.media!.created
-              ? new Date(topicMedia[0].media.created).toLocaleDateString(
-                  'zh-CN'
-                )
-              : ''
-          }
-        />
-        <TabRender />
-      </Box>
-    </>
+        <Grid size={3}>
+          <QaSidebar
+            lesson={questions.map((question, idx) => ({
+              label: question.title || '',
+              path: `/qa/${courseOrder}/lesson${lessonOrder}?tab=question${idx + 1}`,
+            }))}
+            selectedIdx={Number(questionOrder) - 1}
+          />
+        </Grid>
+        <Grid container spacing={4} sx={{ px: 3, py: 4 }} size={9}>
+          <Box
+            sx={{
+              backgroundColor: 'white',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 4,
+              pb: 5,
+              px: 3.5,
+              borderRadius: 5,
+              width: '100%',
+            }}
+          >
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                alignItems: 'center',
+                flexDirection: 'column',
+              }}
+            >
+              <LessonMeta
+                title={`${questionOrder}. ${answerMediaRes?.media?.title}`}
+                tags={[]}
+                description={answerMediaRes?.media?.summary ?? ''}
+                author='作者：慈诚罗珠堪布'
+                date={
+                  answerMediaRes?.created
+                    ? new Date(answerMediaRes.created).toLocaleDateString(
+                        'zh-CN'
+                      )
+                    : ''
+                }
+              />
+            </Box>
+            <>
+              <MediaDownloadButton
+                sx={{
+                  alignSelf: 'flex-end',
+                  my: -3,
+                }}
+                mediaType='video'
+                downloadUrls={[answerMediaRes?.media?.url_hd || '']}
+              />
+              {answerMediaRes?.media?.url_hd && (
+                <Fragment key={answerMediaRes?.media?.id}>
+                  {answerMediaRes?.media?.url_hd ? (
+                    <VideoPlayer
+                      poster={
+                        answerMediaRes?.media?.url_image ||
+                        answerMediaRes?.media?.image1_url ||
+                        ''
+                      }
+                      title={''}
+                      src={answerMediaRes?.media?.url_hd}
+                    />
+                  ) : (
+                    <Typography>
+                      视频资源不可用：{answerMediaRes?.media?.title}{' '}
+                    </Typography>
+                  )}
+                </Fragment>
+              )}
+            </>
+          </Box>
+        </Grid>
+      </Grid>
+    </Container>
   );
 };
 

@@ -21,9 +21,7 @@ export default function CourseCard({
   const isQa = slug === 'qa';
   return (
     <Link
-      href={
-        isQa ? `/qa/${item.idx}` : `/${slug}/${courseOrder}/lesson${item.idx}`
-      }
+      href={`/${slug}/${courseOrder}/lesson${item.idx}`}
       sx={{
         textDecoration: 'none',
       }}

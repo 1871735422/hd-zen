@@ -3,6 +3,7 @@
 import PocketBase from 'pocketbase';
 import { Menu } from '../components/pc/MenuItem';
 import {
+  AnswerMedia,
   Category,
   Course,
   CourseTopic,
@@ -236,6 +237,12 @@ export const getCourses = async (): Promise<PaginatedResponse<Course>> => {
   }
 };
 
+
+/**
+ * 
+ * @param displayOrder 课程编号 如：1
+ * @returns 课程内容
+ */
 export const getCourseTopicsByDisplayOrder = async (
   displayOrder: string
 ): Promise<PaginatedResponse<CourseTopic>> => {
@@ -250,13 +257,17 @@ export const getCourseTopicsByDisplayOrder = async (
   };
 };
 
+/**
+ * 
+ * @param volume 第几册课程 如：1
+ * @param lesson 课时编号 如：1
+ * @returns 此问题内容列表
+ */
 export const getQuestionsByOrder = async (
   volume: string,
   lesson: string
 ): Promise<PaginatedResponse<Questions>> => {
-  console.log({ volume, lesson });
-
-  const result = await pb.collection('questions').getList(1, 20, {
+  const result = await pb.collection('questions').getList(1, 30, {
     filter: [
       'topicId.courseId.displayOrder = ' + volume,
       'topicId.ordering = ' + lesson,
@@ -267,6 +278,28 @@ export const getQuestionsByOrder = async (
 
   return {
     ...result,
+  };
+};
+
+export const getAnswerMediaByOrder = async (
+  volume: string,
+  lesson: string,
+  questionOrder: string
+): Promise<AnswerMedia> => {
+  const result = await pb.collection('answerMedia').getList(1, 30, {
+    filter: [
+      'answerId.questionId.topicId.courseId.displayOrder = ' + volume,
+      'answerId.questionId.topicId.ordering = ' + lesson,
+      'displayOrder = ' + questionOrder,
+    ].join(' && '),
+    expand:
+      'answerId,answerId.questionId, answerId.questionId.topicId, answerId.questionId.topicId.courseId, mediaId',
+    // fields: 'title,topicId.expand.ordering',
+  });
+  console.log('result', result);
+  return {
+    ...result?.items[0],
+    media: result?.items[0].expand.mediaId,
   };
 };
 
@@ -284,6 +317,10 @@ export const getCourseByDisplayOrder = async (
   }
 };
 
+/**
+ * 
+ * @returns 课程内容列表
+ */
 export const getCourseTopics = async (): Promise<
   PaginatedResponse<CourseTopic>
 > => {
@@ -364,6 +401,12 @@ export const getCourseTopicById = async (
   }
 };
 
+/**
+ * 
+ * @param courseOrder 第几册课程 如：1
+ * @param lessonOrder 课时编号 如：1
+ * @returns 此课时内容
+ */
 export const getCourseTopicByOrder = async (
   courseOrder: string,
   lessonOrder: string
@@ -388,6 +431,12 @@ export const getCourseTopicByOrder = async (
   }
 };
 
+/**
+ * 
+ * @param courseOrder 第几册课程 如：1
+ * @param lessonOrder 课时编号 如：1
+ * @returns 此课时媒体内容
+ */
 export const getTopicMediaByOrder = async (
   courseOrder: string,
   lessonOrder: string

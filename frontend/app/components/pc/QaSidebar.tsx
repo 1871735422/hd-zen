@@ -132,8 +132,15 @@ export default async function QaSidebar({
                         <Typography
                           fontWeight={isSelected ? 600 : 'inherit'}
                           fontSize={16}
-                          flexWrap={'wrap'}
                           marginRight={2}
+                          sx={{
+                            display: '-webkit-box',
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: 'vertical',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            lineHeight: 1.2,
+                          }}
                         >
                           {item.label}
                         </Typography>

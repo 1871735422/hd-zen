@@ -14,6 +14,26 @@ export interface Questions extends BaseModel {
   isActive: boolean;
 }
 
+// Answers
+export interface Answers extends BaseModel {
+  topicId: string;
+  title: string;
+  assetId?: string;
+  questionId: string;
+  isActive: boolean;
+}
+
+// answerMedia
+export interface AnswerMedia extends BaseModel {
+  topicId: string;
+  title: string;
+  assetId?: string;
+  answerId: string;
+  displayOrder: number;
+  isActive: boolean;
+  media?: Media;
+}
+
 // Category
 export interface Category extends BaseModel {
   name: string;

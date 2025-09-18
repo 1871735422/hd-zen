@@ -18,15 +18,16 @@ export default function LessonMeta({
   author,
   date,
 }: LessonMetaProps) {
+  console.log(/^\d+\./.test(title));
   return (
     <Box sx={{ mt: 3 }}>
       <Typography
-        variant='h4'
         fontWeight={500}
+        px={0}
         fontSize={24}
-        align='center'
+        align={/^\d+\./.test(title) ? 'left' : 'center'}
         color='#333'
-        m={3}
+        my={3}
       >
         {title}
       </Typography>
