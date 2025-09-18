@@ -3,6 +3,7 @@ import {
   getCourses,
   getCourseTopicsByCourse,
 } from '@/app/api';
+import { CourseTopic } from '@/app/types/models';
 import MediaDownloadButton from '@/app/components/pc/MediaDownloadButton';
 import VideoPlayer from '@/app/components/pc/VideoPlayer';
 import { Box } from '@mui/material';
@@ -20,8 +21,8 @@ export async function generateStaticParams() {
     const { items: courses } = await getCourses();
     const allParams = [];
 
-    // 限制处理的课程数量，避免构建时间过长
-    const maxCourses = Math.min(courses.length, 10);
+    // 处理所有课程，确保完整的 SSG 构建
+    const maxCourses = courses.length;
 
     for (let i = 0; i < maxCourses; i++) {
       const course = courses[i];
@@ -35,10 +36,10 @@ export async function generateStaticParams() {
         const { items: topics } = (await Promise.race([
           topicsPromise,
           timeoutPromise,
-        ])) as any;
+        ])) as { items: CourseTopic[] };
 
-        // 限制每个课程的课时数量
-        const maxTopics = Math.min(topics.length, 20);
+        // 处理所有课时，确保完整的 SSG 构建
+        const maxTopics = topics.length;
 
         // 为每个课时生成参数
         for (let j = 0; j < maxTopics; j++) {
