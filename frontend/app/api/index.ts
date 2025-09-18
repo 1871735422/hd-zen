@@ -3,23 +3,24 @@
 import PocketBase from 'pocketbase';
 import { Menu } from '../components/pc/MenuItem';
 import {
-    Category,
-    Course,
-    CourseTopic,
-    Media,
-    PaginatedResponse,
-    TopicMedia,
+  Category,
+  Course,
+  CourseTopic,
+  Media,
+  PaginatedResponse,
+  TopicMedia,
 } from '../types/models';
 
 // Initialize PocketBase using environment variable
-export const pb = new PocketBase(process.env.NEXT_PB_URL as string);
+const pbUrl = process.env.NEXT_PB_URL;
+export const pb = new PocketBase(pbUrl);
 
 // Configure PocketBase to prevent auto-cancellation
 pb.autoCancellation(false);
 
 // Configuration
 export const config = {
-  apiUrl: process.env.NEXT_PB_URL as string,
+  apiUrl: pbUrl,
   defaultPageSize: 50,
   requestTimeout: 10000, // 10 seconds
 } as const;
@@ -156,6 +157,14 @@ const mapRecordToTopicMedia = (record: PocketRecord): TopicMedia => ({
 // API Functions
 export const getCategories = async (name?: string): Promise<Array<Menu>> => {
   try {
+    // 检查是否在构建环境中
+    if (process.env.NODE_ENV === 'production' && !process.env.NEXT_PB_URL) {
+      console.warn(
+        'Build time: Returning empty categories due to missing NEXT_PB_URL'
+      );
+      return [];
+    }
+
     const result = await pb.collection('navMenu').getFullList({
       sort: 'displayOrder',
       filter: `isActive = true ${name ? '&& name = "' + name + '"' : ''}`,
@@ -170,12 +179,27 @@ export const getCategories = async (name?: string): Promise<Array<Menu>> => {
     });
   } catch (error) {
     console.error('Error fetching categories:', error);
+    // 构建时返回空数组而不是抛出错误
     return [];
   }
 };
 
 export const getCourses = async (): Promise<PaginatedResponse<Course>> => {
   try {
+    // 检查是否在构建环境中
+    if (process.env.NODE_ENV === 'production' && !process.env.NEXT_PB_URL) {
+      console.warn(
+        'Build time: Returning empty courses due to missing NEXT_PB_URL'
+      );
+      return {
+        items: [],
+        totalItems: 0,
+        totalPages: 0,
+        page: 1,
+        perPage: 0,
+      };
+    }
+
     const result = await pb.collection('courses').getFullList({
       sort: 'displayOrder',
       expand: 'categoryId',
@@ -204,17 +228,37 @@ export const getCourses = async (): Promise<PaginatedResponse<Course>> => {
   }
 };
 
-export const getCoursesByCategory = async (
-  categoryId: string
-): Promise<PaginatedResponse<Course>> => {
-  const result = await pb.collection('courses').getList(1, 500, {
-    filter: `categoryId = "${categoryId}"`,
-    sort: 'displayOrder',
-    expand: 'categoryId',
+export const getCourseTopicsByDisplayOrder = async (
+  displayOrder: string
+): Promise<PaginatedResponse<CourseTopic>> => {
+  const result = await pb.collection('courseTopics').getList(1, 50, {
+    filter: `courseId.displayOrder = "${displayOrder}"`,
+    expand: 'courseId',
+    fields: 'article_title,ordering',
   });
+
   return {
     ...result,
-    items: result.items.map(mapRecordToCourse),
+  };
+};
+
+export const getQuestionsByOrder = async (
+  volume: string,
+  lesson: string
+): Promise<PaginatedResponse<Questions>> => {
+  console.log({ volume, lesson });
+
+  const result = await pb.collection('questions').getList(1, 20, {
+    filter: [
+      'topicId.courseId.displayOrder = ' + volume,
+      'topicId.ordering = ' + lesson,
+    ].join(' && '),
+    expand: 'topicId,topicId.courseId',
+    // fields: 'title,topicId.expand.ordering',
+  });
+
+  return {
+    ...result,
   };
 };
 
@@ -317,15 +361,17 @@ export const getCourseTopicByOrder = async (
   lessonOrder: string
 ): Promise<CourseTopic | null> => {
   try {
-    const record = await pb.collection('courseTopics').getFirstListItem(
-      [
-        'courseId.displayOrder = ' + courseOrder,
-        'ordering = ' + lessonOrder,
-      ].join(' && '),
-      {
-        expand: 'courseId',
-      }
-    );
+    const record = await pb
+      .collection('courseTopics')
+      .getFirstListItem(
+        [
+          'courseId.displayOrder = ' + courseOrder,
+          'ordering = ' + lessonOrder,
+        ].join(' && '),
+        {
+          expand: 'courseId',
+        }
+      );
 
     return mapRecordToCourseTopic(record);
   } catch (error) {

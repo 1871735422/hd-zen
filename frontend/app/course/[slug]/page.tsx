@@ -3,6 +3,9 @@ import CourseCard from '@/app/components/pc/CourseCard';
 import { Box, Container, Grid, Typography } from '@mui/material';
 import { notFound } from 'next/navigation';
 
+// 15分钟缓存
+export const revalidate = 900;
+
 interface CoursePageProps {
   params: Promise<{ slug: string }>;
 }

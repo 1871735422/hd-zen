@@ -10,6 +10,9 @@ import LessonMeta from '../../../components/pc/LessonMeta';
 import LessonSidebar from '../../../components/pc/LessonSidebar';
 import ReadingPage from '../../../components/pc/ReadingPage';
 
+// 15分钟缓存
+export const revalidate = 900;
+
 interface LessonPageProps {
   params: Promise<{ slug: string; lesson: string }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;

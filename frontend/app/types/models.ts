@@ -5,6 +5,15 @@ export interface BaseModel {
   updated: string;
 }
 
+// Questions
+export interface Questions extends BaseModel {
+  topicId: string;
+  title: string;
+  assetId?: string;
+  contentId: string;
+  isActive: boolean;
+}
+
 // Category
 export interface Category extends BaseModel {
   name: string;

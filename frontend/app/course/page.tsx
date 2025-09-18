@@ -2,6 +2,9 @@ import { Container, Grid } from '@mui/material';
 import { getCourseImageUrl, getCourses } from '../api';
 import BookCard from '../components/pc/BookCard';
 
+// 15分钟缓存
+export const revalidate = 900;
+
 async function CoursePage() {
   const { items: courses } = await getCourses();
 

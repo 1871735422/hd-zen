@@ -4,6 +4,9 @@ import { notFound } from 'next/navigation';
 import { getCourseByDisplayOrder, getCourses } from '../../api';
 import TitleBanner from '@/app/components/shared/TitleBanner';
 
+// 15分钟缓存
+export const revalidate = 900;
+
 export default async function CourseLayout({
   children,
   params,

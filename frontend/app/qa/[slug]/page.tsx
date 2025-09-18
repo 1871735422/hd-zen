@@ -1,33 +1,40 @@
-import { getCourseByDisplayOrder, getCourseTopicsByCourse } from '@/app/api';
-import CourseCard from '@/app/components/pc/CourseCard';
+import { getCourseTopicsByDisplayOrder, getQuestionsByOrder } from '@/app/api';
 import { Container, Grid } from '@mui/material';
-import { notFound } from 'next/navigation';
 import QaSidebar from '../../components/pc/QaSidebar';
 
-interface CoursePageProps {
+// 15分钟缓存
+export const revalidate = 900;
+
+interface QaPageProps {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-export default async function QaPage({ params }: CoursePageProps) {
+export default async function QaPage({ params, searchParams }: QaPageProps) {
   const resolvedParams = await params;
   const displayOrder = resolvedParams.slug;
+  const resolvedSearchParams = await searchParams;
+  const lessonOrder =
+    typeof resolvedSearchParams.tab === 'string' && resolvedSearchParams.tab
+      ? resolvedSearchParams.tab.replace('lesson', '')
+      : '1';
 
   try {
     // Fetch course details and topics
-    const course = await getCourseByDisplayOrder(displayOrder);
-    const courseId = course?.id || '';
-    const courseTopicsResult = await getCourseTopicsByCourse(courseId);
+    const courseTopics = (await getCourseTopicsByDisplayOrder(displayOrder))
+      ?.items;
+    const questions = await getQuestionsByOrder(displayOrder, lessonOrder);
 
-    // If course is not found, show not found
-    if (!course) {
-      notFound();
-    }
+    console.log({ courseTopics });
+    console.log(questions);
+    // console.log(questions.items[0]);
 
-    const courseTopics = courseTopicsResult.items;
-    const sidebarData = courseTopics.map(item => ({
-      label: item.title,
-      path: '',
-    }));
+    const sidebarData = courseTopics
+      .sort((a, b) => a.ordering - b.ordering)
+      .map(item => ({
+        label: item.article_title,
+        path: `/qa/${displayOrder}?tab=lesson${item.ordering}`,
+      }));
 
     return (
       <Container
@@ -52,9 +59,12 @@ export default async function QaPage({ params }: CoursePageProps) {
           }}
         >
           <Grid size={3}>
-            <QaSidebar lesson={sidebarData} selectedIdx={0} />
+            <QaSidebar
+              lesson={sidebarData}
+              selectedIdx={Number(lessonOrder) - 1}
+            />
           </Grid>
-          <Grid container spacing={4} sx={{ px: 3, py: 4 }} size={9}>
+          {/* <Grid container spacing={4} sx={{ px: 3, py: 4 }} size={9}>
             {courseTopics.map(topic => (
               <Grid key={topic.id} size={{ xs: 12, sm: 6, md: 4 }}>
                 <CourseCard
@@ -69,7 +79,7 @@ export default async function QaPage({ params }: CoursePageProps) {
                 />
               </Grid>
             ))}
-          </Grid>
+          </Grid> */}
         </Grid>
       </Container>
     );
