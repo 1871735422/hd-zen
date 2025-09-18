@@ -35,17 +35,22 @@ jobs:
           path: |
             ~/.pnpm-store
             frontend/node_modules
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('frontend/package.json') }}
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('frontend/package.json') }}-${{ hashFiles('frontend/pnpm-lock.yaml') }}
           restore-keys: |
+            ${{ runner.os }}-pnpm-${{ hashFiles('frontend/package.json') }}-
             ${{ runner.os }}-pnpm-
+        timeout-minutes: 5
 
       - name: 安装依赖
         run: cd frontend && pnpm install --frozen-lockfile
+        env:
+          NODE_NO_WARNINGS: 1
 
       - name: 构建项目
         run: cd frontend && pnpm build
         env:
           NODE_ENV: production
+          NODE_NO_WARNINGS: 1
 
       - name: 上传构建产物到服务器
         uses: https://gitee.com/actions-mirror/scp-action@master
