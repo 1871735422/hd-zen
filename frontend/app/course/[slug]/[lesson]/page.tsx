@@ -21,6 +21,11 @@ export const revalidate = 900;
 
 // 生成静态参数 - 嵌套动态路由必须预生成
 export async function generateStaticParams() {
+  // 开发环境跳过预获取，避免开发时慢
+  if (process.env.NODE_ENV === 'development') {
+    return [];
+  }
+
   try {
     const { items: courses } = await getCourses();
     const allParams = [];

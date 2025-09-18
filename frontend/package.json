@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build && echo 'Copying static assets...' && (cp -r .next/static .next/standalone/.next/ || echo 'Warning: Static copy failed') && (cp -r public .next/standalone/ || echo 'Warning: Public copy failed') && echo 'Build completed successfully'",
+    "build": "next build && echo 'Copying static assets...' && cp -r .next/static .next/standalone/.next/ && cp -r public .next/standalone/ && echo 'Build completed successfully'",
     "start": "next start",
     "serve": "node .next/standalone/server.js",
     "check-production": "./scripts/check-production.sh",

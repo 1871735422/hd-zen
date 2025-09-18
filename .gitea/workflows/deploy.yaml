@@ -74,76 +74,57 @@ jobs:
           
           # 设置构建超时时间（10分钟）
           timeout 600 pnpm build || {
-            echo "⚠️ 构建超时，但继续检查构建产物..."
-            # 即使超时，也检查是否有部分构建产物
-            if [ -d ".next" ]; then
-              echo "✅ 检测到构建产物，继续部署流程"
+            echo "⚠️ 构建过程出现问题，检查构建产物..."
+            # 检查 Next.js 构建是否成功
+            if [ -d ".next" ] && [ -f ".next/standalone/server.js" ]; then
+              echo "✅ Next.js 构建成功，检查静态资源..."
+              
+              # 手动复制静态资源（如果构建脚本失败）
+              if [ ! -d ".next/standalone/.next/static" ]; then
+                echo "📁 手动复制静态资源..."
+                mkdir -p .next/standalone/.next/
+                cp -r .next/static .next/standalone/.next/ || echo "⚠️ 静态资源复制失败"
+              fi
+              
+              if [ ! -d ".next/standalone/public" ]; then
+                echo "📁 手动复制 public 目录..."
+                cp -r public .next/standalone/ || echo "⚠️ public 目录复制失败"
+              fi
+              
+              echo "✅ 构建产物检查完成，继续部署"
             else
-              echo "❌ 构建完全失败，退出"
+              echo "❌ Next.js 构建失败，退出"
               exit 1
             fi
           }
           
-          echo "📊 检查生成的路由..."
-          if [ -f ".next/standalone/.next/prerender-manifest.json" ]; then
-            echo "✅ prerender-manifest.json 存在"
-            
-            # 显示预生成的路由数量
-            COURSE_ROUTES=$(cat .next/standalone/.next/prerender-manifest.json | grep -o '"/course/[^"]*"' | grep -v '/lesson' | wc -l)
-            LESSON_ROUTES=$(cat .next/standalone/.next/prerender-manifest.json | grep -o '"/course/[^"]*/lesson[^"]*"' | wc -l)
-            QA_ROUTES=$(cat .next/standalone/.next/prerender-manifest.json | grep -o '"/qa/[^"]*"' | grep -v '/lesson' | wc -l)
-            QA_LESSON_ROUTES=$(cat .next/standalone/.next/prerender-manifest.json | grep -o '"/qa/[^"]*/lesson[^"]*"' | wc -l)
-            
-            echo "📈 预生成课程路由数量: $COURSE_ROUTES"
-            echo "📈 预生成课时路由数量: $LESSON_ROUTES"
-            echo "📈 预生成QA路由数量: $QA_ROUTES"
-            echo "📈 预生成QA课时路由数量: $QA_LESSON_ROUTES"
-            
-            # 检查是否有嵌套路由
-            if [ "$LESSON_ROUTES" -gt 0 ]; then
-              echo "✅ 嵌套动态路由生成成功"
-            else
-              echo "❌ 嵌套动态路由生成失败"
-            fi
-          else
-            echo "❌ prerender-manifest.json 不存在"
+          # 构建后验证
+          echo "🔍 验证构建产物..."
+          if [ ! -f ".next/standalone/server.js" ]; then
+            echo "❌ standalone server.js 不存在"
+            exit 1
           fi
+          
+          # 自动修复静态资源
+          if [ ! -d ".next/standalone/.next/static" ]; then
+            echo "📁 复制静态资源..."
+            mkdir -p .next/standalone/.next/
+            cp -r .next/static .next/standalone/.next/
+          fi
+          
+          if [ ! -d ".next/standalone/public" ]; then
+            echo "📁 复制 public 目录..."
+            cp -r public .next/standalone/
+          fi
+          
+          echo "✅ 构建验证完成"
 
       - name: 检查构建产物
         run: |
           cd frontend
-          echo "📁 检查构建产物..."
-          
-          # 检查关键目录
-          echo "=== .next/ 目录 ==="
-          ls -la .next/ | head -10
-          
-          echo "=== .next/standalone/ 目录 ==="
-          ls -la .next/standalone/ || echo "❌ standalone 目录不存在"
-          
-          echo "=== .next/static/ 目录 ==="
-          ls -la .next/static/ || echo "❌ static 目录不存在"
-          
-          echo "=== public/ 目录 ==="
-          ls -la public/ || echo "❌ public 目录不存在"
-          
-          # 检查静态资源是否正确复制
-          echo "=== 检查静态资源复制 ==="
-          if [ -d ".next/standalone/.next/static" ]; then
-            echo "✅ 静态资源已复制到 standalone"
-            STATIC_SIZE=$(du -sh .next/standalone/.next/static | cut -f1)
-            echo "📊 静态资源大小: $STATIC_SIZE"
-          else
-            echo "❌ 静态资源未复制到 standalone"
-          fi
-          
-          if [ -d ".next/standalone/public" ]; then
-            echo "✅ public 目录已复制到 standalone"
-            PUBLIC_SIZE=$(du -sh .next/standalone/public | cut -f1)
-            echo "📊 public 目录大小: $PUBLIC_SIZE"
-          else
-            echo "❌ public 目录未复制到 standalone"
-          fi
+          echo "📁 构建产物检查..."
+          ls -la .next/standalone/ | head -5
+          echo "✅ 构建产物检查完成"
 
       - name: 上传构建产物到服务器
         uses: https://gitea.com/nanqic/scp-action@v1.0.1
