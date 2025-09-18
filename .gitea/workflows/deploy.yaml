@@ -63,9 +63,24 @@ jobs:
           echo "📊 检查生成的路由..."
           if [ -f ".next/standalone/.next/prerender-manifest.json" ]; then
             echo "✅ prerender-manifest.json 存在"
+            
             # 显示预生成的路由数量
-            ROUTES=$(cat .next/standalone/.next/prerender-manifest.json | grep -o '"/course/[^"]*"' | wc -l)
-            echo "📈 预生成课程路由数量: $ROUTES"
+            COURSE_ROUTES=$(cat .next/standalone/.next/prerender-manifest.json | grep -o '"/course/[^"]*"' | grep -v '/lesson' | wc -l)
+            LESSON_ROUTES=$(cat .next/standalone/.next/prerender-manifest.json | grep -o '"/course/[^"]*/lesson[^"]*"' | wc -l)
+            QA_ROUTES=$(cat .next/standalone/.next/prerender-manifest.json | grep -o '"/qa/[^"]*"' | grep -v '/lesson' | wc -l)
+            QA_LESSON_ROUTES=$(cat .next/standalone/.next/prerender-manifest.json | grep -o '"/qa/[^"]*/lesson[^"]*"' | wc -l)
+            
+            echo "📈 预生成课程路由数量: $COURSE_ROUTES"
+            echo "📈 预生成课时路由数量: $LESSON_ROUTES"
+            echo "📈 预生成QA路由数量: $QA_ROUTES"
+            echo "📈 预生成QA课时路由数量: $QA_LESSON_ROUTES"
+            
+            # 检查是否有嵌套路由
+            if [ "$LESSON_ROUTES" -gt 0 ]; then
+              echo "✅ 嵌套动态路由生成成功"
+            else
+              echo "❌ 嵌套动态路由生成失败"
+            fi
           else
             echo "❌ prerender-manifest.json 不存在"
           fi
