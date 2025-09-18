@@ -1,9 +1,26 @@
-import { getCourseTopicsByDisplayOrder, getQuestionsByOrder } from '@/app/api';
+import {
+  getCourseTopicsByDisplayOrder,
+  getQuestionsByOrder,
+  getCourses,
+} from '@/app/api';
 import { Container, Grid } from '@mui/material';
 import QaSidebar from '../../components/pc/QaSidebar';
 
 // 15分钟缓存
 export const revalidate = 900;
+
+// 生成静态参数 - 最佳解决方案
+export async function generateStaticParams() {
+  try {
+    const { items: courses } = await getCourses();
+    return courses.map(course => ({
+      slug: course.displayOrder.toString(),
+    }));
+  } catch (error) {
+    console.error('Error generating static params:', error);
+    return [];
+  }
+}
 
 interface QaPageProps {
   params: Promise<{ slug: string }>;
