@@ -44,20 +44,37 @@ jobs:
           export NEXT_PB_URL="${{ vars.NEXT_PB_URL }}"
           pnpm build
 
+      - name: 检查构建产物
+        run: |
+          echo "=== 检查 frontend/.next 目录结构 ==="
+          ls -la frontend/.next/ || echo "frontend/.next 不存在"
+          echo "=== 检查 standalone 目录 ==="
+          ls -la frontend/.next/standalone/ || echo "standalone 目录不存在"
+          echo "=== 检查 static 目录 ==="
+          ls -la frontend/.next/static/ || echo "static 目录不存在"
+          echo "=== 检查 public 目录 ==="
+          ls -la frontend/public/ || echo "public 目录不存在"
+
       - name: 上传构建产物到服务器
         uses: https://gitea.com/nanqic/scp-action@v1.0.0
+        env:
+          DRONE_SCP_RELEASE_URL: https://gitea.com/nanqic/drone-scp/releases/download
+          DRONE_SCP_VERSION: 1.8.0
         with:
           host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           source: |
-            frontend/.next/standalone/
-            frontend/.next/static/
-            frontend/public/
+            frontend/.next/standalone
+            frontend/.next/static
+            frontend/public
           target: "/opt/hd-zen-web/"
 
       - name: 重启服务
         uses: https://gitea.com/nanqic/ssh-action@v1.2.3
+        env:
+          DRONE_SSH_RELEASE_URL: https://gitea.com/nanqic/drone-ssh/releases/download
+          DRONE_SSH_VERSION: 1.8.1
         with:
           host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEPLOY_USER }}
