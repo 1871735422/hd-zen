@@ -46,14 +46,14 @@ jobs:
 
       - name: 检查构建产物
         run: |
-          echo "=== 检查 frontend/.next 目录结构 ==="
-          ls -la frontend/.next/ || echo "frontend/.next 不存在"
-          echo "=== 检查 standalone 目录 ==="
-          ls -la frontend/.next/standalone/ || echo "standalone 目录不存在"
-          echo "=== 检查 static 目录 ==="
-          ls -la frontend/.next/static/ || echo "static 目录不存在"
-          echo "=== 检查 public 目录 ==="
-          ls -la frontend/public/ || echo "public 目录不存在"
+          echo "=== 执行: ls -la frontend/.next/ ==="
+          ls -la frontend/.next/
+          echo "=== 执行: ls -la frontend/.next/standalone/ ==="
+          ls -la frontend/.next/standalone/ || echo "❌ standalone 目录不存在"
+          echo "=== 执行: ls -la frontend/.next/static/ ==="
+          ls -la frontend/.next/static/ || echo "❌ static 目录不存在"
+          echo "=== 执行: ls -la frontend/public/ ==="
+          ls -la frontend/public/ || echo "❌ public 目录不存在"
 
       - name: 上传构建产物到服务器
         uses: https://gitea.com/nanqic/scp-action@v1.0.1
@@ -61,10 +61,7 @@ jobs:
           host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
-          source: |
-            frontend/.next/standalone
-            frontend/.next/static
-            frontend/public
+          source: "frontend/.next/standalone,frontend/.next/static,frontend/public"
           target: "/opt/hd-zen-web/"
 
       - name: 重启服务
