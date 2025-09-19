@@ -1,0 +1,81 @@
+name: 构建和部署
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy-staging:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出代码
+        uses: https://gitea.com/actions/checkout@v4
+
+      - name: 设置 Node.js
+        uses: https://gitea.com/actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: 安装 pnpm
+        run: corepack enable pnpm
+
+      - name: 安装依赖
+        run: |
+          cd frontend
+          export NODE_NO_WARNINGS=1
+          pnpm install --frozen-lockfile
+
+      - name: 构建项目
+        run: |
+          cd frontend
+          export NODE_ENV=staging
+          export NODE_NO_WARNINGS=1
+          export NEXT_PB_URL="${{ vars.NEXT_PB_URL }}"
+          export NEXT_PB_AUTH="${{ secrets.NEXT_PB_AUTH }}"  # 认证信息放在 secrets 中更安全
+          
+          echo "🚀 开始构建..."
+          echo "NEXT_PB_URL: $NEXT_PB_URL"
+          echo "NEXT_PB_AUTH: ${NEXT_PB_AUTH:0:10}..." # 只显示前10个字符
+          
+          # 构建项目（包含静态资源复制）
+          timeout 600 pnpm build
+          
+          # 验证构建产物
+          echo "🔍 验证构建产物..."
+          if [ ! -f ".next/standalone/server.js" ]; then
+            echo "❌ standalone server.js 不存在"
+            exit 1
+          fi
+          
+          echo "✅ 构建完成"
+
+
+      - name: 上传构建产物到服务器
+        uses: https://gitea.com/nanqic/scp-action@v1.0.1
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          source: "frontend/.next/standalone,frontend/.next/static,frontend/public"
+          target: "/opt/hd-zen-web/"
+
+      - name: 重启服务
+        uses: https://gitea.com/nanqic/ssh-action@v1.2.3
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          script: |
+            cd /opt/hd-zen-web/frontend
+            
+            # 重启服务
+            if pm2 list | grep -q "hd-zen-web"; then
+              pm2 reload hd-zen-web
+            else
+              PORT=3011 pm2 start .next/standalone/server.js --name hd-zen-web
+            fi
+            
+            # 等待并验证服务
+            sleep 3
+            curl -f -s http://localhost:3011/ > /dev/null && echo "✅ 服务启动成功" || echo "❌ 服务启动失败"

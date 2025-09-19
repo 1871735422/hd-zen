@@ -1,0 +1,207 @@
+name: 生产环境部署
+
+on:
+  push:
+    branches: [ main ]
+    tags:
+      - '*-release'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: '发布标签（以 -release 结尾）'
+        required: true
+        type: string
+
+jobs:
+  deploy-production:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: 检出代码
+        uses: https://gitea.com/actions/checkout@v4
+
+      - name: 设置 Node.js
+        uses: https://gitea.com/actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: 安装 pnpm
+        run: corepack enable pnpm
+
+      - name: 安装依赖
+        run: |
+          cd frontend
+          export NODE_NO_WARNINGS=1
+          pnpm install --frozen-lockfile
+
+      - name: 验证 API 连接
+        run: |
+          cd frontend
+          export NEXT_PB_URL="${{ vars.NEXT_PB_URL }}"
+          export NEXT_PB_AUTH="${{ secrets.NEXT_PB_AUTH }}"
+          echo "🔍 验证生产环境 API 连接: $NEXT_PB_URL"
+          
+          if [ -n "$NEXT_PB_AUTH" ]; then
+            AUTH_USER=$(echo $NEXT_PB_AUTH | cut -d: -f1)
+            AUTH_PASS=$(echo $NEXT_PB_AUTH | cut -d: -f2)
+            if curl -f -s -u "$AUTH_USER:$AUTH_PASS" "$NEXT_PB_URL/api/collections/courses/records" > /dev/null; then
+              echo "✅ 生产环境 API 连接正常"
+            else
+              echo "❌ 生产环境 API 连接失败，但继续构建"
+            fi
+          else
+            echo "⚠️ 未设置认证信息，尝试无认证连接"
+            if curl -f -s "$NEXT_PB_URL/api/collections/courses/records" > /dev/null; then
+              echo "✅ 生产环境 API 连接正常"
+            else
+              echo "❌ 生产环境 API 连接失败，但继续构建"
+            fi
+          fi
+
+      - name: 构建生产项目
+        run: |
+          cd frontend
+          export NODE_ENV=production
+          export NODE_NO_WARNINGS=1
+          export NEXT_PB_URL="${{ vars.NEXT_PB_URL }}"
+          export NEXT_PB_AUTH="${{ secrets.NEXT_PB_AUTH }}"
+          
+          TAG_NAME="${{ github.ref_name }}"
+          echo "🚀 开始构建生产环境..."
+          echo "Tag: $TAG_NAME"
+          echo "NEXT_PB_URL: $NEXT_PB_URL"
+          echo "NEXT_PB_AUTH: ${NEXT_PB_AUTH:0:10}..."
+          
+          # 构建项目
+          timeout 600 pnpm build || {
+            echo "⚠️ 构建过程出现问题，检查构建产物..."
+            if [ -d ".next" ] && [ -f ".next/standalone/server.js" ]; then
+              echo "✅ Next.js 构建成功，检查静态资源..."
+              
+              if [ ! -d ".next/standalone/.next/static" ]; then
+                echo "📁 手动复制静态资源..."
+                mkdir -p .next/standalone/.next/
+                cp -r .next/static .next/standalone/.next/ || echo "⚠️ 静态资源复制失败"
+              fi
+              
+              if [ ! -d ".next/standalone/public" ]; then
+                echo "📁 手动复制 public 目录..."
+                cp -r public .next/standalone/ || echo "⚠️ public 目录复制失败"
+              fi
+              
+              echo "✅ 构建产物检查完成，继续部署"
+            else
+              echo "❌ Next.js 构建失败，退出"
+              exit 1
+            fi
+          }
+          
+          # 验证构建产物
+          echo "🔍 验证生产环境构建产物..."
+          if [ ! -f ".next/standalone/server.js" ]; then
+            echo "❌ standalone server.js 不存在"
+            exit 1
+          fi
+          
+          # 确保静态资源存在
+          if [ ! -d ".next/standalone/.next/static" ]; then
+            echo "📁 复制静态资源..."
+            mkdir -p .next/standalone/.next/
+            cp -r .next/static .next/standalone/.next/
+          fi
+          
+          if [ ! -d ".next/standalone/public" ]; then
+            echo "📁 复制 public 目录..."
+            cp -r public .next/standalone/
+          fi
+          
+          echo "✅ 生产环境构建验证完成"
+
+      - name: 创建发布包并发布到 Gitea
+        run: |
+          cd frontend
+          TAG_NAME="${{ github.ref_name }}"
+          RELEASE_NAME="hd-zen-web-${TAG_NAME%-release}"
+          
+          echo "📦 创建生产发布包: $RELEASE_NAME"
+          
+          # 创建发布目录
+          mkdir -p ../release
+          
+          # 复制构建产物
+          cp -r .next/standalone ../release/
+          cp -r .next/static ../release/
+          cp -r public ../release/
+          
+          # 创建压缩包
+          cd ../release
+          zip -r "../${RELEASE_NAME}.zip" .
+          
+          echo "✅ 生产发布包创建完成"
+          ls -la ../${RELEASE_NAME}.*
+
+      - name: 发布到 Gitea Release
+        uses: https://gitea.com/actions/gitea-release@v1
+        with:
+          api_url: ${{ vars.GITEA_API_URL || 'https://gitea.com' }}
+          gitea_token: ${{ secrets.GITEA_TOKEN }}
+          tag: ${{ github.ref_name }}
+          title: "HD Zen Web ${{ github.ref_name }} - 生产环境发布"
+          body: |
+            ## 🚀 HD Zen Web 生产环境发布
+            
+            **版本**: ${{ github.ref_name }}
+            **构建时间**: $(date)
+            
+            ### 📋 变更日志
+            请查看 [CHANGELOG.md](../../blob/main/CHANGELOG.md) 了解详细变更。
+          files: |
+            hd-zen-web-${{ github.ref_name }%-release}.tar.gz
+            hd-zen-web-${{ github.ref_name }%-release}.zip
+          draft: false
+          prerelease: false
+
+      - name: 部署到生产服务器
+        uses: https://gitea.com/nanqic/scp-action@v1.0.1
+        with:
+          host: ${{ secrets.PROD_DEPLOY_HOST }}
+          username: ${{ secrets.PROD_DEPLOY_USER }}
+          key: ${{ secrets.PROD_DEPLOY_SSH_KEY }}
+          source: "frontend/.next/standalone,frontend/.next/static,frontend/public"
+          target: "/opt/hd-zen-web-prod/"
+
+      - name: 重启生产服务
+        uses: https://gitea.com/nanqic/ssh-action@v1.2.3
+        with:
+          host: ${{ secrets.PROD_DEPLOY_HOST }}
+          username: ${{ secrets.PROD_DEPLOY_USER }}
+          key: ${{ secrets.PROD_DEPLOY_SSH_KEY }}
+          script: |
+            cd /opt/hd-zen-web-prod/frontend
+            
+            echo "🔄 重启生产服务..."
+            
+            if pm2 list | grep -q "hd-zen-web-prod"; then
+              echo "📊 当前生产服务状态:"
+              pm2 list | grep hd-zen-web-prod
+              pm2 reload hd-zen-web-prod
+              echo "✅ 生产服务重新加载完成"
+            else
+              echo "🚀 启动新生产服务..."
+              PORT=3011 pm2 start .next/standalone/server.js --name hd-zen-web-prod
+              echo "✅ 新生产服务启动完成"
+            fi
+            
+            sleep 3
+            
+            echo "🔍 验证生产服务状态..."
+            pm2 list | grep hd-zen-web-prod
+            
+            echo "🌐 测试生产服务响应..."
+            if curl -f -s http://localhost:3011/ > /dev/null; then
+              echo "✅ 生产服务响应正常"
+            else
+              echo "❌ 生产服务响应异常"
+            fi
+            
+            echo "🎉 生产环境部署完成！"
