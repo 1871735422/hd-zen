@@ -1,10 +1,5 @@
 'use client';
-import { Box, Paper, Stack, Typography } from '@mui/material';
-import {
-  getTagBgColor,
-  getTagTextColor,
-  getTextColor,
-} from '../../constants/colors';
+import { Box, Divider, Paper, Stack, Typography } from '@mui/material';
 import { formatDate } from '../../utils/courseUtils';
 import { READING_THEMES, useReadingMode } from './ReadingModeProvider';
 import ReadingModeSidebar from './ReadingModeSidebar';
@@ -51,17 +46,53 @@ export default function ReadingModeContainer({
         sx={{
           position: 'relative',
           maxWidth: '900px',
-          margin: '0 auto',
+          margin: '40px auto 60px',
           zIndex: 2,
+          ':before': {
+            content: '""',
+            position: 'absolute',
+            top: -28,
+            left: '2%',
+            width: '96%',
+            height: 32,
+            borderRadius: '20px 20px 0 0',
+            backgroundColor: READING_THEMES[
+              state.backgroundTheme
+            ].main?.replace('1)', '0.3)'),
+          },
+          ':after': {
+            content: '""',
+            position: 'absolute',
+            top: -40,
+            left: '3%',
+            width: '94%',
+            height: 36,
+            borderRadius: '20px 20px 0 0',
+            backgroundColor: READING_THEMES[
+              state.backgroundTheme
+            ].main?.replace('1)', '0.15)'),
+          },
         }}
       >
         <Paper
           elevation={0}
           sx={{
             backgroundColor: READING_THEMES[state.backgroundTheme].main,
-            borderRadius: '16px',
+            borderRadius: '20px',
             padding: '80px 60px 60px 60px',
             minHeight: 'calc(100vh - 160px)',
+            ':before': {
+              content: '""',
+              position: 'absolute',
+              top: -14,
+              left: '1%',
+              width: '98%',
+              height: 22,
+              borderRadius: '20px 20px 0 0',
+              backgroundColor: READING_THEMES[
+                state.backgroundTheme
+              ].main?.replace('1)', '0.5)'),
+            },
           }}
         >
           {/* 标题 */}
@@ -71,7 +102,7 @@ export default function ReadingModeContainer({
             sx={{
               textAlign: 'center',
               fontWeight: 'bold',
-              color: getTextColor(state.backgroundTheme),
+              color: READING_THEMES[state.backgroundTheme].text,
               marginBottom: '40px',
               fontSize: '2rem',
               lineHeight: 1.2,
@@ -93,7 +124,7 @@ export default function ReadingModeContainer({
                 variant='body2'
                 component={'span'}
                 sx={{
-                  color: getTextColor(state.backgroundTheme),
+                  color: READING_THEMES[state.backgroundTheme].text,
                   fontSize: '14px',
                   fontWeight: '500',
                   minWidth: 40,
@@ -114,13 +145,13 @@ export default function ReadingModeContainer({
                   <Box
                     key={index}
                     sx={{
-                      backgroundColor: getTagBgColor(state.backgroundTheme),
-                      color: getTagTextColor(state.backgroundTheme),
-                      padding: '6px 12px',
-                      borderRadius: '16px',
-                      fontSize: '12px',
-                      fontWeight: '500',
-                      border: `1px solid ${getTagTextColor(state.backgroundTheme)}20`,
+                      backgroundColor:
+                        READING_THEMES[state.backgroundTheme].tagBg,
+                      color: READING_THEMES[state.backgroundTheme].tagText,
+                      padding: '3px 10px',
+                      borderRadius: '20px',
+                      fontSize: 14,
+                      cursor: 'pointer',
                     }}
                   >
                     {tag}
@@ -143,8 +174,7 @@ export default function ReadingModeContainer({
                 variant='body2'
                 component={'span'}
                 sx={{
-                  color: getTextColor(state.backgroundTheme),
-                  fontSize: '14px',
+                  color: READING_THEMES[state.backgroundTheme].text,
                   fontWeight: '500',
                   minWidth: 40,
                   marginRight: 1.5,
@@ -155,7 +185,7 @@ export default function ReadingModeContainer({
               <Typography
                 variant='body1'
                 sx={{
-                  color: getTextColor(state.backgroundTheme),
+                  color: READING_THEMES[state.backgroundTheme].text,
                   lineHeight: state.lineSpacing,
                   fontSize: `${state.fontSize}px`,
                   opacity: 0.8,
@@ -172,8 +202,8 @@ export default function ReadingModeContainer({
               <Typography
                 variant='body2'
                 sx={{
-                  color: getTextColor(state.backgroundTheme),
-                  fontSize: '14px',
+                  color: READING_THEMES[state.backgroundTheme].text,
+                  fontSize: 13,
                   opacity: 0.7,
                 }}
               >
@@ -186,19 +216,16 @@ export default function ReadingModeContainer({
           )}
 
           {/* 分隔线 */}
-          <Box
+          <Divider
             sx={{
-              height: '1px',
-              backgroundColor: getTextColor(state.backgroundTheme),
-              opacity: 0.2,
-              marginBottom: '40px',
+              backgroundColor: READING_THEMES[state.backgroundTheme].divider,
             }}
           />
 
           {/* 文章内容 */}
           <Box
             sx={{
-              color: getTextColor(state.backgroundTheme),
+              color: READING_THEMES[state.backgroundTheme].text,
               fontSize: `${state.fontSize}px`,
               lineHeight: state.lineSpacing,
               fontWeight: state.fontWeight,
@@ -218,7 +245,7 @@ export default function ReadingModeContainer({
               '& h5': { fontSize: '1.1em' },
               '& h6': { fontSize: '1em' },
               '& blockquote': {
-                borderLeft: `4px solid ${getTextColor(state.backgroundTheme)}40`,
+                borderLeft: `4px solid ${READING_THEMES[state.backgroundTheme].text}`,
                 paddingLeft: '20px',
                 margin: '20px 0',
                 fontStyle: 'italic',

@@ -92,7 +92,7 @@ export default function ReadingSidebar({
 
   return (
     <Stack
-      spacing={2}
+      spacing={0.7}
       alignItems='center'
       sx={{
         position: 'absolute',

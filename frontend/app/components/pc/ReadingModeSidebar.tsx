@@ -51,27 +51,29 @@ export default function ReadingModeSidebar({
     toggleFontWeight,
   } = useReadingMode();
 
-  const sidebarBg = READING_THEMES[state.backgroundTheme].sidebar_bg;
-  const sidebarText = READING_THEMES[state.backgroundTheme].sidebar_text;
-  const sidebarBackBg = READING_THEMES[state.backgroundTheme].sidebar_back_bg;
-  const buttonBg = READING_THEMES[state.backgroundTheme].sidebar_btn_bg;
+  const sidebarBg = READING_THEMES[state.backgroundTheme].sidebarBg;
+  const sidebarText = READING_THEMES[state.backgroundTheme].sidebarText;
+  const sidebarBackText = READING_THEMES[state.backgroundTheme].sidebarBackText;
+  const settingText = READING_THEMES[state.backgroundTheme].settingText;
+  const sidebarBackBg = READING_THEMES[state.backgroundTheme].sidebarBackBg;
+  const buttonBg = READING_THEMES[state.backgroundTheme].sidebarBtnBg;
 
   const backgroundThemes: {
     theme: BackgroundTheme;
     color: string;
     label: string;
   }[] = [
+    { theme: 'brown', color: READING_THEMES.brown.main, label: '棕' },
     { theme: 'white', color: READING_THEMES.white.main, label: '白' },
-    { theme: 'gray', color: READING_THEMES.gray.main, label: '棕' },
-    { theme: 'dark', color: READING_THEMES.dark.main, label: '黑' },
     { theme: 'green', color: READING_THEMES.green.main, label: '绿' },
+    { theme: 'dark', color: READING_THEMES.dark.main, label: '黑' },
   ];
 
   return (
     <Box
       sx={{
         position: 'absolute',
-        right: '-45px',
+        right: '-50px',
         top: '40px',
         zIndex: 1000,
       }}
@@ -79,11 +81,11 @@ export default function ReadingModeSidebar({
       {/* 主工具栏 - 根据收起状态调整高度 */}
       <Box
         sx={{
-          width: 45,
+          width: 50,
           zIndex: 1000,
           backgroundColor: sidebarBg,
           borderRadius: '0 20px 20px 0',
-          padding: state.sidebarCollapsed ? '5px 0' : '6px 0',
+          padding: state.sidebarCollapsed ? '5px 0' : '2px 0 10px 0',
           height: state.sidebarCollapsed ? 40 : 'auto',
           boxShadow: `0px 2px 4px ${sidebarBg.replace('1)', '0.25)')}`,
           display: 'flex',
@@ -97,7 +99,7 @@ export default function ReadingModeSidebar({
           <IconButton
             onClick={toggleSidebar}
             sx={{
-              color: sidebarText,
+              color: settingText,
               borderRadius: '15px',
               width: 30,
               height: 30,
@@ -111,6 +113,7 @@ export default function ReadingModeSidebar({
         ) : (
           /* 展开状态 - 垂直排列所有按钮 */
           <Stack
+            spacing={0.8}
             alignItems='center'
             sx={{
               '& .MuiButton-text': {
@@ -125,7 +128,7 @@ export default function ReadingModeSidebar({
               sx={{
                 width: 40,
                 height: 40,
-                color: sidebarText,
+                color: settingText,
                 '&:hover': {
                   opacity: 0.8,
                 },
@@ -220,15 +223,14 @@ export default function ReadingModeSidebar({
       <Box sx={{ position: 'relative' }}>
         <Button
           sx={{
-            width: 40,
-            height: 57,
+            width: 44,
+            height: 66,
             minWidth: 0,
             pt: 1,
             borderRadius: '0 0 20px 0',
             backgroundColor: sidebarBackBg,
-            color: sidebarText,
-            fontSize: '13px',
-            fontWeight: 'bold',
+            color: sidebarBackText,
+            fontSize: 16,
             writingMode: 'vertical-rl',
             textOrientation: 'mixed',
             transition: 'all 0.3s ease',
