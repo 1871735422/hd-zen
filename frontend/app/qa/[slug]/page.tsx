@@ -1,11 +1,11 @@
 import {
+  getCourses,
   getCourseTopicsByDisplayOrder,
   getQuestionsByOrder,
-  getCourses,
 } from '@/app/api';
+import CourseCard from '@/app/components/pc/CourseCard';
 import { Container, Grid } from '@mui/material';
 import QaSidebar from '../../components/pc/QaSidebar';
-import CourseCard from '@/app/components/pc/CourseCard';
 
 // 15分钟缓存
 export const revalidate = 900;
@@ -93,7 +93,7 @@ export default async function QaPage({ params, searchParams }: QaPageProps) {
             }}
             size={9}
           >
-            {questions.map(question => (
+            {questions.map((question, idx) => (
               <Grid key={question.id} size={{ xs: 12, sm: 6, md: 4 }}>
                 <CourseCard
                   item={{
@@ -103,6 +103,7 @@ export default async function QaPage({ params, searchParams }: QaPageProps) {
                   }}
                   courseOrder={Number(displayOrder)}
                   slug='qa'
+                  questionOrder={idx + 1}
                 />
               </Grid>
             ))}

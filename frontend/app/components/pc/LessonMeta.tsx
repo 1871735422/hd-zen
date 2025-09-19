@@ -1,4 +1,4 @@
-import { Box, Stack, Typography } from '@mui/material';
+import { Box, Link, Stack, Typography } from '@mui/material';
 import { Fragment } from 'react';
 import { formatDate } from '../../utils/courseUtils';
 import CourseTag from '../shared/CourseTag';
@@ -9,6 +9,8 @@ export interface LessonMetaProps {
   description: string;
   author: string;
   date: string;
+  refCourse?: string;
+  refUrl?: string;
 }
 
 export default function LessonMeta({
@@ -17,15 +19,17 @@ export default function LessonMeta({
   description,
   author,
   date,
+  refCourse,
+  refUrl,
 }: LessonMetaProps) {
-  console.log(/^\d+\./.test(title));
+  const isQuestion = /^\d+\./.test(title);
   return (
     <Box sx={{ mt: 3 }}>
       <Typography
         fontWeight={500}
         px={0}
         fontSize={24}
-        align={/^\d+\./.test(title) ? 'left' : 'center'}
+        align={isQuestion ? 'left' : 'center'}
         color='#333'
         my={3}
       >
@@ -34,8 +38,9 @@ export default function LessonMeta({
       {description && (
         <Box
           sx={{
-            backgroundImage: 'url(/images/course-desc-bg.webp)',
-            backgroundPositionY: '40%',
+            background: isQuestion
+              ? 'rgba(240, 247, 255, 1)'
+              : 'url(/images/course-desc-bg.webp) 0 40% / cover no-repeat',
             borderRadius: 6,
             p: 3,
             boxShadow: '0 2px 16px 0 rgba(0,0,0,0.06)',
@@ -96,15 +101,21 @@ export default function LessonMeta({
           </Box>
         </Box>
       )}
-      <Box mt={1} mb={2}>
+      <Box mt={1} mb={2} color='rgba(153, 153, 153, 1)' fontSize={16}>
         <Typography
-          variant='subtitle2'
-          color='rgba(153, 153, 153, 1)'
+          variant='subtitle1'
           fontFamily={'"Microsoft Yahei", "Hiragino Sans GB"'}
-          fontSize={14}
         >
           作者：{author?.replace('作者：', '')} &nbsp;&nbsp; {formatDate(date)}
         </Typography>
+        {refCourse && (
+          <Typography variant='subtitle1'>
+            本问答属于：
+            <Link href={refUrl} color='rgba(86, 137, 204, 1) !important'>
+              {refCourse}
+            </Link>
+          </Typography>
+        )}
       </Box>
     </Box>
   );

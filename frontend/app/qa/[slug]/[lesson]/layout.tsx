@@ -2,11 +2,7 @@ import AppBreadcrumbs, {
   BreadcrumbProvider,
 } from '@/app/components/pc/AppBreadcrumbs';
 import { Box, Container } from '@mui/material';
-import {
-  getCategories,
-  getCourseByDisplayOrder,
-  getCourseTopicsByCourse,
-} from '../../../api';
+import { getCourseByDisplayOrder, getCourseTopicsByCourse } from '../../../api';
 
 const LessonLayout = async ({
   children,
@@ -19,22 +15,21 @@ const LessonLayout = async ({
   const courseOrder = resolvedParams.slug;
   const lessonOrder = resolvedParams.lesson.replace('lesson', '');
   const course = await getCourseByDisplayOrder(courseOrder);
+  // console.log('course', course);
   const courseId = course?.id || '';
   const { items: courseTopics } = await getCourseTopicsByCourse(courseId);
-  const lessonCrumbLabel =
+  // console.log('courseTopics', courseTopics);
+  const courseName = course?.title ?? '';
+  const lessonName =
     courseTopics.find(topic => topic.ordering + '' === lessonOrder)?.title ??
     '';
-  const menuData = await getCategories('慧灯禅修课');
-  const lessonName =
-    menuData[0].subMenu?.find(item => item.slug === lessonOrder)?.name ?? '';
-
   const breadcrumbItems = [
     { label: '首页', href: '/' },
-    { label: '慧灯禅修课', href: '/course' },
-    { label: lessonName, href: `/course/${courseOrder}` },
+    { label: '禅修课问答', href: '/qa' },
+    { label: courseName, href: `/qa/${courseOrder}` },
     {
-      label: lessonCrumbLabel,
-      href: `/course/${courseOrder}/lesson${lessonOrder}`,
+      label: lessonName,
+      href: `/qa/${courseOrder}/lesson${lessonOrder}`,
     },
   ];
 

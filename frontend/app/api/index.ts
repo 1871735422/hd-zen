@@ -237,9 +237,8 @@ export const getCourses = async (): Promise<PaginatedResponse<Course>> => {
   }
 };
 
-
 /**
- * 
+ *
  * @param displayOrder 课程编号 如：1
  * @returns 课程内容
  */
@@ -258,7 +257,7 @@ export const getCourseTopicsByDisplayOrder = async (
 };
 
 /**
- * 
+ *
  * @param volume 第几册课程 如：1
  * @param lesson 课时编号 如：1
  * @returns 此问题内容列表
@@ -299,7 +298,7 @@ export const getAnswerMediaByOrder = async (
   console.log('result', result);
   return {
     ...result?.items[0],
-    media: result?.items[0].expand.mediaId,
+    media: result?.items[0]?.expand.mediaId,
   };
 };
 
@@ -318,7 +317,7 @@ export const getCourseByDisplayOrder = async (
 };
 
 /**
- * 
+ *
  * @returns 课程内容列表
  */
 export const getCourseTopics = async (): Promise<
@@ -402,7 +401,7 @@ export const getCourseTopicById = async (
 };
 
 /**
- * 
+ *
  * @param courseOrder 第几册课程 如：1
  * @param lessonOrder 课时编号 如：1
  * @returns 此课时内容
@@ -432,7 +431,7 @@ export const getCourseTopicByOrder = async (
 };
 
 /**
- * 
+ *
  * @param courseOrder 第几册课程 如：1
  * @param lessonOrder 课时编号 如：1
  * @returns 此课时媒体内容

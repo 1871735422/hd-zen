@@ -11,17 +11,19 @@ interface ReferenceCardProps {
   };
   slug: 'course' | 'qa' | 'reference';
   courseOrder?: number;
+  questionOrder?: number;
 }
 
 export default function CourseCard({
   item,
   courseOrder,
   slug,
+  questionOrder,
 }: ReferenceCardProps) {
   const isQa = slug === 'qa';
   return (
     <Link
-      href={`/${slug}/${courseOrder}/lesson${item.idx}`}
+      href={`/${slug}/${courseOrder}/lesson${item.idx}${questionOrder ? `?tab=question${questionOrder}` : ''}`}
       sx={{
         textDecoration: 'none',
       }}

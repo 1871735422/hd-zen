@@ -1,16 +1,20 @@
 import {
+  getAnswerMediaByOrder,
+  getCourseByDisplayOrder,
   getCourses,
   getCourseTopicsByCourse,
   getQuestionsByOrder,
-  getAnswerMediaByOrder,
 } from '@/app/api';
-import { CourseTopic } from '@/app/types/models';
-import { Grid, Container, Box, Typography } from '@mui/material';
-import { notFound } from 'next/navigation';
-import QaSidebar from '@/app/components/pc/QaSidebar';
 import LessonMeta from '@/app/components/pc/LessonMeta';
-import VideoPlayer from '@/app/components/pc/VideoPlayer';
 import MediaDownloadButton from '@/app/components/pc/MediaDownloadButton';
+import QaSidebar from '@/app/components/pc/QaSidebar';
+import VideoPlayer from '@/app/components/pc/VideoPlayer';
+import { CourseTopic } from '@/app/types/models';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { Box, Button, Container, Grid, Stack, Typography } from '@mui/material';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
 import { Fragment } from 'react';
 
 // 15分钟缓存
@@ -90,6 +94,15 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
   const courseOrder = resolvedParams.slug;
   const lessonOrder = resolvedParams.lesson?.replace('lesson', '');
 
+  // 获取课程和课时信息
+  const course = await getCourseByDisplayOrder(courseOrder);
+  const courseId = course?.id || '';
+  const { items: courseTopics } = await getCourseTopicsByCourse(courseId);
+  const courseName = course?.title ?? '';
+  const lessonName =
+    courseTopics.find(topic => topic.ordering + '' === lessonOrder)?.title ??
+    '';
+
   // 获取问题和答案
   const questionsRes = await getQuestionsByOrder(courseOrder, lessonOrder);
   const answerMediaRes = await getAnswerMediaByOrder(
@@ -159,9 +172,16 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
               }}
             >
               <LessonMeta
-                title={`${questionOrder}. ${answerMediaRes?.media?.title}`}
-                tags={[]}
-                description={answerMediaRes?.media?.summary ?? ''}
+                title={
+                  answerMediaRes?.media?.title
+                    ? `${questionOrder}. ${answerMediaRes?.media?.title}`
+                    : ''
+                }
+                tags={['智悲力', '禅修课', '中观', '大圆满']}
+                description={
+                  // answerMediaRes?.media?.summary ??
+                  '想要度化众生，必须提升自己的智、悲、力，其中最重要的是智，即证悟心性的智慧。本课介绍了显宗中观、密宗气脉明点和大圆满三种证悟的方法，然后引用《大宝积经》中的偈颂，进一步阐明所要证悟的心的本性究竟为何。'
+                }
                 author='作者：慈诚罗珠堪布'
                 date={
                   answerMediaRes?.created
@@ -170,6 +190,8 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
                       )
                     : ''
                 }
+                refCourse={`${courseName} > ${lessonName}`}
+                refUrl={`/course/${courseOrder}/lesson${lessonOrder}`}
               />
             </Box>
             <>
@@ -179,7 +201,7 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
                   my: -3,
                 }}
                 mediaType='video'
-                downloadUrls={[answerMediaRes?.media?.url_hd || '']}
+                downloadUrls={[answerMediaRes?.media?.url_downmp4 || '']}
               />
               {answerMediaRes?.media?.url_hd && (
                 <Fragment key={answerMediaRes?.media?.id}>
@@ -200,6 +222,49 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
                   )}
                 </Fragment>
               )}
+              <Stack
+                direction='row'
+                justifyContent='space-between'
+                sx={{
+                  '& .MuiButton-root': {
+                    backgroundColor: 'rgba(240, 247, 255, 1)',
+                    py: 0.5,
+                    px: 2,
+                    borderRadius: '20px',
+                  },
+                  '& .MuiButton-root>a': {
+                    color: 'rgba(127, 173, 235, 1)',
+                  },
+                  '& .MuiButton-startIcon': {
+                    marginRight: '0 !important',
+                    fontWeight: 300,
+                  },
+                  '& .MuiButton-endIcon': {
+                    marginLeft: '0 !important',
+                  },
+                }}
+              >
+                <Button
+                  startIcon={<ArrowBackIosIcon />}
+                  disabled={parseInt(questionOrder) <= 1}
+                >
+                  <Link
+                    href={`/qa/${courseOrder}/lesson${lessonOrder}?tab=question${parseInt(questionOrder) - 1}`}
+                  >
+                    上一个
+                  </Link>
+                </Button>
+                <Button
+                  disabled={parseInt(questionOrder) >= questions.length}
+                  endIcon={<ArrowForwardIosIcon />}
+                >
+                  <Link
+                    href={`/qa/${courseOrder}/lesson${lessonOrder}?tab=question${parseInt(questionOrder) + 1}`}
+                  >
+                    下一个
+                  </Link>
+                </Button>
+              </Stack>
             </>
           </Box>
         </Grid>

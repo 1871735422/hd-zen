@@ -47,7 +47,6 @@ export default function VideoPlayer({ poster, src, title }: VideoPlayerProps) {
             alt={title || ''}
             width={1000}
             height={1000}
-            objectFit='cover'
             style={{
               position: 'absolute',
               top: 0,
@@ -55,6 +54,7 @@ export default function VideoPlayer({ poster, src, title }: VideoPlayerProps) {
               width: '100%',
               height: '100%',
               borderRadius: 10,
+              objectFit: 'cover',
             }}
           />
           <IconButton
@@ -106,7 +106,6 @@ export default function VideoPlayer({ poster, src, title }: VideoPlayerProps) {
             alt={title || ''}
             width={1000}
             height={1000}
-            objectFit='cover'
             style={{
               position: 'absolute',
               top: 0,
@@ -114,6 +113,7 @@ export default function VideoPlayer({ poster, src, title }: VideoPlayerProps) {
               width: '100%',
               height: '100%',
               borderRadius: 10,
+              objectFit: 'cover',
             }}
           />
         )}
