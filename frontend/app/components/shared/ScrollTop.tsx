@@ -1,7 +1,7 @@
 'use client';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { Fab, Fade, useScrollTrigger } from '@mui/material';
+import { Fade, useScrollTrigger } from '@mui/material';
 import Box from '@mui/material/Box';
+import ToTopIcon from '../icons/ToTopIcon';
 
 export const handleScrollTop = (event: React.MouseEvent<HTMLDivElement>) => {
   const anchor = (
@@ -25,12 +25,16 @@ export default function ScrollTop() {
     <Fade in={trigger}>
       <Box
         onClick={handleScrollTop}
+        aria-label='scroll back to top'
         role='presentation'
-        sx={{ position: 'fixed', bottom: 60, right: 16 }}
+        sx={{
+          position: 'fixed',
+          bottom: 60,
+          right: 16,
+          color: 'rgba(127, 173, 235, 1)',
+        }}
       >
-        <Fab size='small' aria-label='scroll back to top'>
-          <KeyboardArrowUpIcon />
-        </Fab>
+        <ToTopIcon />
       </Box>
     </Fade>
   );
