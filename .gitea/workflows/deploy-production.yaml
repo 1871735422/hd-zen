@@ -2,7 +2,6 @@ name: 生产环境部署
 
 on:
   push:
-    branches: [ main ]
     tags:
       - '*-release'
   workflow_dispatch:
@@ -18,7 +17,7 @@ jobs:
     environment: production
     steps:
       - name: 检出代码
-        uses: https://gitea.com/actions/checkout@v4
+        uses: https://gitea.com/actions/checkout@v4 # 访问不了github，采用gitea的仓库
 
       - name: 设置 Node.js
         uses: https://gitea.com/actions/setup-node@v4
@@ -141,12 +140,12 @@ jobs:
           ls -la ../${RELEASE_NAME}.*
 
       - name: 发布到 Gitea Release
-        uses: https://gitea.com/actions/gitea-release@v1
+        uses: akkuman/gitea-release-action@v1
         with:
-          api_url: ${{ vars.GITEA_API_URL || 'https://gitea.com' }}
-          gitea_token: ${{ secrets.GITEA_TOKEN }}
-          tag: ${{ github.ref_name }}
-          title: "HD Zen Web ${{ github.ref_name }} - 生产环境发布"
+          server_url: ${{ vars.GITEA_API_URL || 'https://gitea.com' }}
+          token: ${{ secrets.GITEA_TOKEN }}
+          tag_name: ${{ github.ref_name }}
+          name: "HD Zen Web ${{ github.ref_name }} - 生产环境发布"
           body: |
             ## 🚀 HD Zen Web 生产环境发布
             
@@ -156,7 +155,6 @@ jobs:
             ### 📋 变更日志
             请查看 [CHANGELOG.md](../../blob/main/CHANGELOG.md) 了解详细变更。
           files: |
-            hd-zen-web-${{ github.ref_name }%-release}.tar.gz
             hd-zen-web-${{ github.ref_name }%-release}.zip
           draft: false
           prerelease: false
