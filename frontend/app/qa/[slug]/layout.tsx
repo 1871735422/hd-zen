@@ -1,8 +1,8 @@
 import CategorySelector from '@/app/components/pc/CategorySelector';
+import TitleBanner from '@/app/components/shared/TitleBanner';
 import { Container } from '@mui/material';
 import { notFound } from 'next/navigation';
 import { getCourseByDisplayOrder, getCourses } from '../../api';
-import TitleBanner from '@/app/components/shared/TitleBanner';
 
 // 15分钟缓存
 export const revalidate = 900;
@@ -36,6 +36,7 @@ export default async function CourseLayout({
       sx={{
         m: 0,
         px: { lg: 25 },
+        background: 'url(/images/course-bg-h.png)',
       }}
     >
       <TitleBanner title='禅修课问答' />

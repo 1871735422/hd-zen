@@ -123,7 +123,6 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
     <Container
       maxWidth='lg'
       sx={{
-        backgroundImage: 'url(/images/course-lesson-bg.jpg)',
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',
         backgroundPosition: 'center',

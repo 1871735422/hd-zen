@@ -59,10 +59,6 @@ export default async function QaPage({ params, searchParams }: QaPageProps) {
       <Container
         maxWidth='lg'
         sx={{
-          backgroundImage: 'url(/images/course-lesson-bg.jpg)',
-          backgroundSize: 'cover',
-          backgroundRepeat: 'no-repeat',
-          backgroundPosition: 'center',
           py: 4,
           px: '0 !important',
         }}

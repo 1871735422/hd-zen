@@ -1,6 +1,6 @@
 import CategorySelector from '@/app/components/pc/CategorySelector';
 import TitleBanner from '@/app/components/shared/TitleBanner';
-import { Container } from '@mui/material';
+import { Container, Typography } from '@mui/material';
 import { notFound } from 'next/navigation';
 import { getCourseByDisplayOrder, getCourses } from '../../api';
 
@@ -39,7 +39,19 @@ export default async function CourseLayout({
         background: 'url(/images/course-bg-h.png)',
       }}
     >
-      <TitleBanner title={'慧灯禅修课'} />
+      <TitleBanner title='学修参考资料' />
+      <Typography
+        sx={{
+          color: 'rgba(127, 173, 235, 1)',
+          mt: -6,
+          mb: 6,
+          px: 2,
+        }}
+      >
+        本栏目提供加行修法的必修资料：《大圆满前行引导文》
+        <br />
+        辅助参考资料：《前行备忘录》《菩提道次第广论》《稻杆经》《大圆满心性修息》
+      </Typography>
       <CategorySelector
         categories={categories}
         selectedCategory={selectedCategory}

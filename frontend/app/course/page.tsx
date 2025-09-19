@@ -19,6 +19,7 @@ async function CoursePage() {
         mx: 0,
         pt: 6,
         pb: 12,
+        background: 'url(/images/course-bg.png)',
       }}
     >
       <Grid
