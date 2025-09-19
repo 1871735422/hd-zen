@@ -225,23 +225,12 @@ export default function ReadingContent({
     return null;
   }
 
-  // 分页模式：完全覆盖服务端内容，只显示分页内容
+  // 分页模式：只显示分页内容，不覆盖服务端内容
   if (mode === 'paged') {
     const currentContent = getCachedPageContent(currentPage);
 
     return (
-      <Box
-        sx={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0, // 覆盖到页面底部
-          zIndex: 1,
-          backgroundColor: 'white', // 完全覆盖服务端内容
-          overflow: 'hidden', // 防止内容溢出
-        }}
-      >
+      <Box>
         {/* 只显示分页内容 */}
         <Typography
           className='reading-content'
@@ -250,8 +239,7 @@ export default function ReadingContent({
             lineHeight: 1.8,
             color: 'rgba(68, 68, 68, 1)',
             mb: 5,
-            minHeight: '400px',
-            pr: 10, // 为侧边栏留空间
+            pr: 2.5, // 为侧边栏留空间
           }}
           dangerouslySetInnerHTML={{ __html: currentContent }}
         />
@@ -264,6 +252,28 @@ export default function ReadingContent({
     );
   }
 
-  // 全文模式：不渲染任何内容，让服务端内容显示
-  return null;
+  // 全文模式：显示完整内容
+  return (
+    <Box>
+      {introText && (
+        <Typography
+          className='reading-content'
+          variant='body1'
+          sx={{
+            lineHeight: 1.8,
+            color: 'rgba(68, 68, 68, 1)',
+            mb: 5,
+            pr: 10, // 为侧边栏留空间
+          }}
+        >
+          {introText}
+        </Typography>
+      )}
+      {fullText && (
+        <Box sx={{ pr: 10 }}>
+          <div dangerouslySetInnerHTML={{ __html: fullText }} />
+        </Box>
+      )}
+    </Box>
+  );
 }

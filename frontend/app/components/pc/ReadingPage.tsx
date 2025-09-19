@@ -1,6 +1,5 @@
 import { Box, Paper, Typography } from '@mui/material';
 import { CourseTopic, TopicMedia } from '../../types/models';
-import Article from '../shared/Article';
 import ScrollTop from '../shared/ScrollTop';
 import AudioPage from './AudioPage';
 import ReadingContentWrapper from './ReadingContentWrapper';
@@ -58,27 +57,11 @@ export default async function ReadingPage({
     <Box>
       <AudioPage topicMedia={topicMedia} courseTopic={topic} />
 
-      {/* 服务端渲染的完整内容 - SEO 友好 */}
+      {/* 阅读内容区域 */}
       <Box sx={{ position: 'relative' }} data-reading-container>
         <ReadingSidebar />
 
-        {/* 默认显示完整内容 */}
-        {topic.article_introtext && (
-          <Typography
-            className='reading-content'
-            variant='body1'
-            sx={{
-              lineHeight: 1.8,
-              color: 'rgba(68, 68, 68, 1)',
-              mb: 5,
-            }}
-          >
-            {topic.article_introtext}
-          </Typography>
-        )}
-        {topic.article_fulltext && <Article html={topic.article_fulltext} />}
-
-        {/* 客户端增强功能 */}
+        {/* 客户端增强功能 - 包含分页和全文模式 */}
         <ReadingContentWrapper
           introText={topic.article_introtext}
           fullText={topic.article_fulltext}

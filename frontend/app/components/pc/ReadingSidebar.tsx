@@ -1,7 +1,27 @@
 'use client';
-import { Button, Stack } from '@mui/material';
+import { Button, Stack, styled } from '@mui/material';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import BookExpandIcon from '../icons/BookExpandIcon';
+
+// 创建styled button组件
+const StyledButton = styled(Button)(() => ({
+  width: 55,
+  height: 55,
+  color: 'rgba(42, 130, 228, 1)',
+  borderRadius: '50%',
+  minWidth: 0,
+  fontSize: 12,
+  lineHeight: 1.15,
+  textAlign: 'center',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  flexDirection: 'column',
+  gap: 0.1,
+  fontFamily: 'Montserrat, "Segoe UI", "Arial Narrow", Arial, sans-serif',
+  fontWeight: 500,
+}));
 
 // 全局函数类型声明
 declare global {
@@ -100,110 +120,81 @@ export default function ReadingSidebar({
         top: 0,
         zIndex: 10,
         fontWeight: 500,
-        '&:hover': {
-          opacity: 0.8,
+        fontFamily: 'Montserrat, "Segoe UI", "Arial Narrow", Arial, sans-serif',
+        '& .MuiButton-root:hover': {
+          backgroundColor: '#E0F3FF',
         },
       }}
     >
-      <Button
+      <StyledButton
         onClick={handleEnterReadingMode}
         disableElevation
         sx={{
-          width: 60,
-          height: 60,
-          borderRadius: '50%',
-          bgcolor: activeBg,
-          color: '#fff',
-          fontSize: 12,
-          lineHeight: 1.15,
-          minWidth: 0,
-          textAlign: 'center',
-          '&:hover': { bgcolor: activeBg, opacity: 0.8 },
+          bgcolor: defaultBg,
         }}
       >
+        <BookExpandIcon />
         阅读
         <br />
         模式
-      </Button>
-      <Button
+      </StyledButton>
+      <StyledButton
         onClick={handleIncreaseFont}
         disableElevation
         sx={{
-          width: 60,
-          height: 60,
-          borderRadius: '50%',
           bgcolor: defaultBg,
           color: '#2F7AD5',
-          fontFamily: 'Montserrat, system-ui, -apple-system, Segoe UI, Roboto',
           fontSize: 22,
           lineHeight: 1,
-          minWidth: 0,
           '&:hover': { bgcolor: defaultBg },
         }}
       >
         A+
-      </Button>
+      </StyledButton>
 
-      <Button
+      <StyledButton
         onClick={handleDecreaseFont}
         disableElevation
         sx={{
-          width: 60,
-          height: 60,
-          borderRadius: '50%',
           bgcolor: defaultBg,
-          color: '#2F7AD5',
-          fontFamily: 'Montserrat, system-ui, -apple-system, Segoe UI, Roboto',
           fontSize: 22,
           lineHeight: 1,
-          minWidth: 0,
-          '&:hover': { bgcolor: defaultBg },
         }}
       >
         A-
-      </Button>
+      </StyledButton>
 
-      <Button
+      <StyledButton
         onClick={() => handleToggleMode('paged')}
         disableElevation
         sx={{
-          width: 60,
-          height: 60,
-          borderRadius: '50%',
           bgcolor: mode === 'paged' ? activeBg : defaultBg,
-          color: mode === 'paged' ? '#fff' : '#2F7AD5',
-          fontSize: 12,
-          lineHeight: 1.15,
-          minWidth: 0,
-          textAlign: 'center',
-          '&:hover': { bgcolor: mode === 'paged' ? activeBg : defaultBg },
+          color: mode === 'paged' ? '#fff' : 'rgba(42, 130, 228, 1)',
+          '&:hover': {
+            bgcolor: mode === 'paged' ? `${activeBg} !important` : defaultBg,
+          },
         }}
       >
         分页
         <br />
         阅读
-      </Button>
+      </StyledButton>
 
-      <Button
+      <StyledButton
         onClick={() => handleToggleMode('full')}
         disableElevation
         sx={{
-          width: 60,
-          height: 60,
-          borderRadius: '50%',
           bgcolor: mode === 'full' ? activeBg : defaultBg,
           color: mode === 'full' ? '#fff' : '#2F7AD5',
-          fontSize: 12,
-          lineHeight: 1.15,
-          minWidth: 0,
-          textAlign: 'center',
-          '&:hover': { bgcolor: mode === 'full' ? activeBg : defaultBg },
+          '&:hover': {
+            bgcolor: mode === 'full' ? `${activeBg} !important` : defaultBg,
+          },
         }}
       >
         全文
         <br />
         阅读
-      </Button>
+      </StyledButton>
     </Stack>
   );
 }
