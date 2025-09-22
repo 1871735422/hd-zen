@@ -2,11 +2,12 @@ import { getTagRelations } from '../api';
 import TagRelation from '../components/pc/TagRelation';
 
 interface PageProps {
-  searchParams: { tag?: string };
+  searchParams: Promise<{ tag?: string }>;
 }
 
 const page = async ({ searchParams }: PageProps) => {
-  const tag = searchParams.tag || '';
+  const resolvedSearchParams = await searchParams;
+  const tag = resolvedSearchParams.tag || '';
   const tagRelations = await getTagRelations(tag);
   // console.log('tagRelations', tagRelations);
   const refCourses = tagRelations.map(tagRelation => ({
