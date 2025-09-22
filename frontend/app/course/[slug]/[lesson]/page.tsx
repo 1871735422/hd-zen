@@ -5,16 +5,16 @@ import { Box, Typography } from '@mui/material';
 import { notFound } from 'next/navigation';
 import { Fragment } from 'react';
 import {
-  getCourseTopicByOrder,
-  getTopicMediaByOrder,
   getCourses,
+  getCourseTopicByOrder,
   getCourseTopicsByCourse,
+  getTopicMediaByOrder,
 } from '../../../api';
-import { CourseTopic } from '../../../types/models';
 import AudioPage from '../../../components/pc/AudioPage';
 import LessonMeta from '../../../components/pc/LessonMeta';
 import LessonSidebar from '../../../components/pc/LessonSidebar';
 import ReadingPage from '../../../components/pc/ReadingPage';
+import { CourseTopic } from '../../../types/models';
 
 // 15分钟缓存
 export const revalidate = 900;
@@ -93,6 +93,7 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
   // 总是需要获取 topicMedia 数据
   const topicMediaRes = await getTopicMediaByOrder(courseOrder, lessonOrder);
   const topicMedia = topicMediaRes?.items;
+  console.log('topicMedia', topicMedia);
 
   // 仅在 reading tab 时获取 topic 数据
   const topic =
@@ -143,7 +144,18 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
               <VideoPlayer
                 poster={media.media?.url_image || media.media?.image1_url || ''}
                 title={media.media?.title || ''}
-                src={media.media?.url_hd}
+                sources={[
+                  {
+                    src: media.media?.url_hd,
+                    quality: 'HD',
+                    label: '高清',
+                  },
+                  {
+                    src: media.media?.url_sd || media.media?.url_hd,
+                    quality: 'SD',
+                    label: '标清',
+                  },
+                ]}
               />
             ) : (
               <Typography>视频资源不可用：{media.media?.title} </Typography>

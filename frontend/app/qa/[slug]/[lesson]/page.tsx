@@ -212,7 +212,20 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
                         ''
                       }
                       title={''}
-                      src={answerMediaRes?.media?.url_hd}
+                      sources={[
+                        {
+                          src: answerMediaRes?.media?.url_hd,
+                          quality: 'HD',
+                          label: '高清',
+                        },
+                        {
+                          src:
+                            answerMediaRes?.media?.url_sd ||
+                            answerMediaRes?.media?.url_hd,
+                          quality: 'SD',
+                          label: '标清',
+                        },
+                      ]}
                     />
                   ) : (
                     <Typography>

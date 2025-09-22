@@ -4,7 +4,7 @@ import {
   getQuestionsByOrder,
 } from '@/app/api';
 import CourseCard from '@/app/components/pc/CourseCard';
-import { Container, Grid } from '@mui/material';
+import { Container, Grid, Typography } from '@mui/material';
 import QaSidebar from '../../components/pc/QaSidebar';
 
 // 15分钟缓存
@@ -104,6 +104,11 @@ export default async function QaPage({ params, searchParams }: QaPageProps) {
                 />
               </Grid>
             ))}
+            {questions.length === 0 && (
+              <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+                <Typography variant='h5'>即将推出</Typography>
+              </Grid>
+            )}
           </Grid>
         </Grid>
       </Container>
