@@ -36,10 +36,10 @@ export default function RootLayout({
               sx={{
                 p: { xs: 0, sm: 0, md: 0, lg: 0 },
                 m: { xs: 0, sm: 0, md: 0, lg: 0 },
-                backgroundImage: 'url(/images/course-lesson-bg.jpg)',
-                backgroundSize: '100% auto',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: '0px 0',
+                // backgroundImage: 'url(/images/course-lesson-bg.jpg)',
+                // backgroundSize: '100% auto',
+                // backgroundRepeat: 'no-repeat',
+                // backgroundPosition: '0px 0',
               }}
             >
               {children}

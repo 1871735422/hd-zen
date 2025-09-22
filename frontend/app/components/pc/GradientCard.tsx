@@ -27,17 +27,13 @@ const GradientCard: React.FC<GradientCardProps> = ({
         sx={{
           px: 0.5,
           mt: `${(1 - idx) * 10}px`,
-          height: {
-            xs: `${200 + idx * 20}px`,
-            sm: `${240 + idx * 30}px`,
-            md: `${280 + idx * 40}px`,
-          },
+          height: `${280 + idx * 40}px`,
           borderRadius: '30px 30px 0 0',
           display: 'flex',
           flexDirection: 'column',
           alignContent: 'flex-start',
           cursor: 'pointer',
-          width: { xs: 160, sm: 180, md: 200, lg: 210 },
+          width: 200,
           flexShrink: 0,
           color: INNER_TEXT_COLOR,
           background: `url(/images/card${idx + 1}.png) no-repeat center center`,
@@ -52,16 +48,20 @@ const GradientCard: React.FC<GradientCardProps> = ({
             background: 'rgba(124, 134, 236, 0.3)',
             transform: 'scale(1.1)',
             transition: 'transform 0.5s ease-in-out',
+            '& .description-text': {
+              WebkitLineClamp: 'unset',
+              overflow: 'visible',
+            },
           },
           zIndex: 10,
         }}
       >
         <Typography
           variant='h1'
-          fontSize={{ xs: 16, sm: 18, md: 20 }}
+          fontSize={20}
           fontWeight={500}
           textAlign='center'
-          my={{ xs: 1, sm: 1.5, md: 2 }}
+          my={2}
         >
           {title}
         </Typography>
@@ -69,19 +69,20 @@ const GradientCard: React.FC<GradientCardProps> = ({
           bgcolor='white'
           sx={{
             height: '100%',
-            pb: { xs: 1, sm: 1.5, md: 2 },
+            pb: 2,
             borderRadius: '16px 16px 0 0',
           }}
         >
           <Typography
-            fontSize={{ xs: 12, sm: 13, md: 14 }}
+            fontSize={14}
+            className='description-text'
             sx={{
               m: 0,
-              p: { xs: 1, sm: 1.5, md: 2 },
+              p: 2,
               pb: 0,
               display: '-webkit-box',
               WebkitBoxOrient: 'vertical',
-              WebkitLineClamp: { xs: 4 + idx, sm: 5 + idx, md: 6 + idx * 2 },
+              WebkitLineClamp: 6 + idx * 2,
               overflow: 'hidden',
               lineHeight: 1.6,
             }}

@@ -8,8 +8,8 @@ function TitleBanner({ title, subTitle }: TitleBannerProps) {
   return (
     <Stack
       sx={{
-        pt: 4,
-        mb: 6,
+        pt: 5,
+        mb: 7,
         flexDirection: 'row',
         alignItems: 'flex-end',
         cursor: 'pointer',
@@ -19,10 +19,16 @@ function TitleBanner({ title, subTitle }: TitleBannerProps) {
         variant='h2'
         className='fz-quanfu'
         sx={{
-          color: 'rgba(102, 158, 222, 1)',
-          textShadow:
-            '0 2px 8px rgba(255,255,255,0.92), 0 4px 10px rgba(0,0,0,0.08)',
+          background:
+            'linear-gradient(180deg, rgba(34, 96, 168, 1) 0%, rgba(102, 158, 222, 1) 100%)',
+          backgroundClip: 'text',
+          WebkitBackgroundClip: 'text',
+          color: 'transparent',
+          WebkitTextStroke: '0.5px rgba(255, 255, 255, 1)',
+          textShadow: 'none',
           display: 'inline-block',
+          fontSize: '3.2rem',
+          fontWeight: 500,
         }}
       >
         {title}
@@ -33,7 +39,11 @@ function TitleBanner({ title, subTitle }: TitleBannerProps) {
           className='bei-fang'
           lineHeight={2}
           sx={{
-            color: 'rgba(255, 106, 114, .9)',
+            background:
+              'linear-gradient(to bottom, rgba(255, 106, 114, 1), rgba(255, 150, 160, 0.7))',
+            backgroundClip: 'text',
+            WebkitBackgroundClip: 'text',
+            color: 'transparent',
             fontSize: '1.8rem',
             px: 1,
           }}

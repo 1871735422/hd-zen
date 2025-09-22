@@ -69,7 +69,7 @@ export default async function QaPage({ params, searchParams }: QaPageProps) {
             backgroundColor: '#fff',
             borderRadius: 5,
             py: 0,
-            mb: 5,
+            mb: 9,
             height: 'fit-content',
           }}
         >
@@ -81,10 +81,11 @@ export default async function QaPage({ params, searchParams }: QaPageProps) {
           </Grid>
           <Grid
             container
-            spacing={4}
+            spacing={3.5}
             sx={{
               px: 3,
-              py: 4,
+              pt: 4,
+              pb: 5,
               height: 'fit-content',
             }}
             size={9}

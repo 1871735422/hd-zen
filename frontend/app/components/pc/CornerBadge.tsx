@@ -8,8 +8,8 @@ interface CornerBadgeProps {
 export default function CornerBadge({ content }: CornerBadgeProps) {
   const sizeConfig = {
     medium: {
-      width: 60,
-      height: 36,
+      width: 80,
+      height: 46,
     },
     large: {
       width: 80,
@@ -40,8 +40,7 @@ export default function CornerBadge({ content }: CornerBadgeProps) {
             position: 'absolute',
             top: 6,
             right: '35%',
-            fontSize: 14,
-            fontWeight: 'bold',
+            fontSize: 18,
             color: 'white',
           }}
         >

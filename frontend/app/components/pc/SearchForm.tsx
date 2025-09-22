@@ -23,8 +23,8 @@ const SearchForm: React.FC = () => {
           required
           name='query'
           sx={{
-            width: { xs: 120, sm: 150, md: 180 },
-            height: { xs: 28, md: 30 },
+            width: { xs: 120, md: 160 },
+            height: { xs: 23, md: 25 },
             '& .MuiOutlinedInput-root': {
               height: { xs: 28, sm: 30, md: 32 },
               fontSize: { xs: 14, sm: 15, md: 16 },
@@ -33,7 +33,7 @@ const SearchForm: React.FC = () => {
               px: { xs: 1, sm: 1.5, md: 2 },
               backgroundColor: 'transparent',
               '& fieldset': {
-                borderColor: '#cfd8dc',
+                borderColor: 'rgba(130, 178, 232, 0.5)',
               },
               '&:hover fieldset': {
                 borderColor: MAIN_BLUE_COLOR,
@@ -48,7 +48,10 @@ const SearchForm: React.FC = () => {
             },
           }}
         />
-        <IconButton type='submit'>
+        <IconButton
+          type='submit'
+          sx={{ color: MAIN_BLUE_COLOR, ml: '2px !important' }}
+        >
           <SearchIcon />
         </IconButton>
       </Stack>

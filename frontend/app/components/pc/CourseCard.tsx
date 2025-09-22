@@ -32,7 +32,7 @@ export default function CourseCard({
         sx={{
           borderRadius: '25px',
           position: 'relative',
-          boxShadow: '0 4px 20px rgba(0,0,0,0.05)',
+          boxShadow: '0 4px 20px rgba(131, 181, 247, 0.3)',
           display: 'flex',
           flexDirection: 'column',
           px: 1,
@@ -42,7 +42,7 @@ export default function CourseCard({
           sx={{
             pl: 2,
             pt: 2,
-            pr: 4,
+            pr: 5,
             fontWeight: 500,
             minHeight: 60,
             fontSize: isQa ? 14 : 18,
@@ -57,6 +57,7 @@ export default function CourseCard({
             display: 'flex',
             flexDirection: 'column',
             pt: 0,
+            pb: '1rem !important',
           }}
         >
           <Box

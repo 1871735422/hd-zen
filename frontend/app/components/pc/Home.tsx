@@ -16,7 +16,7 @@ const Home: React.FC = async () => {
     description: course.description || '',
     imageUrl: course.cover
       ? `https://zen.huidengzg.com/api/files/courses/${course.id}/${course.cover}`
-      : '/images/default-course.jpg',
+      : '',
   }));
 
   return (
@@ -46,6 +46,8 @@ const Home: React.FC = async () => {
             backgroundSize: '100% 100%',
             backgroundRepeat: 'no-repeat',
             backdropFilter: 'blur(20px)',
+            // 使用 clip-path 排除右下角底边很长、高度很小的三角形区域
+            clipPath: 'polygon(0% 0%, 100% 0%, 100% 84.1%, 0% 100%)',
           }}
         >
           <Typography

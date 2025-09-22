@@ -37,6 +37,10 @@ export default async function CourseLayout({
         m: 0,
         px: { lg: 25 },
         background: 'url(/images/course-bg-h.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        minHeight: '200px',
       }}
     >
       <TitleBanner title='禅修课问答' />
