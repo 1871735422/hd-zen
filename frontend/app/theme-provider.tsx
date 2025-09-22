@@ -12,6 +12,23 @@ const theme = createTheme({
         },
       },
     },
+    MuiSelect: {
+      defaultProps: {
+        MenuProps: {
+          disableScrollLock: true,
+        },
+      },
+    },
+    MuiMenu: {
+      defaultProps: {
+        disableScrollLock: true,
+      },
+    },
+    MuiPopover: {
+      defaultProps: {
+        disableScrollLock: true,
+      },
+    },
   },
 });
 

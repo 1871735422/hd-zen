@@ -9,6 +9,7 @@ import {
   CourseTopic,
   Media,
   PaginatedResponse,
+  TagRelation,
   TopicMedia,
 } from '../types/models';
 
@@ -506,4 +507,13 @@ export const getCourseImageUrl = (
 // Utility function to get media thumbnail URL
 export const getMediaImageUrl = (media: Media): string => {
   return media.url_image || media.image1_url || '';
+};
+
+export const getTagRelations = async (tag: string): Promise<TagRelation[]> => {
+  if (!tag) return [];
+  const resultList = await pb.collection('tagRelation').getList(1, 50, {
+    filter: `tags ~ "${tag}"`,
+  });
+  // console.log('resultList', resultList);
+  return resultList.items;
 };

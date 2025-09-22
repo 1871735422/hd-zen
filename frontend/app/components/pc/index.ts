@@ -6,5 +6,5 @@ export { default as ReadingModeContainer } from './ReadingModeContainer';
 export { default as ReadingModePage } from './ReadingModePage';
 export { ReadingModeProvider, useReadingMode } from './ReadingModeProvider';
 export { default as ReadingModeSidebar } from './ReadingModeSidebar';
-export { default as ReadingPagination } from './ReadingPagination';
 export { default as ReadingSidebar } from './ReadingSidebar';
+export { default as TagRelation } from './TagRelation';

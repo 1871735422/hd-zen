@@ -1,7 +1,7 @@
 'use client';
 import { Box, Typography } from '@mui/material';
 import React, { useState } from 'react';
-import ReadingPagination from './ReadingPagination';
+import { CustomPagination } from '../shared';
 
 interface ReadingContentProps {
   introText?: string;
@@ -243,7 +243,7 @@ export default function ReadingContent({
           }}
           dangerouslySetInnerHTML={{ __html: currentContent }}
         />
-        <ReadingPagination
+        <CustomPagination
           totalPages={totalPages}
           currentPage={currentPage}
           onPageChange={handlePageChange}

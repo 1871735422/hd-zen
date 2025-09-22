@@ -1,6 +1,7 @@
 'use client';
 import Chip, { ChipProps } from '@mui/material/Chip';
 import { styled } from '@mui/material/styles';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 
 const StyledChip = styled(Chip)(() => ({
@@ -20,9 +21,10 @@ const StyledChip = styled(Chip)(() => ({
 }));
 
 const CourseTag: React.FC<ChipProps> = ({ label, ...rest }) => {
+  const router = useRouter();
   return (
     <StyledChip
-      onClick={() => console.log(label)}
+      onClick={() => router.push(`/tags?tag=${label}`)}
       label={label}
       variant={'filled'}
       {...rest}

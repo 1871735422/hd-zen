@@ -63,8 +63,26 @@ export const generateCourseBreadcrumbs = (
 export function formatDate(input: string): string {
   if (!input) return '';
 
-  // 拆分日期字符串
-  const [year, month, day] = input.split('/');
+  let year: string, month: string, day: string;
+
+  // 检查是否为 ISO 8601 格式 (YYYY-MM-DD 或 YYYY-MM-DDTHH:mm:ss.sssZ)
+  if (input.includes('-') && (input.includes('T') || input.includes(' '))) {
+    // ISO 8601 格式: 2025-09-15 03:18:42.959Z 或 2025-09-15T03:18:42.959Z
+    const datePart = input.split(/[T ]/)[0]; // 提取日期部分
+    [year, month, day] = datePart.split('-');
+  } else if (input.includes('/')) {
+    // 原有格式: YYYY/MM/DD
+    [year, month, day] = input.split('/');
+  } else {
+    // 尝试解析为 Date 对象
+    const date = new Date(input);
+    if (isNaN(date.getTime())) {
+      return ''; // 无效日期
+    }
+    year = date.getFullYear().toString();
+    month = (date.getMonth() + 1).toString();
+    day = date.getDate().toString();
+  }
 
   // 月份处理：直接转换为数字去除前导零
   const monthFormatted = parseInt(month).toString();

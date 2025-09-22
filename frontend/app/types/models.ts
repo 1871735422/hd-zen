@@ -141,3 +141,12 @@ export interface PaginatedResponse<T> {
   page: number;
   perPage: number;
 }
+export interface TagRelation extends BaseModel {
+  course_title: string;
+  course_order: string;
+  course_active: boolean;
+  topic_title: string;
+  topic_order: string;
+  topic_active: boolean;
+  tags: string[];
+}
