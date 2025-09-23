@@ -73,7 +73,7 @@
 - **构建工具**: Turbopack
 - **包管理器**: pnpm
 - **代码规范**: ESLint + Prettier
-- **Git 钩子**: Husky + lint-staged
+- **Git 钩子**: Husky + lint-staged + commitlint
 - **数据源**: PocketBase API
 
 ## 主要功能
@@ -158,13 +158,38 @@ pnpm format
 
 ### Git 提交规范
 
-遵循 [常规提交规范](http://localhost:60093/public/hd-Gitea/src/branch/main/常规提交.md)，示例：
+项目已配置 **Husky + commitlint** 自动检查提交信息格式，遵循 [常规提交规范](http://localhost:60093/public/hd-Gitea/src/branch/main/常规提交.md)。
+
+#### 支持的提交类型
+
+- `feat`: 新功能
+- `fix`: 修复 Bug
+- `build`: 构建或依赖改动
+- `chore`: 杂项（如工具链调整）
+- `ci`: CI/CD 配置
+- `docs`: 文档更新
+- `style`: 代码样式调整
+- `refactor`: 代码重构
+- `perf`: 性能优化
+- `test`: 测试相关
+
+#### 提交示例
 
 ```bash
 git commit -m "feat(dashboard): 新增数据统计面板"
 git commit -m "fix(login): 修复用户登录时密码验证问题"
 git commit -m "style(ui): 优化按钮样式和布局"
+git commit -m "docs(readme): 更新项目文档"
 ```
+
+#### Git Hooks 配置
+
+项目已配置以下 Git hooks：
+
+- **pre-commit**: 自动运行 `lint-staged`，在提交前格式化代码
+- **commit-msg**: 自动检查提交信息格式，确保符合规范
+
+如果提交信息不符合规范，提交会被阻止并显示错误信息。
 
 ### Windows 环境特别说明
 
@@ -190,16 +215,28 @@ git config --global core.autocrlf false
 
 ## 常见问题解决
 
-1. husky 脚本无法执行：
+1. **Husky 脚本无法执行**：
 
    - 使用管理员权限运行终端
    - 检查 `.husky` 目录下的文件执行权限
+   - 确保已运行 `chmod +x .husky/pre-commit .husky/commit-msg`
 
-2. 换行符问题：
+2. **提交信息格式错误**：
+
+   - 确保提交信息符合规范：`type(scope): description`
+   - 支持的 type：feat, fix, build, chore, ci, docs, style, refactor, perf, test
+   - 示例：`git commit -m "feat(auth): 添加用户登录功能"`
+
+3. **lint-staged 执行失败**：
+
+   - 确保所有代码符合 ESLint 和 Prettier 规范
+   - 运行 `pnpm lint:fix` 和 `pnpm format` 修复代码格式
+
+4. **换行符问题**：
 
    - 确保已执行 `git config --global core.autocrlf false`
    - 重新克隆仓库
    - 或执行 `git add . --renormalize`
 
-3. Windows 下 pnpm build 可能会报错，需到设置 打开 开发人员选项
+5. **Windows 下 pnpm build 可能会报错**，需到设置 打开 开发人员选项
    > `pnpm and output standalone return EPERM: operation not permitted, symlink` > [https://github.com/vercel/next.js/discussions/52244](https://github.com/vercel/next.js/discussions/52244)
