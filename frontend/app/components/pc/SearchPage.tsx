@@ -538,43 +538,24 @@ const SearchPage = () => {
               </Box>
             ) : searchResults.length > 0 ? (
               <Stack spacing={2}>
-                {searchResults.map((item: SearchResultItem, index) => {
+                {searchResults.map((item: Article, index) => {
                   // 判断是文章还是音视频数据
                   const isArticle =
                     'fulltext' in item ||
                     'introtext' in item ||
                     'summary' in item;
                   const itemType = isArticle ? '文章' : '音视频';
-
-                  // 安全地获取课程信息
-                  const getCourseInfo = (item: SearchResultItem) => {
-                    if (isArticle) {
-                      return {
-                        courseTitle:
-                          (item as Article).courseTitle || '未知课程',
-                        courseOrder: (item as Article).courseOrder || '',
-                        topicOrder: (item as Article).topicOrder || '',
-                      };
-                    } else {
-                      // 对于媒体类型，从关联的课程或问题中获取信息
-                      const mediaItem = item as CourseMedia | QuestionMedia;
-                      const isCourseMedia = 'courseId' in mediaItem;
-
-                      return {
-                        courseTitle: isCourseMedia
-                          ? (mediaItem as CourseMedia).course?.title ||
-                            '未知课程'
-                          : (mediaItem as QuestionMedia).question?.title ||
-                            '未知课程',
-                        courseOrder: isCourseMedia
-                          ? (mediaItem as CourseMedia).course?.id || ''
-                          : (mediaItem as QuestionMedia).question?.id || '',
-                        topicOrder: mediaItem.displayOrder || '',
-                      };
-                    }
+                  console.log({ item });
+                  // 获取课程信息
+                  const courseInfo = {
+                    courseTitle: (item as Article).courseTitle || '未知课程',
+                    courseOrder: (item as Article).courseOrder || '',
+                    topicOrder: (item as Article).topicOrder || '',
+                    mediaType:
+                      item?.mediaType === 'course'
+                        ? ('course' as const)
+                        : ('qa' as const),
                   };
-
-                  const courseInfo = getCourseInfo(item);
 
                   return (
                     <Fragment key={index}>
@@ -598,7 +579,7 @@ const SearchPage = () => {
                         url={
                           isArticle
                             ? `/course/${courseInfo.courseOrder}/lesson${courseInfo.topicOrder}?tab=article`
-                            : `/${cate === 'qa' ? 'qa' : 'course'}/${courseInfo.courseOrder}/lesson${courseInfo.topicOrder}`
+                            : `/${courseInfo.mediaType}/${courseInfo.courseOrder}/lesson${courseInfo.topicOrder}`
                         }
                         keywords={searchQuery ? [searchQuery] : []}
                         onTypeClick={handleTypeClick}

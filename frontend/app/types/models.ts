@@ -173,6 +173,7 @@ export interface Article extends BaseModel {
   isActive: boolean;
   topicOrder: string;
   courseTitle: string;
+  mediaType?: string;
 }
 
 // CourseMedia - 课程媒体
@@ -198,4 +199,4 @@ export interface QuestionMedia extends BaseModel {
 }
 
 // 搜索结果联合类型
-export type SearchResultItem = Article | CourseMedia | QuestionMedia;
+export type SearchResultItem = Article;
