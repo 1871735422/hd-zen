@@ -1,5 +1,5 @@
-/* eslint-disable @next/next/no-img-element */
 import { Box, Link, Typography } from '@mui/material';
+import Image from 'next/image';
 import { LINK_COLOR, NAV_COLOR } from '../constants';
 
 export default function QuestionCollectPage() {
@@ -68,7 +68,7 @@ export default function QuestionCollectPage() {
           </Typography>
         </Box>
         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-          <img
+          <Image
             src='https://img.js.design/assets/img/67dadfa407c4c2e4674d942a.png'
             alt='QR Code'
             style={{ width: '200px', height: '200px', marginTop: '16px' }}

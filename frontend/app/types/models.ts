@@ -5,6 +5,19 @@ export interface BaseModel {
   updated: string;
 }
 
+// PocketBase record type with flexible fields
+export interface PocketRecord {
+  id: string;
+  created: string;
+  updated: string;
+  collectionId: string;
+  collectionName: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  expand?: Record<string, any>;
+}
+
 // Questions
 export interface Questions extends BaseModel {
   topicId: string;

@@ -1,15 +1,15 @@
-/* eslint-disable */
-// @ts-nocheck
 import PocketBase from 'pocketbase';
 import { Menu } from '../components/pc/MenuItem';
 import {
   AnswerMedia,
-  Article,
   Category,
   Course,
   CourseTopic,
   Media,
   PaginatedResponse,
+  PocketRecord,
+  Questions,
+  QuestionMedia,
   SearchResultItem,
   TagRelation,
   TopicMedia,
@@ -24,14 +24,6 @@ export const pb = new PocketBase(pbUrl);
 // Configure PocketBase to prevent auto-cancellation
 pb.autoCancellation(false);
 
-// Configure Basic Auth for PocketBase
-if (process.env.NEXT_PB_AUTH) {
-  const auth = process.env.NEXT_PB_AUTH.split(':');
-  if (auth.length === 2) {
-    pb.authStore.save(auth[0], auth[1]);
-  }
-}
-
 // Configuration
 export const config = {
   apiUrl: pbUrl,
@@ -40,12 +32,6 @@ export const config = {
 } as const;
 
 // Helper functions for mapping records
-interface PocketRecord extends Record<string, unknown> {
-  id: string;
-  created: string;
-  updated: string;
-  expand?: Record<string, unknown>;
-}
 
 const mapRecordToCategory = (record: PocketRecord): Category => ({
   id: record.id,
@@ -202,9 +188,7 @@ export const getCourses = async (): Promise<PaginatedResponse<Course>> => {
   try {
     // 检查是否在构建环境中
     if (process.env.NODE_ENV === 'production' && !pbUrl) {
-      console.warn(
-        'Build time: Returning empty courses due to missing PB_URL'
-      );
+      console.warn('Build time: Returning empty courses due to missing PB_URL');
       return {
         items: [],
         totalItems: 0,
@@ -220,7 +204,9 @@ export const getCourses = async (): Promise<PaginatedResponse<Course>> => {
       requestKey: null, // Disable auto-cancellation
     });
 
-    const mappedCourses = result.map(mapRecordToCourse);
+    const mappedCourses = result.map(record =>
+      mapRecordToCourse(record as PocketRecord)
+    );
 
     return {
       items: mappedCourses,
@@ -258,6 +244,9 @@ export const getCourseTopicsByDisplayOrder = async (
 
   return {
     ...result,
+    items: result.items.map(record =>
+      mapRecordToCourseTopic(record as PocketRecord)
+    ),
   };
 };
 
@@ -282,6 +271,7 @@ export const getQuestionsByOrder = async (
 
   return {
     ...result,
+    items: result.items.map(record => record as unknown as Questions),
   };
 };
 
@@ -289,7 +279,7 @@ export const getAnswerMediaByOrder = async (
   volume: string,
   lesson: string,
   questionOrder: string
-): Promise<AnswerMedia> => {
+): Promise<AnswerMedia | null> => {
   const result = await pb.collection('answerMedia').getList(1, 30, {
     filter: [
       'answerId.questionId.topicId.courseId.displayOrder = ' + volume,
@@ -301,10 +291,15 @@ export const getAnswerMediaByOrder = async (
     // fields: 'title,topicId.expand.ordering',
   });
   console.log('result', result);
+  const firstItem = result?.items[0];
+  if (!firstItem) {
+    return null;
+  }
+
   return {
-    ...result?.items[0],
-    media: result?.items[0]?.expand.mediaId,
-  };
+    ...firstItem,
+    media: firstItem.expand?.mediaId,
+  } as unknown as AnswerMedia;
 };
 
 export const getCourseByDisplayOrder = async (
@@ -314,7 +309,7 @@ export const getCourseByDisplayOrder = async (
     const record = await pb
       .collection('courses')
       .getFirstListItem(`displayOrder="${displayOrder}"`);
-    return mapRecordToCourse(record);
+    return mapRecordToCourse(record as PocketRecord);
   } catch (error) {
     console.error(`Error fetching course ${displayOrder}:`, error);
     return null;
@@ -333,7 +328,9 @@ export const getCourseTopics = async (): Promise<
     expand: 'courseId',
   });
 
-  const mappedCourseTopics = result.map(mapRecordToCourseTopic);
+  const mappedCourseTopics = result.map(record =>
+    mapRecordToCourseTopic(record as PocketRecord)
+  );
 
   return {
     items: mappedCourseTopics,
@@ -357,7 +354,9 @@ export const getCourseTopicsByCourse = async (
 
     return {
       ...result,
-      items: result.items.map(mapRecordToCourseTopic),
+      items: result.items.map(record =>
+        mapRecordToCourseTopic(record as PocketRecord)
+      ),
     };
   } catch (error) {
     console.error(
@@ -398,8 +397,8 @@ export const getCourseTopicById = async (
     const record = await pb.collection('courseTopics').getOne(topicId, {
       expand: 'courseId',
     });
-    return mapRecordToCourseTopic(record);
-  } catch (error) {
+    return mapRecordToCourseTopic(record as PocketRecord);
+  } catch {
     // Handle error silently in server-side context
     return null;
   }
@@ -428,8 +427,8 @@ export const getCourseTopicByOrder = async (
         }
       );
 
-    return mapRecordToCourseTopic(record);
-  } catch (error) {
+    return mapRecordToCourseTopic(record as PocketRecord);
+  } catch {
     // Handle error silently in server-side context
     return null;
   }
@@ -459,7 +458,9 @@ export const getTopicMediaByOrder = async (
 
     return {
       ...result,
-      items: result.items.map(mapRecordToTopicMedia),
+      items: result.items.map(record =>
+        mapRecordToTopicMedia(record as PocketRecord)
+      ),
     };
   } catch (error) {
     console.error(
@@ -486,7 +487,9 @@ export const getTopicMediaByOrder = async (
 
       return {
         ...simplifiedResult,
-        items: simplifiedResult.items.map(mapRecordToTopicMedia),
+        items: simplifiedResult.items.map(record =>
+          mapRecordToTopicMedia(record as PocketRecord)
+        ),
       };
     } catch (fallbackError) {
       console.error(
@@ -519,7 +522,7 @@ export const getTagRelations = async (tag: string): Promise<TagRelation[]> => {
     filter: `tags ~ "${tag}"`,
   });
   // console.log('resultList', resultList);
-  return resultList.items;
+  return resultList.items as unknown as TagRelation[];
 };
 
 export const getSearchQuestions = async (
@@ -528,7 +531,7 @@ export const getSearchQuestions = async (
   pageSize = 10,
   sort = 'desc'
 ): Promise<{
-  items: Article[];
+  items: QuestionMedia[];
   totalItems: number;
   totalPages: number;
   currentPage: number;
@@ -539,7 +542,7 @@ export const getSearchQuestions = async (
   try {
     let totalItems = 0;
     let totalPages = 0;
-    let allItems: any[] = [];
+    let allItems: QuestionMedia[] = [];
 
     const result = await pb
       .collection('questionMedia')
@@ -547,7 +550,7 @@ export const getSearchQuestions = async (
         filter: `title ~ "${title}"`,
         sort: sort === 'desc' ? '-created' : 'created',
       });
-    allItems = [...allItems, ...result.items];
+    allItems = [...allItems, ...(result.items as unknown as QuestionMedia[])];
     totalItems += result.totalItems;
     totalPages = Math.ceil(totalItems / pageSize);
 
@@ -557,7 +560,7 @@ export const getSearchQuestions = async (
       totalPages,
       currentPage: page,
     };
-  } catch (error) {
+  } catch {
     return { items: [], totalItems: 0, totalPages: 0, currentPage: 1 };
   }
 };
@@ -604,8 +607,10 @@ export const getSearchArticles = async (
       return `(title ~ "${title}" || fulltext ~ "${content}" || introtext ~ "${content}" || summary ~ "${content}")`;
     } else if (title) {
       return buildFilter(getKeywords(title), true);
-    } else {
+    } else if (content) {
       return buildFilter(getKeywords(content), false);
+    } else {
+      return '';
     }
   };
 
@@ -618,11 +623,14 @@ export const getSearchArticles = async (
       sort: sort === 'desc' ? 'created' : '-created',
     });
 
-    return { items: result.items, totalItems: result.totalItems };
+    return {
+      items: result.items as unknown as SearchResultItem[],
+      totalItems: result.totalItems,
+    };
   };
 
   try {
-    let allItems: any[] = [];
+    let allItems: SearchResultItem[] = [];
     let totalItems = 0;
 
     // 根据类型搜索不同的集合
@@ -636,7 +644,7 @@ export const getSearchArticles = async (
       totalItems += articlesResult.totalItems;
 
       // 搜索课程媒体
-      const courseMediaFilter = buildMediaFilter(title || content);
+      const courseMediaFilter = buildMediaFilter(title || content || '');
       const courseMediaResult = await searchCollection(
         'courseMedia',
         courseMediaFilter
@@ -645,7 +653,7 @@ export const getSearchArticles = async (
       totalItems += courseMediaResult.totalItems;
 
       // 搜索问答媒体
-      const questionMediaFilter = buildMediaFilter(title || content);
+      const questionMediaFilter = buildMediaFilter(title || content || '');
       const questionMediaResult = await searchCollection(
         'questionMedia',
         questionMediaFilter
@@ -660,7 +668,7 @@ export const getSearchArticles = async (
       totalItems += articlesResult.totalItems;
     } else if (type === 'av') {
       // 搜索课程媒体和问答媒体
-      const mediaFilter = buildMediaFilter(title || content);
+      const mediaFilter = buildMediaFilter(title || content || '');
       console.log({ mediaFilter });
 
       // 搜索课程媒体
@@ -688,7 +696,7 @@ export const getSearchArticles = async (
       totalPages,
       currentPage: page,
     };
-  } catch (error) {
+  } catch {
     return { items: [], totalItems: 0, totalPages: 0, currentPage: 1 };
   }
 };
