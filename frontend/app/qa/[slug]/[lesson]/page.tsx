@@ -119,6 +119,10 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
     notFound();
   }
 
+  const title = `${questionOrder}. ${answerMediaRes?.media?.title}`;
+  const tags = answerMediaRes?.media?.tags;
+  const description = answerMediaRes?.media?.summary;
+
   return (
     <Container
       maxWidth='lg'
@@ -171,16 +175,9 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
               }}
             >
               <LessonMeta
-                title={
-                  answerMediaRes?.media?.title
-                    ? `${questionOrder}. ${answerMediaRes?.media?.title}`
-                    : ''
-                }
-                tags={['智悲力', '禅修课', '中观', '大圆满']}
-                description={
-                  // answerMediaRes?.media?.summary ??
-                  '想要度化众生，必须提升自己的智、悲、力，其中最重要的是智，即证悟心性的智慧。本课介绍了显宗中观、密宗气脉明点和大圆满三种证悟的方法，然后引用《大宝积经》中的偈颂，进一步阐明所要证悟的心的本性究竟为何。'
-                }
+                title={title}
+                tags={tags}
+                description={description} 
                 author='作者：慈诚罗珠堪布'
                 date={
                   answerMediaRes?.created

@@ -3,9 +3,10 @@ import { SvgIcon, SxProps } from '@mui/material';
 const VideoCamIcon = ({ sx }: { sx?: SxProps }) => (
   <SvgIcon
     sx={{
-      width: 20,
-      height: 20,
+      width: '1em',
+      height: '1em',
       cursor: 'pointer',
+      fontSize: 'inherit',
       ...sx,
     }}
   >

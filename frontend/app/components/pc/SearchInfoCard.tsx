@@ -189,22 +189,19 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
           {title}
         </Typography>
 
-        <Button
-          size='small'
+        <Stack
+          direction='row'
+          alignItems='center'
           sx={{
             color: 'rgba(194, 194, 194, 1)',
-            cursor: onTypeClick ? 'pointer' : 'default',
-            '&:hover': onTypeClick
-              ? {
-                  color: 'rgba(78, 136, 219, 1)',
-                }
-              : {},
+            cursor: 'default',
+            fontSize: 14,
+            gap: 0.5,
           }}
-          variant='text'
-          startIcon={type === '文章' ? <BookIcon /> : <VideoCamIcon />}
         >
+          {type === '文章' ? <BookIcon /> : <VideoCamIcon />}
           {type}
-        </Button>
+        </Stack>
       </Stack>
 
       <Box

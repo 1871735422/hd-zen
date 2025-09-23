@@ -330,6 +330,8 @@ const SearchPage = () => {
               alignItems: 'center',
               my: 3,
               fontSize: 14,
+              color: 'rgba(68, 68, 68, 1)',
+
             }}
           >
             <Box
@@ -370,7 +372,12 @@ const SearchPage = () => {
                 gap: 3,
               }}
             >
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                }}
+              >
                 <Typography fontSize={'inherit'} mr={2}>
                   分类选项：
                 </Typography>
@@ -380,10 +387,10 @@ const SearchPage = () => {
                   onChange={handleSelectChange}
                   style={{
                     color: 'rgba(78, 136, 219, 1)',
-                    border: 'none',
+                    border: '1px solid rgba(212, 212, 212, 1)',
                     fontSize: '13px',
-                    paddingLeft: 4,
-                    paddingRight: 20,
+                    padding: '3px 20px 3px 4px',
+                    backgroundColor: '#fff',
                   }}
                 >
                   {searchCates.map(item => (
@@ -545,7 +552,6 @@ const SearchPage = () => {
                     'introtext' in item ||
                     'summary' in item;
                   const itemType = isArticle ? '文章' : '音视频';
-                  console.log({ item });
                   // 获取课程信息
                   const courseInfo = {
                     courseTitle: (item as Article).courseTitle || '未知课程',

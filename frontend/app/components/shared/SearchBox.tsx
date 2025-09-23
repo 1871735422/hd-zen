@@ -55,6 +55,7 @@ export const SearchBox = ({
         placeholder={placeholder}
         sx={{
           '& .MuiOutlinedInput-root': {
+            color: 'rgba(119, 119, 119, 1)',
             borderRadius: '40px',
             '& fieldset': {
               border: 'none',

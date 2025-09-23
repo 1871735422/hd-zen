@@ -3,9 +3,10 @@ import { SvgIcon, SxProps } from '@mui/material';
 const BookIcon = ({ sx }: { sx?: SxProps }) => (
   <SvgIcon
     sx={{
-      width: 18,
-      height: 18,
+      width: '1em',
+      height: '1em',
       cursor: 'pointer',
+      fontSize: 'inherit',
       ...sx,
     }}
   >

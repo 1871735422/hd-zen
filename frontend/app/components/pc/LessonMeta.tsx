@@ -5,8 +5,8 @@ import CourseTag from '../shared/CourseTag';
 
 export interface LessonMetaProps {
   title: string;
-  tags: string[];
-  description: string;
+  tags?: string[];
+  description?: string;
   author: string;
   date: string;
   refCourse?: string;
@@ -24,7 +24,7 @@ export default function LessonMeta({
 }: LessonMetaProps) {
   const isQuestion = /^\d+\./.test(title);
   return (
-    <Box sx={{ mt: 3 }}>
+    <Box>
       <Typography
         fontWeight={500}
         px={0}
