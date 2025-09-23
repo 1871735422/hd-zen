@@ -9,9 +9,10 @@ export default function QuestionCollectPage() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        minHeight: 'calc(100vh - 136px)',
-        background:
-          'url(https://img.js.design/assets/img/67d3a3b8cf31bff6774f8c69.jpg#b8a5359db5369d5c8c8c7e2b0598f112)',
+        background: `
+        url(/images/course-bg.jpg),
+        linear-gradient(rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.05))
+        `,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}
@@ -21,6 +22,7 @@ export default function QuestionCollectPage() {
           background: 'rgba(255, 255, 255, 0.8)',
           borderRadius: '16px',
           p: 4,
+          my: 12,
           textAlign: 'left',
           maxWidth: '600px',
           boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.37)',

@@ -60,14 +60,24 @@ export default function TagRelation({ tag, refCourses }: TagRelationProps) {
         '&::before': {
           content: '""',
           position: 'absolute',
+          width: '100%',
           top: 0,
           left: 0,
           right: 0,
           bottom: 0,
+          // 渐变背景 - 从上到下的多层渐变效果
           background: `
-            linear-gradient(180deg, rgba(224, 241, 255, 1) 0%, rgba(255, 255, 255, 0) 20.05%, rgba(217, 234, 252, 1) 33.35%, rgba(241, 247, 254, 1) 63.87%, rgba(245, 247, 251, 1) 100%),
-            url(/images/search-bg.webp) no-repeat center center / contain
+            linear-gradient(
+              180deg,
+              rgba(224, 241, 255, 1) 0%,
+              rgba(255, 255, 255, 0) 20.05%,
+              rgba(217, 234, 252, 1) 33.35%,
+              rgba(241, 247, 254, 1) 63.87%,
+              rgba(245, 247, 251, 1) 100%
+            ),
+            url(/images/search-bg.webp) no-repeat center center / cover
           `,
+          // 模糊效果 - 创建背景虚化
           filter: 'blur(40px)',
           zIndex: 0,
         },
@@ -77,8 +87,9 @@ export default function TagRelation({ tag, refCourses }: TagRelationProps) {
         sx={{
           position: 'relative',
           zIndex: 1,
-          maxWidth: 1200,
-          mx: 'auto',
+          width: '55%',
+          mr: '30%',
+          ml: '15%',
           px: 2,
         }}
       >
@@ -109,12 +120,12 @@ export default function TagRelation({ tag, refCourses }: TagRelationProps) {
             overflow: 'hidden',
           }}
         >
-          <CardContent sx={{ p: '0 !important' }}>
+          <CardContent style={{ padding: '0 !important' }}>
             {/* 分页控制 */}
             <Box
               sx={{
                 width: '280px',
-                px: 3,
+                px: 0.3,
                 py: 2,
                 float: 'right',
                 display: 'flex',
@@ -148,8 +159,9 @@ export default function TagRelation({ tag, refCourses }: TagRelationProps) {
               component={Paper}
               elevation={0}
               sx={{
-                px: '30px',
-                width: 'calc(100% - 60px)',
+                px: '20px',
+                pb: '20px',
+                width: 'calc(100% - 40px)',
               }}
             >
               <Table

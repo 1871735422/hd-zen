@@ -20,7 +20,6 @@ const Header: React.FC = async () => {
       sx={{
         background: 'transparent',
         boxShadow: 'none',
-        minHeight: { xl: 70 },
         width: '100%',
         maxWidth: '100%',
         justifyContent: 'center',
