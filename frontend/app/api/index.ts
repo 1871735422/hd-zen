@@ -17,7 +17,8 @@ import {
 
 // Initialize PocketBase using environment variable
 // 客户端组件只能访问 NEXT_PUBLIC_ 开头的环境变量
-const pbUrl = process.env.NEXT_PUBLIC_PB_URL;
+// 构建时使用 NEXT_PB_URL，运行时使用 NEXT_PUBLIC_PB_URL
+const pbUrl = process.env.NEXT_PUBLIC_PB_URL || process.env.NEXT_PB_URL;
 export const pb = new PocketBase(pbUrl);
 
 // Configure PocketBase to prevent auto-cancellation
@@ -171,9 +172,9 @@ const mapRecordToTopicMedia = (record: PocketRecord): TopicMedia => ({
 export const getCategories = async (name?: string): Promise<Array<Menu>> => {
   try {
     // 检查是否在构建环境中
-    if (process.env.NODE_ENV === 'production' && !process.env.NEXT_PB_URL) {
+    if (process.env.NODE_ENV === 'production' && !pbUrl) {
       console.warn(
-        'Build time: Returning empty categories due to missing NEXT_PB_URL'
+        'Build time: Returning empty categories due to missing PB_URL'
       );
       return [];
     }
@@ -200,9 +201,9 @@ export const getCategories = async (name?: string): Promise<Array<Menu>> => {
 export const getCourses = async (): Promise<PaginatedResponse<Course>> => {
   try {
     // 检查是否在构建环境中
-    if (process.env.NODE_ENV === 'production' && !process.env.NEXT_PB_URL) {
+    if (process.env.NODE_ENV === 'production' && !pbUrl) {
       console.warn(
-        'Build time: Returning empty courses due to missing NEXT_PB_URL'
+        'Build time: Returning empty courses due to missing PB_URL'
       );
       return {
         items: [],

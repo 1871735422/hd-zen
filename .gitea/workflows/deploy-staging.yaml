@@ -32,10 +32,11 @@ jobs:
           export NODE_ENV=staging
           export NODE_NO_WARNINGS=1
           export NEXT_PB_URL="${{ vars.NEXT_PB_URL }}"
+          export NEXT_PUBLIC_PB_URL="${{ vars.NEXT_PB_URL }}"  # 客户端也需要访问
           export NEXT_PB_AUTH="${{ secrets.NEXT_PB_AUTH }}"  # 认证信息放在 secrets 中更安全
           
           echo "🚀 开始构建..."
-          echo "NEXT_PB_URL: $NEXT_PB_URL"
+          echo "NEXT_PUBLIC_PB_URL: $NEXT_PUBLIC_PB_URL"
           echo "NEXT_PB_AUTH: ${NEXT_PB_AUTH:0:10}..." # 只显示前10个字符
           
           # 构建项目（包含静态资源复制）
