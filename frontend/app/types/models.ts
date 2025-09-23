@@ -22,6 +22,7 @@ export interface PocketRecord {
 export interface Questions extends BaseModel {
   topicId: string;
   title: string;
+  description?: string;
   assetId?: string;
   contentId: string;
   isActive: boolean;
