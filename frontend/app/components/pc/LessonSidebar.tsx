@@ -34,7 +34,7 @@ export default async function LessonSidebar({
       color: 'rgba(175, 183, 240, 1)',
     },
     {
-      key: 'reading',
+      key: 'article',
       label: '文字',
       icon: <CharIcon />,
       color: 'rgba(199, 143, 227, 1)',

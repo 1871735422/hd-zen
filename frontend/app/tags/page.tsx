@@ -11,10 +11,10 @@ const page = async ({ searchParams }: PageProps) => {
   const tagRelations = await getTagRelations(tag);
   // console.log('tagRelations', tagRelations);
   const refCourses = tagRelations.map(tagRelation => ({
-    topicTitle: tagRelation.topic_title,
-    topicUrl: `/course/${tagRelation.course_order}/lesson${tagRelation.topic_order}`,
-    courseName: tagRelation.course_title,
-    courseUrl: `/course/${tagRelation.course_order}`,
+    topicTitle: tagRelation.topicTitle,
+    topicUrl: `/course/${tagRelation.courseOrder}/lesson${tagRelation.topicOrder}`,
+    courseName: tagRelation.courseTitle,
+    courseUrl: `/course/${tagRelation.courseOrder}`,
     date: tagRelation.created,
   }));
   return <TagRelation tag={tag} refCourses={refCourses} />;

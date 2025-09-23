@@ -1,6 +1,5 @@
 'use client';
 // SearchInfoCard.tsx
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {
   Box,
   Button,
@@ -12,8 +11,11 @@ import {
 import React, { useEffect, useState } from 'react';
 import BookExpandIcon from '../icons/BookExpandIcon';
 import BookIcon from '../icons/BookIcon';
+import FoldResultIcon from '../icons/FoldResultIcon';
+import VideoCamIcon from '../icons/VideoCamIcon';
+import WaveIcon from '../icons/WaveIcon';
 
-export type SearchInfoCardType = '文章' | '视频';
+export type SearchInfoCardType = '文章' | '音视频';
 
 export interface SearchInfoCardProps {
   index?: number;
@@ -24,15 +26,8 @@ export interface SearchInfoCardProps {
   url?: string; // 原文链接
   keywords?: string[]; // 需要高亮的词（可选）
   style?: React.CSSProperties;
+  onTypeClick?: (type: SearchInfoCardType) => void; // 点击类型时的回调
 }
-
-const escapeHtml = (str: string) =>
-  str
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#039;');
 
 // 将 keywords 转为安全的 RegExp
 const buildKeywordRegex = (keywords: string[]) => {
@@ -41,6 +36,69 @@ const buildKeywordRegex = (keywords: string[]) => {
     .map(k => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
   if (escaped.length === 0) return null;
   return new RegExp(`(${escaped.join('|')})`, 'gi');
+};
+
+// 处理内容显示逻辑
+const processContent = (
+  content: string,
+  keywords: string[],
+  expanded: boolean
+) => {
+  if (!keywords || keywords.length === 0) {
+    return content;
+  }
+
+  // 按HTML标签分割内容（p标签或h标签），保留完整标签
+  const paragraphRegex = /<(p|h[1-6])(?:\s[^>]*)?>(.*?)<\/\1>/gi;
+  const paragraphs: string[] = [];
+  let match;
+
+  while ((match = paragraphRegex.exec(content)) !== null) {
+    const fullTag = match[0]; // 完整的标签包括开始和结束标签
+    const tagContent = match[2].trim();
+    if (tagContent) {
+      paragraphs.push(fullTag);
+    }
+  }
+
+  // 如果没有找到HTML标签，尝试按空行分割
+  if (paragraphs.length === 0) {
+    const fallbackParagraphs = content.split(/\n\s*\n/).filter(p => p.trim());
+    if (fallbackParagraphs.length > 0) {
+      paragraphs.push(...fallbackParagraphs);
+    }
+  }
+
+  if (paragraphs.length === 0) {
+    return content;
+  }
+
+  // 找到包含关键词的段落
+  const keywordRegex = buildKeywordRegex(keywords);
+  const keywordParagraphIndices: number[] = [];
+
+  paragraphs.forEach((paragraph, index) => {
+    if (keywordRegex && keywordRegex.test(paragraph)) {
+      keywordParagraphIndices.push(index);
+    }
+  });
+
+  if (keywordParagraphIndices.length === 0) {
+    // 如果没有找到包含关键词的段落，返回原内容
+    return content;
+  }
+
+  if (expanded) {
+    // 展开状态：显示包含关键词的段落 + 下一段 + 后面3段
+    const startIndex = Math.min(...keywordParagraphIndices);
+    const endIndex = Math.min(startIndex + 5, paragraphs.length); // 关键词段落 + 下一段 + 后面3段
+    return paragraphs.slice(startIndex, endIndex).join('');
+  } else {
+    // 折叠状态：只显示包含关键词的段落和下一段
+    const startIndex = Math.min(...keywordParagraphIndices);
+    const endIndex = Math.min(startIndex + 2, paragraphs.length); // 关键词段落 + 下一段
+    return paragraphs.slice(startIndex, endIndex).join('');
+  }
 };
 
 export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
@@ -52,18 +110,22 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
   url,
   keywords,
   style,
+  onTypeClick,
 }) => {
   const [expanded, setExpanded] = useState(false);
   const [contentElement, setContentElement] = useState<HTMLDivElement | null>(
     null
   );
-  const [isOverflowing, setIsOverflowing] = useState(true);
+  const [isOverflowing, setIsOverflowing] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const height = 120;
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    setIsMounted(true);
+  }, []);
 
-    if (!contentElement) return;
+  useEffect(() => {
+    if (!isMounted || !contentElement) return;
 
     const check = () => {
       setIsOverflowing(contentElement.scrollHeight > height + 4); // 余量
@@ -75,165 +137,7 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
       ro.observe(contentElement);
       return () => ro.disconnect();
     }
-  }, [height, content, expanded, contentElement]);
-
-  // 服务端渲染时返回默认状态
-  if (typeof window === 'undefined') {
-    return (
-      <Box
-        style={style}
-        sx={{
-          width: '100%',
-          borderRadius: 2,
-          boxShadow: 0,
-          pt: 2,
-        }}
-      >
-        <Stack direction='row' alignItems='center' spacing={1.25}>
-          {typeof index === 'number' && (
-            <Box
-              sx={{
-                minWidth: 22,
-                height: 22,
-                borderRadius: '50%',
-                bgcolor: 'rgba(86, 137, 204, 1)',
-                color: 'primary.contrastText',
-                fontWeight: 500,
-                fontSize: 14,
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flex: '0 0 auto',
-              }}
-              aria-label={`index-${index}`}
-            >
-              {index}
-            </Box>
-          )}
-          <Typography
-            variant='h6'
-            sx={{
-              fontSize: { xs: 16, sm: 18 },
-              fontWeight: 700,
-              color: 'rgba(86, 137, 204, 1)',
-              flex: 1,
-              lineHeight: 1.4,
-            }}
-          >
-            {title}
-          </Typography>
-
-          <Button
-            size='small'
-            sx={{
-              color: 'rgba(194, 194, 194, 1)',
-            }}
-            variant='text'
-            startIcon={<BookIcon />}
-          >
-            {type}
-          </Button>
-        </Stack>
-
-        <Box
-          sx={{
-            position: 'relative',
-            mt: 1.25,
-            color: 'text.secondary',
-            fontSize: { xs: 14, sm: 15 },
-            lineHeight: 1.8,
-            overflow: 'hidden',
-            maxHeight: `${height}px`,
-            pr: 0.5,
-          }}
-        >
-          <Box
-            component='div'
-            sx={{ '& mark': { px: 0.25, borderRadius: 0.5 } }}
-            dangerouslySetInnerHTML={{
-              __html:
-                keywords && keywords.length > 0
-                  ? escapeHtml(content).replace(
-                      buildKeywordRegex(keywords) ?? /$^/,
-                      m =>
-                        `<mark style="color: rgba(255, 94, 124, 1);background: transparent">${m}</mark>`
-                    )
-                  : content,
-            }}
-          />
-        </Box>
-
-        <Stack
-          direction='column'
-          alignItems='center'
-          justifyContent='space-between'
-          sx={{ mt: 1 }}
-          spacing={1}
-        >
-          <Button
-            size='small'
-            aria-label='expand'
-            sx={{
-              alignSelf: 'center',
-              display: 'flex',
-              flexDirection: 'column',
-              color: 'rgba(84, 161, 209, 1)',
-            }}
-          >
-            展开
-            <ExpandMoreIcon
-              sx={{
-                transform: 'none',
-                transition: 'transform 200ms',
-              }}
-            />
-          </Button>
-          <Stack
-            direction='row'
-            spacing={1}
-            alignItems='center'
-            sx={{
-              width: '100%',
-              display: 'flex',
-              justifyContent: 'space-between',
-            }}
-          >
-            {from && (
-              <Typography variant='body2' sx={{ color: 'text.disabled' }}>
-                来源：{from}
-              </Typography>
-            )}
-            {url && (
-              <Tooltip title='查看原文' arrow>
-                <MuiLink
-                  href={url}
-                  target='_blank'
-                  rel='noopener noreferrer'
-                  underline='hover'
-                  sx={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    color: 'rgba(130, 178, 232, 1)',
-                  }}
-                >
-                  <BookExpandIcon />
-                  <Typography
-                    sx={{
-                      ml: 0.5,
-                      fontSize: 13,
-                      color: 'rgba(130, 178, 232, 1)',
-                    }}
-                  >
-                    查看原文
-                  </Typography>
-                </MuiLink>
-              </Tooltip>
-            )}
-          </Stack>
-        </Stack>
-      </Box>
-    );
-  }
+  }, [height, content, expanded, contentElement, isMounted]);
 
   return (
     <Box
@@ -245,17 +149,23 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
         pt: 2,
       }}
     >
-      <Stack direction='row' alignItems='center' spacing={1.25}>
+      <Stack
+        direction='row'
+        alignItems='center'
+        sx={{
+          mb: '-16px !important',
+        }}
+      >
         {typeof index === 'number' && (
           <Box
             sx={{
-              minWidth: 22,
-              height: 22,
+              minWidth: 19,
+              height: 19,
               borderRadius: '50%',
               bgcolor: 'rgba(86, 137, 204, 1)',
               color: 'primary.contrastText',
+              fontSize: 13,
               fontWeight: 500,
-              fontSize: 14,
               display: 'inline-flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -269,11 +179,11 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
         <Typography
           variant='h6'
           sx={{
-            fontSize: { xs: 16, sm: 18 },
-            fontWeight: 700,
+            fontSize: 16,
+            fontWeight: 500,
             color: 'rgba(86, 137, 204, 1)',
+            ml: '8px !important',
             flex: 1,
-            lineHeight: 1.4,
           }}
         >
           {title}
@@ -283,9 +193,15 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
           size='small'
           sx={{
             color: 'rgba(194, 194, 194, 1)',
+            cursor: onTypeClick ? 'pointer' : 'default',
+            '&:hover': onTypeClick
+              ? {
+                  color: 'rgba(78, 136, 219, 1)',
+                }
+              : {},
           }}
           variant='text'
-          startIcon={<BookIcon />}
+          startIcon={type === '文章' ? <BookIcon /> : <VideoCamIcon />}
         >
           {type}
         </Button>
@@ -309,15 +225,21 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
           component='div'
           sx={{ '& mark': { px: 0.25, borderRadius: 0.5 } }}
           dangerouslySetInnerHTML={{
-            __html:
-              keywords && keywords.length > 0
-                ? // 简易 HTML 高亮（仅做字符串替换，不处理复杂 DOM）
-                  escapeHtml(content).replace(
-                    buildKeywordRegex(keywords) ?? /$^/,
-                    m =>
-                      `<mark style="color: rgba(255, 94, 124, 1);background: transparent">${m}</mark>`
-                  )
-                : content,
+            __html: (() => {
+              const processedContent = processContent(
+                content,
+                keywords || [],
+                expanded
+              );
+              if (keywords && keywords.length > 0) {
+                return processedContent.replace(
+                  buildKeywordRegex(keywords) ?? /$^/,
+                  m =>
+                    `<mark style="color: rgba(255, 94, 124, 1);background: transparent">${m}</mark>`
+                );
+              }
+              return processedContent;
+            })(),
           }}
         />
 
@@ -326,7 +248,6 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
             sx={{
               position: 'absolute',
               inset: 'auto 0 0 0',
-              height: 48,
               background:
                 'linear-gradient(to bottom, rgba(255,255,255,0), var(--mui-palette-background-paper) 60%)',
             }}
@@ -338,11 +259,10 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
         direction='column'
         alignItems='center'
         justifyContent='space-between'
-        sx={{ mt: 1 }}
-        spacing={1}
       >
-        <Button
-          size='small'
+        <Stack
+          direction='row'
+          alignItems='center'
           onClick={() => setExpanded(v => !v)}
           aria-label={expanded ? 'collapse' : 'expand'}
           sx={{
@@ -350,19 +270,14 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
             display: 'flex',
             flexDirection: 'column',
             color: 'rgba(84, 161, 209, 1)',
+            mt: 2,
+            mb: type === '文章' ? (expanded ? -1 : -3) : 1,
           }}
         >
-          {expanded ? '折叠' : '展开'}
-          <ExpandMoreIcon
-            sx={{
-              transform: expanded ? 'rotate(180deg)' : 'none',
-              transition: 'transform 200ms',
-            }}
-          />
-        </Button>
+          {type === '文章' && <FoldResultIcon expanded={expanded} />}
+        </Stack>
         <Stack
           direction='row'
-          spacing={1}
           alignItems='center'
           sx={{
             width: '100%',
@@ -371,12 +286,16 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
           }}
         >
           {from && (
-            <Typography variant='body2' sx={{ color: 'text.disabled' }}>
+            <Typography
+              variant='body2'
+              fontSize={12}
+              sx={{ color: 'rgba(194, 194, 194, 1)' }}
+            >
               来源：{from}
             </Typography>
           )}
           {url && (
-            <Tooltip title='查看原文' arrow>
+            <Tooltip title={type === '文章' ? '查看原文' : '查看音视频'} arrow>
               <MuiLink
                 href={url}
                 target='_blank'
@@ -386,9 +305,12 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
                   display: 'inline-flex',
                   alignItems: 'center',
                   color: 'rgba(130, 178, 232, 1)',
+                  '& svg': {
+                    color: 'rgba(178, 207, 202, 1)',
+                  },
                 }}
               >
-                <BookExpandIcon />
+                {type === '文章' ? <BookExpandIcon /> : <WaveIcon />}
                 <Typography
                   sx={{
                     ml: 0.5,
@@ -396,7 +318,7 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
                     color: 'rgba(130, 178, 232, 1)',
                   }}
                 >
-                  查看原文
+                  {type === '文章' ? '查看原文' : '查看音视频'}
                 </Typography>
               </MuiLink>
             </Tooltip>

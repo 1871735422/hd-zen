@@ -142,11 +142,46 @@ export interface PaginatedResponse<T> {
   perPage: number;
 }
 export interface TagRelation extends BaseModel {
-  course_title: string;
-  course_order: string;
-  course_active: boolean;
-  topic_title: string;
-  topic_order: string;
-  topic_active: boolean;
+  courseTitle: string;
+  courseOrder: string;
+  courseActive: boolean;
+  topicTitle: string;
+  topicOrder: string;
+  topicActive: boolean;
   tags: string[];
 }
+export interface Article extends BaseModel {
+  title: string;
+  fulltext: string;
+  introtext: string;
+  summary: string;
+  courseOrder: string;
+  isActive: boolean;
+  topicOrder: string;
+  courseTitle: string;
+}
+
+// CourseMedia - 课程媒体
+export interface CourseMedia extends BaseModel {
+  title: string;
+  courseId: string;
+  mediaId: string;
+  displayOrder: number;
+  isActive: boolean;
+  course?: Course;
+  media?: Media;
+}
+
+// QuestionMedia - 问答媒体
+export interface QuestionMedia extends BaseModel {
+  title: string;
+  questionId: string;
+  mediaId: string;
+  displayOrder: number;
+  isActive: boolean;
+  question?: Questions;
+  media?: Media;
+}
+
+// 搜索结果联合类型
+export type SearchResultItem = Article | CourseMedia | QuestionMedia;

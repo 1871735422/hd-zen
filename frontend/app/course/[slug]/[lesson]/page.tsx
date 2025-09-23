@@ -97,7 +97,7 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
 
   // 仅在 reading tab 时获取 topic 数据
   const topic =
-    selectedKey === 'reading'
+    selectedKey === 'article'
       ? await getCourseTopicByOrder(courseOrder, lessonOrder)
       : null;
 
@@ -109,7 +109,7 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
 
   const TabRender = () => {
     if (selectedKey === 'audio') return <AudioPage topicMedia={topicMedia} />;
-    if (selectedKey === 'reading') {
+    if (selectedKey === 'article') {
       if (!topic) {
         return <NotFound />;
       }

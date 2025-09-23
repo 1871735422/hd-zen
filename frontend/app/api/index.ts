@@ -4,17 +4,20 @@ import PocketBase from 'pocketbase';
 import { Menu } from '../components/pc/MenuItem';
 import {
   AnswerMedia,
+  Article,
   Category,
   Course,
   CourseTopic,
   Media,
   PaginatedResponse,
+  SearchResultItem,
   TagRelation,
   TopicMedia,
 } from '../types/models';
 
 // Initialize PocketBase using environment variable
-const pbUrl = process.env.NEXT_PB_URL;
+// 客户端组件只能访问 NEXT_PUBLIC_ 开头的环境变量
+const pbUrl = process.env.NEXT_PUBLIC_PB_URL;
 export const pb = new PocketBase(pbUrl);
 
 // Configure PocketBase to prevent auto-cancellation
@@ -516,4 +519,175 @@ export const getTagRelations = async (tag: string): Promise<TagRelation[]> => {
   });
   // console.log('resultList', resultList);
   return resultList.items;
+};
+
+export const getSearchQuestions = async (
+  title: string,
+  page = 1,
+  pageSize = 10,
+  sort = 'desc'
+): Promise<{
+  items: Article[];
+  totalItems: number;
+  totalPages: number;
+  currentPage: number;
+}> => {
+  if (!title)
+    return { items: [], totalItems: 0, totalPages: 0, currentPage: 1 };
+
+  try {
+    let totalItems = 0;
+    let totalPages = 0;
+    let allItems: any[] = [];
+
+    const result = await pb
+      .collection('questionMedia')
+      .getList(page, pageSize, {
+        filter: `title ~ "${title}"`,
+        sort: sort === 'desc' ? '-created' : 'created',
+      });
+    allItems = [...allItems, ...result.items];
+    totalItems += result.totalItems;
+    totalPages = Math.ceil(totalItems / pageSize);
+
+    return {
+      items: allItems,
+      totalItems,
+      totalPages,
+      currentPage: page,
+    };
+  } catch (error) {
+    return { items: [], totalItems: 0, totalPages: 0, currentPage: 1 };
+  }
+};
+
+export const getSearchArticles = async (
+  title?: string,
+  content?: string,
+  page = 1,
+  pageSize = 10,
+  sort = 'asc',
+  type = 'all' // all, article, av
+): Promise<{
+  items: SearchResultItem[];
+  totalItems: number;
+  totalPages: number;
+  currentPage: number;
+}> => {
+  if (!title && !content)
+    return { items: [], totalItems: 0, totalPages: 0, currentPage: 1 };
+
+  // 构建搜索过滤器
+  const buildFilter = (keywords: string[], isTitle = false) => {
+    const keywordFilters = keywords.map(keyword => {
+      if (isTitle) {
+        return `title ~ "${keyword}"`;
+      }
+      return `(fulltext ~ "${keyword}" || introtext ~ "${keyword}" || summary ~ "${keyword}")`;
+    });
+    return keywordFilters.join(' && ');
+  };
+
+  const getKeywords = (text: string) =>
+    text.split(/[,\s]+/).filter(k => k.trim());
+
+  // 构建媒体搜索过滤器（仅搜索标题）
+  const buildMediaFilter = (searchText: string) => {
+    if (!searchText) return '';
+    return buildFilter(getKeywords(searchText), true);
+  };
+
+  // 构建文章搜索过滤器
+  const buildArticleFilter = (title?: string, content?: string) => {
+    if (title && content) {
+      return `(title ~ "${title}" || fulltext ~ "${content}" || introtext ~ "${content}" || summary ~ "${content}")`;
+    } else if (title) {
+      return buildFilter(getKeywords(title), true);
+    } else {
+      return buildFilter(getKeywords(content), false);
+    }
+  };
+
+  // 搜索集合的通用函数
+  const searchCollection = async (collection: string, filter: string) => {
+    if (!filter) return { items: [], totalItems: 0 };
+
+    const result = await pb.collection(collection).getList(page, pageSize, {
+      filter,
+      sort: sort === 'desc' ? 'created' : '-created',
+    });
+
+    return { items: result.items, totalItems: result.totalItems };
+  };
+
+  try {
+    let allItems: any[] = [];
+    let totalItems = 0;
+
+    // 根据类型搜索不同的集合
+    if (type === 'all') {
+      // 搜索全部：同时搜索 articles、courseMedia 和 questionMedia
+
+      // 搜索文章
+      const articleFilter = buildArticleFilter(title, content);
+      const articlesResult = await searchCollection('articles', articleFilter);
+      allItems = [...allItems, ...articlesResult.items];
+      totalItems += articlesResult.totalItems;
+
+      // 搜索课程媒体
+      const courseMediaFilter = buildMediaFilter(title || content);
+      const courseMediaResult = await searchCollection(
+        'courseMedia',
+        courseMediaFilter
+      );
+      allItems = [...allItems, ...courseMediaResult.items];
+      totalItems += courseMediaResult.totalItems;
+
+      // 搜索问答媒体
+      const questionMediaFilter = buildMediaFilter(title || content);
+      const questionMediaResult = await searchCollection(
+        'questionMedia',
+        questionMediaFilter
+      );
+      allItems = [...allItems, ...questionMediaResult.items];
+      totalItems += questionMediaResult.totalItems;
+    } else if (type === 'artile') {
+      // 只搜索文章
+      const articleFilter = buildArticleFilter(title, content);
+      const articlesResult = await searchCollection('articles', articleFilter);
+      allItems = [...allItems, ...articlesResult.items];
+      totalItems += articlesResult.totalItems;
+    } else if (type === 'av') {
+      // 搜索课程媒体和问答媒体
+      const mediaFilter = buildMediaFilter(title || content);
+      console.log({ mediaFilter });
+
+      // 搜索课程媒体
+      const courseMediaResult = await searchCollection(
+        'courseMedia',
+        mediaFilter
+      );
+      allItems = [...allItems, ...courseMediaResult.items];
+      totalItems += courseMediaResult.totalItems;
+
+      // 搜索问答媒体
+      const questionMediaResult = await searchCollection(
+        'questionMedia',
+        mediaFilter
+      );
+      allItems = [...allItems, ...questionMediaResult.items];
+      totalItems += questionMediaResult.totalItems;
+    }
+
+    const totalPages = Math.ceil(totalItems / pageSize);
+
+    return {
+      items: allItems,
+      totalItems,
+      totalPages,
+      currentPage: page,
+    };
+  } catch (error) {
+    return { items: [], totalItems: 0, totalPages: 0, currentPage: 1 };
+  }
 };
