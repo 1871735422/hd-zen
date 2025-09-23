@@ -11,12 +11,7 @@ import {
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Fragment, useEffect, useState } from 'react';
 import { HELPER_TEXT_COLOR } from '../../constants/colors';
-import type {
-  Article,
-  CourseMedia,
-  QuestionMedia,
-  SearchResultItem,
-} from '../../types/models';
+import type { Article, SearchResultItem } from '../../types/models';
 import CheckedIcon from '../icons/CheckedIcon';
 import UncheckIcon from '../icons/UncheckIcon';
 import { SearchBox } from '../shared/SearchBox';
@@ -331,7 +326,6 @@ const SearchPage = () => {
               my: 3,
               fontSize: 14,
               color: 'rgba(68, 68, 68, 1)',
-
             }}
           >
             <Box

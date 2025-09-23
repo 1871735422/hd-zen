@@ -177,7 +177,7 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
               <LessonMeta
                 title={title}
                 tags={tags}
-                description={description} 
+                description={description}
                 author='作者：慈诚罗珠堪布'
                 date={
                   answerMediaRes?.created

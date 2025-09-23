@@ -2,7 +2,6 @@
 // SearchInfoCard.tsx
 import {
   Box,
-  Button,
   Link as MuiLink,
   Stack,
   Tooltip,
@@ -26,7 +25,6 @@ export interface SearchInfoCardProps {
   url?: string; // 原文链接
   keywords?: string[]; // 需要高亮的词（可选）
   style?: React.CSSProperties;
-  onTypeClick?: (type: SearchInfoCardType) => void; // 点击类型时的回调
 }
 
 // 将 keywords 转为安全的 RegExp
@@ -110,7 +108,6 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
   url,
   keywords,
   style,
-  onTypeClick,
 }) => {
   const [expanded, setExpanded] = useState(false);
   const [contentElement, setContentElement] = useState<HTMLDivElement | null>(
