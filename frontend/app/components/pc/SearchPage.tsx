@@ -142,16 +142,6 @@ const SearchPage = () => {
     }
   };
 
-  const handleTypeClick = (clickedType: '文章' | '音视频') => {
-    // 根据点击的类型切换搜索条件
-    const newFilter = clickedType === '文章' ? 'artile' : 'av';
-    setFilter(newFilter);
-    // 如果有搜索查询，重新搜索以应用新的过滤条件
-    if (searchQuery) {
-      handleSearchWithFilter(searchQuery, 1, newFilter, cate); // 重置到第一页，内部会更新URL
-    }
-  };
-
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= totalPages && newPage !== currentPage) {
       handleSearchWithFilter(searchQuery, newPage, filter, cate);
@@ -582,7 +572,6 @@ const SearchPage = () => {
                             : `/${courseInfo.mediaType}/${courseInfo.courseOrder}/lesson${courseInfo.topicOrder}`
                         }
                         keywords={searchQuery ? [searchQuery] : []}
-                        onTypeClick={handleTypeClick}
                       />
                       {index < searchResults.length - 1 && (
                         <Divider sx={{ color: '#F0F0F0' }} />

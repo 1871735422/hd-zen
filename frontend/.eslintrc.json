@@ -1,53 +1,57 @@
 {
-  "extends": ["next/core-web-vitals", "prettier"],
-  "root": true,
-  "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint", "unused-imports", "prettier"],
+  // ==================== 基础配置 ====================
+  "extends": ["next/core-web-vitals", "prettier"], // 继承 Next.js 和 Prettier 配置
+  "root": true, // 根配置文件
+  "parser": "@typescript-eslint/parser", // TypeScript 解析器
+  "plugins": ["@typescript-eslint", "unused-imports", "prettier"], // 使用的插件
   "env": {
-    "browser": true,
-    "es2021": true,
-    "node": true
+    "browser": true, // 浏览器环境
+    "es2021": true, // ES2021 语法支持
+    "node": true // Node.js 环境
   },
   "rules": {
-    // Next.js 规则
-    "@next/next/no-img-element": "warn",
+    // ==================== Next.js 规则 ====================
+    "@next/next/no-img-element": "warn", // 建议使用 next/image 替代 img 标签
 
-    // React 规则
-    "react-hooks/exhaustive-deps": "off",
-    "react/no-unknown-property": "off",
-    "react/react-in-jsx-scope": "off",
-    "react/prop-types": "off",
-    "react/jsx-no-target-blank": "off",
+    // ==================== React 规则 ====================
+    "react-hooks/exhaustive-deps": "off", // 关闭 useEffect 依赖检查（避免过度警告）
+    "react/no-unknown-property": "off", // 允许未知属性（支持 MUI 等库的自定义属性）
+    "react/react-in-jsx-scope": "off", // Next.js 13+ 不需要手动导入 React
+    "react/prop-types": "off", // 使用 TypeScript 接口，不需要 PropTypes
+    "react/jsx-no-target-blank": "off", // 关闭外部链接安全检查
+    "react/jsx-uses-react": "off", // Next.js 13+ 不需要检查 React 使用
+    "react/jsx-uses-vars": "error", // 检查 JSX 中使用的变量是否已定义
 
-    // TypeScript 规则
-    "@typescript-eslint/no-unused-vars": "off",
-    "@typescript-eslint/no-explicit-any": "warn",
+    // ==================== TypeScript 规则 ====================
+    "@typescript-eslint/no-unused-vars": "off", // 关闭（与 unused-imports 重复）
+    "@typescript-eslint/no-explicit-any": "warn", // 警告使用 any 类型
 
-    // 未使用导入规则
-    "unused-imports/no-unused-imports": "error",
+    // ==================== 未使用代码检查规则 ====================
+    "unused-imports/no-unused-imports": "error", // 自动删除未使用的导入
     "unused-imports/no-unused-vars": [
-      "warn",
+      "warn", // 警告未使用的变量
       {
-        "vars": "all",
-        "varsIgnorePattern": "^_",
-        "args": "after-used",
-        "argsIgnorePattern": "^_"
+        "vars": "all", // 检查所有变量
+        "varsIgnorePattern": "^_", // 忽略以 _ 开头的变量
+        "args": "after-used", // 只检查使用位置之后的参数
+        "argsIgnorePattern": "^_" // 忽略以 _ 开头的参数
       }
     ],
 
-    // 其他规则
-    "prefer-const": "error",
-    "no-console": "off",
-    "no-debugger": "error",
-    "no-undef": "off",
-    "prettier/prettier": "error",
+    // ==================== 代码质量规则 ====================
+    "prefer-const": "error", // 优先使用 const
+    "no-console": "off", // 允许使用 console（开发调试需要）
+    "no-debugger": "error", // 禁止 debugger 语句
+    "no-undef": "off", // 关闭（TypeScript 已处理）
+    "prettier/prettier": "error", // 代码格式化检查
 
-    // 导入规则
-    "import/no-anonymous-default-export": "warn"
+    // ==================== 导入规则 ====================
+    "import/no-anonymous-default-export": "warn" // 警告匿名默认导出
   },
+  // ==================== 插件设置 ====================
   "settings": {
     "react": {
-      "version": "detect"
+      "version": "detect" // 自动检测 React 版本
     }
   }
 }
