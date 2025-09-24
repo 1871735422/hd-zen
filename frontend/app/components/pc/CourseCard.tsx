@@ -30,7 +30,7 @@ export default function CourseCard({
     >
       <Card
         sx={{
-          borderRadius: '25px',
+          borderRadius: '20px',
           position: 'relative',
           boxShadow: '0 4px 20px rgba(131, 181, 247, 0.3)',
           display: 'flex',
@@ -43,11 +43,18 @@ export default function CourseCard({
             pl: 2,
             pt: 2,
             pr: 7,
+            display: '-webkit-box',
+            WebkitBoxOrient: 'vertical',
+            WebkitLineClamp: isQa ? 3 : 1,
+            overflow: 'hidden',
+            lineHeight: 1.5,
+            textOverflow: 'ellipsis',
             fontWeight: 500,
-            fontSize: isQa ? 14 : 20,
+            fontSize: isQa ? 16 : 20,
+            minHeight: isQa ? 60 : 20,
           }}
         >
-          {item.title}
+          {item.title?.replace(/(慧灯禅修课\d+ )|(｜慧灯禅修课问答)/, '')}
         </Typography>
         <CornerBadge content={isQa ? undefined : item.idx} />
         <CardContent
@@ -56,8 +63,9 @@ export default function CourseCard({
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-between',
-            minHeight: 100,
+            minHeight: isQa ? 60 : 100,
             flex: 1,
+            pb: isQa ? '16px !important' : '',
           }}
         >
           <Box
@@ -73,7 +81,7 @@ export default function CourseCard({
               sx={{
                 display: '-webkit-box',
                 WebkitBoxOrient: 'vertical',
-                WebkitLineClamp: 2,
+                WebkitLineClamp: isQa ? 1 : 2,
                 overflow: 'hidden',
                 fontSize: 12,
                 lineHeight: 1.5,

@@ -1,7 +1,7 @@
 import {
+  getAnswerMediasByOrder,
   getCourses,
   getCourseTopicsByDisplayOrder,
-  getQuestionsByOrder,
 } from '@/app/api';
 import CourseCard from '@/app/components/pc/CourseCard';
 import { Container, Grid, Typography } from '@mui/material';
@@ -41,12 +41,11 @@ export default async function QaPage({ params, searchParams }: QaPageProps) {
     // Fetch course details and topics
     const courseTopics = (await getCourseTopicsByDisplayOrder(displayOrder))
       ?.items;
-    const questions = (await getQuestionsByOrder(displayOrder, lessonOrder))
-      ?.items;
+    const questions = await getAnswerMediasByOrder(displayOrder, lessonOrder);
 
     // console.log({ courseTopics });
-    console.log(questions);
-    // console.log(questions.items[0]);
+    // console.log({ questions });
+    // console.log(questions[0]);
 
     const sidebarData = courseTopics
       .sort((a, b) => a.ordering - b.ordering)
@@ -90,17 +89,20 @@ export default async function QaPage({ params, searchParams }: QaPageProps) {
             }}
             size={9}
           >
-            {questions.map((question, idx) => (
-              <Grid key={question.id} size={{ xs: 12, sm: 6, md: 4 }}>
+            {questions.map(question => (
+              <Grid
+                key={question.questionOrder}
+                size={{ xs: 12, sm: 6, md: 4 }}
+              >
                 <CourseCard
                   item={{
-                    idx: Number(lessonOrder),
-                    title: question.title || '',
+                    idx: Number(question.questionOrder),
+                    title: question.questionTitle || '',
                     description: question.description || '',
                   }}
                   courseOrder={Number(displayOrder)}
                   slug='qa'
-                  questionOrder={idx + 1}
+                  questionOrder={question.questionOrder}
                 />
               </Grid>
             ))}

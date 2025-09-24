@@ -9,7 +9,7 @@ import {
   Typography,
 } from '@mui/material';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export interface VideoSource {
   src: string;
@@ -29,10 +29,12 @@ export default function VideoPlayer({
   title,
 }: VideoPlayerProps) {
   const [video, setVideo] = useState<HTMLVideoElement | null>(null);
+  const [played, setPlayed] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [currentQuality, setCurrentQuality] = useState<'SD' | 'HD'>('SD');
   const [qualityMenuAnchor, setQualityMenuAnchor] =
     useState<null | HTMLElement>(null);
+  const qualitySelectRef = useRef(null);
 
   // 初始化默认画质
   useEffect(() => {
@@ -45,6 +47,7 @@ export default function VideoPlayer({
   }, [video, sources, currentQuality]);
 
   const handlePlay = () => {
+    setPlayed(true);
     setPlaying(true);
     video?.play();
   };
@@ -82,8 +85,22 @@ export default function VideoPlayer({
           {title}
         </Typography>
       )}
-      <Box sx={{ position: 'relative', width: '100%', pt: '56.25%' }}>
-        {!playing && (
+      <Box
+        onMouseEnter={() => {
+          const ref = qualitySelectRef?.current as HTMLElement | null;
+          if (ref) {
+            ref.style.display = '';
+          }
+        }}
+        onMouseLeave={() => {
+          const ref = qualitySelectRef?.current as HTMLElement | null;
+          if (ref && playing) {
+            ref.style.display = 'none';
+          }
+        }}
+        sx={{ position: 'relative', width: '100%', pt: '56.25%' }}
+      >
+        {!played && (
           <Image
             src={poster}
             alt={title || ''}
@@ -106,7 +123,7 @@ export default function VideoPlayer({
           controls
           disablePictureInPicture
           style={{
-            display: playing ? 'block' : 'none',
+            display: played ? 'block' : 'none',
             position: 'absolute',
             top: 0,
             left: 0,
@@ -115,13 +132,15 @@ export default function VideoPlayer({
             borderRadius: 10,
           }}
           poster={poster}
+          onPause={() => setPlaying(false)}
+          onPlay={() => setPlaying(true)}
         >
           {sources.map((source, index) => (
             <source key={index} src={source.src} type='video/mp4' />
           ))}
         </video>
 
-        {!playing && (
+        {!played && (
           <IconButton
             onClick={handlePlay}
             sx={{
@@ -136,8 +155,9 @@ export default function VideoPlayer({
           </IconButton>
         )}
 
-        {playing && sources.length > 1 && (
+        {played && sources.length > 1 && (
           <Box
+            ref={qualitySelectRef}
             sx={{ position: 'absolute', bottom: 32, right: 150, zIndex: 10 }}
           >
             <Button

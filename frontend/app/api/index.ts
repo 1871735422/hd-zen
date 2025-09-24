@@ -1,15 +1,14 @@
 import PocketBase from 'pocketbase';
 import { Menu } from '../components/pc/MenuItem';
 import {
-  AnswerMedia,
   Category,
   Course,
   CourseTopic,
   Media,
   PaginatedResponse,
   PocketRecord,
+  QuestionResult,
   Questions,
-  QuestionMedia,
   SearchResultItem,
   TagRelation,
   TopicMedia,
@@ -275,31 +274,37 @@ export const getQuestionsByOrder = async (
   };
 };
 
-export const getAnswerMediaByOrder = async (
-  volume: string,
-  lesson: string,
-  questionOrder: string
-): Promise<AnswerMedia | null> => {
-  const result = await pb.collection('answerMedia').getList(1, 30, {
-    filter: [
-      'answerId.questionId.topicId.courseId.displayOrder = ' + volume,
-      'answerId.questionId.topicId.ordering = ' + lesson,
-      'displayOrder = ' + questionOrder,
-    ].join(' && '),
-    expand:
-      'answerId,answerId.questionId, answerId.questionId.topicId, answerId.questionId.topicId.courseId, mediaId',
-    // fields: 'title,topicId.expand.ordering',
-  });
-  console.log('result', result);
-  const firstItem = result?.items[0];
-  if (!firstItem) {
-    return null;
+export const getAnswerMediasByOrder = async (
+  courseOrder: string,
+  topicOrder?: string,
+  questionOrder?: string,
+  fetchMedia?: boolean
+): Promise<QuestionResult[]> => {
+  const filters = ['courseOrder = ' + courseOrder];
+  if (topicOrder) {
+    filters.push('topicOrder = ' + topicOrder);
+  }
+  if (questionOrder) {
+    filters.push('questionOrder = ' + questionOrder);
   }
 
-  return {
-    ...firstItem,
-    media: firstItem.expand?.mediaId,
-  } as unknown as AnswerMedia;
+  let fileds =
+    'courseTitle,topicTitle,questionTitle,questionOrder,questionCreated,description';
+  if (fetchMedia) {
+    fileds +=
+      ',url_image,url_hd,url_sd,mp4_duration,url_downmp4,mp4_size,url_mp3,mp3_duration,url_downmp3,mp3_size,summary';
+  }
+
+  const result = await pb
+    .collection('getQuestionsWithCourseTopic')
+    .getList(1, 50, {
+      filter: filters.join(' && '),
+      fields: fileds,
+    });
+  console.log('result', result);
+
+  if (!result) return [];
+  return result?.items as unknown as QuestionResult[];
 };
 
 export const getCourseByDisplayOrder = async (
@@ -531,7 +536,7 @@ export const getSearchQuestions = async (
   pageSize = 10,
   sort = 'desc'
 ): Promise<{
-  items: QuestionMedia[];
+  items: QuestionResult[];
   totalItems: number;
   totalPages: number;
   currentPage: number;
@@ -542,7 +547,7 @@ export const getSearchQuestions = async (
   try {
     let totalItems = 0;
     let totalPages = 0;
-    let allItems: QuestionMedia[] = [];
+    let allItems: QuestionResult[] = [];
 
     const result = await pb
       .collection('questionMedia')
@@ -550,7 +555,7 @@ export const getSearchQuestions = async (
         filter: `title ~ "${title}"`,
         sort: sort === 'desc' ? '-created' : 'created',
       });
-    allItems = [...allItems, ...(result.items as unknown as QuestionMedia[])];
+    allItems = [...allItems, ...(result.items as unknown as QuestionResult[])];
     totalItems += result.totalItems;
     totalPages = Math.ceil(totalItems / pageSize);
 

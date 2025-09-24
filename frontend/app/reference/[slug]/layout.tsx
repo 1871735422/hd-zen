@@ -27,7 +27,6 @@ export default async function CourseLayout({
   }
 
   const categories = coursesResult.items.map(item => item.title);
-  const courseOrders = coursesResult.items.map(item => item.displayOrder + '');
   const selectedCategory = course.title;
 
   return (
@@ -55,7 +54,6 @@ export default async function CourseLayout({
       <CategorySelector
         categories={categories}
         selectedCategory={selectedCategory}
-        courseIds={courseOrders}
       />
       {children}
     </Container>

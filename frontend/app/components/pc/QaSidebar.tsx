@@ -41,7 +41,7 @@ export default async function QaSidebar({
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'flex-start',
-          pt: 5,
+          pt: 6,
         }}
       >
         {lesson.map((item, idx) => {
@@ -59,7 +59,7 @@ export default async function QaSidebar({
                 href={item.path}
                 width={'100%'}
                 sx={{
-                  height: 70,
+                  minHeight: 70,
                   marginLeft: 2,
                   boxSizing: 'border-box',
                 }}
@@ -67,8 +67,9 @@ export default async function QaSidebar({
                 <ListItemButton
                   selected={isSelected}
                   sx={{
-                    height: 46,
-                    p: 0,
+                    minHeight: 54,
+                    px: 0,
+                    py: 1,
                     alignItems: 'center',
                     background: isSelected ? 'white !important' : 'transparent',
                     borderRadius: isSelected ? '40px 0 0 40px' : 'none',
@@ -111,7 +112,6 @@ export default async function QaSidebar({
                       flexDirection: 'row',
                       justifyContent: 'center',
                       alignItems: 'center',
-                      color: isSelected ? MAIN_BLUE_COLOR : STANDARD_TEXT_COLOR,
                     }}
                   >
                     <Avatar
@@ -121,13 +121,17 @@ export default async function QaSidebar({
                         bgcolor: isSelected ? MAIN_BLUE_COLOR : '#fff',
                         width: 26,
                         height: 26,
-                        display: { xs: 'none', sm: 'flex' },
                       }}
                     >
-                      <Typography variant='body2'>{idx + 1}</Typography>
+                      <Typography
+                        variant='body2'
+                        fontSize={18}
+                        fontWeight={500}
+                      >
+                        {idx + 1}
+                      </Typography>
                     </Avatar>
                     <ListItemText
-                      sx={{ m: 0 }}
                       primary={
                         <Typography
                           fontWeight={isSelected ? 600 : 'inherit'}
@@ -140,6 +144,9 @@ export default async function QaSidebar({
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
                             lineHeight: 1.2,
+                            color: isSelected
+                              ? 'rgba(86, 137, 204, 1)'
+                              : STANDARD_TEXT_COLOR,
                           }}
                         >
                           {item.label}

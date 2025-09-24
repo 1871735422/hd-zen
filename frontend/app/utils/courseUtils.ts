@@ -93,3 +93,15 @@ export function formatDate(input: string): string {
   // 拼接中文格式
   return `${year}年${monthFormatted}月${dayFormatted}日`;
 }
+
+export function buildLessonsTitle(size: number) {
+  const one2ten = '一二三四五六七八九十'.split('');
+  const lessons = [];
+  for (let i = 0; i < size; i++) {
+    if (i <= 10) lessons.push(`第${one2ten[i]}课`);
+    if (i > 10 && i < 20) lessons.push(`第十${one2ten[i % 10]}课`);
+    if (i >= 20) break;
+  }
+
+  return lessons;
+}

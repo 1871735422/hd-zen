@@ -1,21 +1,20 @@
 import {
-  getAnswerMediaByOrder,
+  getAnswerMediasByOrder,
   getCourseByDisplayOrder,
   getCourses,
   getCourseTopicsByCourse,
-  getQuestionsByOrder,
 } from '@/app/api';
 import LessonMeta from '@/app/components/pc/LessonMeta';
 import MediaDownloadButton from '@/app/components/pc/MediaDownloadButton';
 import QaSidebar from '@/app/components/pc/QaSidebar';
 import VideoPlayer from '@/app/components/pc/VideoPlayer';
 import { CourseTopic } from '@/app/types/models';
+import { formatDate } from '@/app/utils/courseUtils';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Box, Button, Container, Grid, Stack, Typography } from '@mui/material';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { Fragment } from 'react';
 
 // 15分钟缓存
 export const revalidate = 900;
@@ -104,24 +103,17 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
     '';
 
   // 获取问题和答案
-  const questionsRes = await getQuestionsByOrder(courseOrder, lessonOrder);
-  const answerMediaRes = await getAnswerMediaByOrder(
+  const questions = await getAnswerMediasByOrder(
     courseOrder,
     lessonOrder,
-    questionOrder
+    undefined,
+    true
   );
-
-  const questions = questionsRes?.items || [];
-  // console.log(questions);
-  console.log('answerMediaRes', answerMediaRes);
 
   if (!questions.length) {
     notFound();
   }
-
-  const title = `${questionOrder}. ${answerMediaRes?.media?.title}`;
-  const tags = answerMediaRes?.media?.tags;
-  const description = answerMediaRes?.media?.summary;
+  const currentQuestion = questions[Number(questionOrder) - 1];
 
   return (
     <Container
@@ -130,7 +122,7 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',
         backgroundPosition: 'center',
-        py: 4,
+        pb: 4,
         px: '0 !important',
       }}
     >
@@ -146,9 +138,9 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
       >
         <Grid size={3}>
           <QaSidebar
-            lesson={questions.map((question, idx) => ({
-              label: question.title || '',
-              path: `/qa/${courseOrder}/lesson${lessonOrder}?tab=question${idx + 1}`,
+            lesson={questions.map(question => ({
+              label: question.questionTitle || '',
+              path: `/qa/${courseOrder}/lesson${lessonOrder}?tab=question${question.questionOrder}`,
             }))}
             selectedIdx={Number(questionOrder) - 1}
           />
@@ -175,17 +167,9 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
               }}
             >
               <LessonMeta
-                title={title}
-                tags={tags}
-                description={description}
+                title={currentQuestion?.questionTitle}
                 author='作者：慈诚罗珠堪布'
-                date={
-                  answerMediaRes?.created
-                    ? new Date(answerMediaRes.created).toLocaleDateString(
-                        'zh-CN'
-                      )
-                    : ''
-                }
+                date={formatDate(currentQuestion?.questionCreated)}
                 refCourse={`${courseName} > ${lessonName}`}
                 refUrl={`/course/${courseOrder}/lesson${lessonOrder}`}
               />
@@ -197,28 +181,26 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
                   my: -3,
                 }}
                 mediaType='video'
-                downloadUrls={[answerMediaRes?.media?.url_downmp4 || '']}
+                downloadUrls={[currentQuestion.url_downmp4 || '']}
               />
-              {answerMediaRes?.media?.url_hd && (
-                <Fragment key={answerMediaRes?.media?.id}>
-                  {answerMediaRes?.media?.url_hd ? (
+              {currentQuestion.url_hd && (
+                <>
+                  {currentQuestion.url_hd ? (
                     <VideoPlayer
                       poster={
-                        answerMediaRes?.media?.url_image ||
-                        answerMediaRes?.media?.image1_url ||
+                        currentQuestion.url_image ||
+                        currentQuestion.image1_url ||
                         ''
                       }
                       title={''}
                       sources={[
                         {
-                          src: answerMediaRes?.media?.url_hd,
+                          src: currentQuestion.url_hd,
                           quality: 'HD',
                           label: '高清',
                         },
                         {
-                          src:
-                            answerMediaRes?.media?.url_sd ||
-                            answerMediaRes?.media?.url_hd,
+                          src: currentQuestion.url_sd || currentQuestion.url_hd,
                           quality: 'SD',
                           label: '标清',
                         },
@@ -226,10 +208,10 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
                     />
                   ) : (
                     <Typography>
-                      视频资源不可用：{answerMediaRes?.media?.title}{' '}
+                      视频资源不可用：{currentQuestion.title}{' '}
                     </Typography>
                   )}
-                </Fragment>
+                </>
               )}
               <Stack
                 direction='row'

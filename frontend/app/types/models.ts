@@ -187,15 +187,14 @@ export interface CourseMedia extends BaseModel {
   media?: Media;
 }
 
-// QuestionMedia - 问答媒体
-export interface QuestionMedia extends BaseModel {
-  title: string;
-  questionId: string;
-  mediaId: string;
-  displayOrder: number;
-  isActive: boolean;
-  question?: Questions;
-  media?: Media;
+// QuestionResult - 问答媒体
+export interface QuestionResult extends BaseModel, Media {
+  courseTitle: string;
+  topicTitle: string;
+  questionTitle: string;
+  questionOrder: number;
+  questionCreated: string;
+  description?: string;
 }
 
 // 搜索结果联合类型

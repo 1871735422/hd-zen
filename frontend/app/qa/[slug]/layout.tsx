@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation';
 import { getCourseByDisplayOrder, getCourses } from '../../api';
 
 // 15分钟缓存
-export const revalidate = 900;
+export const revalidate = 9000;
 
 export default async function CourseLayout({
   children,
@@ -27,7 +27,6 @@ export default async function CourseLayout({
   }
 
   const categories = coursesResult.items.map(item => item.title);
-  const courseOrders = coursesResult.items.map(item => item.displayOrder + '');
   const selectedCategory = course.title;
 
   return (
@@ -43,11 +42,10 @@ export default async function CourseLayout({
         minHeight: '200px',
       }}
     >
-      <TitleBanner title='禅修课问答' />
+      <TitleBanner title='禅修课问答' subTitle={selectedCategory} />
       <CategorySelector
         categories={categories}
         selectedCategory={selectedCategory}
-        courseIds={courseOrders}
       />
       {children}
     </Container>
