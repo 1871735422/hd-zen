@@ -67,7 +67,9 @@ export default async function LessonSidebar({
     >
       {/* 顶部相关资料 */}
 
-      <Typography sx={{ color: '#fff', mt: 2, fontSize: 13 }}>
+      <Typography
+        sx={{ color: '#fff', mt: 1, mb: 0.5, fontSize: 14, fontWeight: 700 }}
+      >
         相关资料
       </Typography>
       <List
@@ -78,6 +80,9 @@ export default async function LessonSidebar({
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
+          '& .MuiTypography-root': {
+            fontSize: 13,
+          },
         }}
       >
         {items.map((item, idx) => {
@@ -162,7 +167,6 @@ export default async function LessonSidebar({
                         <Typography
                           fontWeight={isSelected ? 600 : 'inherit'}
                           textAlign='center'
-                          fontSize={12}
                         >
                           {item.label}
                         </Typography>

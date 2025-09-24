@@ -38,9 +38,9 @@ export default function CornerBadge({ content }: CornerBadgeProps) {
         <Typography
           sx={{
             position: 'absolute',
-            top: 6,
-            right: '35%',
-            fontSize: 18,
+            top: 3,
+            right: '33%',
+            fontSize: 22,
             color: 'white',
           }}
         >

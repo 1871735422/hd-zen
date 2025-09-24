@@ -77,11 +77,6 @@ export default function ReadingModePage({
     };
   }, [handleExitReadingMode, isClient]);
 
-  // 服务端渲染时返回空内容
-  if (!isClient) {
-    return null;
-  }
-
   return (
     <ReadingModeProvider>
       <Box

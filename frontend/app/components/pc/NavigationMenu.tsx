@@ -14,7 +14,7 @@ const NavigationMenu: React.FC<NavigationProps> = ({ menuData }) => {
         flex: 6,
         justifyContent: 'flex-start',
         px: 4,
-        gap: { xs: 0.5, sm: 1, md: 2 },
+        gap: 1,
       }}
     >
       {menuData.map(item => {

@@ -8,9 +8,14 @@ import AudioPlayer from './AudioPlayer';
 interface AudioPageProps {
   topicMedia: TopicMedia[];
   courseTopic?: CourseTopic;
+  showTitle?: boolean;
 }
 
-export default function AudioPage({ topicMedia, courseTopic }: AudioPageProps) {
+export default function AudioPage({
+  topicMedia,
+  courseTopic,
+  showTitle = true,
+}: AudioPageProps) {
   if (!topicMedia.length) {
     return (
       <Paper sx={{ p: 4, textAlign: 'center' }}>
@@ -36,13 +41,13 @@ export default function AudioPage({ topicMedia, courseTopic }: AudioPageProps) {
       }));
 
   return (
-    <Box sx={{ py: 3, gap: 2 }}>
+    <Box sx={{ py: 0, gap: 2, mr: 5 }}>
       <Box
         sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 2 }}
       >
         {mp3Urls.map(item => (
           <Fragment key={item.title}>
-            {item.title && (
+            {item.title && showTitle && (
               <Typography variant='body1' fontWeight={500} my={2}>
                 {item.title}
               </Typography>
@@ -52,7 +57,7 @@ export default function AudioPage({ topicMedia, courseTopic }: AudioPageProps) {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                mb: 3,
+                mb: 1,
                 gap: 1,
               }}
             >

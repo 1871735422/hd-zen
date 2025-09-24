@@ -55,7 +55,11 @@ export default async function ReadingPage({
   // 默认的普通阅读模式
   return (
     <Box>
-      <AudioPage topicMedia={topicMedia} courseTopic={topic} />
+      <AudioPage
+        topicMedia={topicMedia}
+        courseTopic={topic}
+        showTitle={false}
+      />
 
       {/* 阅读内容区域 */}
       <Box sx={{ position: 'relative' }} data-reading-container>

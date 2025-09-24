@@ -8,7 +8,8 @@ function TitleBanner({ title, subTitle }: TitleBannerProps) {
   return (
     <Stack
       sx={{
-        pt: 5,
+        pt: 5.5,
+        mx: 3,
         mb: 7,
         flexDirection: 'row',
         alignItems: 'flex-end',
@@ -20,15 +21,15 @@ function TitleBanner({ title, subTitle }: TitleBannerProps) {
         className='fz-quanfu'
         sx={{
           background:
-            'linear-gradient(180deg, rgba(34, 96, 168, 1) 0%, rgba(102, 158, 222, 1) 100%)',
-          backgroundClip: 'text',
+            'linear-gradient( rgba(34, 96, 168, 1) 0%, rgba(102, 158, 222, 1) 100%)',
+          // backgroundClip: 'text',
           WebkitBackgroundClip: 'text',
           color: 'transparent',
-          WebkitTextStroke: '0.5px rgba(255, 255, 255, 1)',
+          WebkitTextStroke: '1px rgba(255, 255, 255, 1)',
           textShadow: 'none',
           display: 'inline-block',
           fontSize: '3.2rem',
-          fontWeight: 500,
+          fontWeight: 200,
         }}
       >
         {title}

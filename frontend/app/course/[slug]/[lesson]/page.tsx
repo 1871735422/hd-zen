@@ -124,6 +124,7 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
       );
     }
 
+    // 默认视频 tab 组件
     const downloadUrls = topicMedia
       .map(media => media.media?.url_downmp4)
       .filter(url => url !== undefined);
@@ -133,7 +134,7 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
         <MediaDownloadButton
           sx={{
             alignSelf: 'flex-end',
-            my: -3,
+            my: -4,
           }}
           mediaType='video'
           downloadUrls={downloadUrls}

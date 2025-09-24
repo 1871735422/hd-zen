@@ -1,5 +1,6 @@
 'use client';
 
+import { STANDARD_TEXT_COLOR } from '@/app/constants/colors';
 import { ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { usePathname, useRouter } from 'next/navigation';
 import { sharedButtonStyles } from '../shared/ButtonStyles';
@@ -39,7 +40,8 @@ export default function CategorySelector({
       sx={{
         display: 'flex',
         justifyContent: 'space-between',
-        px: 6,
+        px: 6.5,
+        mx: 3,
         flexWrap: 'wrap',
         borderRadius: '80px',
         background: 'rgba(255, 255, 255, 0.7)',
@@ -48,9 +50,12 @@ export default function CategorySelector({
         '& .MuiToggleButtonGroup-grouped': {
           ...sharedButtonStyles,
           mx: 1,
-          my: 1,
-          padding: '5px 20px',
-          color: '#333',
+          my: 0.3,
+          px: 4,
+          py: 1.3,
+          color: STANDARD_TEXT_COLOR,
+          fontSize: 16,
+          fontWeight: 500,
           border: 'none',
           '&.Mui-selected': {
             background:

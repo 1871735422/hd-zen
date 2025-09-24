@@ -230,7 +230,7 @@ export default function ReadingContent({
     const currentContent = getCachedPageContent(currentPage);
 
     return (
-      <Box>
+      <>
         {/* 只显示分页内容 */}
         <Typography
           className='reading-content'
@@ -239,7 +239,7 @@ export default function ReadingContent({
             lineHeight: 1.8,
             color: 'rgba(68, 68, 68, 1)',
             mb: 5,
-            pr: 2.5, // 为侧边栏留空间
+            mr: 2,
           }}
           dangerouslySetInnerHTML={{ __html: currentContent }}
         />
@@ -248,7 +248,7 @@ export default function ReadingContent({
           currentPage={currentPage}
           onPageChange={handlePageChange}
         />
-      </Box>
+      </>
     );
   }
 
@@ -263,16 +263,16 @@ export default function ReadingContent({
             lineHeight: 1.8,
             color: 'rgba(68, 68, 68, 1)',
             mb: 5,
-            pr: 10, // 为侧边栏留空间
+            mr: 2,
           }}
-        >
-          {introText}
-        </Typography>
+          dangerouslySetInnerHTML={{ __html: introText }}
+        />
       )}
       {fullText && (
-        <Box sx={{ pr: 10 }}>
-          <div dangerouslySetInnerHTML={{ __html: fullText }} />
-        </Box>
+        <Typography
+          sx={{ mr: 2 }}
+          dangerouslySetInnerHTML={{ __html: fullText }}
+        />
       )}
     </Box>
   );

@@ -42,10 +42,9 @@ export default function CourseCard({
           sx={{
             pl: 2,
             pt: 2,
-            pr: 5,
+            pr: 7,
             fontWeight: 500,
-            minHeight: 60,
-            fontSize: isQa ? 14 : 18,
+            fontSize: isQa ? 14 : 20,
           }}
         >
           {item.title}
@@ -56,15 +55,17 @@ export default function CourseCard({
             textAlign: 'left',
             display: 'flex',
             flexDirection: 'column',
-            pt: 0,
-            pb: '1rem !important',
+            justifyContent: 'space-between',
+            minHeight: 100,
+            flex: 1,
           }}
         >
           <Box
             sx={{
-              height: 30,
+              flex: 1,
+              display: 'flex',
+              alignItems: 'flex-start',
               overflow: 'hidden',
-              pb: 2,
             }}
           >
             <Typography
@@ -74,11 +75,11 @@ export default function CourseCard({
                 WebkitBoxOrient: 'vertical',
                 WebkitLineClamp: 2,
                 overflow: 'hidden',
-                fontSize: 11,
+                fontSize: 12,
                 lineHeight: 1.5,
                 textOverflow: 'ellipsis',
                 wordBreak: 'break-word',
-                height: '100%',
+                width: '100%',
               }}
             >
               {item.description.replace(/<[^>]*>/g, '')}

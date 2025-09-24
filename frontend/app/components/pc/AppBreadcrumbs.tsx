@@ -1,7 +1,7 @@
 'use client';
 import { Breadcrumbs, Link } from '@mui/material';
 import NextLink from 'next/link';
-import React, { createContext, useCallback, useContext, useState } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 
 export interface BreadcrumbItem {
   label: string;
@@ -13,7 +13,6 @@ interface AppBreadcrumbsProps {
   useContext?: boolean;
 }
 
-// 创建 Context 用于动态面包屑
 const BreadcrumbContext = createContext<{
   extraBreadcrumb: BreadcrumbItem | null;
   setExtraBreadcrumb: (item: BreadcrumbItem | null) => void;
@@ -31,70 +30,41 @@ export default function AppBreadcrumbs({
   useContext = false,
 }: AppBreadcrumbsProps) {
   const { extraBreadcrumb } = useBreadcrumb();
-
-  // 如果启用 Context 且有额外的面包屑，则合并
   const finalItems =
     useContext && extraBreadcrumb ? [...items, extraBreadcrumb] : items;
+
   return (
     <Breadcrumbs
       aria-label='breadcrumb'
-      sx={{
-        color: 'rgba(42, 130, 228, 1)',
-        mb: 1,
-        pl: { xs: 2, sm: 0 },
-        '& .MuiBreadcrumbs-separator': {
-          mx: 1,
-        },
-      }}
+      sx={{ color: 'rgba(42, 130, 228, 1)', mb: 1, mx: 3 }}
     >
-      {finalItems.map((item, index) => {
-        return (
-          <Link
-            variant='subtitle2'
-            key={index}
-            component={NextLink}
-            href={item.href || ''}
-            underline='hover'
-            color='inherit'
-          >
-            {item.label}
-          </Link>
-        );
-      })}
+      {finalItems.map((item, index) => (
+        <Link
+          variant='subtitle2'
+          key={index}
+          component={NextLink}
+          href={item.href || ''}
+          underline='hover'
+          color='inherit'
+        >
+          {item.label}
+        </Link>
+      ))}
     </Breadcrumbs>
   );
 }
 
-// 导出 Context Provider 组件
 export function BreadcrumbProvider({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [extraBreadcrumb, setExtraBreadcrumbState] =
-    useState<BreadcrumbItem | null>(null);
-  const [isClient, setIsClient] = useState(false);
-
-  // 确保只在客户端运行
-  React.useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  const setExtraBreadcrumb = useCallback(
-    (item: BreadcrumbItem | null) => {
-      if (!isClient) return;
-      setExtraBreadcrumbState(item);
-    },
-    [isClient]
+  const [extraBreadcrumb, setExtraBreadcrumb] = useState<BreadcrumbItem | null>(
+    null
   );
 
-  // 服务端渲染时返回默认值
-  const contextValue = isClient
-    ? { extraBreadcrumb, setExtraBreadcrumb }
-    : { extraBreadcrumb: null, setExtraBreadcrumb: () => {} };
-
   return (
-    <BreadcrumbContext.Provider value={contextValue}>
+    <BreadcrumbContext.Provider value={{ extraBreadcrumb, setExtraBreadcrumb }}>
       {children}
     </BreadcrumbContext.Provider>
   );

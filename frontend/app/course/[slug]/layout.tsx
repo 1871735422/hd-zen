@@ -36,11 +36,14 @@ export default async function CourseLayout({
       sx={{
         m: 0,
         px: { lg: 25 },
-        background: 'url(/images/course-bg-h.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
+        backgroundImage: `
+          linear-gradient(180deg, rgba(224, 241, 255, 0.7) 0%, rgba(255, 255, 255, 0) 20.05%, rgba(217, 234, 252, 0.7) 33.35%, rgba(241, 247, 254, 0.7) 63.87%, rgba(245, 247, 251, 0.7) 100%),
+          url(/images/course-bg-h.png),
+          url(/images/course-lesson-bg.jpg)
+        `,
+        backgroundSize: 'cover, cover, contain',
+        backgroundPosition: 'center, center, 0% -14%',
         backgroundRepeat: 'no-repeat',
-        minHeight: '200px',
       }}
     >
       <TitleBanner title={'慧灯禅修课'} />

@@ -1,3 +1,4 @@
+import { STANDARD_TEXT_COLOR } from '@/app/constants/colors';
 import { Box, Link, Stack, Typography } from '@mui/material';
 import { Fragment } from 'react';
 import { formatDate } from '../../utils/courseUtils';
@@ -24,14 +25,15 @@ export default function LessonMeta({
 }: LessonMetaProps) {
   const isQuestion = /^\d+\./.test(title);
   return (
-    <Box>
+    <Box sx={{ mr: 5 }}>
       <Typography
         fontWeight={500}
         px={0}
-        fontSize={24}
+        fontSize={28}
         align={isQuestion ? 'left' : 'center'}
-        color='#333'
-        my={3}
+        color={STANDARD_TEXT_COLOR}
+        mb={4}
+        mt={7}
       >
         {title}
       </Typography>
@@ -40,15 +42,28 @@ export default function LessonMeta({
           sx={{
             background: isQuestion
               ? 'rgba(240, 247, 255, 1)'
-              : 'url(/images/course-desc-bg.webp) 0 40% / cover no-repeat',
-            borderRadius: 6,
+              : 'url(/images/course-desc-bg.webp) 0 35% / cover no-repeat',
+            '&::before': isQuestion
+              ? {}
+              : {
+                  content: '""',
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  background:
+                    'url(/images/course-desc-bg.webp) 0 0 / cover no-repeat',
+                  transform: 'rotate(180deg)',
+                  zIndex: -1,
+                },
+            borderRadius: '20px',
             p: 3,
             boxShadow: '0 2px 16px 0 rgba(0,0,0,0.06)',
             position: 'relative',
             backdropFilter: 'blur(12px)',
             WebkitBackdropFilter: 'blur(12px)',
             overflow: 'hidden',
-            border: '1px solid #e3eaf2',
           }}
         >
           {tags && (
@@ -101,9 +116,10 @@ export default function LessonMeta({
           </Box>
         </Box>
       )}
-      <Box mt={1} mb={2} color='rgba(153, 153, 153, 1)' fontSize={16}>
+      <Box mt={1} mb={2} color='rgba(153, 153, 153, 1)' fontSize={14}>
         <Typography
           variant='subtitle1'
+          px={2}
           fontFamily={'"Microsoft Yahei", "Hiragino Sans GB"'}
         >
           作者：{author?.replace('作者：', '')} &nbsp;&nbsp; {formatDate(date)}

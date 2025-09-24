@@ -26,7 +26,7 @@ const MenuItemComponent: React.FC<MenuItemProps> = ({ item }) => {
       color: NAV_COLOR,
       background: 'rgba(70, 114, 166, 0.08)',
     },
-    px: { xs: 0.5, sm: 1, md: 1.5 },
+    px: 1.5,
   };
 
   if (hasChildren) {
@@ -54,14 +54,14 @@ const MenuItemComponent: React.FC<MenuItemProps> = ({ item }) => {
             left: 0,
             zIndex: 1000,
             opacity: 0,
+            p: 1,
             visibility: 'hidden',
             transform: 'translateY(-10px)',
             transition: 'all 0.2s ease-in-out',
             background: 'white',
-            borderRadius: '0 0 5px 5px',
-            border: '1px solid #cfd8dc',
-            borderTop: 'none',
-            minWidth: 200,
+            borderRadius: '0 0 15px 15px',
+            minWidth: 150,
+            width: 'fit-content',
             boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
             '&:hover': {
               opacity: 1,
@@ -87,6 +87,7 @@ const MenuItemComponent: React.FC<MenuItemProps> = ({ item }) => {
                       width: '100%',
                       justifyContent: 'flex-start',
                       borderRadius: 0,
+                      whiteSpace: 'nowrap',
                       '&:hover': {
                         color: NAV_COLOR,
                         background: 'rgba(70, 114, 166, 0.08)',
