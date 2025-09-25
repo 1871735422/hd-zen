@@ -79,7 +79,7 @@ const BookCard: React.FC<BookCardProps> = ({
           }}
         >
           <Image
-            src={cover}
+            src={`/images/book_cover${idx + 1}.webp`}
             alt={title}
             fill
             sizes='200px'

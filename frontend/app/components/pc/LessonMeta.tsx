@@ -119,7 +119,6 @@ export default function LessonMeta({
       <Box mt={1} mb={2} color='rgba(153, 153, 153, 1)' fontSize={14}>
         <Typography
           variant='subtitle1'
-          px={2}
           fontFamily={'"Microsoft Yahei", "Hiragino Sans GB"'}
         >
           作者：{author?.replace('作者：', '')} &nbsp;&nbsp; {formatDate(date)}

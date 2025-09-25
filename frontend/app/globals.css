@@ -13,7 +13,7 @@
 /* Load FZ Quanfu font for titles */
 @font-face {
   font-family: 'FZQuanfu';
-  src: url('https://f004.backblazeb2.com/file/hd-zen/static/方正全福体.woff2')
+  src: url('https://d2e6j3zdpz3g2k.cloudfront.net/fhfy/cdn/fonts/方正全福体.woff2')
     format('woff2');
   font-weight: normal;
   font-style: normal;
@@ -27,7 +27,7 @@
 /* 北方行书 for subtitles */
 @font-face {
   font-family: 'BeiFangXingShu';
-  src: url('https://f004.backblazeb2.com/file/hd-zen/static/北方行书.woff2')
+  src: url('https://d2e6j3zdpz3g2k.cloudfront.net/fhfy/cdn/fonts/北方行书.woff2')
     format('woff2');
   font-weight: normal;
   font-style: normal;

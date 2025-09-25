@@ -1,6 +1,5 @@
-import { Box, Link, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import Image from 'next/image';
-import { LINK_COLOR, NAV_COLOR } from '../constants';
 
 export default function QuestionCollectPage() {
   return (
@@ -9,38 +8,52 @@ export default function QuestionCollectPage() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: `
-        url(/images/course-bg.jpg),
-        linear-gradient(rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.05))
-        `,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
+        position: 'relative',
+        '&:before': {
+          content: '""',
+          position: 'absolute',
+          left: 0,
+          top: 0,
+          width: '100%',
+          height: '100%',
+          backgroundImage: 'url(/images/course-bg.jpg)',
+          backgroundSize: 'cover',
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: 'center',
+          opacity: 0.5,
+        },
       }}
     >
       <Box
         sx={{
           background:
-            'linear-gradient(229.09deg, rgba(255, 255, 255, 1) 0.02%, rgba(255, 255, 255, 0.55) 100%)',
-          borderRadius: '16px',
+            'linear-gradient(229.09deg, rgba(255, 255, 255, 1) 0.02%, rgba(255, 255, 255, 0.28) 100%)',
+          borderRadius: '25px',
           py: 4,
-          px: 10,
-          my: 12,
+          px: 7,
+          my: 10,
           textAlign: 'left',
-          maxWidth: '600px',
-          backdropFilter: 'blur(4px)',
+          width: '650px',
+          backdropFilter: 'blur(10px)',
         }}
       >
-        <Typography
-          variant='h6'
-          component='p'
-          sx={{ mb: 2, color: LINK_COLOR }}
-        >
-          亲爱的朋友们：
-          <br />
-          在学修佛法的过程中，如果您有疑惑，欢迎提出问题，一起探讨！
-        </Typography>
+        <Image
+          alt='亲爱的朋友们：在学修佛法的过程中，如果您有疑惑，欢迎提出问题，一起探讨！'
+          src='/images/dear-friend.png'
+          width={0}
+          height={0}
+          style={{
+            width: '100%',
+            height: 'auto',
+            maxWidth: 630,
+            display: 'block',
+          }}
+          sizes='100vw'
+          priority
+        />
         <Box
           sx={{
+            mx: 1.5,
             my: 3,
             background: 'rgba(255, 255, 255, 0.7)',
             position: 'relative',
@@ -49,39 +62,34 @@ export default function QuestionCollectPage() {
             py: 2,
           }}
         >
-          <Typography
-            variant='subtitle1'
-            component='p'
-            sx={{ color: 'rgba(255, 94, 124, 1)', fontWeight: 'bold' }}
-          >
-            参与方式：
-          </Typography>
-          <Typography
-            variant='body1'
-            component='p'
-            sx={{ mt: 1, color: NAV_COLOR }}
-          >
-            请扫描下方二维码或点击
-            <Link
-              href='#'
+          <a href='#'>
+            <Image
+              alt='参与方式：请扫描下方二维码或点击 问卷链接 填写您的问题。'
+              src={'/images/join-way.png'}
+              width={0}
+              height={0}
               style={{
-                margin: '0 4px',
-                color: LINK_COLOR,
-                fontWeight: 'bold',
-                textDecoration: 'underline',
+                cursor: 'pointer',
+                width: '100%',
+                height: 'auto',
+                maxWidth: 560,
+                display: 'block',
               }}
-            >
-              问卷链接
-            </Link>
-            填写您的问题。
-          </Typography>
+              sizes='100vw'
+              priority
+            />
+          </a>
           <Box sx={{ display: 'flex', justifyContent: 'center' }}>
             <Image
               src='https://img.js.design/assets/img/67dadfa407c4c2e4674d942a.png'
               alt='QR Code'
               width={200}
               height={200}
-              style={{ width: '200px', height: '200px', marginTop: '16px' }}
+              style={{
+                width: '200px',
+                height: '200px',
+                marginBottom: '1.6rem',
+              }}
             />
           </Box>
         </Box>

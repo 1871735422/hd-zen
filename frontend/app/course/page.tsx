@@ -2,7 +2,6 @@ import { Container, Grid } from '@mui/material';
 import { getCourseImageUrl, getCourses } from '../api';
 import BookCard from '../components/pc/BookCard';
 
-// 15分钟缓存
 export const revalidate = 900;
 
 async function CoursePage() {
@@ -12,14 +11,43 @@ async function CoursePage() {
     <Container
       maxWidth={false}
       sx={{
+        position: 'relative',
         display: 'flex',
+        inset: 0,
         flexWrap: 'wrap',
         justifyContent: 'center',
         width: '100%',
         mx: 0,
         pt: 6,
         pb: 12,
-        background: 'url(/images/course-bg.png)',
+        '&:before': {
+          content: '""',
+          position: 'absolute',
+          left: 0,
+          top: 0,
+          width: '100%',
+          height: '100%',
+          backgroundImage: 'url(/images/course-bg.jpg)',
+          backgroundSize: 'cover',
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: 'center',
+          opacity: 0.5,
+          zIndex: 0,
+          pointerEvents: 'none',
+        },
+        '&:after': {
+          content: '""',
+          position: 'absolute',
+          left: '0',
+          top: '0',
+          width: '100%',
+          height: '100%',
+          background: 'rgba(130,178,232,0.1)', // 半透明叠层
+          backdropFilter: 'blur(40px)',
+          WebkitBackdropFilter: 'blur(40px)',
+          zIndex: 1,
+          pointerEvents: 'none',
+        },
       }}
     >
       <Grid
@@ -27,9 +55,8 @@ async function CoursePage() {
         spacing={6}
         justifyContent='center'
         alignItems='center'
-        width={{
-          lg: '60%',
-        }}
+        width={'60%'}
+        sx={{ position: 'relative', zIndex: 2 }} // 确保卡片在最上层
       >
         {courses.map((course, idx) => (
           <BookCard
