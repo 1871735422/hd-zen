@@ -3,8 +3,9 @@ import {
   getCourses,
   getCourseTopicsByDisplayOrder,
 } from '@/app/api';
+import VideoDownIcon from '@/app/components/icons/VideoDownIcon';
 import CourseCard from '@/app/components/pc/CourseCard';
-import { Container, Grid, Typography } from '@mui/material';
+import { Button, Container, Grid, Typography } from '@mui/material';
 import QaSidebar from '../../components/pc/QaSidebar';
 
 // 15分钟缓存
@@ -53,15 +54,39 @@ export default async function QaPage({ params, searchParams }: QaPageProps) {
         label: item.article_title,
         path: `/qa/${displayOrder}?tab=lesson${item.ordering}`,
       }));
-
+    // const handleDownload = () => {
+    //   console.log({ questions });
+    // };
     return (
       <Container
         maxWidth='lg'
         sx={{
           py: 4,
           px: '0 !important',
+          position: 'relative',
         }}
       >
+        <Button
+          // onClick={handleDownload}
+          sx={{
+            position: 'absolute',
+            top: -3.5,
+            right: 25,
+            color: '#fff',
+            backgroundColor: 'rgba(255, 168, 184, 1)',
+            borderRadius: '25px 25px 0 0 ',
+            px: 2,
+            pt: 1,
+            pb: 0.4,
+          }}
+        >
+          <VideoDownIcon sx={{ width: 24, height: 24 }} />
+          <Typography fontSize={11} pl={0.8} lineHeight={1.1}>
+            本课问答
+            <br />
+            打包下载
+          </Typography>
+        </Button>
         <Grid
           container
           sx={{

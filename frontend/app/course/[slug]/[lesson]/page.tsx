@@ -1,19 +1,17 @@
+import AudioPage from '@/app/components/pc/AudioPage';
 import MediaDownloadButton from '@/app/components/pc/MediaDownloadButton';
+import ReadingPage from '@/app/components/pc/ReadingPage';
 import VideoPlayer from '@/app/components/pc/VideoPlayer';
-import NotFound from '@/app/not-found';
 import { Box, Typography } from '@mui/material';
 import { notFound } from 'next/navigation';
 import { Fragment } from 'react';
 import {
   getCourses,
-  getCourseTopicByOrder,
   getCourseTopicsByCourse,
   getTopicMediaByOrder,
 } from '../../../api';
-import AudioPage from '../../../components/pc/AudioPage';
 import LessonMeta from '../../../components/pc/LessonMeta';
 import LessonSidebar from '../../../components/pc/LessonSidebar';
-import ReadingPage from '../../../components/pc/ReadingPage';
 import { CourseTopic } from '../../../types/models';
 
 // 15分钟缓存
@@ -77,7 +75,6 @@ export async function generateStaticParams() {
     return [];
   }
 }
-
 interface LessonPageProps {
   params: Promise<{ slug: string; lesson: string }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -91,42 +88,44 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
   const lessonOrder = resolvedParams.lesson?.replace('lesson', '');
 
   // 总是需要获取 topicMedia 数据
-  const topicMediaRes = await getTopicMediaByOrder(courseOrder, lessonOrder);
-  const topicMedia = topicMediaRes?.items;
-  console.log('topicMedia', topicMedia);
-
-  // 仅在 reading tab 时获取 topic 数据
-  const topic =
-    selectedKey === 'article'
-      ? await getCourseTopicByOrder(courseOrder, lessonOrder)
-      : null;
+  const topicMedia = await getTopicMediaByOrder(courseOrder, lessonOrder);
+  // console.log('topicMedia', topicMedia);
 
   if (!topicMedia) {
     notFound();
   }
-
-  const topicTags = topicMedia[0]?.media?.tags;
+  const media = topicMedia[0];
+  const topicTags = media?.tags;
+  const excludeLabels = [''];
+  if (!media?.url_hd && !media.url_sd) {
+    excludeLabels.push('视频');
+  }
+  if (!media?.url_mp3) {
+    excludeLabels.push('音频');
+  }
+  if (!media?.article_introtext && media?.article_fulltext) {
+    excludeLabels.push('文字');
+  }
 
   const TabRender = () => {
-    if (selectedKey === 'audio') return <AudioPage topicMedia={topicMedia} />;
-    if (selectedKey === 'article') {
-      if (!topic) {
-        return <NotFound />;
-      }
-
+    if (
+      selectedKey === 'audio' ||
+      (excludeLabels?.includes('视频') && media?.url_mp3)
+    )
+      return <AudioPage topicMedia={topicMedia} />;
+    if (
+      selectedKey === 'article' ||
+      (excludeLabels?.includes('视频') && !media?.mp3_duration)
+    ) {
       const isReadingMode = resolvedSearchParams.readingMode === 'true';
       return (
-        <ReadingPage
-          topic={topic}
-          topicMedia={topicMedia}
-          isReadingMode={isReadingMode}
-        />
+        <ReadingPage topicMediaX={topicMedia} isReadingMode={isReadingMode} />
       );
     }
 
     // 默认视频 tab 组件
     const downloadUrls = topicMedia
-      .map(media => media.media?.url_downmp4)
+      .map(media => media?.url_downmp4)
       .filter(url => url !== undefined);
 
     return (
@@ -141,25 +140,25 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
         />
         {topicMedia.map(media => (
           <Fragment key={media.id}>
-            {media.media?.url_hd ? (
+            {media?.url_hd ? (
               <VideoPlayer
-                poster={media.media?.url_image || media.media?.image1_url || ''}
-                title={media.media?.title || ''}
+                poster={media?.url_image || media?.image1_url || ''}
+                title={media?.title || ''}
                 sources={[
                   {
-                    src: media.media?.url_hd,
+                    src: media?.url_hd,
                     quality: 'HD',
                     label: '高清',
                   },
                   {
-                    src: media.media?.url_sd || media.media?.url_hd,
+                    src: media?.url_sd || media?.url_hd,
                     quality: 'SD',
                     label: '标清',
                   },
                 ]}
               />
             ) : (
-              <Typography>视频资源不可用：{media.media?.title} </Typography>
+              <Typography>视频资源不可用：{media?.title} </Typography>
             )}
           </Fragment>
         ))}
@@ -170,7 +169,8 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
   return (
     <>
       <LessonSidebar
-        selectedKey={selectedKey?.toString() ?? ''}
+        excludeLabels={excludeLabels}
+        selectedKey={selectedKey?.toString()}
         path={`/course/${courseOrder}/lesson${lessonOrder}`}
       />
       <Box
@@ -195,21 +195,15 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
           }}
         >
           <LessonMeta
-            title={topicMedia[0]?.media!.title}
+            title={topicMedia[0]?.title}
             tags={
               topicTags?.length
                 ? topicTags.map((tag: string) => tag.trim())
                 : []
             }
-            description={topicMedia[0]?.media!.summary ?? ''}
+            description={topicMedia[0]?.article_summary ?? ''}
             author='作者：慈诚罗珠堪布'
-            date={
-              topicMedia[0]?.media!.created
-                ? new Date(topicMedia[0].media.created).toLocaleDateString(
-                    'zh-CN'
-                  )
-                : ''
-            }
+            date={topicMedia[0]?.created}
           />
         </Box>
         <TabRender />

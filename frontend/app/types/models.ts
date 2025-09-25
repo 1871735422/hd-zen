@@ -147,6 +147,7 @@ export interface TopicMedia extends BaseModel {
   media?: Media;
 }
 
+export interface TopicMediaX extends Article, Omit<Media, 'summary'> {}
 // API Response types
 export interface PaginatedResponse<T> {
   items: T[];
@@ -165,15 +166,18 @@ export interface TagRelation extends BaseModel {
   tags: string[];
 }
 export interface Article extends BaseModel {
-  title: string;
-  fulltext: string;
-  introtext: string;
-  summary: string;
+  article_title: string;
+  article_fulltext: string;
+  article_introtext: string;
+  article_summary: string;
   courseOrder: string;
   isActive: boolean;
   topicOrder: string;
   courseTitle: string;
   mediaType?: string;
+  url_downpdf: string;
+  url_downepub: string;
+  ct_url_mp3: string;
 }
 
 // CourseMedia - 课程媒体

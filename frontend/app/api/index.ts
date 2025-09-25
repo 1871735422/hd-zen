@@ -11,7 +11,7 @@ import {
   Questions,
   SearchResultItem,
   TagRelation,
-  TopicMedia,
+  TopicMediaX,
 } from '../types/models';
 
 // Initialize PocketBase using environment variable
@@ -104,54 +104,6 @@ const mapRecordToCourseTopic = (record: PocketRecord): CourseTopic => {
 
   return courseTopic;
 };
-
-const mapRecordToMedia = (record: PocketRecord): Media => ({
-  id: record.id,
-  title: record.title,
-  url_hd: record.url_hd,
-  url_sd: record.url_sd,
-  url_image: record.url_image,
-  mp4_duration: record.mp4_duration,
-  url_mp3: record.url_mp3,
-  mp3_duration: record.mp3_duration,
-  url_downmp4: record.url_downmp4,
-  mp4_size: record.mp4_size,
-  url_downmp3: record.url_downmp3,
-  mp3_size: record.mp3_size,
-  summary: record.summary,
-  tags: record.tags,
-  assetId: record.assetId,
-  resourceId: record.resourceId,
-  intro_text: record.intro_text,
-  full_text: record.full_text,
-  summary_text: record.summary_text,
-  contentType: record.contentType,
-  duration: record.duration,
-  fileSize: record.fileSize,
-  high_quality_url: record.high_quality_url,
-  low_quality_url: record.low_quality_url,
-  image1_url: record.image1_url,
-  image2_url: record.image2_url,
-  fohuifayu_url: record.fohuifayu_url,
-  file_hash: record.file_hash,
-  created: record.created,
-  updated: record.updated,
-});
-
-const mapRecordToTopicMedia = (record: PocketRecord): TopicMedia => ({
-  id: record.id,
-  topicId: record.topicId,
-  mediaId: record.mediaId,
-  isActive: record.isActive,
-  topic: record.expand?.topicId
-    ? mapRecordToCourseTopic(record.expand.topicId)
-    : undefined,
-  media: record.expand?.mediaId
-    ? mapRecordToMedia(record.expand.mediaId)
-    : undefined,
-  created: record.created,
-  updated: record.updated,
-});
 
 // API Functions
 export const getCategories = async (name?: string): Promise<Array<Menu>> => {
@@ -447,62 +399,27 @@ export const getCourseTopicByOrder = async (
  */
 export const getTopicMediaByOrder = async (
   courseOrder: string,
-  lessonOrder: string
-): Promise<PaginatedResponse<TopicMedia> | null> => {
+  topicOrder?: string
+): Promise<TopicMediaX[]> => {
   try {
     // 增加超时时间和错误处理
-    const result = await pb.collection('topicMedia').getList(1, 10, {
-      filter: [
-        'topicId.courseId.displayOrder = ' + courseOrder,
-        'topicId.ordering = ' + lessonOrder,
-      ].join(' && '),
-      expand: 'topicId, mediaId, topicId.courseId',
-      requestKey: null, // Disable auto-cancellation
-      timeout: 30000, // 30秒超时
-    });
+    const filters = ['courseOrder = ' + courseOrder];
+    if (topicOrder) {
+      filters.push('topicOrder = ' + topicOrder);
+    }
 
-    return {
-      ...result,
-      items: result.items.map(record =>
-        mapRecordToTopicMedia(record as PocketRecord)
-      ),
-    };
+    const result = await pb.collection('getTopicMedia').getList(1, 50, {
+      filter: filters.join(' && '),
+    });
+    // console.log({ courseOrder, topicOrder });
+
+    return result?.items as unknown as TopicMediaX[];
   } catch (error) {
     console.error(
-      `Error fetching topicMedia for course ${courseOrder}, lesson ${lessonOrder}:`,
+      `Error fetching topicMedia for course ${courseOrder}, lesson ${topicOrder}:`,
       error
     );
-
-    // 尝试简化查询作为降级方案
-    try {
-      console.log(
-        `Trying simplified query for course ${courseOrder}, lesson ${lessonOrder}`
-      );
-      const simplifiedResult = await pb
-        .collection('topicMedia')
-        .getList(1, 10, {
-          filter: [
-            'topicId.courseId.displayOrder = ' + courseOrder,
-            'topicId.ordering = ' + lessonOrder,
-          ].join(' && '),
-          expand: 'mediaId', // 只展开 mediaId，减少查询复杂度
-          requestKey: null,
-          timeout: 15000, // 15秒超时
-        });
-
-      return {
-        ...simplifiedResult,
-        items: simplifiedResult.items.map(record =>
-          mapRecordToTopicMedia(record as PocketRecord)
-        ),
-      };
-    } catch (fallbackError) {
-      console.error(
-        `Fallback query also failed for course ${courseOrder}, lesson ${lessonOrder}:`,
-        fallbackError
-      );
-      return null;
-    }
+    return [];
   }
 };
 

@@ -7,17 +7,15 @@ import {
   Grid,
   styled,
   Typography,
-  useMediaQuery,
-  useTheme,
 } from '@mui/material';
 import AudioDownIcon from '../components/icons/AudioDownIcon';
 import EpubDownIcon from '../components/icons/EpubDownIcon';
 import HeadphoneIcon from '../components/icons/HeadphoneIcon';
 import PdfDownIcon from '../components/icons/PdfDownIcon';
 import VideoDownIcon from '../components/icons/VideoDownIcon';
+import TitleBanner from '../components/shared/TitleBanner';
 import { downloadItems, NAV_COLOR } from '../constants';
 import { MAIN_BLUE_COLOR, STANDARD_TEXT_COLOR } from '../constants/colors';
-import TitleBanner from '../components/shared/TitleBanner';
 
 const fileTypes = [
   { key: 'pdf', name: 'PDF', icon: <PdfDownIcon /> },
@@ -38,10 +36,11 @@ const FileIconContainer = styled(Box)({
   },
 });
 
-function DownloadPage() {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+const handleDownload = (idx: number, type: string) => {
+  console.log(idx, type);
+};
 
+function DownloadPage() {
   return (
     <Box
       sx={{
@@ -60,37 +59,35 @@ function DownloadPage() {
             borderRadius: '16px',
           }}
         >
-          {!isMobile && (
-            <Grid container spacing={2} alignItems='center' px={4} pb={1}>
-              <Grid size={4}>
-                <Typography
-                  variant='subtitle1'
-                  align='left'
-                  sx={{ pl: 8, color: NAV_COLOR, fontWeight: '600' }}
-                >
-                  文件名
-                </Typography>
-              </Grid>
-              <Grid size={8}>
-                <Grid container spacing={1} textAlign='center'>
-                  {fileTypes.map(ft => (
-                    <Grid
-                      size={{ xs: 'auto' }}
-                      key={ft.key}
-                      sx={{ flexGrow: 1, minWidth: 60 }}
+          <Grid container spacing={2} alignItems='center' px={4} pb={1}>
+            <Grid size={4}>
+              <Typography
+                variant='subtitle1'
+                align='left'
+                sx={{ pl: 8, color: NAV_COLOR, fontWeight: '600' }}
+              >
+                文件名
+              </Typography>
+            </Grid>
+            <Grid size={8}>
+              <Grid container spacing={1} textAlign='center'>
+                {fileTypes.map(ft => (
+                  <Grid
+                    size={{ xs: 'auto' }}
+                    key={ft.key}
+                    sx={{ flexGrow: 1, minWidth: 60 }}
+                  >
+                    <Typography
+                      variant='subtitle1'
+                      sx={{ fontWeight: '600', color: NAV_COLOR }}
                     >
-                      <Typography
-                        variant='subtitle1'
-                        sx={{ fontWeight: '600', color: NAV_COLOR }}
-                      >
-                        {ft.name}
-                      </Typography>
-                    </Grid>
-                  ))}
-                </Grid>
+                      {ft.name}
+                    </Typography>
+                  </Grid>
+                ))}
               </Grid>
             </Grid>
-          )}
+          </Grid>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             {downloadItems.map(item => (
               <Grid
@@ -136,12 +133,12 @@ function DownloadPage() {
                         key={ft.key}
                         sx={{ minWidth: 60, flexGrow: 1 }}
                       >
-                        {isMobile && (
-                          <Typography variant='caption' color='text.secondary'>
-                            {ft.name}
-                          </Typography>
-                        )}
-                        <FileIconContainer>
+                        <Typography variant='caption' color='text.secondary'>
+                          {ft.name}
+                        </Typography>
+                        <FileIconContainer
+                          onClick={() => handleDownload(item.id, ft.key)}
+                        >
                           {ft.icon}
                           <Typography variant='caption' pt={0.3}>
                             {item.files[ft.key as keyof typeof item.files]}

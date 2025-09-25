@@ -11,39 +11,45 @@ import QaIcon from '../icons/QaIcon';
 import VideoCamIcon from '../icons/VideoCamIcon';
 import WaveIcon from '../icons/WaveIcon';
 
+const labelItemList = [
+  {
+    key: '',
+    label: '视频',
+    icon: <VideoCamIcon />,
+    color: '#82B2E8',
+  },
+  {
+    key: 'audio',
+    label: '音频',
+    icon: <WaveIcon />,
+    color: 'rgba(175, 183, 240, 1)',
+  },
+  {
+    key: 'article',
+    label: '文字',
+    icon: <CharIcon />,
+    color: 'rgba(199, 143, 227, 1)',
+  },
+  { key: 'qa', label: '问答', icon: <QaIcon /> },
+];
 export interface LessonSidebarProps {
   path: string;
-  selectedKey: string;
+  selectedKey?: string;
+  excludeLabels: (typeof labelItemList)[number]['label'][];
 }
 
 export default async function LessonSidebar({
   path,
   selectedKey,
+  excludeLabels,
 }: LessonSidebarProps) {
-  const items = [
-    {
-      key: '',
-      label: '视频',
-      icon: <VideoCamIcon />,
-      color: '#82B2E8',
-    },
-    {
-      key: 'audio',
-      label: '音频',
-      icon: <WaveIcon />,
-      color: 'rgba(175, 183, 240, 1)',
-    },
-    {
-      key: 'article',
-      label: '文字',
-      icon: <CharIcon />,
-      color: 'rgba(199, 143, 227, 1)',
-    },
-    { key: 'qa', label: '问答', icon: <QaIcon /> },
-  ];
+  const labelItems = labelItemList.filter(
+    item => !excludeLabels.includes(item.label)
+  );
 
-  const defaultSelected =
-    items.find(item => item.key === selectedKey)?.key || '';
+  const defaultSelected = (
+    labelItems.find(item => item.key === selectedKey) || labelItems[0]
+  ).key;
 
   return (
     <Box
@@ -85,14 +91,15 @@ export default async function LessonSidebar({
           },
         }}
       >
-        {items.map((item, idx) => {
+        {labelItems.map((item, idx) => {
           const isSelected = defaultSelected === item.key;
+
           return (
             <ListItem
               key={item.key}
               disablePadding
               sx={{
-                mb: idx !== items.length - 1 ? 1 : 0,
+                mb: idx !== labelItems.length - 1 ? 1 : 0,
                 width: '100%',
               }}
             >

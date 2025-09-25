@@ -19,15 +19,15 @@ export default function QuestionCollectPage() {
     >
       <Box
         sx={{
-          background: 'rgba(255, 255, 255, 0.8)',
+          background:
+            'linear-gradient(229.09deg, rgba(255, 255, 255, 1) 0.02%, rgba(255, 255, 255, 0.55) 100%)',
           borderRadius: '16px',
-          p: 4,
+          py: 4,
+          px: 10,
           my: 12,
           textAlign: 'left',
           maxWidth: '600px',
-          boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.37)',
           backdropFilter: 'blur(4px)',
-          border: '1px solid rgba(255, 255, 255, 0.18)',
         }}
       >
         <Typography
@@ -39,7 +39,16 @@ export default function QuestionCollectPage() {
           <br />
           在学修佛法的过程中，如果您有疑惑，欢迎提出问题，一起探讨！
         </Typography>
-        <Box sx={{ my: 3 }}>
+        <Box
+          sx={{
+            my: 3,
+            background: 'rgba(255, 255, 255, 0.7)',
+            position: 'relative',
+            borderRadius: '25px',
+            px: 5,
+            py: 2,
+          }}
+        >
           <Typography
             variant='subtitle1'
             component='p'
@@ -66,13 +75,15 @@ export default function QuestionCollectPage() {
             </Link>
             填写您的问题。
           </Typography>
-        </Box>
-        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-          <Image
-            src='https://img.js.design/assets/img/67dadfa407c4c2e4674d942a.png'
-            alt='QR Code'
-            style={{ width: '200px', height: '200px', marginTop: '16px' }}
-          />
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Image
+              src='https://img.js.design/assets/img/67dadfa407c4c2e4674d942a.png'
+              alt='QR Code'
+              width={200}
+              height={200}
+              style={{ width: '200px', height: '200px', marginTop: '16px' }}
+            />
+          </Box>
         </Box>
       </Box>
     </Box>

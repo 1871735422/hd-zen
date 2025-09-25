@@ -1,5 +1,5 @@
 import { Box, Paper, Typography } from '@mui/material';
-import { CourseTopic, TopicMedia } from '../../types/models';
+import { TopicMediaX } from '../../types/models';
 import ScrollTop from '../shared/ScrollTop';
 import AudioPage from './AudioPage';
 import ReadingContentWrapper from './ReadingContentWrapper';
@@ -7,19 +7,20 @@ import ReadingModePage from './ReadingModePage';
 import ReadingSidebar from './ReadingSidebar';
 
 interface ReadingPageProps {
-  topic: CourseTopic;
-  topicMedia: TopicMedia[];
+  topicMediaX: TopicMediaX[];
   isReadingMode?: boolean;
 }
 
 export default async function ReadingPage({
-  topic,
-  topicMedia,
+  topicMediaX,
   isReadingMode = false,
 }: ReadingPageProps) {
-  const topicTags = topicMedia[0]?.media?.tags;
+  const topicMedia = topicMediaX[0];
+  const topicTags = topicMedia?.tags;
+  console.log({ topicMedia });
 
-  const hasContent = topic.article_fulltext || topic.article_introtext;
+  const hasContent =
+    topicMedia.article_fulltext || topicMedia.article_introtext;
 
   if (!hasContent) {
     return (
@@ -34,17 +35,17 @@ export default async function ReadingPage({
   // 如果是阅读模式，渲染专门的阅读模式组件
   if (isReadingMode) {
     const tags = topicTags ? topicTags.map(tag => tag.trim()) : [];
-    const content = `${topic.article_introtext || ''}${topic.article_fulltext || ''}`;
+    const content = `${topicMedia.article_introtext || ''}${topicMedia.article_fulltext || ''}`;
 
     return (
       <ReadingModePage
-        title={topic.article_title || topic.title}
+        title={topicMedia.article_title || topicMedia.title}
         tags={tags}
-        summary={topic.article_summary}
+        summary={topicMedia.article_summary}
         author='慈诚罗珠堪布'
         date={
-          topic.created
-            ? new Date(topic.created).toLocaleDateString('zh-CN')
+          topicMedia.created
+            ? new Date(topicMedia.created).toLocaleDateString('zh-CN')
             : ''
         }
         content={content}
@@ -55,11 +56,7 @@ export default async function ReadingPage({
   // 默认的普通阅读模式
   return (
     <Box>
-      <AudioPage
-        topicMedia={topicMedia}
-        courseTopic={topic}
-        showTitle={false}
-      />
+      <AudioPage topicMedia={topicMediaX} showTitle={false} />
 
       {/* 阅读内容区域 */}
       <Box sx={{ position: 'relative' }} data-reading-container>
@@ -67,8 +64,8 @@ export default async function ReadingPage({
 
         {/* 客户端增强功能 - 包含分页和全文模式 */}
         <ReadingContentWrapper
-          introText={topic.article_introtext}
-          fullText={topic.article_fulltext}
+          introText={topicMedia.article_introtext}
+          fullText={topicMedia.article_fulltext}
         />
       </Box>
 

@@ -20,6 +20,12 @@ export default function CategorySelector({
   const hideQaLayout =
     isLessonPage && categories.length === 6 && categories[0] === '第一册';
 
+  const getBtnPx = () => {
+    if (categories.length > 10) return 'auto';
+    else if (categories.length > 6) return 2;
+    else return 4;
+  };
+
   return (
     <>
       {!hideQaLayout && (
@@ -46,7 +52,7 @@ export default function CategorySelector({
           sx={{
             display: 'flex',
             justifyContent: 'space-between',
-            px: 6.5,
+            px: categories.length > 6 ? 3 : 7,
             mx: 3,
             flexWrap: 'nowrap',
             overflowX: 'auto',
@@ -56,14 +62,14 @@ export default function CategorySelector({
             mb: 2,
             '& .MuiToggleButtonGroup-grouped': {
               ...sharedButtonStyles,
-              mx: 1,
-              my: 0.3,
-              px: 4,
-              py: 1.3,
+              mx: categories.length > 10 ? 0.2 : 1,
+              my: 0.4,
+              px: getBtnPx(),
+              py: 1,
               textWrap: 'nowrap',
               color: STANDARD_TEXT_COLOR,
               fontSize: 16,
-              fontWeight: 500,
+              fontWeight: 700,
               border: 'none',
               '&.Mui-selected': {
                 background:

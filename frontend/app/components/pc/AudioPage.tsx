@@ -2,18 +2,16 @@
 import MediaDownloadButton from '@/app/components/pc/MediaDownloadButton';
 import { Box, Paper, Typography } from '@mui/material';
 import { Fragment } from 'react';
-import { CourseTopic, TopicMedia } from '../../types/models';
+import { TopicMediaX } from '../../types/models';
 import AudioPlayer from './AudioPlayer';
 
 interface AudioPageProps {
-  topicMedia: TopicMedia[];
-  courseTopic?: CourseTopic;
+  topicMedia: TopicMediaX[];
   showTitle?: boolean;
 }
 
 export default function AudioPage({
   topicMedia,
-  courseTopic,
   showTitle = true,
 }: AudioPageProps) {
   if (!topicMedia.length) {
@@ -26,19 +24,22 @@ export default function AudioPage({
     );
   }
 
-  const bookUrls = courseTopic
-    ? [courseTopic?.url_downpdf].filter(item => item != undefined)
-    : null;
+  const bookUrls = showTitle
+    ? null
+    : {
+        pdf: [topicMedia[0].url_downpdf],
+        epub: [topicMedia[0].url_downepub],
+      };
   const audioBookUrl = [
-    { title: courseTopic?.title, url_mp3: courseTopic?.url_mp3 },
+    { title: topicMedia[0]?.title, url_mp3: topicMedia[0]?.ct_url_mp3 },
   ];
 
-  const mp3Urls = courseTopic
-    ? audioBookUrl
-    : topicMedia.map(item => ({
-        title: item.media?.title,
-        url_mp3: item.media?.url_mp3,
-      }));
+  const mp3Urls = showTitle
+    ? topicMedia.map(item => ({
+        title: item?.title,
+        url_mp3: item?.url_mp3,
+      }))
+    : audioBookUrl;
 
   return (
     <Box sx={{ py: 0, gap: 2, mr: 5 }}>
@@ -62,24 +63,22 @@ export default function AudioPage({
               }}
             >
               <AudioPlayer src={item?.url_mp3 ?? ''} />
-              {bookUrls && bookUrls.length > 0 ? (
+              {bookUrls ? (
                 <Box display={'flex'}>
                   <MediaDownloadButton
                     mediaType='pdf'
-                    downloadUrls={bookUrls}
+                    downloadUrls={bookUrls['pdf']}
                   />{' '}
                   &nbsp;
                   <MediaDownloadButton
                     mediaType='epub'
-                    downloadUrls={bookUrls}
+                    downloadUrls={bookUrls['epub']}
                   />
                 </Box>
               ) : (
                 <MediaDownloadButton
                   mediaType='audio'
-                  downloadUrls={topicMedia.map(
-                    item => item.media?.url_downmp3 || ''
-                  )}
+                  downloadUrls={topicMedia.map(item => item?.url_downmp3 || '')}
                 />
               )}
             </Box>
