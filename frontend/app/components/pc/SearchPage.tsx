@@ -551,12 +551,12 @@ const SearchPage = () => {
                     <Fragment key={index}>
                       <SearchInfoCard
                         index={index + 1}
-                        title={item.title}
+                        title={item.article_title}
                         content={
                           isArticle
-                            ? item.fulltext ||
-                              item.introtext ||
-                              item.summary ||
+                            ? item.article_fulltext ||
+                              item.article_introtext ||
+                              item.article_summary ||
                               ''
                             : ''
                         }

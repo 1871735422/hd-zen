@@ -1,5 +1,5 @@
 import { Container, Grid } from '@mui/material';
-import { getCourseImageUrl, getCourses } from '../api';
+import { getCourses } from '../api';
 import BookCard from '../components/pc/BookCard';
 
 export const revalidate = 900;
@@ -64,7 +64,6 @@ async function CoursePage() {
             idx={idx}
             title={course.title}
             description={course.description || ''}
-            cover={getCourseImageUrl(course, true)}
           />
         ))}
       </Grid>
