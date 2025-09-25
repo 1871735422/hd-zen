@@ -10,15 +10,9 @@ interface BookCardProps {
   idx: number;
   title: string;
   description: string;
-  cover: string;
 }
 
-const BookCard: React.FC<BookCardProps> = ({
-  title,
-  description,
-  cover,
-  idx,
-}) => {
+const BookCard: React.FC<BookCardProps> = ({ title, description, idx }) => {
   return (
     <Card
       sx={{
