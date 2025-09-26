@@ -19,7 +19,18 @@ const NavigationMenu: React.FC<NavigationProps> = ({ menuData }) => {
     >
       {menuData.map(item => {
         return (
-          <Box key={item.name} sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box
+            key={item.name}
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              '& .MuiButton-endIcon': {
+                marginLeft: 0,
+                transform: 'scaleX(1.2)',
+                fontWeight: 100,
+              },
+            }}
+          >
             <MenuItemComponent item={item} />
           </Box>
         );

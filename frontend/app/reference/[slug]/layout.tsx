@@ -2,7 +2,7 @@ import CategorySelector from '@/app/components/pc/CategorySelector';
 import TitleBanner from '@/app/components/shared/TitleBanner';
 import { Container, Typography } from '@mui/material';
 import { notFound } from 'next/navigation';
-import { getCourseByDisplayOrder, getCourses } from '../../api';
+import { getCategories, getCourseByDisplayOrder, getCourses } from '../../api';
 
 // 15分钟缓存
 export const revalidate = 900;
@@ -17,17 +17,20 @@ export default async function CourseLayout({
   const { slug } = await params;
 
   // Get the current course and all courses
-  const [course, coursesResult] = await Promise.all([
+  const [course, coursesResult, menuData] = await Promise.all([
     getCourseByDisplayOrder(slug),
     getCourses(),
+    getCategories('学修参考资料'),
   ]);
 
   if (!course) {
     notFound();
   }
 
-  const categories = coursesResult.items.map(item => item.title);
-  const selectedCategory = course.title;
+  console.log({ course, coursesResult, menuData });
+  const menus = menuData[0]?.subMenu;
+  const categories = menus?.map(item => item.name) || [];
+  const selectedCategory = (menus && menus[Number(slug) - 1]?.name) || '';
 
   return (
     <Container

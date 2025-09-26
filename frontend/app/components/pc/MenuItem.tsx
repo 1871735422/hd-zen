@@ -22,6 +22,7 @@ const MenuItemComponent: React.FC<MenuItemProps> = ({ item }) => {
   const buttonSx = {
     color: STANDARD_TEXT_COLOR,
     fontWeight: 500,
+    fontSize: 18,
     '&:hover': {
       color: NAV_COLOR,
       background: 'rgba(70, 114, 166, 0.08)',
@@ -41,7 +42,10 @@ const MenuItemComponent: React.FC<MenuItemProps> = ({ item }) => {
           },
         }}
       >
-        <Link href={`/${item.slug}/1`} style={{ textDecoration: 'none' }}>
+        <Link
+          href={`/${item.slug}${item?.slug === 'course' ? '' : '/1'}`}
+          style={{ textDecoration: 'none' }}
+        >
           <Button sx={buttonSx} endIcon={<KeyboardArrowDownIcon />}>
             {item.name}
           </Button>
@@ -80,9 +84,9 @@ const MenuItemComponent: React.FC<MenuItemProps> = ({ item }) => {
                 >
                   <Button
                     sx={{
-                      fontSize: 14,
+                      fontSize: 16,
+                      fontWeight: 400,
                       color: STANDARD_TEXT_COLOR,
-                      fontWeight: 500,
                       padding: '8px 16px',
                       width: '100%',
                       justifyContent: 'flex-start',

@@ -109,14 +109,6 @@ const mapRecordToCourseTopic = (record: PocketRecord): CourseTopic => {
 // API Functions
 export const getCategories = async (name?: string): Promise<Array<Menu>> => {
   try {
-    // 检查是否在构建环境中
-    if (process.env.NODE_ENV === 'production' && !pbUrl) {
-      console.warn(
-        'Build time: Returning empty categories due to missing PB_URL'
-      );
-      return [];
-    }
-
     const result = await pb.collection('navMenu').getFullList({
       sort: 'displayOrder',
       filter: `isActive = true ${name ? '&& name = "' + name + '"' : ''}`,
@@ -138,18 +130,6 @@ export const getCategories = async (name?: string): Promise<Array<Menu>> => {
 
 export const getCourses = async (): Promise<PaginatedResponse<Course>> => {
   try {
-    // 检查是否在构建环境中
-    if (process.env.NODE_ENV === 'production' && !pbUrl) {
-      console.warn('Build time: Returning empty courses due to missing PB_URL');
-      return {
-        items: [],
-        totalItems: 0,
-        totalPages: 0,
-        page: 1,
-        perPage: 0,
-      };
-    }
-
     const result = await pb.collection('courses').getFullList({
       sort: 'displayOrder',
       expand: 'categoryId',
@@ -261,6 +241,20 @@ export const getAnswerMediasByOrder = async (
 };
 
 export const getCourseByDisplayOrder = async (
+  displayOrder: string
+): Promise<Course | null> => {
+  try {
+    const record = await pb
+      .collection('courses')
+      .getFirstListItem(`displayOrder="${displayOrder}"`);
+    return mapRecordToCourse(record as PocketRecord);
+  } catch (error) {
+    console.error(`Error fetching course ${displayOrder}:`, error);
+    return null;
+  }
+};
+
+export const getReferenceByDisplayOrder = async (
   displayOrder: string
 ): Promise<Course | null> => {
   try {

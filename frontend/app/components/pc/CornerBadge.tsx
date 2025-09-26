@@ -42,6 +42,7 @@ export default function CornerBadge({ content }: CornerBadgeProps) {
             right: '33%',
             fontSize: 22,
             color: 'white',
+            fontWeight: 300,
           }}
         >
           {content}

@@ -36,7 +36,7 @@ const Header: React.FC = async () => {
         {/* Logo */}
         <Box
           sx={{
-            width: '180px',
+            width: 'fit-content',
             height: '50px',
             display: 'flex',
             alignItems: 'center',
@@ -45,7 +45,11 @@ const Header: React.FC = async () => {
           }}
         >
           <LogoIcon />
-          <Typography variant='h6' sx={{ color: STANDARD_TEXT_COLOR }}>
+          <Typography
+            variant='h6'
+            sx={{ color: STANDARD_TEXT_COLOR }}
+            fontWeight={700}
+          >
             <Link href='/'>慧灯禅修</Link>
           </Typography>
         </Box>

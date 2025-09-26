@@ -22,7 +22,8 @@ export default function CategorySelector({
 
   const getBtnPx = () => {
     if (categories.length > 10) return 'auto';
-    else if (categories.length > 6) return 2;
+    else if (categories.length > 6 || pathname.startsWith('/reference'))
+      return 2;
     else return 4;
   };
 

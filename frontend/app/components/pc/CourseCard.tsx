@@ -42,7 +42,7 @@ export default function CourseCard({
           sx={{
             pl: 2,
             pt: 2,
-            pr: 7,
+            pr: isQa ? 4.5 : 7,
             display: '-webkit-box',
             WebkitBoxOrient: 'vertical',
             WebkitLineClamp: isQa ? 3 : 1,

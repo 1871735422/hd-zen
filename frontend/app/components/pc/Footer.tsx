@@ -10,8 +10,13 @@ const Footer: React.FC = () => {
       bgcolor={'rgba(127, 173, 235, 1)'}
       sx={{ px: { xs: 1, sm: 2 } }}
     >
-      <Typography color='white' textAlign='center' variant='body1'>
-        &nbsp; {new Date().getFullYear()} &nbsp;慧灯禅修 - By Huidengchanxiu
+      <Typography
+        color='#fff'
+        textAlign='center'
+        fontWeight={300}
+        fontSize={14}
+      >
+        &copy; {new Date().getFullYear()} &nbsp;慧灯禅修 - By Huidengchanxiu
       </Typography>
     </Box>
   );
