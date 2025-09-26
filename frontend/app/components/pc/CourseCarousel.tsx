@@ -27,7 +27,6 @@ const CourseCarousel: React.FC<CourseCarouselProps> = ({ cards }) => {
         justifyContent: 'center',
         gap: 1,
         width: '100%',
-        minHeight: 30,
         overflow: 'hidden',
       }}
     >
