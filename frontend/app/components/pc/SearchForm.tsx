@@ -13,7 +13,6 @@ const SearchForm: React.FC = () => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          mr: { xs: 0, sm: 1, md: 2, lg: 3, xl: 4 },
         }}
       >
         <TextField

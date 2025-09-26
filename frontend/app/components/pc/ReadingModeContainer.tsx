@@ -1,6 +1,8 @@
 'use client';
 import { Box, Divider, Paper, Stack, Typography } from '@mui/material';
+import { useEffect, useState } from 'react';
 import { formatDate } from '../../utils/courseUtils';
+import { ScrollTop } from '../shared';
 import { READING_THEMES, useReadingMode } from './ReadingModeProvider';
 import ReadingModeSidebar from './ReadingModeSidebar';
 
@@ -24,6 +26,27 @@ export default function ReadingModeContainer({
   onExitReadingMode,
 }: ReadingModeContainerProps) {
   const { state } = useReadingMode();
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const anchor = document.querySelector('.back-to-top-anchor');
+
+    if (!anchor) {
+      setVisible(true);
+      return;
+    }
+
+    const io = new IntersectionObserver(
+      entries => {
+        const entry = entries[0];
+        setVisible(!entry.isIntersecting);
+      },
+      { root: null, threshold: 0.01 }
+    );
+
+    io.observe(anchor);
+    return () => io.disconnect();
+  }, []);
 
   return (
     <Box
@@ -97,6 +120,7 @@ export default function ReadingModeContainer({
         >
           {/* 标题 */}
           <Typography
+            className='back-to-top-anchor'
             variant='h3'
             component='h1'
             sx={{
@@ -139,10 +163,16 @@ export default function ReadingModeContainer({
                   flexWrap: 'wrap',
                   gap: '8px',
                   justifyContent: 'center',
+                  '& a:hover': {
+                    opacity: 0.7,
+                  },
                 }}
               >
                 {tags.map((tag, index) => (
                   <Box
+                    component={'a'}
+                    href={`/tags?tag=${tag}`}
+                    target='_blank'
                     key={index}
                     sx={{
                       backgroundColor:
@@ -266,6 +296,11 @@ export default function ReadingModeContainer({
         {/* 侧边栏 - 吸附在文章内容右侧 */}
         <ReadingModeSidebar onExitReadingMode={onExitReadingMode} />
       </Box>
+
+      <ScrollTop
+        bgColor={READING_THEMES[state.backgroundTheme].sidebarBackBg}
+        visible={visible}
+      />
     </Box>
   );
 }

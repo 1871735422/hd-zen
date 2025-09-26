@@ -89,7 +89,7 @@ export default function ReadingModePage({
           width: '100vw',
           height: '100vh',
           overflow: 'hidden',
-          zIndex: 9999,
+          zIndex: 1000,
           backgroundColor: 'transparent',
         }}
       >

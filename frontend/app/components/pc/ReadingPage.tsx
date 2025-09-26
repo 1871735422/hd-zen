@@ -17,7 +17,6 @@ export default async function ReadingPage({
 }: ReadingPageProps) {
   const topicMedia = topicMediaX[0];
   const topicTags = topicMedia?.tags;
-  console.log({ topicMedia });
 
   const hasContent =
     topicMedia.article_fulltext || topicMedia.article_introtext;
@@ -55,7 +54,7 @@ export default async function ReadingPage({
 
   // 默认的普通阅读模式
   return (
-    <Box>
+    <>
       <AudioPage topicMedia={topicMediaX} showTitle={false} />
 
       {/* 阅读内容区域 */}
@@ -70,6 +69,6 @@ export default async function ReadingPage({
       </Box>
 
       <ScrollTop />
-    </Box>
+    </>
   );
 }
