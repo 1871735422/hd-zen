@@ -53,7 +53,7 @@ export default function CategorySelector({
             display: 'flex',
             justifyContent: 'space-between',
             px: categories.length > 6 ? 3 : 7,
-            mx: 3,
+            mx: 1,
             flexWrap: 'nowrap',
             overflowX: 'auto',
             borderRadius: '80px',

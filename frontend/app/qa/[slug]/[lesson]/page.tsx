@@ -145,7 +145,7 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
             selectedIdx={Number(questionOrder) - 1}
           />
         </Grid>
-        <Grid container spacing={4} sx={{ px: 3, py: 4 }} size={9}>
+        <Grid container spacing={4} sx={{ px: 8, py: 4 }} size={9}>
           <Box
             sx={{
               backgroundColor: 'white',
@@ -153,7 +153,6 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
               flexDirection: 'column',
               gap: 4,
               pb: 5,
-              px: 3.5,
               borderRadius: 5,
               width: '100%',
             }}
@@ -167,7 +166,7 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
               }}
             >
               <LessonMeta
-                title={currentQuestion?.questionTitle}
+                title={`${questionOrder}. ${currentQuestion?.questionTitle}`}
                 author='作者：慈诚罗珠堪布'
                 date={formatDate(currentQuestion?.questionCreated)}
                 refCourse={`${courseName} > ${lessonName}`}

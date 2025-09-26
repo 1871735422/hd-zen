@@ -33,7 +33,7 @@ export default function LessonMeta({
         align={isQuestion ? 'left' : 'center'}
         color={STANDARD_TEXT_COLOR}
         mb={4}
-        mt={7}
+        mt={isQuestion ? 0 : 7}
       >
         {title}
       </Typography>

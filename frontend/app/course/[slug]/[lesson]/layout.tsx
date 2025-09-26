@@ -60,7 +60,6 @@ const LessonLayout = async ({
             overflow: 'hidden',
             pb: 5,
             mb: 5,
-            mx: 3,
             borderRadius: 5,
           }}
         >

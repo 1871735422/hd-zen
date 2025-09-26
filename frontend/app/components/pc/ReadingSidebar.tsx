@@ -97,6 +97,9 @@ export default function ReadingSidebar({
         fontWeight: 500,
         fontFamily: 'Montserrat, "Segoe UI", "Arial Narrow", Arial, sans-serif',
         '& .MuiButton-root:hover': { backgroundColor: '#E0F3FF' },
+        '& span': {
+          transform: 'scaleX(1.3)',
+        },
       }}
     >
       <Button
@@ -116,20 +119,18 @@ export default function ReadingSidebar({
         sx={{
           ...buttonStyle,
           bgcolor: defaultBg,
-          color: '#2F7AD5',
-          fontSize: 22,
-          lineHeight: 1,
+          fontSize: 20,
         }}
       >
-        A+
+        <span>A+</span>
       </Button>
 
       <Button
         onClick={handleDecreaseFont}
         disableElevation
-        sx={{ ...buttonStyle, bgcolor: defaultBg, fontSize: 22, lineHeight: 1 }}
+        sx={{ ...buttonStyle, bgcolor: defaultBg, fontSize: 18, lineHeight: 1 }}
       >
-        A-
+        <span>A-</span>
       </Button>
 
       <Button

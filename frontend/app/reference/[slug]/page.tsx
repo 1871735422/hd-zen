@@ -35,10 +35,15 @@ export default async function ReferencePage({
   ];
 
   return (
-    <Container maxWidth='lg'>
+    <Container
+      maxWidth='lg'
+      sx={{
+        paddingX: '0 !important',
+      }}
+    >
       <Grid
         container
-        spacing={4}
+        spacing={5}
         sx={{
           mt: 6,
           pb: 16,
