@@ -203,3 +203,26 @@ export interface QuestionResult extends BaseModel, Media {
 
 // 搜索结果联合类型
 export type SearchResultItem = Article;
+
+export interface DownloadResource {
+  pdf_size: string;
+  epub_size: string;
+  audio_size: string;
+  audiobook_size: string;
+  video_size: string;
+  collectionId: string;
+  collectionName: string;
+  created: string;
+  date: string;
+  displayOrder: number;
+  downType: string;
+  id: string;
+  isActive: boolean;
+  name: string;
+  updated: string;
+  url_downaudio: string;
+  url_downaudiobook: string;
+  url_downepub: string;
+  url_downpdf: string;
+  url_downvideo: string;
+}

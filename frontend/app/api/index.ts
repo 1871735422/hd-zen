@@ -4,6 +4,7 @@ import {
   Category,
   Course,
   CourseTopic,
+  DownloadResource,
   Media,
   PaginatedResponse,
   PocketRecord,
@@ -621,4 +622,14 @@ export const getSearchArticles = async (
   } catch {
     return { items: [], totalItems: 0, totalPages: 0, currentPage: 1 };
   }
+};
+
+export const getDownloadResources = async (
+  isQa = false
+): Promise<DownloadResource[]> => {
+  const records = await pb.collection('download').getFullList({
+    filter: `name${isQa ? '' : '!'}~'问答' && isActive=true`,
+    order: 'displayOrder',
+  });
+  return records as unknown as DownloadResource[];
 };

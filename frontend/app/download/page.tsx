@@ -1,20 +1,13 @@
-'use client';
-
-import {
-  Avatar,
-  Box,
-  Container,
-  Grid,
-  styled,
-  Typography,
-} from '@mui/material';
+import { Avatar, Box, Container, Grid, Typography } from '@mui/material';
+import { getDownloadResources } from '../api';
 import AudioDownIcon from '../components/icons/AudioDownIcon';
 import EpubDownIcon from '../components/icons/EpubDownIcon';
 import HeadphoneIcon from '../components/icons/HeadphoneIcon';
 import PdfDownIcon from '../components/icons/PdfDownIcon';
 import VideoDownIcon from '../components/icons/VideoDownIcon';
+import FileIconContainer from '../components/shared/FileIconContainer';
 import TitleBanner from '../components/shared/TitleBanner';
-import { downloadItems, NAV_COLOR } from '../constants';
+import { NAV_COLOR } from '../constants';
 import { MAIN_BLUE_COLOR, STANDARD_TEXT_COLOR } from '../constants/colors';
 
 const fileTypes = [
@@ -25,28 +18,8 @@ const fileTypes = [
   { key: 'video', name: '视频', icon: <VideoDownIcon /> },
 ];
 
-const FileIconContainer = styled(Box)({
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  color: 'rgba(255, 168, 184, 1)',
-  paddingTop: 3,
-  paddingBottom: -3,
-  '&:hover': {
-    color: 'rgba(255, 94, 124, 1)',
-  },
-  '& svg': {
-    width: 30,
-    hegit: 30,
-  },
-});
-
-const handleDownload = (idx: number, type: string) => {
-  console.log(idx, type);
-};
-
-function DownloadPage() {
+export default async function DownloadPage() {
+  const downloadItems = await getDownloadResources();
   return (
     <Box
       sx={{
@@ -111,7 +84,7 @@ function DownloadPage() {
             </Grid>
           </Grid>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            {downloadItems.map(item => (
+            {downloadItems.map((item, idx) => (
               <Grid
                 key={item.id}
                 container
@@ -135,7 +108,7 @@ function DownloadPage() {
                       display: { xs: 'none', sm: 'flex' },
                     }}
                   >
-                    <Typography variant='body2'>{item.id}</Typography>
+                    <Typography variant='body2'>{idx + 1}</Typography>
                   </Avatar>
                   <Box>
                     <Typography
@@ -143,7 +116,7 @@ function DownloadPage() {
                       fontWeight='medium'
                       color={STANDARD_TEXT_COLOR}
                     >
-                      {item.title}
+                      {item.name}
                     </Typography>
                   </Box>
                 </Grid>
@@ -156,11 +129,21 @@ function DownloadPage() {
                         sx={{ minWidth: 60, flexGrow: 1 }}
                       >
                         <FileIconContainer
-                          onClick={() => handleDownload(item.id, ft.key)}
+                          target={
+                            item[`url_down${ft.key}` as keyof typeof item]
+                              ? '_blank'
+                              : '_top'
+                          }
+                          href={
+                            (item[
+                              `url_down${ft.key}` as keyof typeof item
+                            ] as string) || '#'
+                          }
                         >
                           {ft.icon}
-                          <Typography fontSize={13} pt={0.3}>
-                            {item.files[ft.key as keyof typeof item.files]}
+                          <Typography fontSize={13} pt={0.3} minWidth={40}>
+                            {item[`${ft.key}_size` as keyof typeof item] ||
+                              'N/A'}
                           </Typography>
                         </FileIconContainer>
                       </Grid>
@@ -175,5 +158,3 @@ function DownloadPage() {
     </Box>
   );
 }
-
-export default DownloadPage;
