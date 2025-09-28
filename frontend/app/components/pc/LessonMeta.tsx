@@ -25,15 +25,15 @@ export default function LessonMeta({
 }: LessonMetaProps) {
   const isQuestion = /^\d+\./.test(title);
   return (
-    <Box sx={{ mr: 5 }}>
+    <Box>
       <Typography
         fontWeight={500}
         px={0}
-        fontSize={28}
+        fontSize={{ lg: 28, xl: 36 }}
         align={isQuestion ? 'left' : 'center'}
         color={STANDARD_TEXT_COLOR}
-        mb={4}
-        mt={isQuestion ? 0 : 7}
+        mb={{ lg: 4, xl: 8 }}
+        mt={isQuestion ? 0 : { lg: 7, xl: 9 }}
       >
         {title}
       </Typography>
@@ -58,12 +58,20 @@ export default function LessonMeta({
                   zIndex: -1,
                 },
             borderRadius: '20px',
-            p: 3,
+            px: { lg: 3, xl: 4 },
+            pt: { lg: 3, xl: 3.5 },
+            pb: 3,
             boxShadow: '0 2px 16px 0 rgba(0,0,0,0.06)',
             position: 'relative',
             backdropFilter: 'blur(12px)',
             WebkitBackdropFilter: 'blur(12px)',
             overflow: 'hidden',
+            '& .MuiTypography-subtitle1': {
+              mr: 0.7,
+              color: 'rgba(102, 102, 102, 1)',
+              fontWeight: 500,
+              fontSize: { lg: 16, xl: 18 },
+            },
           }}
         >
           {tags && (
@@ -73,15 +81,14 @@ export default function LessonMeta({
               mb={1}
               alignItems='center'
               flexWrap='wrap'
+              sx={{
+                '& .MuiTypography-root, .MuiChip-root': {
+                  fontSize: { lg: 16, xl: 18 },
+                  lineHeight: { lg: '24px', xl: '28px' },
+                },
+              }}
             >
-              <Typography
-                variant='subtitle1'
-                color='rgba(102, 102, 102, 1)'
-                fontWeight={500}
-                sx={{ fontSize: 16 }}
-              >
-                标签：
-              </Typography>
+              <Typography variant='subtitle1'>标签：</Typography>
               {tags.map((tag, idx) => (
                 <Fragment key={idx}>
                   <CourseTag label={tag} />
@@ -89,38 +96,35 @@ export default function LessonMeta({
               ))}
             </Stack>
           )}
-          <Box display='flex' alignItems='flex-start'>
-            <Typography
-              variant='subtitle1'
-              color='rgba(102, 102, 102, 1)'
-              fontWeight={500}
-              sx={{ fontSize: 16, minWidth: 60 }}
-            >
+          <Stack flexDirection={'row'} mt={2}>
+            <Typography variant='subtitle1' sx={{ minWidth: 60 }}>
               问题：
             </Typography>
             <Typography
               variant='body1'
               color='rgba(102, 102, 102, 1)'
               sx={{
-                fontSize: 16,
                 lineHeight: 1.7,
                 display: '-webkit-box',
                 WebkitBoxOrient: 'vertical',
                 WebkitLineClamp: 2,
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
+                fontSize: { lg: 16, xl: 18 },
               }}
             >
               {description}
             </Typography>
-          </Box>
+          </Stack>
         </Box>
       )}
-      <Box mt={1} mb={2} color='rgba(153, 153, 153, 1)' fontSize={14}>
-        <Typography
-          variant='subtitle1'
-          fontFamily={'"Microsoft Yahei", "Hiragino Sans GB"'}
-        >
+      <Box
+        mt={{ lg: 1, xl: 2 }}
+        mb={2}
+        color='rgba(153, 153, 153, 1)'
+        fontSize={{ lg: 16, xl: 18 }}
+      >
+        <Typography variant='subtitle1' fontSize={'inherit'} ml={1}>
           作者：{author?.replace('作者：', '')} &nbsp;&nbsp; {formatDate(date)}
         </Typography>
         {refCourse && (

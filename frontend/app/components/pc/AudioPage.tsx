@@ -49,7 +49,12 @@ export default function AudioPage({
         {mp3Urls.map(item => (
           <Fragment key={item.title}>
             {item.title && showTitle && (
-              <Typography variant='body1' fontWeight={500} my={2}>
+              <Typography
+                variant='body1'
+                fontWeight={500}
+                my={2}
+                fontSize={{ lg: 18, xl: 20 }}
+              >
                 {item.title}
               </Typography>
             )}

@@ -1,13 +1,7 @@
 import { SvgIcon } from '@mui/material';
 
 const SpeakerIcon = () => (
-  <SvgIcon
-    sx={{
-      width: 24,
-      height: 24,
-      cursor: 'pointer',
-    }}
-  >
+  <SvgIcon>
     <svg
       xmlns='http://www.w3.org/2000/svg'
       xmlnsXlink='http://www.w3.org/1999/xlink'

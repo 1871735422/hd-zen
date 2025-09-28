@@ -100,12 +100,12 @@ export default function AudioPlayer({ src }: AudioPlayerProps) {
         width: '90%',
         backgroundColor: 'rgba(242, 248, 255, 0.75)',
         borderRadius: 999,
-        px: 2,
-        py: 1,
+        px: { lg: 2, xl: 3 },
+        py: { lg: 1, xl: 1.5 },
         gap: 1.5,
         '& .MuiTypography-root': {
           color: 'rgba(102, 102, 102, 1)',
-          fontSize: 14,
+          fontSize: { lg: 14, xl: 16 },
         },
       }}
     >
@@ -121,7 +121,7 @@ export default function AudioPlayer({ src }: AudioPlayerProps) {
         <Typography
           variant='body2'
           color='text.secondary'
-          sx={{ minWidth: 40, textAlign: 'center' }}
+          sx={{ minWidth: { lg: 40, xl: 50 }, textAlign: 'center' }}
         >
           {formatTime(currentTime)}
         </Typography>
@@ -145,8 +145,8 @@ export default function AudioPlayer({ src }: AudioPlayerProps) {
               'linear-gradient(270deg, rgba(78, 144, 237, 1) 0%, rgba(176, 222, 255, 1) 100%)',
           },
           '& .MuiSlider-thumb': {
-            width: 16,
-            height: 16,
+            width: { lg: 16, xl: 20 },
+            height: { lg: 16, xl: 20 },
             backgroundColor: '#7DB1F8',
             boxShadow: '3px 0 0 0 rgba(245, 249, 252, 1)',
           },
@@ -157,11 +157,10 @@ export default function AudioPlayer({ src }: AudioPlayerProps) {
         <Typography
           variant='body2'
           color='text.secondary'
-          sx={{ minWidth: 40, textAlign: 'center' }}
+          sx={{ minWidth: { lg: 40, xl: 50 }, textAlign: 'center' }}
         >
           {formatTime(duration)}
         </Typography>
-
         <IconButton
           aria-label='mute'
           onClick={toggleMute}
@@ -169,13 +168,16 @@ export default function AudioPlayer({ src }: AudioPlayerProps) {
           sx={
             isMuted
               ? {
+                  '& svg': {
+                    fontSize: { lg: 24, xl: 28 },
+                  },
                   position: 'relative',
                   '&::after': {
                     content: '""',
                     position: 'absolute',
                     top: '50%',
                     left: '50%',
-                    width: 22,
+                    width: { lg: 24, xl: 28 },
                     height: 2,
                     transform: 'translate(-50%, -50%) rotate(45deg)',
                     background:
@@ -184,7 +186,11 @@ export default function AudioPlayer({ src }: AudioPlayerProps) {
                     pointerEvents: 'none',
                   },
                 }
-              : undefined
+              : {
+                  '& svg': {
+                    fontSize: { lg: 24, xl: 28 },
+                  },
+                }
           }
         >
           <SpeakerIcon />

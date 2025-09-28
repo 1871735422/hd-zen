@@ -25,24 +25,23 @@ const SearchForm: React.FC = () => {
         required
         name='query'
         sx={{
-          pb: '4px',
           width: { lg: 160, xl: 180 },
           '& .MuiOutlinedInput-root': {
-            height: { lg: 25, xl: 40 },
+            height: { lg: 25, xl: 32 },
             fontSize: { xs: 14, sm: 15, md: 16 },
             color: STANDARD_TEXT_COLOR,
-            borderRadius: 1,
+            borderRadius: '5px',
             p: { lg: 0.5 },
             backgroundColor: 'transparent',
             '& fieldset': {
-              height: { lg: 25, xl: 40 },
-              borderColor: 'rgba(130, 178, 232, 0.5)',
+              height: { lg: 25, xl: 32 },
+              borderColor: 'rgba(130, 178, 232, 0.8)',
             },
             '&:hover fieldset': {
               borderColor: MAIN_BLUE_COLOR,
             },
             '&.Mui-focused fieldset': {
-              height: { lg: 25, xl: 40 },
+              height: { lg: 25, xl: 32 },
               borderColor: MAIN_BLUE_COLOR,
             },
           },

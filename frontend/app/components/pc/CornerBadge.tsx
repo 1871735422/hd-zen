@@ -12,12 +12,12 @@ export default function CornerBadge({ content }: CornerBadgeProps) {
       height: 46,
     },
     large: {
-      width: 80,
+      width: { lg: 80, xl: 100 },
       height: 60,
     },
   };
 
-  const config = sizeConfig[content ? 'medium' : 'large'];
+  const config = sizeConfig[content ? 'large' : 'medium'];
 
   return (
     <Box
@@ -40,7 +40,7 @@ export default function CornerBadge({ content }: CornerBadgeProps) {
             position: 'absolute',
             top: 3,
             right: '33%',
-            fontSize: 22,
+            fontSize: { lg: 22, xl: 24 },
             color: 'white',
             fontWeight: 300,
           }}

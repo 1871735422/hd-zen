@@ -36,7 +36,7 @@ export default function AppBreadcrumbs({
   return (
     <Breadcrumbs
       aria-label='breadcrumb'
-      sx={{ color: 'rgba(42, 130, 228, 1)', mb: 1, mx: 3 }}
+      sx={{ color: 'rgba(42, 130, 228, 1)', mb: 1, mx: 1 }}
     >
       {finalItems.map((item, index) => (
         <Link
@@ -46,6 +46,7 @@ export default function AppBreadcrumbs({
           href={item.href || ''}
           underline='hover'
           color='inherit'
+          fontSize={{ lg: 14, xl: 16 }}
         >
           {item.label}
         </Link>

@@ -11,20 +11,19 @@ interface BookCardProps {
   description: string;
 }
 
-const width = 230;
 const BookCard: React.FC<BookCardProps> = ({ title, description, idx }) => {
   return (
     <Card
       component={'a'}
       href={`/course/${idx + 1}`}
       sx={{
-        width,
-        height: width * 1.5,
-        mx: 1.5,
+        width: { lg: 230, xl: 286 },
+        height: { lg: 230 * 1.55, xl: 286 * 1.55 }, // 高度按比例
+        mx: { lg: 1.5, xl: 2.5 },
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-        borderRadius: '24px',
+        borderRadius: { lg: '24px', xl: '30px' },
         boxShadow: 'none',
         cursor: 'pointer',
         transition: 'background 0.3s ease-in-out',
@@ -53,20 +52,21 @@ const BookCard: React.FC<BookCardProps> = ({ title, description, idx }) => {
         },
         '&:hover .description-hover': {
           display: '-webkit-box',
-          mt: 1.5,
+          mt: { lg: 1.5, xl: 2.5 },
+          px: { lg: 1.5, xl: 2.5 },
           color: 'text.secondary',
           textAlign: 'left',
           WebkitBoxOrient: 'vertical',
-          // WebkitLineClamp: 10,·
           overflow: 'hidden',
           pb: 0,
+          fontSize: { lg: 12, xl: 14 },
         },
       }}
     >
       <CardMedia
         className='book-card-media'
         sx={{
-          height: width,
+          height: { lg: 230, xl: 286 },
           position: 'relative',
           overflow: 'hidden',
           transition:
@@ -94,12 +94,13 @@ const BookCard: React.FC<BookCardProps> = ({ title, description, idx }) => {
           flexGrow: 1,
           display: 'flex',
           flexDirection: 'column',
+          justifyContent: 'center',
         }}
       >
         <Typography
           sx={{
             color: 'rgba(70, 114, 166, 1)',
-            fontSize: 20,
+            fontSize: { lg: 20, xl: 24 },
             fontWeight: '500',
             textAlign: 'center',
           }}
@@ -108,7 +109,6 @@ const BookCard: React.FC<BookCardProps> = ({ title, description, idx }) => {
           {title}
         </Typography>
         <Typography
-          fontSize={11}
           className='description-normal'
           sx={{
             mt: 1.5,
@@ -119,6 +119,7 @@ const BookCard: React.FC<BookCardProps> = ({ title, description, idx }) => {
             WebkitLineClamp: 2,
             overflow: 'hidden',
             lineHeight: 2,
+            fontSize: { lg: 11, xl: 14 },
           }}
         >
           {description}

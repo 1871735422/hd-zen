@@ -71,14 +71,14 @@ export default function VideoPlayer({
   };
 
   return (
-    <Box sx={{ overflow: 'hidden', mb: 5 }}>
+    <Box sx={{ overflow: 'hidden', mb: { lg: 5, xl: 10 } }}>
       {title && (
         <Typography
-          variant='h6'
+          variant='h1'
           sx={{
             fontWeight: 500,
             my: 2,
-            fontSize: 17,
+            fontSize: { lg: 17, xl: 20 },
             color: 'rgba(102, 102, 102, 1)',
           }}
         >
@@ -112,7 +112,7 @@ export default function VideoPlayer({
               left: 0,
               width: '100%',
               height: '100%',
-              borderRadius: 10,
+              borderRadius: '25px',
               objectFit: 'cover',
             }}
           />
@@ -148,10 +148,9 @@ export default function VideoPlayer({
               bottom: '5%',
               left: '3%',
               color: 'white',
-              fontSize: 80,
             }}
           >
-            <PlayCircleOutlineIcon sx={{ fontSize: 80 }} />
+            <PlayCircleOutlineIcon sx={{ fontSize: { lg: 80, xl: 94 } }} />
           </IconButton>
         )}
 

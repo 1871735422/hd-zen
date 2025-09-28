@@ -58,8 +58,10 @@ async function CoursePage() {
         justifyContent='center'
         alignItems='center'
         width={'60%'}
+        px={{ lg: 0, xl: 3.5 }}
         sx={{ position: 'relative', zIndex: 2 }}
         gap={5}
+        marginTop={{ lg: 0, xl: 1.25 }}
       >
         {courses.map((course, idx) => (
           <BookCard

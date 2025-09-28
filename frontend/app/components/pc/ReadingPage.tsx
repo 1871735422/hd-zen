@@ -58,7 +58,20 @@ export default async function ReadingPage({
       <AudioPage topicMedia={topicMediaX} showTitle={false} />
 
       {/* 阅读内容区域 */}
-      <Box sx={{ position: 'relative' }} data-reading-container>
+      <Box
+        sx={{
+          position: 'relative',
+          '& .reading-content>p': {
+            fontSize: { lg: 16, xl: 18 },
+            lineHeight: { lg: '36px', xl: '40px' },
+          },
+          '& .reading-content>h4': {
+            fontSize: { lg: 20, xl: 24 },
+            fontWeight: 500,
+          },
+        }}
+        data-reading-container
+      >
         <ReadingSidebar />
 
         {/* 客户端增强功能 - 包含分页和全文模式 */}

@@ -3,8 +3,6 @@ import { SvgIcon, SxProps } from '@mui/material';
 const AudioDownIcon = ({ sx }: { sx?: SxProps }) => (
   <SvgIcon
     sx={{
-      width: 20,
-      height: 20,
       cursor: 'pointer',
       ...sx,
     }}

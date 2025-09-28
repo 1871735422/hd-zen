@@ -46,16 +46,16 @@ export default async function CoursePage({ params }: CoursePageProps) {
 
     return (
       <Container
-        maxWidth='lg'
+        maxWidth='xl'
         sx={{
-          py: 4,
+          py: { lg: 4, xl: 5 },
           paddingX: '0px !important',
         }}
       >
         {/* Course Topics Grid */}
         <Grid container spacing={5}>
           {courseTopics.map(topic => (
-            <Grid key={topic.id} size={{ xs: 12, sm: 6, md: 4 }}>
+            <Grid key={topic.id} size={{ lg: 4 }}>
               <CourseCard
                 item={{
                   idx: topic.ordering,

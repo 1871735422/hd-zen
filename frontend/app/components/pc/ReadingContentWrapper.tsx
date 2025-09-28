@@ -1,5 +1,5 @@
 'use client';
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import React, { useState } from 'react';
 import { CustomPagination } from '../shared';
 
@@ -232,11 +232,9 @@ export default function ReadingContent({
     return (
       <>
         {/* 只显示分页内容 */}
-        <Typography
+        <Box
           className='reading-content'
-          variant='body1'
           sx={{
-            lineHeight: 1.8,
             color: 'rgba(68, 68, 68, 1)',
             mb: 5,
             mr: 2,
@@ -256,9 +254,8 @@ export default function ReadingContent({
   return (
     <Box>
       {introText && (
-        <Typography
+        <Box
           className='reading-content'
-          variant='body1'
           sx={{
             lineHeight: 1.8,
             color: 'rgba(68, 68, 68, 1)',
@@ -269,7 +266,8 @@ export default function ReadingContent({
         />
       )}
       {fullText && (
-        <Typography
+        <Box
+          className='reading-content'
           sx={{ mr: 2 }}
           dangerouslySetInnerHTML={{ __html: fullText }}
         />

@@ -3,8 +3,7 @@ import { SvgIcon } from '@mui/material';
 const PlayIcon = () => (
   <SvgIcon
     sx={{
-      width: 16,
-      height: 16,
+      fontSize: { lg: 18, xl: 20 },
       cursor: 'pointer',
       padding: '2px 1px 2px 3px',
     }}

@@ -16,7 +16,7 @@ const labelItemList = [
     key: '',
     label: '视频',
     icon: <VideoCamIcon />,
-    color: '#82B2E8',
+    color: 'rgba(86, 137, 204, 1)',
   },
   {
     key: 'audio',
@@ -58,23 +58,34 @@ export default async function LessonSidebar({
         top: 0,
         left: 0,
         zIndex: 1000,
-        width: 80,
+        width: { lg: 80, xl: 96 },
         background:
           'linear-gradient(180deg, rgba(157, 208, 250, 1) 0%, rgba(255, 166, 224, 1) 99.96%)',
         borderTopRightRadius: 10,
         borderBottomRightRadius: 10,
         borderBottomLeftRadius: 20,
         borderTopLeftRadius: 20,
-        p: 0,
+        px: 0,
+        py: { xl: 0.5 },
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        '& svg': {
+          width: { lg: 16, xl: 24 },
+          height: { lg: 16, xl: 24 },
+        },
       }}
     >
       {/* 顶部相关资料 */}
 
       <Typography
-        sx={{ color: '#fff', mt: 1, mb: 0.5, fontSize: 14, fontWeight: 700 }}
+        sx={{
+          color: '#fff',
+          mt: 1,
+          mb: 0.5,
+          fontSize: { lg: 14, xl: 16 },
+          fontWeight: 700,
+        }}
       >
         相关资料
       </Typography>
@@ -87,7 +98,7 @@ export default async function LessonSidebar({
           alignItems: 'center',
           justifyContent: 'center',
           '& .MuiTypography-root': {
-            fontSize: 13,
+            fontSize: { lg: 14, xl: 16 },
           },
         }}
       >
@@ -112,7 +123,7 @@ export default async function LessonSidebar({
                 }
                 sx={{
                   width: 100,
-                  height: 80,
+                  height: { lg: 80, xl: 94 },
                   borderLeft: isSelected ? '8px solid transparent' : 'none',
                   boxSizing: 'border-box',
                 }}
@@ -120,7 +131,7 @@ export default async function LessonSidebar({
                 <ListItemButton
                   selected={isSelected}
                   sx={{
-                    height: 46,
+                    height: { lg: 46, xl: 56 },
                     p: 0,
                     alignItems: 'center',
                     background: isSelected ? 'white !important' : 'transparent',
@@ -130,11 +141,11 @@ export default async function LessonSidebar({
                     '&:before': isSelected
                       ? {
                           position: 'absolute',
-                          top: -25,
+                          top: { lg: -25, xl: -30 },
                           right: -8,
                           content: '""',
                           background: '#fff',
-                          height: 25,
+                          height: { lg: 25, xl: 30 },
                           aspectRatio: 1,
                           WebkitMask:
                             'radial-gradient(100% 100% at 0% 0%, transparent 0 100%, white 100%)', // 正方形角在右下
@@ -144,11 +155,11 @@ export default async function LessonSidebar({
                     '&:after': isSelected
                       ? {
                           position: 'absolute',
-                          bottom: -25,
+                          bottom: { lg: -25, xl: -30 },
                           right: -8,
                           content: '""',
                           background: '#fff',
-                          height: 25,
+                          height: { lg: 25, xl: 30 },
                           aspectRatio: 1,
                           WebkitMask:
                             'radial-gradient(100% 100% at 0% 100%, transparent 0 100%, white 100%)', // 正方形角在右上
@@ -171,10 +182,7 @@ export default async function LessonSidebar({
                     <ListItemText
                       sx={{ m: 0 }}
                       primary={
-                        <Typography
-                          fontWeight={isSelected ? 600 : 'inherit'}
-                          textAlign='center'
-                        >
+                        <Typography fontWeight={700} textAlign='center'>
                           {item.label}
                         </Typography>
                       }

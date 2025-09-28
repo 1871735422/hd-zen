@@ -1,4 +1,5 @@
 import { Stack, Typography } from '@mui/material';
+import Image from 'next/image';
 
 interface TitleBannerProps {
   title: string;
@@ -8,32 +9,24 @@ function TitleBanner({ title, subTitle }: TitleBannerProps) {
   return (
     <Stack
       sx={{
-        pt: 5.5,
-        mx: 1,
+        pt: { lg: 5.5, xl: 7 },
+        ml: -3,
         mb: 7,
         flexDirection: 'row',
         alignItems: 'flex-end',
         cursor: 'pointer',
       }}
     >
-      <Typography
-        variant='h2'
-        className='fz-quanfu'
-        sx={{
-          background:
-            'linear-gradient( rgba(34, 96, 168, 1) 0%, rgba(102, 158, 222, 1) 100%)',
-          backgroundClip: 'text',
-          WebkitBackgroundClip: 'text',
-          color: 'transparent',
-          WebkitTextStroke: '0.7px rgba(255, 255, 255, 1)',
-          fontSize: '3.4rem',
-        }}
-      >
-        {title}
-      </Typography>
+      <Image
+        src={`/images/${title}.webp`}
+        alt={title}
+        width={370}
+        height={80}
+        style={{ objectFit: 'contain' }}
+      />
       {subTitle && (
         <Typography
-          variant='h5'
+          variant='h2'
           className='bei-fang'
           lineHeight={2}
           sx={{

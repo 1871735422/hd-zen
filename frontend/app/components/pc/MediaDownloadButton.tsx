@@ -20,33 +20,8 @@ const MediaDownloadButton: React.FC<MediaDownloadButtonProps> = ({
   mediaType,
   downloadUrls,
   disabled = false,
-  size = 'medium',
   sx,
 }) => {
-  const getSizeStyles = () => {
-    switch (size) {
-      case 'small':
-        return {
-          width: 40,
-          height: 40,
-          fontSize: '0.5rem',
-        };
-      case 'large':
-        return {
-          width: 80,
-          height: 80,
-          fontSize: '0.75rem',
-        };
-      default:
-        return {
-          width: 60,
-          height: 60,
-          fontSize: '0.55rem',
-          pt: 1,
-        };
-    }
-  };
-
   const getMediaInfo = (type: MediaType) => {
     switch (type) {
       case 'pdf':
@@ -76,8 +51,6 @@ const MediaDownloadButton: React.FC<MediaDownloadButtonProps> = ({
         };
     }
   };
-
-  const sizeStyles = getSizeStyles();
   const mediaInfo = getMediaInfo(mediaType);
   const IconComponent = mediaInfo.icon;
 
@@ -98,8 +71,9 @@ const MediaDownloadButton: React.FC<MediaDownloadButtonProps> = ({
       disabled={disabled}
       onClick={handleDownload}
       sx={{
-        width: sizeStyles.width,
-        height: sizeStyles.height,
+        width: { lg: 60, xl: 76 },
+        height: { lg: 60, xl: 76 },
+        fontSize: { lg: 10, xl: 12 },
         borderRadius: '50%',
         background: 'rgba(255, 168, 184, 1)',
         color: 'white',
@@ -126,14 +100,14 @@ const MediaDownloadButton: React.FC<MediaDownloadButtonProps> = ({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          fontSize: sizeStyles.width * 0.4,
+          fontSize: { lg: 20, xl: 22 },
           zIndex: 1,
         }}
       />
       <Typography
         variant='caption'
         sx={{
-          fontSize: sizeStyles.fontSize,
+          fontSize: { lg: 10, xl: 12 },
           fontWeight: 500,
           lineHeight: 1,
           textAlign: 'center',
