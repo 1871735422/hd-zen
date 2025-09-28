@@ -57,6 +57,7 @@ const Home: React.FC = async () => {
             mt={3}
             color={TITLE_COLOR}
             textAlign='center'
+            variant='h2'
           >
             慧灯禅修课简介
           </Typography>

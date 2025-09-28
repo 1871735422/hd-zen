@@ -9,7 +9,7 @@ function TitleBanner({ title, subTitle }: TitleBannerProps) {
     <Stack
       sx={{
         pt: 5.5,
-        mx: 3,
+        mx: 1,
         mb: 7,
         flexDirection: 'row',
         alignItems: 'flex-end',

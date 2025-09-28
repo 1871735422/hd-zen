@@ -4,6 +4,7 @@ import ReadingPage from '@/app/components/pc/ReadingPage';
 import VideoPlayer from '@/app/components/pc/VideoPlayer';
 import { Box, Typography } from '@mui/material';
 import { notFound } from 'next/navigation';
+import { Metadata } from 'next/types';
 import { Fragment } from 'react';
 import {
   getCourses,
@@ -19,61 +20,81 @@ export const revalidate = 900;
 
 // 生成静态参数 - 嵌套动态路由必须预生成
 export async function generateStaticParams() {
-  // 开发环境跳过预获取，避免开发时慢
-  if (process.env.NODE_ENV === 'development') {
-    return [];
-  }
+  if (process.env.NODE_ENV === 'development') return [];
 
   try {
     const { items: courses } = await getCourses();
-    const allParams = [];
+    const allParams: { slug: string; lesson: string }[] = [];
 
-    // 处理所有课程，确保完整的 SSG 构建
-    const maxCourses = courses.length;
-
-    for (let i = 0; i < maxCourses; i++) {
-      const course = courses[i];
+    for (const course of courses) {
       try {
-        // 添加超时控制
-        const timeoutPromise = new Promise((_, reject) =>
+        const timeout = new Promise((_, reject) =>
           setTimeout(() => reject(new Error('Timeout')), 10000)
         );
-
-        const topicsPromise = getCourseTopicsByCourse(course.id);
         const { items: topics } = (await Promise.race([
-          topicsPromise,
-          timeoutPromise,
+          getCourseTopicsByCourse(course.id),
+          timeout,
         ])) as { items: CourseTopic[] };
 
-        // 处理所有课时，确保完整的 SSG 构建
-        const maxTopics = topics.length;
-
-        // 为每个课时生成参数
-        for (let j = 0; j < maxTopics; j++) {
-          const topic = topics[j];
+        for (const topic of topics) {
           allParams.push({
             slug: course.displayOrder.toString(),
             lesson: `lesson${topic.ordering}`,
           });
         }
-      } catch (error) {
-        console.error(`Error fetching topics for course ${course.id}:`, error);
-        // 如果获取课时失败，至少生成课程参数
+      } catch {
         allParams.push({
           slug: course.displayOrder.toString(),
-          lesson: 'lesson1', // 默认第一个课时
+          lesson: 'lesson1',
         });
       }
     }
-
-    console.log(
-      `Generated ${allParams.length} lesson params (limited to ${maxCourses} courses)`
-    );
     return allParams;
-  } catch (error) {
-    console.error('Error generating static params for lessons:', error);
+  } catch {
     return [];
   }
+}
+export async function generateMetadata({
+  params,
+}: {
+  params: { slug: string; lesson: string };
+}): Promise<Metadata | undefined> {
+  const courseOrder = params.slug;
+  const lessonOrder = params.lesson?.replace('lesson', '');
+
+  // 获取课程和课题信息
+  const { items: courses } = await getCourses();
+  const course = courses.find(c => c.displayOrder.toString() === courseOrder);
+
+  const { items: topics } = await getCourseTopicsByCourse(course?.id ?? '');
+  const topic = topics.find(t => `lesson${t.ordering}` === params.lesson);
+
+  const topicMedia = await getTopicMediaByOrder(courseOrder, lessonOrder);
+  const media = topicMedia?.[0];
+
+  if (!course || !topic || !media) return;
+
+  const url = `https://www.example.com/course/${courseOrder}/lesson${lessonOrder}`;
+  const title = `${media.title || topic.title || '课程'} | 慧灯禅修`;
+  const description =
+    media.article_summary ||
+    media.article_introtext ||
+    topic.title ||
+    course.title;
+
+  return {
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      title,
+      description,
+      url,
+      type: 'article',
+      publishedTime: media.created,
+      authors: ['作者：慈诚罗珠堪布'],
+    },
+  };
 }
 interface LessonPageProps {
   params: Promise<{ slug: string; lesson: string }>;

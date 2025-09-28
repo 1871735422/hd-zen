@@ -2,7 +2,10 @@ import { Container, Grid } from '@mui/material';
 import { getCourses } from '../api';
 import BookCard from '../components/pc/BookCard';
 
-export const revalidate = 900;
+export const metadata = {
+  title: '慧灯禅修课', // 可选：在这里定义默认 metadata，页面会覆盖
+  description: '慧灯禅修网站课程',
+};
 
 async function CoursePage() {
   const { items: courses } = await getCourses();
@@ -52,11 +55,11 @@ async function CoursePage() {
     >
       <Grid
         container
-        spacing={6}
         justifyContent='center'
         alignItems='center'
         width={'60%'}
-        sx={{ position: 'relative', zIndex: 2 }} // 确保卡片在最上层
+        sx={{ position: 'relative', zIndex: 2 }}
+        gap={5}
       >
         {courses.map((course, idx) => (
           <BookCard

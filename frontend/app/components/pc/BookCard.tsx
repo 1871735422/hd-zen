@@ -1,10 +1,9 @@
-import { CardMedia, Link } from '@mui/material';
+import { CardMedia } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Image from 'next/image';
 import React from 'react';
-import { NAV_COLOR } from '../../constants';
 
 interface BookCardProps {
   idx: number;
@@ -12,17 +11,20 @@ interface BookCardProps {
   description: string;
 }
 
+const width = 230;
 const BookCard: React.FC<BookCardProps> = ({ title, description, idx }) => {
   return (
     <Card
+      component={'a'}
+      href={`/course/${idx + 1}`}
       sx={{
-        width: 200,
-        height: '300px',
+        width,
+        height: width * 1.5,
+        mx: 1.5,
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
         borderRadius: '24px',
-        border: '1px solid #e3f2fd', // light blue
         boxShadow: 'none',
         cursor: 'pointer',
         transition: 'background 0.3s ease-in-out',
@@ -61,68 +63,70 @@ const BookCard: React.FC<BookCardProps> = ({ title, description, idx }) => {
         },
       }}
     >
-      <Link href={`/course/${idx}`}>
-        <CardMedia
-          className='book-card-media'
+      <CardMedia
+        className='book-card-media'
+        sx={{
+          height: width,
+          position: 'relative',
+          overflow: 'hidden',
+          transition:
+            'max-height 0.4s ease-in-out, opacity 0.4s 0.2s ease-in-out, margin 0.4s ease-in-out',
+        }}
+      >
+        <Image
+          src={`/images/book_cover${idx + 1}.webp`}
+          alt={title}
+          fill
+          sizes='100vw'
+          style={{
+            objectFit: 'cover',
+            width: '100%',
+            height: '100%',
+          }}
+          priority={false}
+        />
+      </CardMedia>
+      <CardContent
+        sx={{
+          backgroundColor: '#fff',
+          transition: 'background-color 0.3s ease-in-out',
+          padding: 2,
+          flexGrow: 1,
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
+        <Typography
           sx={{
-            height: '192px',
-            position: 'relative',
+            color: 'rgba(70, 114, 166, 1)',
+            fontSize: 20,
+            fontWeight: '500',
+            textAlign: 'center',
+          }}
+        >
+          {title.endsWith('册') && '慧灯禅修'}
+          {title}
+        </Typography>
+        <Typography
+          fontSize={11}
+          className='description-normal'
+          sx={{
+            mt: 1.5,
+            px: 1,
+            color: 'text.secondary',
+            textAlign: 'left',
+            WebkitBoxOrient: 'vertical',
+            WebkitLineClamp: 2,
             overflow: 'hidden',
-            transition:
-              'max-height 0.4s ease-in-out, opacity 0.4s 0.2s ease-in-out, margin 0.4s ease-in-out',
+            lineHeight: 2,
           }}
         >
-          <Image
-            src={`/images/book_cover${idx + 1}.webp`}
-            alt={title}
-            fill
-            sizes='200px'
-            style={{
-              objectFit: 'cover',
-            }}
-            priority={false}
-          />
-        </CardMedia>
-        <CardContent
-          sx={{
-            backgroundColor: '#fff',
-            transition: 'background-color 0.3s ease-in-out',
-            padding: 2,
-            flexGrow: 1,
-            display: 'flex',
-            flexDirection: 'column',
-            mt: 2,
-          }}
-        >
-          <Typography
-            sx={{
-              color: NAV_COLOR,
-              fontWeight: 'bold',
-              textAlign: 'center',
-            }}
-          >
-            {title}
-          </Typography>
-          <Typography
-            fontSize={11}
-            className='description-normal'
-            sx={{
-              mt: 1.5,
-              color: 'text.secondary',
-              textAlign: 'left',
-              WebkitBoxOrient: 'vertical',
-              WebkitLineClamp: 2,
-              overflow: 'hidden',
-              lineHeight: 1.5,
-            }}
-          >
-            {description}
-          </Typography>
-          <Typography fontSize={11} className='description-hover'>
-            {description}
-          </Typography>
-        </CardContent>
-      </Link>
+          {description}
+        </Typography>
+        <Typography fontSize={11} className='description-hover'>
+          {description}
+        </Typography>
+      </CardContent>
     </Card>
   );
 };

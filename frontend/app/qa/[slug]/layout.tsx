@@ -7,6 +7,10 @@ import { getCourseByDisplayOrder, getCourses } from '../../api';
 // 15分钟缓存
 export const revalidate = 9000;
 
+export const metadata = {
+  title: '禅修课问答 | 慧灯禅修',
+  description: '慧灯之光禅修网站 — 禅修课问答',
+};
 export default async function CourseLayout({
   children,
   params,

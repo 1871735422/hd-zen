@@ -1,6 +1,10 @@
 import { Box } from '@mui/material';
 import Image from 'next/image';
 
+export const metadata = {
+  title: '不懂就问 | 慧灯禅修',
+  description: '慧灯之光禅修网站 — 不懂就问',
+};
 export default function QuestionCollectPage() {
   return (
     <Box

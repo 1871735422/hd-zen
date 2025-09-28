@@ -18,6 +18,11 @@ const fileTypes = [
   { key: 'video', name: '视频', icon: <VideoDownIcon /> },
 ];
 
+export const metadata = {
+  title: '禅修课资料下载 | 慧灯禅修',
+  description: '慧灯之光禅修网站 — 禅修课资料下载',
+};
+
 export default async function DownloadPage() {
   const downloadItems = await getDownloadResources();
   return (
