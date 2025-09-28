@@ -31,13 +31,13 @@ const Header: React.FC = async () => {
           background: '#fff',
           display: 'flex',
           justifyContent: 'space-between',
+          minHeight: { lg: 64, xl: 76 },
         }}
       >
         {/* Logo */}
         <Box
           sx={{
             width: 'fit-content',
-            height: '50px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -49,7 +49,7 @@ const Header: React.FC = async () => {
             variant='h1'
             sx={{ color: STANDARD_TEXT_COLOR }}
             fontWeight={500}
-            fontSize={20}
+            fontSize={{ lg: 20, xl: 24 }}
           >
             <Link href='/'>慧灯禅修</Link>
           </Typography>

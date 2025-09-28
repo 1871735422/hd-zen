@@ -13,7 +13,7 @@ const NavigationMenu: React.FC<NavigationProps> = ({ menuData }) => {
         display: 'flex',
         flex: 6,
         justifyContent: 'flex-start',
-        px: 4,
+        pl: { lg: 4, xl: 7 },
         gap: 1,
       }}
     >

@@ -13,10 +13,10 @@ const Footer: React.FC = () => {
       <Typography
         color='#fff'
         textAlign='center'
-        fontWeight={300}
-        fontSize={14}
+        fontWeight={400}
+        fontSize={{ lg: 4, xl: 16 }}
       >
-        &copy; {new Date().getFullYear()} &nbsp;慧灯禅修 - By Huidengchanxiu
+        &copy; {new Date().getFullYear()} &nbsp;慧灯禅修 - By HuiDengChanXiu
       </Typography>
     </Box>
   );

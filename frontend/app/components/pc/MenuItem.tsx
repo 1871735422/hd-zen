@@ -1,11 +1,11 @@
 'use client';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { Box } from '@mui/material';
 import Button from '@mui/material/Button';
 import Link from 'next/link';
 import React from 'react';
 import { NAV_COLOR } from '../../constants';
 import { STANDARD_TEXT_COLOR } from '../../constants/colors';
+import DropDownIcon from '../icons/DropDownIcon';
 
 export type Menu = {
   name: string;
@@ -22,7 +22,7 @@ const MenuItemComponent: React.FC<MenuItemProps> = ({ item }) => {
   const buttonSx = {
     color: STANDARD_TEXT_COLOR,
     fontWeight: 500,
-    fontSize: 18,
+    fontSize: { lg: 18, xl: 20 },
     '&:hover': {
       color: NAV_COLOR,
       background: 'rgba(70, 114, 166, 0.08)',
@@ -46,7 +46,7 @@ const MenuItemComponent: React.FC<MenuItemProps> = ({ item }) => {
           href={`/${item.slug}${item?.slug === 'course' ? '' : '/1'}`}
           style={{ textDecoration: 'none' }}
         >
-          <Button sx={buttonSx} endIcon={<KeyboardArrowDownIcon />}>
+          <Button sx={buttonSx} endIcon={<DropDownIcon />}>
             {item.name}
           </Button>
         </Link>
