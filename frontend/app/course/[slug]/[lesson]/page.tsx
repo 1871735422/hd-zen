@@ -101,13 +101,17 @@ export async function generateMetadata({
 }
 interface LessonPageProps {
   params: Promise<{ slug: string; lesson: string }>;
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
   const resolvedParams = await params;
-  const resolvedSearchParams = await searchParams;
-  let { tab: selectedKey } = resolvedSearchParams;
+  const resolvedSearchParams =
+    (await (searchParams ?? Promise.resolve({}))) ?? {};
+  let { tab: selectedKey } = resolvedSearchParams as {
+    tab?: string;
+    readingMode?: string;
+  };
   const courseOrder = resolvedParams.slug;
   const lessonOrder = resolvedParams.lesson?.replace('lesson', '');
 
@@ -142,7 +146,10 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
       (excludeLabels?.includes('视频') && !media?.mp3_duration)
     ) {
       selectedKey = 'article';
-      const isReadingMode = resolvedSearchParams.readingMode === 'true';
+      const resolvedSearchParamsTyped = resolvedSearchParams as {
+        [key: string]: string | string[] | undefined;
+      };
+      const isReadingMode = resolvedSearchParamsTyped.readingMode === 'true';
       return (
         <ReadingPage topicMediaX={topicMedia} isReadingMode={isReadingMode} />
       );

@@ -75,12 +75,12 @@ export async function generateStaticParams() {
     return [];
   }
 }
-interface LessonPageProps {
+interface refPageProps {
   params: Promise<{ slug: string; lesson: string }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
+const refPage = async ({ params, searchParams }: refPageProps) => {
   const resolvedParams = await params;
   const resolvedSearchParams = await searchParams;
   const { tab: selectedKey } = resolvedSearchParams;
@@ -212,4 +212,4 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
   );
 };
 
-export default LessonPage;
+export default refPage;

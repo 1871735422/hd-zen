@@ -78,12 +78,12 @@ export async function generateStaticParams() {
   }
 }
 
-interface LessonPageProps {
+interface qaPageProps {
   params: Promise<{ slug: string; lesson: string }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
+const qaPage = async ({ params, searchParams }: qaPageProps) => {
   const resolvedParams = await params;
   const resolvedSearchParams = await searchParams;
   const questionOrder =
@@ -261,4 +261,4 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
   );
 };
 
-export default LessonPage;
+export default qaPage;

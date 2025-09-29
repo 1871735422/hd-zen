@@ -55,6 +55,8 @@ export const SearchBox = ({
         placeholder={placeholder}
         sx={{
           '& .MuiOutlinedInput-root': {
+            height: { xl: 76 },
+            fontSize: { lg: 14, xl: 16 },
             color: 'rgba(119, 119, 119, 1)',
             borderRadius: '40px',
             '& fieldset': {
@@ -69,7 +71,7 @@ export const SearchBox = ({
       <Stack direction='row' spacing={1} alignItems='center'>
         {query && (
           <IconButton
-            sx={{ height: 20, p: 0 }}
+            sx={{ fontSize: { lg: 22, xl: 27 } }}
             aria-label='clear'
             onClick={handleClear}
           >
@@ -81,8 +83,8 @@ export const SearchBox = ({
           sx={{
             background:
               'linear-gradient(90deg, rgba(70, 134, 207, 1) 0%, rgba(170, 207, 250, 1) 100%)',
-            width: 48,
-            height: 46,
+            width: { lg: 48, xl: 67 },
+            height: { lg: 46, xl: 65 },
             minWidth: 0,
             borderRadius: '100%',
             color: '#fff',
