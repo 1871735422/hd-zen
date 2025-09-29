@@ -1,8 +1,8 @@
 'use client';
 import { Box, IconButton, Slider, Stack, Typography } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
+import AudioPlayIcon from '../icons/AudioPlayIcon';
 import PauseIcon from '../icons/PauseIcon';
-import PlayIcon from '../icons/PlayIcon';
 import SpeakerIcon from '../icons/SpeakerIcon';
 
 export interface AudioPlayerProps {
@@ -115,7 +115,7 @@ export default function AudioPlayer({ src }: AudioPlayerProps) {
           onClick={togglePlay}
           size='small'
         >
-          {isPlaying ? <PauseIcon /> : <PlayIcon />}
+          {isPlaying ? <PauseIcon /> : <AudioPlayIcon />}
         </IconButton>
 
         <Typography

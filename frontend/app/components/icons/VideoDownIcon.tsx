@@ -1,19 +1,12 @@
-import { SvgIcon, SxProps } from '@mui/material';
+import { SvgIcon } from '@mui/material';
 
-const VideoDownIcon = ({ sx }: { sx?: SxProps }) => (
-  <SvgIcon
-    sx={{
-      width: 20,
-      height: 20,
-      cursor: 'pointer',
-      ...sx,
-    }}
-  >
+const VideoDownIcon = () => (
+  <SvgIcon>
     <svg
       xmlns='http://www.w3.org/2000/svg'
       xmlnsXlink='http://www.w3.org/1999/xlink'
-      width='27.57763671875'
-      height='22'
+      width='1em'
+      height='1em'
       viewBox='0 0 27.57763671875 22'
       fill='currentColor'
     >

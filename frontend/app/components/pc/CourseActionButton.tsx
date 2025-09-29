@@ -19,7 +19,6 @@ export default function CourseActionButton({
         border: '2px solid rgba(186, 213, 245, 1)',
         boxSizing: 'border-box',
         py: 0.75,
-        mr: 3,
         color: 'rgba(154, 189, 230, 1)',
         '&:hover': {
           background: 'linear-gradient(90deg, #4687cf 0%, #a9cefa 100%)',

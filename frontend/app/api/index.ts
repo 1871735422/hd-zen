@@ -229,7 +229,7 @@ export const getAnswerMediasByOrder = async (
   }
 
   const result = await pb
-    .collection('getQuestionsWithCourseTopic')
+    .collection('vGetQuestionsWithCourseTopic')
     .getList(1, 50, {
       filter: filters.join(' && '),
       fields: fileds,
@@ -403,7 +403,7 @@ export const getTopicMediaByOrder = async (
       filters.push('topicOrder = ' + topicOrder);
     }
 
-    const result = await pb.collection('getTopicMedia').getList(1, 50, {
+    const result = await pb.collection('vGetTopicMedia').getList(1, 50, {
       filter: filters.join(' && '),
     });
     // console.log({ courseOrder, topicOrder });
@@ -435,7 +435,7 @@ export const getMediaImageUrl = (media: Media): string => {
 
 export const getTagRelations = async (tag: string): Promise<TagRelation[]> => {
   if (!tag) return [];
-  const resultList = await pb.collection('tagRelation').getList(1, 50, {
+  const resultList = await pb.collection('vGetTagRelation').getList(1, 50, {
     filter: `tags ~ "${tag}"`,
   });
   // console.log('resultList', resultList);
@@ -462,7 +462,7 @@ export const getSearchQuestions = async (
     let allItems: QuestionResult[] = [];
 
     const result = await pb
-      .collection('questionMedia')
+      .collection('vGetQuestionMedia')
       .getList(page, pageSize, {
         filter: `title ~ "${title}"`,
         sort: sort === 'desc' ? '-created' : 'created',
@@ -556,14 +556,17 @@ export const getSearchArticles = async (
 
       // 搜索文章
       const articleFilter = buildArticleFilter(title, content);
-      const articlesResult = await searchCollection('articles', articleFilter);
+      const articlesResult = await searchCollection(
+        'vGetArticles',
+        articleFilter
+      );
       allItems = [...allItems, ...articlesResult.items];
       totalItems += articlesResult.totalItems;
 
       // 搜索课程媒体
       const courseMediaFilter = buildMediaFilter(title || content || '');
       const courseMediaResult = await searchCollection(
-        'courseMedia',
+        'vGetCourseMedia',
         courseMediaFilter
       );
       allItems = [...allItems, ...courseMediaResult.items];
@@ -572,7 +575,7 @@ export const getSearchArticles = async (
       // 搜索问答媒体
       const questionMediaFilter = buildMediaFilter(title || content || '');
       const questionMediaResult = await searchCollection(
-        'questionMedia',
+        'vGetQuestionMedia',
         questionMediaFilter
       );
       allItems = [...allItems, ...questionMediaResult.items];
@@ -580,7 +583,10 @@ export const getSearchArticles = async (
     } else if (type === 'artile') {
       // 只搜索文章
       const articleFilter = buildArticleFilter(title, content);
-      const articlesResult = await searchCollection('articles', articleFilter);
+      const articlesResult = await searchCollection(
+        'vGetArticles',
+        articleFilter
+      );
       allItems = [...allItems, ...articlesResult.items];
       totalItems += articlesResult.totalItems;
     } else if (type === 'av') {
@@ -590,7 +596,7 @@ export const getSearchArticles = async (
 
       // 搜索课程媒体
       const courseMediaResult = await searchCollection(
-        'courseMedia',
+        'vGetCourseMedia',
         mediaFilter
       );
       allItems = [...allItems, ...courseMediaResult.items];
@@ -598,7 +604,7 @@ export const getSearchArticles = async (
 
       // 搜索问答媒体
       const questionMediaResult = await searchCollection(
-        'questionMedia',
+        'vGetQuestionMedia',
         mediaFilter
       );
       allItems = [...allItems, ...questionMediaResult.items];

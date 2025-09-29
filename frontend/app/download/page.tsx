@@ -28,41 +28,36 @@ export default async function DownloadPage() {
   return (
     <Box
       sx={{
-        px: 2,
-        mb: 5,
-        position: 'relative',
-        '&:before': {
-          content: '""',
-          position: 'absolute',
-          left: 0,
-          top: 0,
-          width: '100%',
-          height: '100%',
-          backgroundImage: 'url(/images/course-bg-h.png)',
-          backgroundSize: 'cover',
-          backgroundRepeat: 'no-repeat',
-          backgroundPosition: 'center',
-          opacity: 0.9,
-          zIndex: 0,
-        },
+        width: '100%',
+        height: '100%',
+        backgroundImage: 'url(/images/course-bg-h.png)',
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+        opacity: 0.9,
       }}
     >
-      <Container maxWidth='lg' sx={{ position: 'relative', zIndex: 1, mb: 5 }}>
+      <Container maxWidth='xl' sx={{ position: 'relative', zIndex: 1, pb: 5 }}>
         <TitleBanner title='下载' />
         <Box
           sx={{
             bgcolor: 'rgba(255, 255, 255, 0.5)',
-            px: 2,
+            mx: 10,
+            px: { lg: 2, xl: 2.5 },
             pt: 3,
-            pb: 5,
+            pb: 7,
             borderRadius: '25px',
             backdropFilter: 'blur(10px)',
+            '& .MuiTypography-root': {
+              fontSize: { lg: 18, xl: 20 },
+            },
+            '& .MuiTypography-subtitle2': {
+              fontSize: { lg: 13, xl: 16 },
+            },
           }}
         >
-          <Grid container spacing={2} alignItems='center' px={4} pb={1.5}>
+          <Grid container spacing={2} alignItems='center' px={4} pb={2}>
             <Grid size={4}>
               <Typography
-                variant='subtitle1'
                 align='left'
                 sx={{ pl: 8, color: NAV_COLOR, fontWeight: '700' }}
               >
@@ -108,12 +103,14 @@ export default async function DownloadPage() {
                   <Avatar
                     sx={{
                       bgcolor: MAIN_BLUE_COLOR,
-                      width: 26,
-                      height: 26,
+                      width: { lg: 26, xl: 32 },
+                      height: { lg: 26, xl: 32 },
                       display: { xs: 'none', sm: 'flex' },
                     }}
                   >
-                    <Typography variant='body2'>{idx + 1}</Typography>
+                    <Typography fontSize={{ lg: 16, xl: 18 }}>
+                      {idx + 1}
+                    </Typography>
                   </Avatar>
                   <Box>
                     <Typography
@@ -134,6 +131,7 @@ export default async function DownloadPage() {
                         sx={{ minWidth: 60, flexGrow: 1 }}
                       >
                         <FileIconContainer
+                          fontSize={27}
                           target={
                             item[`url_down${ft.key}` as keyof typeof item]
                               ? '_blank'
@@ -146,7 +144,11 @@ export default async function DownloadPage() {
                           }
                         >
                           {ft.icon}
-                          <Typography fontSize={13} pt={0.3} minWidth={40}>
+                          <Typography
+                            variant='subtitle2'
+                            pt={{ lg: 0.3, xl: 0.7 }}
+                            minWidth={40}
+                          >
                             {item[`${ft.key}_size` as keyof typeof item] ||
                               'N/A'}
                           </Typography>

@@ -1,6 +1,4 @@
-import CategorySelector from '@/app/components/pc/CategorySelector';
-import TitleBanner from '@/app/components/shared/TitleBanner';
-import { Container, Typography } from '@mui/material';
+import BaseLayout from '@/app/components/pc/BaseLayout';
 import { notFound } from 'next/navigation';
 import { getCategories, getCourseByDisplayOrder, getCourses } from '../../api';
 
@@ -40,32 +38,13 @@ export default async function CourseLayout({
   console.log(metadata);
 
   return (
-    <Container
-      maxWidth={false}
-      sx={{
-        m: 0,
-        px: { lg: 25 },
-        background: 'url(/images/course-bg-h.png)',
-      }}
+    <BaseLayout
+      title='学修参考资料'
+      categories={categories}
+      selectedCategory={selectedCategory}
+      description={metadata.description}
     >
-      <TitleBanner title='学修参考资料' />
-      <Typography
-        sx={{
-          color: 'rgba(127, 173, 235, 1)',
-          mt: -6,
-          mb: 6,
-          px: 3,
-        }}
-      >
-        {metadata.description?.split('\n')[0]}
-        <br />
-        {metadata.description?.split('\n')[1]}
-      </Typography>
-      <CategorySelector
-        categories={categories}
-        selectedCategory={selectedCategory}
-      />
       {children}
-    </Container>
+    </BaseLayout>
   );
 }

@@ -26,18 +26,23 @@ export default function DownloadQaResource({
       onClick={handleDownload}
       sx={{
         position: 'absolute',
-        top: -3.5,
-        right: 25,
+        width: 120,
+        height: 40,
+        top: -8,
+        right: 30,
         color: '#fff',
         backgroundColor: 'rgba(255, 168, 184, 1)',
-        borderRadius: '25px 25px 0 0 ',
+        borderRadius: { lg: '25px 25px 0 0 ', xl: '30px 30px 0px 0px' },
         px: 2,
         pt: 1,
         pb: 0.4,
+        '& svg': {
+          fontSize: { lg: 24, xl: 28 },
+        },
       }}
     >
-      <VideoDownIcon sx={{ width: 24, height: 24 }} />
-      <Typography fontSize={11} pl={0.8} lineHeight={1.1}>
+      <VideoDownIcon />
+      <Typography fontSize={12} pl={0.8} lineHeight={'13px'} fontWeight={500}>
         本课问答
         <br />
         打包下载

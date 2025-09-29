@@ -6,32 +6,26 @@ interface CornerBadgeProps {
 }
 
 export default function CornerBadge({ content }: CornerBadgeProps) {
-  const sizeConfig = {
-    medium: {
-      width: 80,
-      height: 46,
-    },
-    large: {
-      width: { lg: 80, xl: 100 },
-      height: 60,
-    },
-  };
-
-  const config = sizeConfig[content ? 'large' : 'medium'];
-
   return (
     <Box
       sx={{
         position: 'absolute',
         top: -1,
         right: 0,
-        width: config.width,
-        height: config.height,
+        width: { lg: 80, xl: content ? 100 : 110 },
+        height: content ? 60 : 80,
         display: 'flex',
         zIndex: 1,
         background: 'url(/images/course-badge.png) no-repeat center center',
         backgroundSize: content ? 'contain' : '70% 70%',
         backgroundPosition: '100% 5%',
+        '& svg': {
+          position: 'absolute',
+          top: '13%',
+          right: '18%',
+          fontSize: { lg: 18, xl: 24 },
+          color: 'white',
+        },
       }}
     >
       {content ? (
@@ -48,15 +42,7 @@ export default function CornerBadge({ content }: CornerBadgeProps) {
           {content}
         </Typography>
       ) : (
-        <VideoIcon
-          sx={{
-            position: 'absolute',
-            top: '13%',
-            right: '18%',
-            fontSize: 14,
-            color: 'white',
-          }}
-        />
+        <VideoIcon />
       )}
     </Box>
   );

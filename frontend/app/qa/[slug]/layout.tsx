@@ -1,6 +1,4 @@
-import CategorySelector from '@/app/components/pc/CategorySelector';
-import TitleBanner from '@/app/components/shared/TitleBanner';
-import { Container } from '@mui/material';
+import BaseLayout from '@/app/components/pc/BaseLayout';
 import { notFound } from 'next/navigation';
 import { getCourseByDisplayOrder, getCourses } from '../../api';
 
@@ -34,24 +32,12 @@ export default async function CourseLayout({
   const selectedCategory = course.title;
 
   return (
-    <Container
-      maxWidth={false}
-      sx={{
-        m: 0,
-        px: { lg: 25 },
-        background: 'url(/images/course-bg-h.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-        minHeight: '200px',
-      }}
+    <BaseLayout
+      title='禅修课问答'
+      categories={categories}
+      selectedCategory={selectedCategory}
     >
-      <TitleBanner title='禅修课问答' subTitle={selectedCategory} />
-      <CategorySelector
-        categories={categories}
-        selectedCategory={selectedCategory}
-      />
       {children}
-    </Container>
+    </BaseLayout>
   );
 }

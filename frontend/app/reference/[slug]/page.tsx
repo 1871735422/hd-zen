@@ -36,7 +36,7 @@ export default async function ReferencePage({
 
   return (
     <Container
-      maxWidth='lg'
+      maxWidth='xl'
       sx={{
         paddingX: '0 !important',
       }}

@@ -1,5 +1,4 @@
 'use client';
-import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import {
   Box,
   Button,
@@ -10,6 +9,7 @@ import {
 } from '@mui/material';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
+import VideoPlayIcon from '../icons/VideoPlayIcon';
 
 export interface VideoSource {
   src: string;
@@ -145,12 +145,12 @@ export default function VideoPlayer({
             onClick={handlePlay}
             sx={{
               position: 'absolute',
-              bottom: '5%',
-              left: '3%',
+              bottom: 10,
+              left: 10,
               color: 'white',
             }}
           >
-            <PlayCircleOutlineIcon sx={{ fontSize: { lg: 80, xl: 94 } }} />
+            <VideoPlayIcon />
           </IconButton>
         )}
 

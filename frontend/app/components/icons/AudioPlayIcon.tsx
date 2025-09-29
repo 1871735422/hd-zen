@@ -1,6 +1,6 @@
 import { SvgIcon } from '@mui/material';
 
-const PlayIcon = () => (
+const AudioPlayIcon = () => (
   <SvgIcon
     sx={{
       fontSize: { lg: 18, xl: 20 },
@@ -38,4 +38,4 @@ const PlayIcon = () => (
   </SvgIcon>
 );
 
-export default PlayIcon;
+export default AudioPlayIcon;

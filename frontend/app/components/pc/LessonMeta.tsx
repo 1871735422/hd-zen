@@ -121,16 +121,21 @@ export default function LessonMeta({
       <Box
         mt={{ lg: 1, xl: 2 }}
         mb={2}
-        color='rgba(153, 153, 153, 1)'
+        ml={1}
+        color='ml={1}rgba(153, 153, 153, 1)'
         fontSize={{ lg: 16, xl: 18 }}
       >
-        <Typography variant='subtitle1' fontSize={'inherit'} ml={1}>
+        <Typography variant='subtitle1' fontSize={'inherit'}>
           作者：{author?.replace('作者：', '')} &nbsp;&nbsp; {formatDate(date)}
         </Typography>
         {refCourse && (
           <Typography variant='subtitle1'>
             本问答属于：
-            <Link href={refUrl} color='rgba(86, 137, 204, 1) !important'>
+            <Link
+              href={refUrl}
+              fontSize={'inherit'}
+              color='rgba(86, 137, 204, 1) !important'
+            >
               {refCourse}
             </Link>
           </Typography>

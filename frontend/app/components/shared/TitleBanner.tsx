@@ -20,9 +20,12 @@ function TitleBanner({ title, subTitle }: TitleBannerProps) {
       <Image
         src={`/images/${title}.webp`}
         alt={title}
-        width={370}
+        width={380}
         height={80}
-        style={{ objectFit: 'contain' }}
+        style={{
+          objectFit: 'contain',
+          marginLeft: title === '学修参考资料' ? '25px' : 0,
+        }}
       />
       {subTitle && (
         <Typography

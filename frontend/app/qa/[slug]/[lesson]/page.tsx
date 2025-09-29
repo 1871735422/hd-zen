@@ -117,7 +117,7 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
 
   return (
     <Container
-      maxWidth='lg'
+      maxWidth='xl'
       sx={{
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',
@@ -130,7 +130,7 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
         container
         sx={{
           backgroundColor: '#fff',
-          borderRadius: 5,
+          borderRadius: '25px',
           py: 0,
           mb: 5,
           height: 'fit-content',
@@ -145,7 +145,7 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
             selectedIdx={Number(questionOrder) - 1}
           />
         </Grid>
-        <Grid container spacing={4} sx={{ px: 8, py: 4 }} size={9}>
+        <Grid container spacing={4} sx={{ px: 9, py: 4 }} size={9}>
           <Box
             sx={{
               backgroundColor: 'white',
@@ -221,9 +221,7 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
                     py: 0.5,
                     px: 2,
                     borderRadius: '20px',
-                  },
-                  '& .MuiButton-root>a': {
-                    color: 'rgba(127, 173, 235, 1)',
+                    color: 'rgba(127, 173, 235, 1 !important)',
                   },
                   '& .MuiButton-startIcon': {
                     marginRight: '0 !important',

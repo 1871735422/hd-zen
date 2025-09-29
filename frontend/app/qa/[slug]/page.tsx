@@ -44,22 +44,15 @@ export default async function QaPage({ params, searchParams }: QaPageProps) {
       ?.items;
     const questions = await getAnswerMediasByOrder(displayOrder, lessonOrder);
 
-    // console.log({ courseTopics });
-    // console.log({ questions });
-    // console.log(questions[0]);
-
     const sidebarData = courseTopics
       .sort((a, b) => a.ordering - b.ordering)
       .map(item => ({
         label: item.article_title,
         path: `/qa/${displayOrder}?tab=lesson${item.ordering}`,
       }));
-    // const handleDownload = () => {
-    //   console.log({ questions });
-    // };
     return (
       <Container
-        maxWidth='lg'
+        maxWidth='xl'
         sx={{
           py: 4,
           px: '0 !important',
@@ -71,7 +64,7 @@ export default async function QaPage({ params, searchParams }: QaPageProps) {
           container
           sx={{
             backgroundColor: '#fff',
-            borderRadius: 5,
+            borderRadius: '25px',
             py: 0,
             mb: 9,
             height: 'fit-content',
@@ -88,7 +81,7 @@ export default async function QaPage({ params, searchParams }: QaPageProps) {
             spacing={3.5}
             sx={{
               px: 3,
-              pt: 4,
+              pt: 5,
               pb: 5,
               height: 'fit-content',
             }}

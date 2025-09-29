@@ -90,7 +90,17 @@ export default function CourseCard({
             {item.description.replace(/<[^>]*>/g, '')}
           </Typography>
         </Box>
-        <CourseActionButton>
+        <CourseActionButton
+          sx={
+            isQa
+              ? {
+                  mx: -2.5,
+                }
+              : {
+                  mr: 3,
+                }
+          }
+        >
           {isQa ? '观看视频' : '点击进入'}
         </CourseActionButton>
       </CardContent>
