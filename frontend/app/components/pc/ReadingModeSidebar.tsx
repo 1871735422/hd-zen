@@ -11,19 +11,29 @@ import {
 } from './ReadingModeProvider';
 
 // 可复用的圆形按钮样式
-const CircleButton = styled(Button)(() => ({
+const CircleButton = styled(Button)(({ theme }) => ({
+  [theme.breakpoints.up('xl')]: {
+    width: 50,
+    height: 50,
+    fontSize: 24,
+  },
+  fontWeight: 300,
   width: 36,
   height: 36,
   minWidth: 0,
   borderRadius: '50%',
-  fontSize: '16px',
+  fontSize: 16,
   '&:hover': {
     opacity: 0.8,
   },
 }));
 
 // 主题颜色选择按钮
-const ThemeColorButton = styled(Button)(() => ({
+const ThemeColorButton = styled(Button)(({ theme }) => ({
+  [theme.breakpoints.up('xl')]: {
+    width: 16,
+    height: 16,
+  },
   width: 12,
   height: 12,
   minWidth: 0,
@@ -73,25 +83,28 @@ export default function ReadingModeSidebar({
     <Box
       sx={{
         position: 'absolute',
-        right: '-50px',
-        top: '40px',
+        right: { lg: -50, xl: state.sidebarCollapsed ? -55 : -66 },
+        top: { lg: 40, xl: 60 },
         zIndex: 1000,
       }}
     >
       {/* 主工具栏 - 根据收起状态调整高度 */}
       <Box
         sx={{
-          width: 50,
+          width: { lg: 50, xl: state.sidebarCollapsed ? 55 : 66 },
           zIndex: 1000,
           backgroundColor: sidebarBg,
-          borderRadius: '0 20px 20px 0',
-          padding: state.sidebarCollapsed ? '5px 0' : '2px 0 10px 0',
+          borderRadius: { lg: '0 20px 20px  0', xl: '0 30px 30px 0' },
+          padding: state.sidebarCollapsed ? '16px 0' : '10px 0',
           height: state.sidebarCollapsed ? 40 : 'auto',
           boxShadow: `0px 2px 4px ${sidebarBg.replace('1)', '0.25)')}`,
           display: 'flex',
           alignItems: state.sidebarCollapsed ? 'center' : 'flex-start',
           justifyContent: 'center',
           transition: 'all 0.3s ease',
+          '& svg': {
+            fontSize: { lg: 24, xl: 32 },
+          },
         }}
       >
         {state.sidebarCollapsed ? (
@@ -100,9 +113,6 @@ export default function ReadingModeSidebar({
             onClick={toggleSidebar}
             sx={{
               color: settingText,
-              borderRadius: '15px',
-              width: 30,
-              height: 30,
               '&:hover': {
                 opacity: 0.8,
               },
@@ -141,12 +151,12 @@ export default function ReadingModeSidebar({
             <Box
               sx={{
                 backgroundColor: buttonBg,
-                borderRadius: '20px',
-                padding: '12px',
+                borderRadius: { lg: '20px', xl: '30px' },
+                padding: { lg: '12px', xl: '18px' },
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                gap: '6px',
+                gap: { lg: 0.7, xl: 1 },
               }}
             >
               {backgroundThemes.map(({ theme, color, label }) => (
@@ -166,13 +176,21 @@ export default function ReadingModeSidebar({
             </Box>
 
             {/* 字体大小调整 */}
-            <Stack spacing={0.8} alignItems='center'>
+            <Stack
+              spacing={0.8}
+              alignItems='center'
+              sx={{
+                '&:nth-child(-n+3) span': {
+                  transform: 'scaleX(1.15)',
+                },
+              }}
+            >
               <CircleButton onClick={increaseFontSize} title='增大字体'>
-                A+
+                <span style={{ fontSize: '27px' }}>A</span>+
               </CircleButton>
 
               <CircleButton onClick={decreaseFontSize} title='减小字体'>
-                A-
+                <span style={{ fontSize: '20px' }}>A</span>-
               </CircleButton>
 
               <CircleButton
@@ -185,7 +203,7 @@ export default function ReadingModeSidebar({
                 }}
                 title='字体加粗'
               >
-                B
+                <span>B</span>
               </CircleButton>
             </Stack>
 
@@ -223,19 +241,19 @@ export default function ReadingModeSidebar({
       <Box sx={{ position: 'relative' }}>
         <Button
           sx={{
-            width: 44,
-            height: 66,
+            width: { lg: 44, xl: 56 },
+            height: { lg: 66, xl: 92 },
             minWidth: 0,
             pt: 1,
-            borderRadius: '0 0 20px 0',
+            borderRadius: `0 ${state.sidebarCollapsed ? '30px' : '0'} 30px 0`,
             backgroundColor: sidebarBackBg,
             color: sidebarBackText,
-            fontSize: 16,
+            fontSize: { lg: 16, xl: 20 },
             writingMode: 'vertical-rl',
             textOrientation: 'mixed',
             transition: 'all 0.3s ease',
             boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-            marginTop: -1,
+            marginTop: { lg: -1, xl: -1.8 },
             zIndex: -1,
             pointerEvents: 'none',
             '&:hover': {
@@ -253,8 +271,8 @@ export default function ReadingModeSidebar({
             position: 'absolute',
             top: 0,
             left: 0,
-            width: 40,
-            height: 57,
+            width: 60,
+            height: 90,
             zIndex: 1,
             cursor: 'pointer',
             backgroundColor: 'transparent',

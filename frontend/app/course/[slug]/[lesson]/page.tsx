@@ -57,17 +57,20 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string; lesson: string };
+  params: Promise<{ slug: string; lesson: string }>;
 }): Promise<Metadata | undefined> {
-  const courseOrder = params.slug;
-  const lessonOrder = params.lesson?.replace('lesson', '');
+  const resolvedParams = await params;
+  const courseOrder = resolvedParams.slug;
+  const lessonOrder = resolvedParams.lesson?.replace('lesson', '');
 
   // 获取课程和课题信息
   const { items: courses } = await getCourses();
   const course = courses.find(c => c.displayOrder.toString() === courseOrder);
 
   const { items: topics } = await getCourseTopicsByCourse(course?.id ?? '');
-  const topic = topics.find(t => `lesson${t.ordering}` === params.lesson);
+  const topic = topics.find(
+    t => `lesson${t.ordering}` === resolvedParams.lesson
+  );
 
   const topicMedia = await getTopicMediaByOrder(courseOrder, lessonOrder);
   const media = topicMedia?.[0];
@@ -104,7 +107,7 @@ interface LessonPageProps {
 const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
   const resolvedParams = await params;
   const resolvedSearchParams = await searchParams;
-  const { tab: selectedKey } = resolvedSearchParams;
+  let { tab: selectedKey } = resolvedSearchParams;
   const courseOrder = resolvedParams.slug;
   const lessonOrder = resolvedParams.lesson?.replace('lesson', '');
 
@@ -138,6 +141,7 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
       selectedKey === 'article' ||
       (excludeLabels?.includes('视频') && !media?.mp3_duration)
     ) {
+      selectedKey = 'article';
       const isReadingMode = resolvedSearchParams.readingMode === 'true';
       return (
         <ReadingPage topicMediaX={topicMedia} isReadingMode={isReadingMode} />
@@ -198,8 +202,8 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
         sx={{
           backgroundColor: 'white',
           ml: '5%',
-          pl: { lg: 14, xl: 21 },
-          pr: { lg: 18, xl: 26 },
+          pl: { lg: 14, xl: selectedKey ? 18 : 21 },
+          pr: { lg: 18, xl: selectedKey ? 24 : 26 },
           display: 'flex',
           flexDirection: 'column',
           gap: 2,

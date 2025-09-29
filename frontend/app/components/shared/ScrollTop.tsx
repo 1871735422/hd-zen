@@ -35,10 +35,14 @@ export default function ScrollTop({ bgColor = color, visible = false }) {
         role='presentation'
         sx={{
           position: 'fixed',
+          fontWeight: 500,
           bottom: 60,
-          right: 8,
+          right: 24,
           color: bgColor,
           zIndex: 1000,
+          '& svg': {
+            fontSize: { lg: 50, xl: 64 },
+          },
         }}
       >
         <ToTopIcon />

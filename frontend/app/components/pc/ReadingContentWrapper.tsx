@@ -237,7 +237,6 @@ export default function ReadingContent({
           sx={{
             color: 'rgba(68, 68, 68, 1)',
             mb: 5,
-            mr: 2,
           }}
           dangerouslySetInnerHTML={{ __html: currentContent }}
         />
@@ -260,7 +259,6 @@ export default function ReadingContent({
             lineHeight: 1.8,
             color: 'rgba(68, 68, 68, 1)',
             mb: 5,
-            mr: 2,
           }}
           dangerouslySetInnerHTML={{ __html: introText }}
         />

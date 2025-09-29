@@ -31,15 +31,31 @@ export default function ReadingSidebar({
       const currentSize = parseInt(getComputedStyle(element).fontSize);
       const newSize = Math.min(currentSize + 2, 36);
       (element as HTMLElement).style.fontSize = `${newSize}px`;
+      // Also increase any h4 inside the reading content by 2px (cap at 36px)
+      const h4s = element.querySelectorAll('h4');
+      h4s.forEach(h4 => {
+        const h4Size = parseInt(getComputedStyle(h4).fontSize) || 0;
+        const newH4Size = Math.min(h4Size + 2, 36);
+        (h4 as HTMLElement).style.fontSize = `${newH4Size}px`;
+      });
     });
   };
 
   const handleDecreaseFont = () => {
     const elements = document.querySelectorAll('.reading-content');
+
     elements.forEach(element => {
       const currentSize = parseInt(getComputedStyle(element).fontSize);
-      const newSize = Math.max(currentSize - 2, 12);
+
+      const newSize = Math.max(currentSize - 2, 10);
       (element as HTMLElement).style.fontSize = `${newSize}px`;
+      // Also decrease any h4 inside the reading content by 2px (min 10px)
+      const h4s = element.querySelectorAll('h4');
+      h4s.forEach(h4 => {
+        const h4Size = parseInt(getComputedStyle(h4).fontSize) || 0;
+        const newH4Size = Math.max(h4Size - 2, 10);
+        (h4 as HTMLElement).style.fontSize = `${newH4Size}px`;
+      });
     });
   };
 
@@ -68,13 +84,13 @@ export default function ReadingSidebar({
   }, []);
 
   const buttonStyle = {
-    width: 55,
-    height: 55,
+    width: { lg: 55, xl: 70 },
+    height: { lg: 55, xl: 70 },
     color: 'rgba(42, 130, 228, 1)',
     borderRadius: '50%',
     minWidth: 0,
-    fontSize: 12,
-    lineHeight: 1.15,
+    fontSize: { lg: 12, xl: 14 },
+    lineHeight: { lg: '12px', xl: '14px' },
     textAlign: 'center',
     display: 'flex',
     alignItems: 'center',
@@ -83,6 +99,9 @@ export default function ReadingSidebar({
     gap: 0.1,
     fontFamily: 'Montserrat, "Segoe UI", "Arial Narrow", Arial, sans-serif',
     fontWeight: 500,
+    '& svg': {
+      fontSize: { lg: 14, xl: 18 },
+    },
   };
 
   return (
@@ -91,14 +110,15 @@ export default function ReadingSidebar({
       alignItems='center'
       sx={{
         position: 'absolute',
-        right: -40,
+        right: { lg: -55, xl: -70 },
         top: 0,
         zIndex: 10,
         fontWeight: 500,
         fontFamily: 'Montserrat, "Segoe UI", "Arial Narrow", Arial, sans-serif',
         '& .MuiButton-root:hover': { backgroundColor: '#E0F3FF' },
         '& span': {
-          transform: 'scaleX(1.3)',
+          transform: 'scaleX(1.2)',
+          fontWeight: 400,
         },
       }}
     >
@@ -119,7 +139,7 @@ export default function ReadingSidebar({
         sx={{
           ...buttonStyle,
           bgcolor: defaultBg,
-          fontSize: 20,
+          fontSize: { lg: 20, xl: 24 },
         }}
       >
         <span>A+</span>
@@ -128,7 +148,12 @@ export default function ReadingSidebar({
       <Button
         onClick={handleDecreaseFont}
         disableElevation
-        sx={{ ...buttonStyle, bgcolor: defaultBg, fontSize: 18, lineHeight: 1 }}
+        sx={{
+          ...buttonStyle,
+          bgcolor: defaultBg,
+          fontSize: { lg: 16, xl: 20 },
+          lineHeight: 1,
+        }}
       >
         <span>A-</span>
       </Button>

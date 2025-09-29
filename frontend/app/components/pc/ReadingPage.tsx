@@ -61,7 +61,7 @@ export default async function ReadingPage({
       <Box
         sx={{
           position: 'relative',
-          '& .reading-content>p': {
+          '& .reading-content': {
             fontSize: { lg: 16, xl: 18 },
             lineHeight: { lg: '36px', xl: '40px' },
           },

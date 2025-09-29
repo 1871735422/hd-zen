@@ -95,8 +95,8 @@ export default function Pagination({
         alignItems='center'
         sx={{
           '& .MuiButton-root span': {
-            fontSize: 28,
-            pb: '3px',
+            fontSize: 24,
+            pb: { lg: '3px', xl: '5px' },
             color: 'rgba(86, 137, 204, 1)',
           },
         }}

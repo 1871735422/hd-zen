@@ -1,19 +1,12 @@
-import { SvgIcon, SxProps } from '@mui/material';
+import { SvgIcon } from '@mui/material';
 
-const BookExpandIcon = ({ sx }: { sx?: SxProps }) => (
-  <SvgIcon
-    sx={{
-      width: 14,
-      height: 14,
-      cursor: 'pointer',
-      ...sx,
-    }}
-  >
+const BookExpandIcon = () => (
+  <SvgIcon>
     <svg
       xmlns='http://www.w3.org/2000/svg'
       xmlnsXlink='http://www.w3.org/1999/xlink'
-      width='16.212890625'
-      height='16.3564453125'
+      width='1em'
+      height='1em'
       viewBox='0 0 16.212890625 16.3564453125'
       fill='none'
     >

@@ -1,14 +1,7 @@
-import { SvgIcon, SxProps } from '@mui/material';
+import { SvgIcon } from '@mui/material';
 
-const ToTopIcon = ({ sx }: { sx?: SxProps }) => (
-  <SvgIcon
-    sx={{
-      width: 50,
-      height: 50,
-      cursor: 'pointer',
-      ...sx,
-    }}
-  >
+const ToTopIcon = () => (
+  <SvgIcon>
     <svg
       xmlns='http://www.w3.org/2000/svg'
       xmlnsXlink='http://www.w3.org/1999/xlink'

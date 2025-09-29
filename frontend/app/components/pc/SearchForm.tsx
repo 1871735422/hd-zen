@@ -35,7 +35,7 @@ const SearchForm: React.FC = () => {
             backgroundColor: 'transparent',
             '& fieldset': {
               height: { lg: 25, xl: 32 },
-              borderColor: 'rgba(130, 178, 232, 0.8)',
+              borderColor: 'rgba(130, 178, 232, 0.6)',
             },
             '&:hover fieldset': {
               borderColor: MAIN_BLUE_COLOR,

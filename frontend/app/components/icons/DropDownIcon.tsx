@@ -13,7 +13,7 @@ const DropDownIcon = () => (
       fill='none'
     >
       <path
-        stroke='rgba(68, 68, 68, 1)'
+        stroke='currentColor'
         strokeWidth='1.3333333333333333'
         strokeLinejoin='round'
         strokeLinecap='round'

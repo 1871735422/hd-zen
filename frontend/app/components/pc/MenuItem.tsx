@@ -1,7 +1,7 @@
 'use client';
 import { Box } from '@mui/material';
 import Button from '@mui/material/Button';
-import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
 import React from 'react';
 import { NAV_COLOR } from '../../constants';
 import { STANDARD_TEXT_COLOR } from '../../constants/colors';
@@ -18,16 +18,19 @@ interface MenuItemProps {
 }
 const MenuItemComponent: React.FC<MenuItemProps> = ({ item }) => {
   const hasChildren = !!item.subMenu;
+  const router = useRouter();
+  const pathname = usePathname();
 
   const buttonSx = {
-    color: STANDARD_TEXT_COLOR,
+    color:
+      pathname.split('/')[1] === item.slug ? NAV_COLOR : STANDARD_TEXT_COLOR,
     fontWeight: 500,
     fontSize: { lg: 18, xl: 20 },
     '&:hover': {
       color: NAV_COLOR,
-      background: 'rgba(70, 114, 166, 0.08)',
+      backgroundColor: 'transparent',
     },
-    px: 1.5,
+    px: 2.5,
   };
 
   if (hasChildren) {
@@ -38,24 +41,27 @@ const MenuItemComponent: React.FC<MenuItemProps> = ({ item }) => {
           '&:hover .menu-dropdown': {
             opacity: 1,
             visibility: 'visible',
-            transform: 'translateY(0)',
+          },
+          '& .MuiButtonBase-root': {
+            backgroundColor: 'transparent',
           },
         }}
       >
-        <Link
-          href={`/${item.slug}${item?.slug === 'course' ? '' : '/1'}`}
-          style={{ textDecoration: 'none' }}
+        <Button
+          sx={buttonSx}
+          endIcon={<DropDownIcon />}
+          onClick={() =>
+            router.push(`/${item.slug}${item?.slug === 'course' ? '' : '/1'}`)
+          }
         >
-          <Button sx={buttonSx} endIcon={<DropDownIcon />}>
-            {item.name}
-          </Button>
-        </Link>
+          {item.name}
+        </Button>
         <Box
           className='menu-dropdown'
           sx={{
             position: 'absolute',
-            top: '100%',
-            left: 0,
+            top: 68,
+            left: -10,
             zIndex: 1000,
             opacity: 0,
             p: 1,
@@ -63,44 +69,52 @@ const MenuItemComponent: React.FC<MenuItemProps> = ({ item }) => {
             transform: 'translateY(-10px)',
             transition: 'all 0.2s ease-in-out',
             background: 'white',
-            borderRadius: '0 0 15px 15px',
-            minWidth: 150,
+            borderRadius: '0 0 20px 20px',
+            minWidth: 180,
             width: 'fit-content',
-            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+            borderTop: '2px solid rgba(131, 181, 247, 1)',
+            boxShadow: '0px 5px 20px  rgba(131, 181, 247, 0.3)',
             '&:hover': {
               opacity: 1,
               visibility: 'visible',
-              transform: 'translateY(0)',
+            },
+            '&:before': {
+              width: 2,
+              height: 24,
+              content: '""',
+              position: 'absolute',
+              backgroundColor: 'rgba(130, 178, 232, 1)',
+              left: 53,
+              top: -26,
+            },
+            '& .MuiButtonBase-root:last-child': {
+              // justifyContent: 'center',
             },
           }}
         >
           {item.subMenu &&
             item.subMenu.map((subItem: Menu) => {
               return (
-                <Link
+                <Button
                   key={subItem.name}
-                  href={`/${item.slug}/${subItem.slug}`}
-                  style={{ textDecoration: 'none' }}
+                  onClick={() => router.push(`/${item.slug}/${subItem.slug}`)}
+                  sx={{
+                    fontSize: 16,
+                    fontWeight: 400,
+                    color: STANDARD_TEXT_COLOR,
+                    padding: '8px 16px',
+                    width: '100%',
+                    justifyContent: 'flex-start',
+                    borderRadius: 0,
+                    whiteSpace: 'nowrap',
+                    '&:hover': {
+                      color: NAV_COLOR,
+                      background: 'rgba(70, 114, 166, 0.08)',
+                    },
+                  }}
                 >
-                  <Button
-                    sx={{
-                      fontSize: 16,
-                      fontWeight: 400,
-                      color: STANDARD_TEXT_COLOR,
-                      padding: '8px 16px',
-                      width: '100%',
-                      justifyContent: 'flex-start',
-                      borderRadius: 0,
-                      whiteSpace: 'nowrap',
-                      '&:hover': {
-                        color: NAV_COLOR,
-                        background: 'rgba(70, 114, 166, 0.08)',
-                      },
-                    }}
-                  >
-                    {subItem.name}
-                  </Button>
-                </Link>
+                  {subItem.name}
+                </Button>
               );
             })}
         </Box>
@@ -109,9 +123,9 @@ const MenuItemComponent: React.FC<MenuItemProps> = ({ item }) => {
   }
 
   return (
-    <Link href={`/${item.slug}`} style={{ textDecoration: 'none' }}>
-      <Button sx={buttonSx}>{item.name}</Button>
-    </Link>
+    <Button onClick={() => router.push(`/${item.slug}`)} sx={buttonSx}>
+      {item.name}
+    </Button>
   );
 };
 

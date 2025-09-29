@@ -1,5 +1,5 @@
 'use client';
-import { Box, Divider, Paper, Stack, Typography } from '@mui/material';
+import { Box, Chip, Divider, Paper, Stack, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { formatDate } from '../../utils/courseUtils';
 import { ScrollTop } from '../shared';
@@ -27,6 +27,21 @@ export default function ReadingModeContainer({
 }: ReadingModeContainerProps) {
   const { state } = useReadingMode();
   const [visible, setVisible] = useState(false);
+
+  // Minimal shared values to reduce repetition (keep rest unchanged)
+  const theme = READING_THEMES[state.backgroundTheme];
+  const rowStackSx = {
+    marginBottom: 2,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+  };
+  const tagBoxSx = {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '8px',
+    justifyContent: 'center',
+    '& a:hover': { opacity: 0.7 },
+  };
 
   useEffect(() => {
     const anchor = document.querySelector('.back-to-top-anchor');
@@ -58,8 +73,8 @@ export default function ReadingModeContainer({
         bottom: 0,
         width: '100vw',
         height: '100vh',
-        backgroundColor: READING_THEMES[state.backgroundTheme].background,
-        padding: '40px 80px 40px 40px', // 右侧留出侧边栏空间
+        backgroundColor: theme.background,
+        py: 7,
         transition: 'background-color 0.3s ease',
         overflow: 'auto',
       }}
@@ -68,68 +83,67 @@ export default function ReadingModeContainer({
       <Box
         sx={{
           position: 'relative',
-          maxWidth: '900px',
+          maxWidth: { lg: 900, xl: 1240 },
           margin: '40px auto 60px',
           zIndex: 2,
           ':before': {
             content: '""',
             position: 'absolute',
-            top: -28,
-            left: '2%',
-            width: '96%',
-            height: 32,
-            borderRadius: '20px 20px 0 0',
-            backgroundColor: READING_THEMES[
-              state.backgroundTheme
-            ].main?.replace('1)', '0.3)'),
+            top: { lg: -28, xl: -36 },
+            left: '2.2%',
+            width: '95.6%',
+            height: 50,
+            borderRadius: { lg: '20px 20px 0 0', xl: '30px 30px 0 0' },
+            backgroundColor: theme.main?.replace('1)', '0.3)'),
           },
           ':after': {
             content: '""',
             position: 'absolute',
-            top: -40,
-            left: '3%',
-            width: '94%',
-            height: 36,
-            borderRadius: '20px 20px 0 0',
-            backgroundColor: READING_THEMES[
-              state.backgroundTheme
-            ].main?.replace('1)', '0.15)'),
+            top: { lg: -40, xl: -52 },
+            left: '3.6%',
+            width: '92.8%',
+            height: 60,
+            borderRadius: { lg: '20px 20px 0 0', xl: '30px 30px 0 0' },
+            backgroundColor: theme.main?.replace('1)', '0.15)'),
           },
         }}
       >
         <Paper
           elevation={0}
           sx={{
-            backgroundColor: READING_THEMES[state.backgroundTheme].main,
-            borderRadius: '20px',
-            padding: '80px 60px 60px 60px',
+            backgroundColor: theme.main,
+            borderRadius: { lg: '20px 20px 0 0', xl: '30px 30px 0 0' },
+            p: { lg: 12, xl: 18 },
             minHeight: 'calc(100vh - 160px)',
             ':before': {
               content: '""',
               position: 'absolute',
-              top: -14,
+              top: { lg: -14, xl: -18 },
               left: '1%',
               width: '98%',
-              height: 22,
-              borderRadius: '20px 20px 0 0',
-              backgroundColor: READING_THEMES[
-                state.backgroundTheme
-              ].main?.replace('1)', '0.5)'),
+              height: 32,
+              borderRadius: { lg: '20px 20px 0 0', xl: '30px 30px 0 0' },
+              backgroundColor: theme.main?.replace('1)', '0.5)'),
+              '& .MuiTypography-root': {
+                fontSize: state.fontSize,
+                lineHeight: '40px',
+              },
             },
           }}
         >
           {/* 标题 */}
           <Typography
             className='back-to-top-anchor'
-            variant='h3'
+            variant='h1'
             component='h1'
             sx={{
               textAlign: 'center',
               fontWeight: 'bold',
-              color: READING_THEMES[state.backgroundTheme].text,
-              marginBottom: '40px',
-              fontSize: '2rem',
-              lineHeight: 1.2,
+              color: theme.text,
+              mt: -2,
+              mb: { lg: 7, xl: 10 },
+              fontSize: { lg: 28, xl: 36 },
+              lineHeight: { lg: '40px', xl: '52px' },
             }}
           >
             {title}
@@ -137,55 +151,34 @@ export default function ReadingModeContainer({
 
           {/* 标签 */}
           {tags.length > 0 && (
-            <Stack
-              sx={{
-                marginBottom: 2,
-                flexDirection: 'row',
-                justifyContent: 'flex-start',
-              }}
-            >
+            <Stack sx={rowStackSx}>
               <Typography
-                variant='body2'
                 component={'span'}
                 sx={{
-                  color: READING_THEMES[state.backgroundTheme].text,
-                  fontSize: '14px',
+                  color: theme.text,
                   fontWeight: '500',
                   minWidth: 40,
-                  marginRight: 1.5,
+                  mx: { lg: 1.5, xl: 3 },
                 }}
               >
                 标签:
               </Typography>
-              <Box
-                sx={{
-                  display: 'flex',
-                  flexWrap: 'wrap',
-                  gap: '8px',
-                  justifyContent: 'center',
-                  '& a:hover': {
-                    opacity: 0.7,
-                  },
-                }}
-              >
+              <Box sx={tagBoxSx}>
                 {tags.map((tag, index) => (
-                  <Box
+                  <Chip
                     component={'a'}
                     href={`/tags?tag=${tag}`}
                     target='_blank'
                     key={index}
                     sx={{
-                      backgroundColor:
-                        READING_THEMES[state.backgroundTheme].tagBg,
-                      color: READING_THEMES[state.backgroundTheme].tagText,
-                      padding: '3px 10px',
-                      borderRadius: '20px',
-                      fontSize: 14,
                       cursor: 'pointer',
+                      borderRadius: { lg: '20px', xl: '30px' },
+                      backgroundColor: theme.tagBg,
+                      color: `${theme.tagText} !important`,
+                      fontSize: 18,
                     }}
-                  >
-                    {tag}
-                  </Box>
+                    label={tag}
+                  />
                 ))}
               </Box>
             </Stack>
@@ -193,31 +186,22 @@ export default function ReadingModeContainer({
 
           {/* 概述 */}
           {summary && (
-            <Stack
-              sx={{
-                marginBottom: 2,
-                flexDirection: 'row',
-                justifyContent: 'flex-start',
-              }}
-            >
+            <Stack sx={{ ...rowStackSx, mb: 3 }}>
               <Typography
-                variant='body2'
                 component={'span'}
                 sx={{
-                  color: READING_THEMES[state.backgroundTheme].text,
+                  color: theme.text,
                   fontWeight: '500',
                   minWidth: 40,
-                  marginRight: 1.5,
+                  mx: { lg: 1.5, xl: 3 },
                 }}
               >
                 概述:
               </Typography>
               <Typography
-                variant='body1'
                 sx={{
-                  color: READING_THEMES[state.backgroundTheme].text,
+                  color: theme.text,
                   lineHeight: state.lineSpacing,
-                  fontSize: `${state.fontSize}px`,
                   opacity: 0.8,
                 }}
               >
@@ -230,10 +214,9 @@ export default function ReadingModeContainer({
           {(author || date) && (
             <Box sx={{ marginBottom: 1.5 }}>
               <Typography
-                variant='body2'
                 sx={{
-                  color: READING_THEMES[state.backgroundTheme].text,
-                  fontSize: 13,
+                  color: theme.text,
+                  fontSize: state.fontSize - 2,
                   opacity: 0.7,
                 }}
               >
@@ -246,23 +229,16 @@ export default function ReadingModeContainer({
           )}
 
           {/* 分隔线 */}
-          <Divider
-            sx={{
-              backgroundColor: READING_THEMES[state.backgroundTheme].divider,
-            }}
-          />
+          <Divider sx={{ backgroundColor: theme.divider }} />
 
           {/* 文章内容 */}
           <Box
             sx={{
-              color: READING_THEMES[state.backgroundTheme].text,
+              color: theme.text,
               fontSize: `${state.fontSize}px`,
               lineHeight: state.lineSpacing,
               fontWeight: state.fontWeight,
-              '& p': {
-                marginBottom: '24px',
-                textAlign: 'justify',
-              },
+              '& p': { marginBottom: '24px', textAlign: 'justify' },
               '& h1, & h2, & h3, & h4, & h5, & h6': {
                 marginTop: '32px',
                 marginBottom: '16px',
@@ -275,19 +251,14 @@ export default function ReadingModeContainer({
               '& h5': { fontSize: '1.1em' },
               '& h6': { fontSize: '1em' },
               '& blockquote': {
-                borderLeft: `4px solid ${READING_THEMES[state.backgroundTheme].text}`,
+                borderLeft: `4px solid ${theme.text}`,
                 paddingLeft: '20px',
                 margin: '20px 0',
                 fontStyle: 'italic',
                 opacity: 0.8,
               },
-              '& ul, & ol': {
-                paddingLeft: '24px',
-                marginBottom: '20px',
-              },
-              '& li': {
-                marginBottom: '8px',
-              },
+              '& ul, & ol': { paddingLeft: '24px', marginBottom: '20px' },
+              '& li': { marginBottom: '8px' },
             }}
             dangerouslySetInnerHTML={{ __html: content }}
           />

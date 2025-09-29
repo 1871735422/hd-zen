@@ -33,8 +33,8 @@ const ReadingModeContext = createContext<ReadingModeContextType | undefined>(
 
 const DEFAULT_STATE: ReadingModeState = {
   backgroundTheme: 'white',
-  fontSize: 16,
-  lineSpacing: 1.8,
+  fontSize: 18,
+  lineSpacing: 2,
   mode: 'paged',
   sidebarCollapsed: false,
   fontWeight: 'normal',
