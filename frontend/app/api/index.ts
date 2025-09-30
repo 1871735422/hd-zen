@@ -1,6 +1,7 @@
 import PocketBase from 'pocketbase';
 import { Menu } from '../components/pc/MenuItem';
 import {
+  BookChapter,
   Category,
   Course,
   CourseTopic,
@@ -10,6 +11,7 @@ import {
   PocketRecord,
   QuestionResult,
   Questions,
+  ReferenceBook,
   TagRelation,
   TopicMediaX,
 } from '../types/models';
@@ -631,4 +633,28 @@ export const getDownloadResources = async (
     order: 'displayOrder',
   });
   return records as unknown as DownloadResource[];
+};
+
+export const getReferenceBooks = async (
+  bookOrder: number
+): Promise<ReferenceBook[]> => {
+  const records = await pb.collection('referenceBooks').getFullList({
+    filter: `displayOrder ~ ${bookOrder}`,
+    order: 'displayOrder',
+  });
+  // console.log(records);
+
+  return records as unknown as ReferenceBook[];
+};
+
+export const getBookChapters = async (
+  chapterOrder: number
+): Promise<BookChapter[]> => {
+  const records = await pb.collection('bookChapters').getFullList({
+    filter: `displayOrder ~ ${chapterOrder}`,
+    order: 'displayOrder',
+  });
+  console.log(records);
+
+  return records as unknown as BookChapter[];
 };

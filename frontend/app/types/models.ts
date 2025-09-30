@@ -221,3 +221,14 @@ export interface DownloadResource {
   url_downpdf: string;
   url_downvideo: string;
 }
+
+export interface BookChapter extends DownloadResource {
+  article_introtext?: string;
+  article_fulltext?: string;
+  article_summary?: string;
+  tags?: string[];
+}
+export interface ReferenceBook extends Course {
+  author?: string;
+  description?: string;
+}

@@ -1,6 +1,6 @@
 import BaseLayout from '@/app/components/pc/BaseLayout';
 import { notFound } from 'next/navigation';
-import { getCategories, getCourseByDisplayOrder, getCourses } from '../../api';
+import { getCategories, getCourseByDisplayOrder } from '../../api';
 
 // 15分钟缓存
 export const revalidate = 900;
@@ -21,9 +21,8 @@ export default async function CourseLayout({
   const { slug } = await params;
 
   // Get the current course and all courses
-  const [course, coursesResult, menuData] = await Promise.all([
+  const [course, menuData] = await Promise.all([
     getCourseByDisplayOrder(slug),
-    getCourses(),
     getCategories('学修参考资料'),
   ]);
 
@@ -31,11 +30,10 @@ export default async function CourseLayout({
     notFound();
   }
 
-  console.log({ course, coursesResult, menuData });
+  // console.log({ course, coursesResult, menuData });
   const menus = menuData[0]?.subMenu;
   const categories = menus?.map(item => item.name) || [];
   const selectedCategory = (menus && menus[Number(slug) - 1]?.name) || '';
-  console.log(metadata);
 
   return (
     <BaseLayout

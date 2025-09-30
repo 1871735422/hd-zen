@@ -14,7 +14,7 @@ const Footer: React.FC = () => {
         color='#fff'
         textAlign='center'
         fontWeight={400}
-        fontSize={{ lg: 4, xl: 16 }}
+        fontSize={{ lg: 14, xl: 16 }}
       >
         &copy; {new Date().getFullYear()} &nbsp;慧灯禅修 - By HuiDengChanXiu
       </Typography>
