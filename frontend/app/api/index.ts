@@ -10,7 +10,6 @@ import {
   PocketRecord,
   QuestionResult,
   Questions,
-  SearchResultItem,
   TagRelation,
   TopicMediaX,
 } from '../types/models';
@@ -490,7 +489,7 @@ export const getSearchArticles = async (
   sort = 'asc',
   type = 'all' // all, article, av
 ): Promise<{
-  items: SearchResultItem[];
+  items: TopicMediaX[];
   totalItems: number;
   totalPages: number;
   currentPage: number;
@@ -541,13 +540,13 @@ export const getSearchArticles = async (
     });
 
     return {
-      items: result.items as unknown as SearchResultItem[],
+      items: result.items as unknown as TopicMediaX[],
       totalItems: result.totalItems,
     };
   };
 
   try {
-    let allItems: SearchResultItem[] = [];
+    let allItems: TopicMediaX[] = [];
     let totalItems = 0;
 
     // 根据类型搜索不同的集合

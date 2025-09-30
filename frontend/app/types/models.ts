@@ -88,11 +88,9 @@ export interface Media extends BaseModel {
   tags?: string[];
   assetId?: string;
 
-  // Legacy fields for backward compatibility
   resourceId?: string;
-  intro_text?: string;
-  full_text?: string;
-  summary_text?: string;
+  introtext?: string;
+  fulltext?: string;
   contentType?: ContentType;
   duration?: string;
   fileSize?: number;
@@ -200,9 +198,6 @@ export interface QuestionResult extends BaseModel, Media {
   questionCreated: string;
   description?: string;
 }
-
-// 搜索结果联合类型
-export type SearchResultItem = Article;
 
 export interface DownloadResource {
   pdf_size: string;

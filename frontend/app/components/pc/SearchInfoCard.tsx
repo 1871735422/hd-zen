@@ -156,17 +156,16 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
         {typeof index === 'number' && (
           <Box
             sx={{
-              minWidth: 19,
-              height: 19,
+              minWidth: { lg: 19, xl: 22 },
+              height: { lg: 19, xl: 22 },
               borderRadius: '50%',
               bgcolor: 'rgba(86, 137, 204, 1)',
-              color: 'primary.contrastText',
-              fontSize: 13,
+              color: '#fff',
+              fontSize: { lg: 13, xl: 16 },
               fontWeight: 500,
               display: 'inline-flex',
               alignItems: 'center',
               justifyContent: 'center',
-              flex: '0 0 auto',
             }}
             aria-label={`index-${index}`}
           >
@@ -174,9 +173,9 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
           </Box>
         )}
         <Typography
-          variant='h6'
+          variant='h2'
           sx={{
-            fontSize: 16,
+            fontSize: { lg: 16, xl: 18 },
             fontWeight: 500,
             color: 'rgba(86, 137, 204, 1)',
             ml: '8px !important',
@@ -192,7 +191,8 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
           sx={{
             color: 'rgba(194, 194, 194, 1)',
             cursor: 'default',
-            fontSize: 14,
+            fontSize: { lg: 14, xl: 16 },
+            lineHeight: '27px',
             gap: 0.5,
           }}
         >
@@ -207,8 +207,8 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
           position: 'relative',
           mt: 1.25,
           color: 'text.secondary',
-          fontSize: { xs: 14, sm: 15 },
-          lineHeight: 1.8,
+          fontSize: { lg: 14, xl: 16 },
+          lineHeight: '27px',
           overflow: 'hidden',
           maxHeight: expanded ? 'none' : `${height}px`,
           transition: 'max-height 220ms ease',
@@ -282,7 +282,7 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
           {from && (
             <Typography
               variant='body2'
-              fontSize={12}
+              fontSize={{ lg: 12, xl: 14 }}
               sx={{ color: 'rgba(194, 194, 194, 1)' }}
             >
               来源：{from}
@@ -301,6 +301,8 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
                   color: 'rgba(130, 178, 232, 1)',
                   '& svg': {
                     color: 'rgba(178, 207, 202, 1)',
+                    fontSize: 16,
+                    mt: '2px',
                   },
                 }}
               >
@@ -308,7 +310,7 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
                 <Typography
                   sx={{
                     ml: 0.5,
-                    fontSize: 13,
+                    fontSize: 14,
                     color: 'rgba(130, 178, 232, 1)',
                   }}
                 >

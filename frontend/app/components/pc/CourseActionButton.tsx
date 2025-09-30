@@ -11,7 +11,7 @@ export default function CourseActionButton({
     <Button
       variant='outlined'
       sx={{
-        borderRadius: '25px',
+        borderRadius: { lg: '25px', xl: '30px' },
         cursor: 'pointer',
         fontWeight: 500,
         fontSize: { lg: 14, xl: 18 },

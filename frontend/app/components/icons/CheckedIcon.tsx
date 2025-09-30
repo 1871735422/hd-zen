@@ -3,8 +3,7 @@ import { SvgIcon, SxProps } from '@mui/material';
 const CheckedIcon = ({ sx }: { sx?: SxProps }) => (
   <SvgIcon
     sx={{
-      width: 14,
-      height: 14,
+      fontSize: { lg: 14, xl: 17 },
       cursor: 'pointer',
       ...sx,
     }}

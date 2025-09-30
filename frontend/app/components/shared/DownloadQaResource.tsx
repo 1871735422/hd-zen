@@ -28,7 +28,7 @@ export default function DownloadQaResource({
         position: 'absolute',
         width: 120,
         height: 40,
-        top: -8,
+        top: -40,
         right: 30,
         color: '#fff',
         backgroundColor: 'rgba(255, 168, 184, 1)',

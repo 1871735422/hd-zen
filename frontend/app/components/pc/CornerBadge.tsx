@@ -10,7 +10,7 @@ export default function CornerBadge({ content }: CornerBadgeProps) {
     <Box
       sx={{
         position: 'absolute',
-        top: -1,
+        top: { lg: -3, xl: -1 },
         right: 0,
         width: { lg: 80, xl: content ? 100 : 110 },
         height: content ? 60 : 80,

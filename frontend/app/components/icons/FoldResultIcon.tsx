@@ -19,7 +19,7 @@ const FoldResultIcon = ({ sx, expanded = false }: FoldResultIconProps) => (
         top: expanded ? '70%' : 0,
         left: '50%',
         transform: 'translateX(-50%)',
-        fontSize: 12,
+        fontSize: { lg: 12, xl: 14 },
         color: 'rgba(84, 161, 209, 1)',
         fontWeight: 500,
         whiteSpace: 'nowrap',
@@ -30,8 +30,7 @@ const FoldResultIcon = ({ sx, expanded = false }: FoldResultIconProps) => (
   >
     <SvgIcon
       sx={{
-        width: 50,
-        height: 50,
+        fontSize: 52,
         transform: expanded ? 'rotateX(180deg)' : 'rotateX(0deg)',
         transition: 'transform 200ms ease',
       }}
@@ -39,8 +38,6 @@ const FoldResultIcon = ({ sx, expanded = false }: FoldResultIconProps) => (
       <svg
         xmlns='http://www.w3.org/2000/svg'
         xmlnsXlink='http://www.w3.org/1999/xlink'
-        width='60'
-        height='32'
         viewBox='0 0 60 32'
         fill='none'
       >

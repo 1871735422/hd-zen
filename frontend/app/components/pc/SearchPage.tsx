@@ -11,7 +11,7 @@ import {
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Fragment, useEffect, useState } from 'react';
 import { HELPER_TEXT_COLOR } from '../../constants/colors';
-import type { Article, SearchResultItem } from '../../types/models';
+import type { TopicMediaX } from '../../types/models';
 import CheckedIcon from '../icons/CheckedIcon';
 import UncheckIcon from '../icons/UncheckIcon';
 import { SearchBox } from '../shared/SearchBox';
@@ -63,7 +63,7 @@ const SearchPage = () => {
   const cate = searchParams.get('cate') || searchCates[0].value;
 
   // 搜索结果状态
-  const [searchResults, setSearchResults] = useState<SearchResultItem[]>([]);
+  const [searchResults, setSearchResults] = useState<TopicMediaX[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState(urlQuery || '');
   const [currentPage, setCurrentPage] = useState(1);
@@ -296,11 +296,11 @@ const SearchPage = () => {
         sx={{
           position: 'relative',
           zIndex: 1,
-          width: '55%',
+          width: '56%',
           mr: '30%',
-          ml: '15%',
+          ml: '14%',
           px: 2,
-          '& .MuiTypography-root': {
+          '& .MuiTypography-body1': {
             fontSize: 14,
           },
         }}
@@ -395,7 +395,7 @@ const SearchPage = () => {
               py: 2,
               px: 6,
               mb: 5,
-              borderRadius: 5,
+              borderRadius: '30px',
             }}
           >
             <Box
@@ -437,7 +437,7 @@ const SearchPage = () => {
             <Box
               sx={{
                 bgcolor: 'rgba(247, 249, 250, 1)',
-                borderRadius: 1,
+                borderRadius: '10px',
                 p: 1,
                 mt: 1,
               }}
@@ -458,8 +458,10 @@ const SearchPage = () => {
                       variant={filter === item.value ? 'contained' : 'text'}
                       onClick={() => handleFilterChange(item.value)}
                       sx={{
-                        borderRadius: 3,
+                        borderRadius: '30px',
                         fontSize: 14,
+                        width: 80,
+                        height: 22,
                         bgcolor:
                           filter === item.value
                             ? 'rgba(245, 147, 135, 1)'
@@ -477,11 +479,13 @@ const SearchPage = () => {
                   display: 'flex',
                   flexDirection: 'row',
                   justifyContent: 'space-between',
+                  alignItems: 'center',
                   color: HELPER_TEXT_COLOR,
                   fontSize: 12,
+                  px: 1,
                 }}
               >
-                <Typography fontSize={'inherit'}>
+                <Typography variant='body2' fontSize={'inherit'}>
                   共找到{' '}
                   <span style={{ color: 'rgba(237, 93, 74, 1)' }}>
                     {isLoading ? '...' : totalItems}
@@ -495,7 +499,7 @@ const SearchPage = () => {
                       color='inherit'
                       disabled={currentPage <= 1}
                       onClick={() => handlePageChange(currentPage - 1)}
-                      sx={{ minWidth: 'auto', p: 0.5 }}
+                      sx={{ minWidth: 'auto', px: 0.5 }}
                     >
                       &lt;
                     </Button>
@@ -510,7 +514,7 @@ const SearchPage = () => {
                       size='small'
                       disabled={currentPage >= totalPages}
                       onClick={() => handlePageChange(currentPage + 1)}
-                      sx={{ minWidth: 'auto', p: 0.5 }}
+                      sx={{ minWidth: 'auto', px: 0.5 }}
                     >
                       &gt;
                     </Button>
@@ -531,7 +535,7 @@ const SearchPage = () => {
               </Box>
             ) : searchResults.length > 0 ? (
               <Stack spacing={2}>
-                {searchResults.map((item: Article, index) => {
+                {searchResults.map((item: TopicMediaX, index) => {
                   // 判断是文章还是音视频数据
                   const isArticle =
                     'fulltext' in item ||
@@ -540,9 +544,10 @@ const SearchPage = () => {
                   const itemType = isArticle ? '文章' : '音视频';
                   // 获取课程信息
                   const courseInfo = {
-                    courseTitle: (item as Article).courseTitle || '未知课程',
-                    courseOrder: (item as Article).courseOrder || '',
-                    topicOrder: (item as Article).topicOrder || '',
+                    courseTitle:
+                      (item as TopicMediaX).courseTitle || '未知课程',
+                    courseOrder: (item as TopicMediaX).courseOrder || '',
+                    topicOrder: (item as TopicMediaX).topicOrder || '',
                     mediaType:
                       item?.mediaType === 'course'
                         ? ('course' as const)
@@ -553,14 +558,9 @@ const SearchPage = () => {
                     <Fragment key={index}>
                       <SearchInfoCard
                         index={index + 1}
-                        title={item.article_title}
+                        title={item.title}
                         content={
-                          isArticle
-                            ? item.article_fulltext ||
-                              item.article_introtext ||
-                              item.article_summary ||
-                              ''
-                            : ''
+                          isArticle ? item.fulltext || item.introtext || '' : ''
                         }
                         from={
                           isArticle

@@ -53,8 +53,8 @@ const Home: React.FC = async () => {
             },
             '& .MuiTypography-body1': {
               color: DESC_TEXT_COLOR,
-              fontSize: { lg: 20, xl: 22 },
-              lineHeight: '36px',
+              fontSize: { lg: 16, xl: 22 },
+              lineHeight: { lg: 1.2, xl: '36px' },
             },
             '& .MuiTypography-body1:nth-child(3)': {
               py: 3,

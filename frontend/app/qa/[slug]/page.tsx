@@ -54,12 +54,10 @@ export default async function QaPage({ params, searchParams }: QaPageProps) {
       <Container
         maxWidth='xl'
         sx={{
-          py: 4,
+          py: 5,
           px: '0 !important',
-          position: 'relative',
         }}
       >
-        <DownloadQaResource volumeName={questions[0]?.courseTitle} />
         <Grid
           container
           sx={{
@@ -68,8 +66,10 @@ export default async function QaPage({ params, searchParams }: QaPageProps) {
             py: 0,
             mb: 9,
             height: 'fit-content',
+            position: 'relative',
           }}
         >
+          <DownloadQaResource volumeName={questions[0]?.courseTitle} />
           <Grid size={3}>
             <QaSidebar
               lesson={sidebarData}
