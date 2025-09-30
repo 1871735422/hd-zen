@@ -157,27 +157,18 @@ const qaPage = async ({ params, searchParams }: qaPageProps) => {
               width: '100%',
             }}
           >
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'flex-end',
-                alignItems: 'center',
-                flexDirection: 'column',
-              }}
-            >
-              <LessonMeta
-                title={`${questionOrder}. ${currentQuestion?.questionTitle}`}
-                author='作者：慈诚罗珠堪布'
-                date={formatDate(currentQuestion?.questionCreated)}
-                refCourse={`${courseName} > ${lessonName}`}
-                refUrl={`/course/${courseOrder}/lesson${lessonOrder}`}
-              />
-            </Box>
+            <LessonMeta
+              title={`${questionOrder}. ${currentQuestion?.questionTitle}`}
+              author='作者：慈诚罗珠堪布'
+              date={formatDate(currentQuestion?.questionCreated)}
+              refCourse={`${courseName} > ${lessonName}`}
+              refUrl={`/course/${courseOrder}/lesson${lessonOrder}`}
+            />
             <>
               <MediaDownloadButton
                 sx={{
                   alignSelf: 'flex-end',
-                  my: -3,
+                  mt: { lg: -8, xl: -14 },
                 }}
                 mediaType='video'
                 downloadUrls={[currentQuestion.url_downmp4 || '']}
@@ -216,16 +207,21 @@ const qaPage = async ({ params, searchParams }: qaPageProps) => {
                 direction='row'
                 justifyContent='space-between'
                 sx={{
+                  mt: -10,
+                  '& .MuiButton-root>a': {
+                    fontSize: 18,
+                    pr: '2px',
+                  },
                   '& .MuiButton-root': {
                     backgroundColor: 'rgba(240, 247, 255, 1)',
-                    py: 0.5,
-                    px: 2,
+                    py: '2px',
+                    px: '14px',
                     borderRadius: '20px',
-                    color: 'rgba(127, 173, 235, 1 !important)',
+                    fontWeight: 400,
+                    color: 'rgba(127, 173, 235, 1)',
                   },
                   '& .MuiButton-startIcon': {
                     marginRight: '0 !important',
-                    fontWeight: 300,
                   },
                   '& .MuiButton-endIcon': {
                     marginLeft: '0 !important',

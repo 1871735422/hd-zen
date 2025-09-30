@@ -56,9 +56,10 @@ export const SearchBox = ({
         sx={{
           '& .MuiOutlinedInput-root': {
             height: { xl: 76 },
-            fontSize: { lg: 14, xl: 16 },
+            fontSize: { lg: 14, xl: 18 },
             color: 'rgba(119, 119, 119, 1)',
             borderRadius: '40px',
+            pl: 2,
             '& fieldset': {
               border: 'none',
             },
@@ -89,6 +90,7 @@ export const SearchBox = ({
             borderRadius: '100%',
             color: '#fff',
             boxSizing: 'border-box',
+            fontSize: { lg: 14, xl: 18 },
           }}
         >
           搜索

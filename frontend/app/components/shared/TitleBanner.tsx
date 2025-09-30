@@ -1,11 +1,10 @@
-import { Stack, Typography } from '@mui/material';
+import { Stack } from '@mui/material';
 import Image from 'next/image';
 
 interface TitleBannerProps {
   title: string;
-  subTitle?: string;
 }
-function TitleBanner({ title, subTitle }: TitleBannerProps) {
+function TitleBanner({ title }: TitleBannerProps) {
   return (
     <Stack
       sx={{
@@ -27,24 +26,6 @@ function TitleBanner({ title, subTitle }: TitleBannerProps) {
           marginLeft: title === '学修参考资料' ? '25px' : 0,
         }}
       />
-      {subTitle && (
-        <Typography
-          variant='h2'
-          className='bei-fang'
-          lineHeight={2}
-          sx={{
-            background:
-              'linear-gradient(222deg, rgba(255, 168, 184, 1) 0%, rgba(255, 106, 114, 1) 69.37%)',
-            backgroundClip: 'text',
-            WebkitBackgroundClip: 'text',
-            color: 'transparent',
-            fontSize: '1.7rem',
-            px: 1,
-          }}
-        >
-          {subTitle}
-        </Typography>
-      )}
     </Stack>
   );
 }

@@ -5,7 +5,7 @@ const Footer: React.FC = () => {
       display='flex'
       justifyContent='center'
       alignItems='center'
-      height={{ xs: 35, md: 40 }}
+      height={{ lg: 40, xl: 45 }}
       width='100%'
       bgcolor={'rgba(127, 173, 235, 1)'}
       sx={{ px: { xs: 1, sm: 2 } }}

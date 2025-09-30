@@ -1,3 +1,4 @@
+import { clearCourseTitle } from '@/app/utils/courseUtils';
 import {
   Avatar,
   Box,
@@ -150,10 +151,7 @@ export default async function QaSidebar({
                               : STANDARD_TEXT_COLOR,
                           }}
                         >
-                          {item.label?.replace(
-                            /(慧灯禅修课\d+ )|(｜慧灯禅修课问答)/,
-                            ''
-                          )}
+                          {clearCourseTitle(item.label)}
                         </Typography>
                       }
                     />

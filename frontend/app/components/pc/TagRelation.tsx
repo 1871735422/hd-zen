@@ -8,7 +8,6 @@ import {
   CardContent,
   FormControl,
   MenuItem,
-  Paper,
   Select,
   Stack,
   Table,
@@ -102,12 +101,12 @@ export default function TagRelation({ tag, refCourses }: TagRelationProps) {
         </Stack>
         {/* 页面标题 */}
         <Typography
-          variant='h6'
-          component='h1'
           sx={{
+            fontSize: { lg: 20, xl: 26 },
             fontWeight: 500,
             color: STANDARD_TEXT_COLOR,
             mb: 1,
+            mt: 5,
             pl: 1,
           }}
         >
@@ -115,32 +114,41 @@ export default function TagRelation({ tag, refCourses }: TagRelationProps) {
         </Typography>
         <Card
           sx={{
-            borderRadius: 3,
+            borderRadius: '32px',
             boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
             overflow: 'hidden',
+            pb: totalPages > 1 ? 0 : 5,
           }}
         >
-          <CardContent style={{ padding: '0 !important' }}>
+          <CardContent
+            sx={{
+              pt: 3,
+              px: 5,
+            }}
+          >
             {/* 分页控制 */}
             <Box
               sx={{
-                width: '280px',
-                px: 0.3,
-                py: 2,
+                pb: 3,
+                width: 300,
                 float: 'right',
                 display: 'flex',
                 justifyContent: 'flex-end',
                 alignItems: 'center',
                 gap: 1,
+                '& .MuiTypography-root': { fontSize: { lg: 13, xl: 16 } },
+                '& .MuiSelect-select': {
+                  fontSize: { lg: 12, xl: 14 },
+                  color: STANDARD_TEXT_COLOR,
+                  py: '2px',
+                },
               }}
             >
-              <Typography variant='body2' color='text.secondary'>
+              <Typography color='text.secondary'>
                 第 {currentPage} 页 &nbsp; 共 {totalPages} 页
               </Typography>
-              <Typography variant='body2' color='text.secondary'>
-                每页显示条数
-              </Typography>
-              <FormControl size='small' sx={{ minWidth: 60, zoom: 0.7 }}>
+              <Typography color='text.secondary'>每页显示条数</Typography>
+              <FormControl size='small' sx={{ minWidth: 70 }}>
                 <Select
                   value={itemsPerPage}
                   onChange={handleItemsPerPageChange}
@@ -156,12 +164,12 @@ export default function TagRelation({ tag, refCourses }: TagRelationProps) {
 
             {/* 内容表格 */}
             <TableContainer
-              component={Paper}
-              elevation={0}
               sx={{
-                px: '20px',
-                pb: '20px',
-                width: 'calc(100% - 40px)',
+                margin: '0 auto',
+                fontSize: { lg: 14, xl: 18 },
+                '& .MuiTableCell-root': {
+                  fontSize: { lg: 14, xl: 18 },
+                },
               }}
             >
               <Table
@@ -223,21 +231,13 @@ export default function TagRelation({ tag, refCourses }: TagRelationProps) {
 
             {/* 底部分页 */}
             {totalPages > 1 && (
-              <Box
-                sx={{
-                  pb: 2.2,
-                  display: 'flex',
-                  justifyContent: 'center',
-                }}
-              >
-                <CustomPagination
-                  totalPages={totalPages}
-                  currentPage={currentPage}
-                  onPageChange={page => setCurrentPage(page)}
-                  size='large'
-                  maxVisible={5}
-                />
-              </Box>
+              <CustomPagination
+                totalPages={totalPages}
+                currentPage={currentPage}
+                onPageChange={page => setCurrentPage(page)}
+                size='large'
+                maxVisible={5}
+              />
             )}
           </CardContent>
         </Card>

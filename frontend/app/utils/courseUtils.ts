@@ -1,3 +1,4 @@
+import { ONE_TO_TEN_CHAR } from '../constants';
 import { CourseTopic } from '../types/models';
 
 // Transform course topics to lesson items format for backward compatibility
@@ -95,13 +96,15 @@ export function formatDate(input: string): string {
 }
 
 export function buildLessonsTitle(size: number) {
-  const one2ten = '一二三四五六七八九十'.split('');
   const lessons = [];
   for (let i = 0; i < size; i++) {
-    if (i <= 10) lessons.push(`第${one2ten[i]}课`);
-    if (i > 10 && i < 20) lessons.push(`第十${one2ten[i % 10]}课`);
+    if (i <= 10) lessons.push(`第${ONE_TO_TEN_CHAR[i]}课`);
+    if (i > 10 && i < 20) lessons.push(`第十${ONE_TO_TEN_CHAR[i % 10]}课`);
     if (i >= 20) break;
   }
 
   return lessons;
 }
+
+export const clearCourseTitle = (title: string) =>
+  title?.replace(/(慧灯禅修课\d+ )|(｜慧灯禅修课问答)/, '');

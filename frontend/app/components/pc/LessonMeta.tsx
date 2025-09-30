@@ -1,7 +1,7 @@
 import { STANDARD_TEXT_COLOR } from '@/app/constants/colors';
 import { Box, Link, Stack, Typography } from '@mui/material';
 import { Fragment } from 'react';
-import { formatDate } from '../../utils/courseUtils';
+import { clearCourseTitle, formatDate } from '../../utils/courseUtils';
 import CourseTag from '../shared/CourseTag';
 
 export interface LessonMetaProps {
@@ -24,18 +24,23 @@ export default function LessonMeta({
   refUrl,
 }: LessonMetaProps) {
   const isQuestion = /^\d+\./.test(title);
+  console.log(isQuestion, title);
+
   return (
-    <Box>
+    <Stack
+      display={'flex'}
+      flexDirection={'column'}
+      alignItems={isQuestion ? 'flex-start' : 'center'}
+    >
       <Typography
         fontWeight={500}
         px={0}
-        fontSize={{ lg: 28, xl: 36 }}
-        align={isQuestion ? 'left' : 'center'}
+        fontSize={{ lg: 28, xl: isQuestion ? 32 : 36 }}
         color={STANDARD_TEXT_COLOR}
-        mb={{ lg: 4, xl: 8 }}
+        mb={tags?.length ? { lg: 4, xl: 8 } : 1}
         mt={isQuestion ? 0 : { lg: 7, xl: 9 }}
       >
-        {title}
+        {clearCourseTitle(title)}
       </Typography>
       {description && (
         <Box
@@ -122,25 +127,27 @@ export default function LessonMeta({
         mt={{ lg: 1, xl: 2 }}
         mb={2}
         ml={1}
-        color='ml={1}rgba(153, 153, 153, 1)'
-        fontSize={{ lg: 16, xl: 18 }}
+        alignSelf={'start'}
+        sx={{
+          '& .MuiTypography-subtitle1': {
+            ml: 1,
+            fontSize: { lg: 16, xl: 18 },
+            color: 'rgba(153, 153, 153, 1)',
+          },
+        }}
       >
-        <Typography variant='subtitle1' fontSize={'inherit'}>
+        <Typography variant='subtitle1'>
           作者：{author?.replace('作者：', '')} &nbsp;&nbsp; {formatDate(date)}
         </Typography>
         {refCourse && (
           <Typography variant='subtitle1'>
             本问答属于：
-            <Link
-              href={refUrl}
-              fontSize={'inherit'}
-              color='rgba(86, 137, 204, 1) !important'
-            >
+            <Link href={refUrl} color='rgba(86, 137, 204, 1) !important'>
               {refCourse}
             </Link>
           </Typography>
         )}
       </Box>
-    </Box>
+    </Stack>
   );
 }

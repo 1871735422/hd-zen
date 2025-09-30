@@ -30,7 +30,7 @@ const CourseCarousel: React.FC<CourseCarouselProps> = ({ cards }) => {
         overflow: 'hidden',
       }}
     >
-      <Grid container spacing={2}>
+      <Grid container spacing={2} pb={12}>
         {cards.map((card, idx) => (
           <GradientCard
             key={card.id}

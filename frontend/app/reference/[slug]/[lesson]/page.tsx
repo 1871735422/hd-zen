@@ -186,26 +186,15 @@ const refPage = async ({ params, searchParams }: refPageProps) => {
           borderRadius: 5,
         }}
       >
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'flex-end',
-            alignItems: 'center',
-            flexDirection: 'column',
-          }}
-        >
-          <LessonMeta
-            title={topicMedia[0]?.title}
-            tags={
-              topicTags?.length
-                ? topicTags.map((tag: string) => tag.trim())
-                : []
-            }
-            description={topicMedia[0]?.article_summary ?? ''}
-            author='作者：慈诚罗珠堪布'
-            date={topicMedia[0]?.created}
-          />
-        </Box>
+        <LessonMeta
+          title={topicMedia[0]?.title}
+          tags={
+            topicTags?.length ? topicTags.map((tag: string) => tag.trim()) : []
+          }
+          description={topicMedia[0]?.article_summary ?? ''}
+          author='作者：慈诚罗珠堪布'
+          date={topicMedia[0]?.created}
+        />
         <TabRender />
       </Box>
     </>

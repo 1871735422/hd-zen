@@ -1,3 +1,4 @@
+import { clearCourseTitle } from '@/app/utils/courseUtils';
 import { Box, Card, CardContent, Typography } from '@mui/material';
 import { HELPER_TEXT_COLOR } from '../../constants/colors';
 import { CourseActionButton } from './';
@@ -50,7 +51,7 @@ export default function CourseCard({
           minHeight: isQa ? 60 : 20,
         }}
       >
-        {item.title?.replace(/(慧灯禅修课\d+ )|(｜慧灯禅修课问答)/, '')}
+        {clearCourseTitle(item.title)}
       </Typography>
       <CornerBadge content={isQa ? undefined : item.idx} />
       <CardContent

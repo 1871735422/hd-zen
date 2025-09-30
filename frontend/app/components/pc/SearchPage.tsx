@@ -254,7 +254,7 @@ const SearchPage = () => {
 
       if (response) {
         const data = await response.json();
-        console.log(data);
+        console.log({ data });
         setSearchResults(data.items || []);
         setTotalPages(data.totalPages || 0);
         setTotalItems(data.totalItems || 0);
@@ -300,6 +300,9 @@ const SearchPage = () => {
           mr: '30%',
           ml: '15%',
           px: 2,
+          '& .MuiTypography-root': {
+            fontSize: 14,
+          },
         }}
       >
         <Box>
@@ -314,7 +317,6 @@ const SearchPage = () => {
               flexDirection: 'row',
               alignItems: 'center',
               my: 3,
-              fontSize: 14,
               color: 'rgba(68, 68, 68, 1)',
             }}
           >
@@ -372,7 +374,6 @@ const SearchPage = () => {
                   style={{
                     color: 'rgba(78, 136, 219, 1)',
                     border: '1px solid rgba(212, 212, 212, 1)',
-                    fontSize: '13px',
                     padding: '3px 20px 3px 4px',
                     backgroundColor: '#fff',
                   }}
@@ -389,6 +390,7 @@ const SearchPage = () => {
           {/* 搜索过滤结束 */}
           {/* 搜索内容展示 开始 */}
           <Paper
+            elevation={0}
             sx={{
               py: 2,
               px: 6,
@@ -407,7 +409,6 @@ const SearchPage = () => {
             >
               <Typography
                 sx={{
-                  fontSize: 13,
                   fontWeight: 500,
                   color: 'rgba(119, 119, 119, 1)',
                 }}
@@ -420,6 +421,7 @@ const SearchPage = () => {
                   size='small'
                   onClick={() => handleSortChange(item.value)}
                   sx={{
+                    fontSize: 14,
                     color:
                       sort === item.value
                         ? 'rgba(237, 93, 74, 1)'
@@ -436,7 +438,6 @@ const SearchPage = () => {
               sx={{
                 bgcolor: 'rgba(247, 249, 250, 1)',
                 borderRadius: 1,
-                fontSize: 13,
                 p: 1,
                 mt: 1,
               }}
@@ -458,6 +459,7 @@ const SearchPage = () => {
                       onClick={() => handleFilterChange(item.value)}
                       sx={{
                         borderRadius: 3,
+                        fontSize: 14,
                         bgcolor:
                           filter === item.value
                             ? 'rgba(245, 147, 135, 1)'

@@ -1,5 +1,5 @@
-import { INNER_TEXT_COLOR } from '@/app/constants/colors';
-import { Box, Grid, Typography } from '@mui/material';
+import { INNER_TEXT_COLOR, STANDARD_TEXT_COLOR } from '@/app/constants/colors';
+import { Grid, Typography } from '@mui/material';
 import React from 'react';
 
 interface GradientCardProps {
@@ -25,35 +25,34 @@ const GradientCard: React.FC<GradientCardProps> = ({
       component={'a'}
       href={`/course/${id}`}
       sx={{
-        px: 0.5,
+        px: { lg: 0.5, xl: 1 },
         mt: `${(1 - idx) * 10}px`,
-        height: `${320 + idx * 20}px`,
+        height: `${420 + idx * 20}px`,
         borderRadius: '30px 30px 0 0',
         display: 'flex',
         flexDirection: 'column',
         alignContent: 'flex-start',
         cursor: 'pointer',
-        width: 200,
+        width: { lg: 200, xl: 262 },
         flexShrink: 0,
         position: 'relative',
         color: INNER_TEXT_COLOR,
-        backgroundImage: `url(/images/card${idx + 1}.png)`,
+        background: `linear-gradient(180deg, rgba(255,255,255,0) 70%, rgba(255,255,255,0.92) 95%, rgba(255,255,255,1) 100%), url(/images/card${idx + 1}.png)`,
         backgroundRepeat: 'no-repeat',
         backgroundPosition: 'center',
         backgroundSize: 'cover',
         '&:hover': {
-          color:
-            idx <= 3
-              ? HOVER_TEXT_COLOR
-              : idx === 4
-                ? HOVER_TEXT_COLOR_2
-                : HOVER_TEXT_COLOR_3,
-          background: 'rgba(124, 134, 236, 0.3)',
-          transform: 'scale(1.1)',
+          transform: 'scale(1.05)',
           transition: 'transform 0.5s ease-in-out',
           '& .description-text': {
-            WebkitLineClamp: 'unset',
-            overflow: 'visible',
+            minHeight: idx === 3 ? 484 : 280 + idx * 15,
+            WebkitLineClamp: 99,
+            color:
+              idx <= 3
+                ? HOVER_TEXT_COLOR
+                : idx === 4
+                  ? HOVER_TEXT_COLOR_2
+                  : HOVER_TEXT_COLOR_3,
           },
         },
         zIndex: 10,
@@ -61,39 +60,39 @@ const GradientCard: React.FC<GradientCardProps> = ({
     >
       <Typography
         variant='h1'
-        fontSize={20}
+        color={STANDARD_TEXT_COLOR}
+        fontSize={{ lg: 20, xl: 32 }}
         fontWeight={500}
         textAlign='center'
-        my={2}
+        my={4}
       >
         {title}
       </Typography>
-      <Box
+
+      <Typography
+        color='rgba(102, 102, 102, 1)'
+        fontSize={{ lg: 14, xl: 18 }}
+        className='description-text'
         sx={{
-          height: '100%',
-          pb: 2,
-          borderRadius: '16px 16px 0 0',
-          background:
-            'linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0.92) 77.5%, rgba(255,255,255,0) 100%)',
+          m: 0,
+          pt: 3,
+          pl: 2.5,
+          pr: 2.2,
+          pb: 0,
+          height: idx === 3 ? 306 : 300 + idx * 25,
+          background: '#fff',
+          borderRadius: '30px 30px 0 0',
+          display: '-webkit-box',
+          WebkitBoxOrient: 'vertical',
+          WebkitLineClamp: idx === 3 ? 11 : 20,
+          overflow: 'hidden',
+          wordBreak: 'break-word',
+          textOverflow: 'ellipsis',
+          lineHeight: '28px',
         }}
       >
-        <Typography
-          fontSize={14}
-          className='description-text'
-          sx={{
-            m: 0,
-            p: 2,
-            pb: 0,
-            display: '-webkit-box',
-            WebkitBoxOrient: 'vertical',
-            WebkitLineClamp: 6 + idx * 2,
-            overflow: 'hidden',
-            lineHeight: 1.6,
-          }}
-        >
-          {description}
-        </Typography>
-      </Box>
+        {description}
+      </Typography>
     </Grid>
   );
 };

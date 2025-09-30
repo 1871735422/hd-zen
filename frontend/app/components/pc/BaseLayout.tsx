@@ -22,6 +22,7 @@ function BaseLayout({
     <Container
       maxWidth={false}
       sx={{
+        position: 'relative',
         m: 0,
         px: { lg: 25, xl: 32 },
         backgroundImage: `

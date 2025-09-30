@@ -179,12 +179,14 @@ export default function VideoPlayer({
               anchorEl={qualityMenuAnchor}
               open={Boolean(qualityMenuAnchor)}
               onClose={() => setQualityMenuAnchor(null)}
+              anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+              transformOrigin={{ vertical: 'bottom', horizontal: 'center' }}
               slotProps={{
                 paper: {
                   sx: {
                     backgroundColor: 'rgba(0, 0, 0, 0.5)',
                     color: 'white',
-                    minWidth: '80px',
+                    minWidth: '50px',
                   },
                 },
               }}
