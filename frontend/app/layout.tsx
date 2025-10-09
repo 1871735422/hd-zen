@@ -3,6 +3,7 @@ import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import Footer from './components/pc/Footer';
 import Header from './components/pc/Header';
 // @ts-ignore
+import Clarity from '@microsoft/clarity';
 import './globals.css';
 import MuiThemeProvider from './theme-provider';
 
@@ -15,6 +16,9 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const projectId = 'tncl8cmm4o';
+
+  Clarity.init(projectId);
   return (
     <html lang='zh-Hans'>
       <body>

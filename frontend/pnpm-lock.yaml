@@ -14,6 +14,9 @@ importers:
       '@emotion/styled':
         specifier: ^11.14.0
         version: 11.14.0(@emotion/react@11.14.0(@types/react@18.3.24)(react@18.3.1))(@types/react@18.3.24)(react@18.3.1)
+      '@microsoft/clarity':
+        specifier: ^1.0.0
+        version: 1.0.0
       '@mui/icons-material':
         specifier: ^7.1.1
         version: 7.1.1(@mui/material@7.1.1(@emotion/react@11.14.0(@types/react@18.3.24)(react@18.3.1))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.3.24)(react@18.3.1))(@types/react@18.3.24)(react@18.3.1))(@types/react@18.3.24)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@types/react@18.3.24)(react@18.3.1)
@@ -494,6 +497,9 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
+
+  '@microsoft/clarity@1.0.0':
+    resolution: {integrity: sha512-2QY6SmXnqRj6dWhNY8NYCN3e53j4zCFebH4wGnNhdGV1mqAsQwql2fT0w8TISxCvwwfVp8idsWLIdrRHOms1PQ==}
 
   '@mui/core-downloads-tracker@7.1.1':
     resolution: {integrity: sha512-yBckQs4aQ8mqukLnPC6ivIRv6guhaXi8snVl00VtyojBbm+l6VbVhyTSZ68Abcx7Ah8B+GZhrB7BOli+e+9LkQ==}
@@ -2937,6 +2943,8 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
+
+  '@microsoft/clarity@1.0.0': {}
 
   '@mui/core-downloads-tracker@7.1.1': {}
 

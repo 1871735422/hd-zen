@@ -648,13 +648,21 @@ export const getReferenceBooks = async (
 };
 
 export const getBookChapters = async (
-  chapterOrder: number
+  bookOrder: string,
+  chapterOrder?: string
 ): Promise<BookChapter[]> => {
-  const records = await pb.collection('bookChapters').getFullList({
-    filter: `displayOrder ~ ${chapterOrder}`,
+  console.log({ bookOrder, chapterOrder });
+
+  let filters = `bookId.displayOrder = ${bookOrder}`;
+  if (chapterOrder) {
+    filters += `&& displayOrder = ${chapterOrder}`;
+  }
+  const records = await pb.collection('bookChapters').getList(1, 50, {
+    filter: filters,
     order: 'displayOrder',
+    expand: 'bookId',
   });
   console.log(records);
 
-  return records as unknown as BookChapter[];
+  return records?.items as unknown as BookChapter[];
 };

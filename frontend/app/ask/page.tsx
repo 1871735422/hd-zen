@@ -34,7 +34,7 @@ export default function QuestionCollectPage() {
           borderRadius: { lg: '25px', xl: '30px' },
           width: { lg: 650, xl: 830 },
           py: 4,
-          px: 7,
+          px: 9,
           mt: 12,
           mb: 16,
           textAlign: 'left',

@@ -27,50 +27,49 @@ const BookCard: React.FC<BookCardProps> = ({ title, description, idx }) => {
         boxShadow: 'none',
         cursor: 'pointer',
         transition: 'background 0.3s ease-in-out',
+        position: 'relative',
         '&:hover': {
-          background: 'linear-gradient(180deg, #f2f8ff 0%, #ffffff 100%)',
-        },
-        '&:hover .book-card-media': {
-          maxHeight: 0,
-          opacity: 0,
-          marginTop: 0,
-          marginBottom: 0,
           transition:
             'max-height 0.4s ease-in-out, opacity 0.2s ease-in-out, margin 0.4s ease-in-out',
-        },
-        '&:hover .MuiCardContent-root': {
-          backgroundColor: 'transparent',
-        },
-        '& .description-normal': {
-          display: '-webkit-box',
-        },
-        '& .description-hover': {
-          display: 'none',
-        },
-        '&:hover .description-normal': {
-          display: 'none',
-        },
-        '&:hover .description-hover': {
-          display: '-webkit-box',
-          mt: { lg: 1.5, xl: 2.5 },
-          px: { lg: 1.5, xl: 2.5 },
-          color: 'text.secondary',
-          textAlign: 'left',
-          WebkitBoxOrient: 'vertical',
-          overflow: 'hidden',
-          pb: 0,
-          fontSize: { lg: 12, xl: 14 },
+          '&::before': {
+            position: 'absolute',
+            inset: 0,
+            content: `"${title}"`,
+            backgroundColor: 'rgba(255,255,255,0.92)',
+            backdropFilter: 'blur(2px)',
+            zIndex: 1,
+            pointerEvents: 'none',
+            textAlign: 'center',
+            color: 'rgba(70, 114, 166, 1)',
+            fontSize: { lg: 20, xl: 24 },
+            fontWeight: '500',
+            pt: idx === 3 ? 7 : 12,
+          },
+          '&::after': {
+            position: 'absolute',
+            inset: 0,
+            content: `'${description}'`,
+            display: '-webkit-box',
+            px: { lg: 3, xl: 4.5 },
+            color: 'text.secondary',
+            textAlign: 'left',
+            WebkitBoxOrient: 'vertical',
+            overflow: 'hidden',
+            fontSize: { lg: 12, xl: 14 },
+            fontWeight: '500',
+            zIndex: 2,
+            pointerEvents: 'none',
+            pt: idx === 3 ? 15 : 20,
+            lineHeight: 1.8,
+          },
         },
       }}
     >
       <CardMedia
-        className='book-card-media'
         sx={{
           height: { lg: 230, xl: 286 },
           position: 'relative',
           overflow: 'hidden',
-          transition:
-            'max-height 0.4s ease-in-out, opacity 0.4s 0.2s ease-in-out, margin 0.4s ease-in-out',
         }}
       >
         <Image
@@ -89,7 +88,6 @@ const BookCard: React.FC<BookCardProps> = ({ title, description, idx }) => {
       <CardContent
         sx={{
           backgroundColor: '#fff',
-          transition: 'background-color 0.3s ease-in-out',
           padding: 2,
           flexGrow: 1,
           display: 'flex',
@@ -109,12 +107,12 @@ const BookCard: React.FC<BookCardProps> = ({ title, description, idx }) => {
           {title}
         </Typography>
         <Typography
-          className='description-normal'
           sx={{
             mt: 1.5,
             px: 1,
             color: 'text.secondary',
             textAlign: 'left',
+            display: '-webkit-box',
             WebkitBoxOrient: 'vertical',
             WebkitLineClamp: 2,
             overflow: 'hidden',
@@ -122,9 +120,6 @@ const BookCard: React.FC<BookCardProps> = ({ title, description, idx }) => {
             fontSize: { lg: 11, xl: 14 },
           }}
         >
-          {description}
-        </Typography>
-        <Typography fontSize={11} className='description-hover'>
           {description}
         </Typography>
       </CardContent>

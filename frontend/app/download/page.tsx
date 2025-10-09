@@ -59,7 +59,7 @@ export default async function DownloadPage() {
             <Grid size={4}>
               <Typography
                 align='left'
-                sx={{ pl: 8, color: NAV_COLOR, fontWeight: '700' }}
+                sx={{ pl: 12, color: NAV_COLOR, fontWeight: '700' }}
               >
                 文件名
               </Typography>
@@ -67,14 +67,9 @@ export default async function DownloadPage() {
             <Grid size={8}>
               <Grid container spacing={1} textAlign='center'>
                 {fileTypes.map(ft => (
-                  <Grid
-                    size={{ xs: 'auto' }}
-                    key={ft.key}
-                    sx={{ flexGrow: 1, minWidth: 60 }}
-                  >
+                  <Grid size={{ xs: 'auto' }} key={ft.key} sx={{ flexGrow: 1 }}>
                     <Typography
-                      variant='subtitle1'
-                      sx={{ fontWeight: '600', color: NAV_COLOR }}
+                      sx={{ fontWeight: '600', width: 70, color: NAV_COLOR }}
                     >
                       {ft.name}
                     </Typography>
@@ -92,7 +87,8 @@ export default async function DownloadPage() {
                 spacing={2}
                 bgcolor={'#fff'}
                 borderRadius={'16px'}
-                px={4}
+                pl={6}
+                pr={4}
                 pt={1.5}
                 pb={1.2}
               >
@@ -125,12 +121,11 @@ export default async function DownloadPage() {
                 <Grid size={8}>
                   <Grid container spacing={1} textAlign='center'>
                     {fileTypes.map(ft => (
-                      <Grid
-                        size={'auto'}
-                        key={ft.key}
-                        sx={{ minWidth: 60, flexGrow: 1 }}
-                      >
+                      <Grid size={'auto'} key={ft.key} sx={{ flexGrow: 1 }}>
                         <FileIconContainer
+                          sx={{
+                            width: 60,
+                          }}
                           fontSize={27}
                           target={
                             item[`url_down${ft.key}` as keyof typeof item]
@@ -147,7 +142,6 @@ export default async function DownloadPage() {
                           <Typography
                             variant='subtitle2'
                             pt={{ lg: 0.3, xl: 0.7 }}
-                            minWidth={40}
                           >
                             {item[`${ft.key}_size` as keyof typeof item] ||
                               'N/A'}

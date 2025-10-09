@@ -1,4 +1,5 @@
 import { getBookChapters } from '@/app/api';
+import CourseCard from '@/app/components/pc/CourseCard';
 import { Container, Grid, Typography } from '@mui/material';
 import { notFound } from 'next/navigation';
 
@@ -7,16 +8,14 @@ export default async function ReferencePage({
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  const { slug } = await params;
-  const bookOrder = parseInt(slug, 10);
-
+  const { slug: bookOrder } = await params;
   const books = await getBookChapters(bookOrder);
   // console.log(books);
 
   if (!books) {
     notFound();
   }
-  if (isNaN(bookOrder) || bookOrder < 1) {
+  if (Number(bookOrder) < 1) {
     notFound();
   }
 
@@ -35,19 +34,23 @@ export default async function ReferencePage({
           pb: 16,
         }}
       >
-        {/* {cardItems.map(item => (
-          <Grid key={item.id} size={{ xs: 12, sm: 6, md: 4 }}>
-            <CourseCard
-              courseOrder={1}
-              slug='reference'
-              item={{
-                idx: item.id,
-                title: item.title,
-              }}
-            />
-          </Grid>
-        ))} */}
-        <Typography>即将推出</Typography>
+        {books?.length ? (
+          books.map(item => (
+            <Grid key={item.id} size={{ xs: 12, sm: 6, md: 4 }}>
+              <CourseCard
+                courseOrder={item?.expand.bookId.displayOrder}
+                slug='reference'
+                item={{
+                  idx: item.displayOrder,
+                  title: item.title,
+                  description: item.article_summary || '',
+                }}
+              />
+            </Grid>
+          ))
+        ) : (
+          <Typography>即将推出</Typography>
+        )}
       </Grid>
     </Container>
   );

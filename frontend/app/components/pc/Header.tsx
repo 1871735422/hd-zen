@@ -49,7 +49,7 @@ const Header: React.FC = async () => {
             variant='h1'
             sx={{ color: STANDARD_TEXT_COLOR }}
             fontWeight={500}
-            fontSize={{ lg: 20, xl: 24 }}
+            fontSize={{ xs: 20, lg: 20, xl: 24 }}
           >
             <Link href='/'>慧灯禅修</Link>
           </Typography>

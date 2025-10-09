@@ -227,6 +227,9 @@ export interface BookChapter extends DownloadResource {
   article_fulltext?: string;
   article_summary?: string;
   tags?: string[];
+  title: string;
+  expand?: any;
+  url_audio?: any;
 }
 export interface ReferenceBook extends Course {
   author?: string;

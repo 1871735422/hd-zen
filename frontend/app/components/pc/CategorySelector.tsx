@@ -34,7 +34,9 @@ export default function CategorySelector({
           value={selectedCategory}
           exclusive
           onChange={(_, value) => {
+            if (!value) return;
             const categoryIndex = categories.indexOf(value);
+            // console.log({ categoryIndex, isLessonPage, value, categories });
 
             if (isLessonPage) {
               router.push(
