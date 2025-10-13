@@ -36,13 +36,13 @@ export default async function ReferencePage({
       >
         {books?.length ? (
           books.map(item => (
-            <Grid key={item.id} size={{ xs: 12, sm: 6, md: 4 }}>
+            <Grid key={item.id} size={{ md: 4 }}>
               <CourseCard
-                courseOrder={item?.expand.bookId.displayOrder}
+                courseOrder={item?.expand?.bookId?.displayOrder}
                 slug='reference'
                 item={{
-                  idx: item.displayOrder,
-                  title: item.title,
+                  idx: item.ordering,
+                  title: item.article_title,
                   description: item.article_summary || '',
                 }}
               />

@@ -77,7 +77,7 @@ export async function generateMetadata({
 
   if (!course || !topic || !media) return;
 
-  const url = `https://www.example.com/course/${courseOrder}/lesson${lessonOrder}`;
+  const url = `/course/${courseOrder}/lesson${lessonOrder}`;
   const title = `${media.title || topic.title || '课程'} | 慧灯禅修`;
   const description =
     media.article_summary ||
@@ -125,7 +125,7 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
   const media = topicMedia[0];
   const topicTags = media?.tags;
   const excludeLabels = [''];
-  if (!media?.url_hd && !media.url_sd) {
+  if (!media?.url_hd && !media?.url_sd) {
     excludeLabels.push('视频');
   }
   if (!media?.url_mp3) {

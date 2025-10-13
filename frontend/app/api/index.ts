@@ -651,18 +651,43 @@ export const getBookChapters = async (
   bookOrder: string,
   chapterOrder?: string
 ): Promise<BookChapter[]> => {
-  console.log({ bookOrder, chapterOrder });
+  // console.log({ bookOrder, chapterOrder });
 
   let filters = `bookId.displayOrder = ${bookOrder}`;
   if (chapterOrder) {
-    filters += `&& displayOrder = ${chapterOrder}`;
+    filters += `&& ordering = ${chapterOrder}`;
   }
   const records = await pb.collection('bookChapters').getList(1, 50, {
     filter: filters,
-    order: 'displayOrder',
+    order: 'ordering',
     expand: 'bookId',
   });
-  console.log(records);
 
   return records?.items as unknown as BookChapter[];
+};
+
+export const getBookMediaByOrder = async (
+  bookOrder: string,
+  chapterOrder?: string
+): Promise<TopicMediaX[]> => {
+  try {
+    // 增加超时时间和错误处理
+    const filters = ['courseOrder = ' + bookOrder];
+    if (chapterOrder) {
+      filters.push('topicOrder = ' + chapterOrder);
+    }
+
+    const result = await pb.collection('vGetBookMedia').getList(1, 50, {
+      filter: filters.join(' && '),
+    });
+    // console.log({ courseOrder, topicOrder });
+    // console.log(result?.items);
+    return result?.items as unknown as TopicMediaX[];
+  } catch (error) {
+    console.error(
+      `Error fetching topicMedia for book ${bookOrder}, lesson ${chapterOrder}:`,
+      error
+    );
+    return [];
+  }
 };

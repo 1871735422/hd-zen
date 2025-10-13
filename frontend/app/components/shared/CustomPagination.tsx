@@ -16,6 +16,10 @@ export default function Pagination({
   maxVisible = 4,
   size = 'medium',
 }: PaginationProps) {
+  if (totalPages <= 1) {
+    return null;
+  }
+
   const handleFirstPage = () => onPageChange(1);
   const handlePrevPage = () => onPageChange(Math.max(1, currentPage - 1));
   const handleNextPage = () =>

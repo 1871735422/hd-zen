@@ -19,7 +19,7 @@ export default async function ReadingPage({
   const topicTags = topicMedia?.tags;
 
   const hasContent =
-    topicMedia.article_fulltext || topicMedia.article_introtext;
+    topicMedia?.article_fulltext || topicMedia?.article_introtext;
 
   if (!hasContent) {
     return (

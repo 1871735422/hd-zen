@@ -24,7 +24,7 @@ export default function LessonMeta({
   refUrl,
 }: LessonMetaProps) {
   const isQuestion = /^\d+\./.test(title);
-  console.log(isQuestion, title);
+  // console.log(isQuestion, title);
 
   return (
     <Stack
@@ -103,7 +103,7 @@ export default function LessonMeta({
           )}
           <Stack flexDirection={'row'} mt={2}>
             <Typography variant='subtitle1' sx={{ minWidth: 60 }}>
-              问题：
+              {`${isQuestion ? '问题' : '概述'}`}：
             </Typography>
             <Typography
               variant='body1'
