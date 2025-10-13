@@ -235,3 +235,8 @@ export interface ReferenceBook extends Course {
   author?: string;
   description?: string;
 }
+
+export interface Dict extends BaseModel {
+  key: string;
+  value: string;
+}

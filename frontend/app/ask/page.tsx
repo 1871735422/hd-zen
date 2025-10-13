@@ -1,10 +1,17 @@
 import { Box } from '@mui/material';
+import { pb } from '../api';
+import { Dict } from '../types/models';
 
 export const metadata = {
   title: '不懂就问 | 慧灯禅修',
   description: '慧灯之光禅修网站 — 不懂就问',
 };
-export default function QuestionCollectPage() {
+export default async function QuestionCollectPage() {
+  const resultList = await pb.collection('dicts').getList(1, 50, {
+    filter: 'key="qa_qrcode_url"||key="qa_link"',
+  });
+  const result = resultList.items as unknown as Dict[];
+  // console.log(result);
   return (
     <Box
       sx={{
@@ -65,11 +72,14 @@ export default function QuestionCollectPage() {
             py: 2,
           }}
         >
-          <a href='#'>
+          <a href={result.find(item => item.key === 'qa_link')?.value || '#'}>
             <Box
               component={'img'}
               alt='参与方式：请扫描下方二维码或点击 问卷链接 填写您的问题。'
-              src={'/images/join-way.png'}
+              src={
+                result.find(item => item.key === 'qa_qrcode_url')?.value ||
+                '/images/join-way.png'
+              }
               width={0}
               height={0}
               sx={{

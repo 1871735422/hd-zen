@@ -12,7 +12,7 @@ import BookExpandIcon from '../icons/BookExpandIcon';
 import BookIcon from '../icons/BookIcon';
 import FoldResultIcon from '../icons/FoldResultIcon';
 import VideoCamIcon from '../icons/VideoCamIcon';
-import WaveIcon from '../icons/WaveIcon';
+import PlayMediaIcon from '../icons/PlayMediaIcon';
 
 export type SearchInfoCardType = '文章' | '音视频';
 
@@ -302,11 +302,10 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
                   '& svg': {
                     color: 'rgba(178, 207, 202, 1)',
                     fontSize: 16,
-                    mt: '2px',
                   },
                 }}
               >
-                {type === '文章' ? <BookExpandIcon /> : <WaveIcon />}
+                {type === '文章' ? <BookExpandIcon /> : <PlayMediaIcon />}
                 <Typography
                   sx={{
                     ml: 0.5,

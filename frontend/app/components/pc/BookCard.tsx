@@ -34,7 +34,7 @@ const BookCard: React.FC<BookCardProps> = ({ title, description, idx }) => {
           '&::before': {
             position: 'absolute',
             inset: 0,
-            content: `"${title}"`,
+            content: `"${title.endsWith('册') ? '慧灯禅修' + title : title}"`,
             backgroundColor: 'rgba(255,255,255,0.92)',
             backdropFilter: 'blur(2px)',
             zIndex: 1,
@@ -59,7 +59,7 @@ const BookCard: React.FC<BookCardProps> = ({ title, description, idx }) => {
             fontWeight: '500',
             zIndex: 2,
             pointerEvents: 'none',
-            pt: idx === 3 ? 15 : 20,
+            pt: idx === 3 ? 14 : 20,
             lineHeight: 1.8,
           },
         },

@@ -66,7 +66,6 @@ export default function LessonMeta({
             px: { lg: 3, xl: 4 },
             pt: { lg: 3, xl: 3.5 },
             pb: 3,
-            boxShadow: '0 2px 16px 0 rgba(0,0,0,0.06)',
             position: 'relative',
             backdropFilter: 'blur(12px)',
             WebkitBackdropFilter: 'blur(12px)',

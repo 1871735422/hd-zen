@@ -42,7 +42,7 @@ const GradientCard: React.FC<GradientCardProps> = ({
         backgroundPosition: 'center',
         backgroundSize: 'cover',
         '&:hover': {
-          transform: 'scale(1.05)',
+          transform: 'scale(1.02)',
           transition: 'transform 0.5s ease-in-out',
           '& .description-text': {
             minHeight: idx === 3 ? 484 : 280 + idx * 15,
