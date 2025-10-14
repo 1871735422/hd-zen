@@ -230,13 +230,11 @@ export const getAnswerMediasByOrder = async (
       ',url_image,url_hd,url_sd,mp4_duration,url_downmp4,mp4_size,url_mp3,mp3_duration,url_downmp3,mp3_size,summary';
   }
 
-  const result = await pb
-    .collection('vGetAnswerMedias')
-    .getList(1, 50, {
-      filter: filters.join(' && '),
-      fields: fileds,
-      sort: 'questionOrder',
-    });
+  const result = await pb.collection('vGetAnswerMedias').getList(1, 50, {
+    filter: filters.join(' && '),
+    fields: fileds,
+    sort: 'questionOrder',
+  });
   // console.log('result', result);
 
   if (!result) return [];
