@@ -78,7 +78,7 @@ export default function LessonMeta({
             },
           }}
         >
-          {tags && (
+          {tags && tags.length > 0 && (
             <Stack
               direction='row'
               spacing={1}

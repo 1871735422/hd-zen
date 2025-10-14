@@ -172,6 +172,7 @@ export const getCourseTopicsByDisplayOrder = async (
   const result = await pb.collection('courseTopics').getList(1, 50, {
     filter: `courseId.displayOrder = "${displayOrder}"`,
     expand: 'courseId',
+    sort: 'ordering',
     fields: 'article_title,ordering',
   });
 
@@ -230,12 +231,13 @@ export const getAnswerMediasByOrder = async (
   }
 
   const result = await pb
-    .collection('vGetQuestionsWithCourseTopic')
+    .collection('vGetAnswerMedias')
     .getList(1, 50, {
       filter: filters.join(' && '),
       fields: fileds,
+      sort: 'questionOrder',
     });
-  console.log('result', result);
+  // console.log('result', result);
 
   if (!result) return [];
   return result?.items as unknown as QuestionResult[];
@@ -630,7 +632,7 @@ export const getDownloadResources = async (
 ): Promise<DownloadResource[]> => {
   const records = await pb.collection('download').getFullList({
     filter: `name${isQa ? '' : '!'}~'问答' && isActive=true`,
-    order: 'displayOrder',
+    sort: 'displayOrder',
   });
   return records as unknown as DownloadResource[];
 };
@@ -640,7 +642,7 @@ export const getReferenceBooks = async (
 ): Promise<ReferenceBook[]> => {
   const records = await pb.collection('referenceBooks').getFullList({
     filter: `displayOrder ~ ${bookOrder}`,
-    order: 'displayOrder',
+    sort: 'displayOrder',
   });
   // console.log(records);
 
@@ -659,7 +661,7 @@ export const getBookChapters = async (
   }
   const records = await pb.collection('bookChapters').getList(1, 50, {
     filter: filters,
-    order: 'ordering',
+    sort: 'ordering',
     expand: 'bookId',
   });
 

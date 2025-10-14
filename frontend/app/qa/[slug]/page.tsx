@@ -43,13 +43,11 @@ export default async function QaPage({ params, searchParams }: QaPageProps) {
     const courseTopics = (await getCourseTopicsByDisplayOrder(displayOrder))
       ?.items;
     const questions = await getAnswerMediasByOrder(displayOrder, lessonOrder);
-
-    const sidebarData = courseTopics
-      .sort((a, b) => a.ordering - b.ordering)
-      .map(item => ({
-        label: item.article_title,
-        path: `/qa/${displayOrder}?tab=lesson${item.ordering}`,
-      }));
+    // console.log({ courseTopics, questions });
+    const sidebarData = courseTopics.map(item => ({
+      label: item.article_title,
+      path: `/qa/${displayOrder}?tab=lesson${item.ordering}`,
+    }));
     return (
       <Container
         maxWidth='xl'

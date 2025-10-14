@@ -113,12 +113,13 @@ const refPage = async ({ params, searchParams }: refPageProps) => {
   const media = bookMedia[0];
   const bookTags = media?.tags;
   const excludeLabels = ['视频', '问答'];
+  // console.log(media);
 
   if (!media?.url_mp3) {
     excludeLabels.push('音频');
   }
 
-  if (!media?.article_introtext && media?.article_fulltext) {
+  if (!media?.article_summary && !media?.article_fulltext) {
     excludeLabels.push('文字');
   }
 

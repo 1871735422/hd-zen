@@ -43,7 +43,7 @@ const BookCard: React.FC<BookCardProps> = ({ title, description, idx }) => {
             color: 'rgba(70, 114, 166, 1)',
             fontSize: { lg: 20, xl: 24 },
             fontWeight: '500',
-            pt: idx === 3 ? 7 : 12,
+            pt: idx === 3 ? {xl: 7,lg: 5} : 12,
           },
           '&::after': {
             position: 'absolute',
@@ -59,7 +59,7 @@ const BookCard: React.FC<BookCardProps> = ({ title, description, idx }) => {
             fontWeight: '500',
             zIndex: 2,
             pointerEvents: 'none',
-            pt: idx === 3 ? 14 : 20,
+            pt: idx === 3 ? {xl: 14,lg: 10} : 20,
             lineHeight: 1.8,
           },
         },

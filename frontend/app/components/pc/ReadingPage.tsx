@@ -55,7 +55,9 @@ export default async function ReadingPage({
   // 默认的普通阅读模式
   return (
     <>
-      <AudioPage topicMedia={topicMediaX} showTitle={false} />
+      {topicMedia?.url_mp3 && (
+        <AudioPage topicMedia={topicMediaX} showTitle={false} />
+      )}
 
       {/* 阅读内容区域 */}
       <Box

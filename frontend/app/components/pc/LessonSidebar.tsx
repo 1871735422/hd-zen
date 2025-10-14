@@ -49,7 +49,7 @@ export default async function LessonSidebar({
 
   const defaultSelected = (
     labelItems.find(item => item.key === selectedKey) || labelItems[0]
-  ).key;
+  )?.key;
 
   return (
     <Box
