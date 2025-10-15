@@ -1,3 +1,5 @@
+'use client';
+
 import { IconButton, Stack, TextField } from '@mui/material';
 import { MAIN_BLUE_COLOR, STANDARD_TEXT_COLOR } from '../../constants/colors';
 import SearchIcon from '../icons/SearchIcon';
@@ -11,11 +13,17 @@ const SearchForm: React.FC = () => {
       direction='row'
       spacing={2}
       sx={{
-        width: '240px',
+        width: {
+          sm: '180px',
+          md: '200px',
+          lg: '240px',
+          xl: '280px',
+          xxl: '320px',
+        },
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        mr: { lg: 0, xl: 8 },
+        mr: { sm: 0, md: 0, lg: 0, xl: 8, xxl: 10 },
       }}
     >
       <TextField
@@ -25,31 +33,16 @@ const SearchForm: React.FC = () => {
         required
         name='query'
         sx={{
-          width: { lg: 160, xl: 180 },
+          width: { sm: 120, md: 140, lg: 160, xl: 180, xxl: 200 },
           '& .MuiOutlinedInput-root': {
-            height: { lg: 25, xl: 32 },
-            fontSize: { xs: 14, sm: 15, md: 16 },
+            height: { sm: 20, md: 22, lg: 25, xl: 32, xxl: 36 },
+            fontSize: { sm: 12, md: 14, lg: 15, xl: 16, xxl: 18 },
             color: STANDARD_TEXT_COLOR,
             borderRadius: '5px',
-            p: { lg: 0.5 },
             backgroundColor: 'transparent',
-            '& fieldset': {
-              height: { lg: 25, xl: 32 },
-              borderColor: 'rgba(130, 178, 232, 0.6)',
-            },
-            '&:hover fieldset': {
-              borderColor: MAIN_BLUE_COLOR,
-            },
-            '&.Mui-focused fieldset': {
-              height: { lg: 25, xl: 32 },
-              borderColor: MAIN_BLUE_COLOR,
-            },
           },
-          '& input': {
-            px: 0.5,
-            py: 0,
-            my: '4px',
-            height: '100%',
+          '& .MuiInputBase-input': {
+            fontSize: { sm: 12, md: 14, lg: 15, xl: 16, xxl: 18 },
           },
         }}
       />

@@ -67,7 +67,9 @@ export async function generateMetadata({
   const { items: courses } = await getCourses();
   const course = courses.find(c => c.displayOrder.toString() === courseOrder);
 
-  const { items: topics } = await getCourseTopicsByCourse(course?.id ?? '');
+  const { items: topics } = (await getCourseTopicsByCourse(
+    course?.id ?? ''
+  )) || { items: [] };
   const topic = topics.find(
     t => `lesson${t.ordering}` === resolvedParams.lesson
   );
@@ -209,7 +211,7 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
       <Box
         sx={{
           backgroundColor: 'white',
-          ml: '5%',
+          ml: { lg: '50px', xl: '66px' },
           pl: { lg: 14, xl: selectedKey ? 18 : 21 },
           pr: { lg: 18, xl: selectedKey ? 24 : 26 },
           display: 'flex',

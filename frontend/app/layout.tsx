@@ -21,16 +21,23 @@ export default function RootLayout({
   Clarity.init(projectId);
   return (
     <html lang='zh-Hans'>
-      <body style={{minHeight: '100vh', display: 'flex', flexDirection: 'column', boxSizing: 'border-box'}}>
-        <AppRouterCacheProvider options={{ enableCssLayer: true }}>
+      <body
+        style={{
+          minHeight: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+          boxSizing: 'border-box',
+        }}
+      >
+        <AppRouterCacheProvider options={{ enableCssLayer: false }}>
           <MuiThemeProvider>
             <Header />
             <Container
               maxWidth={false}
               component='main'
               sx={{
-                p: { xs: 0, sm: 0, md: 0, lg: 0 },
-                m: { xs: 0, sm: 0, md: 0, lg: 0 },
+                p: { xs: 0, sm: 0, md: 0, lg: 0, xl: 0, xxl: 0 },
+                m: { xs: 0, sm: 0, md: 0, lg: 0, xl: 0, xxl: 0 },
                 flexGrow: 1,
               }}
             >

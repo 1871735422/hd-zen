@@ -25,15 +25,21 @@ const GradientCard: React.FC<GradientCardProps> = ({
       component={'a'}
       href={`/course/${id}`}
       sx={{
-        px: { lg: 0.5, xl: 1 },
+        px: { sm: 0.2, md: 0.3, lg: 0.5, xl: 1, xxl: 1.2 },
         mt: `${(1 - idx) * 10}px`,
-        height: `${420 + idx * 20}px`,
+        height: {
+          sm: `${300 + idx * 15}px`,
+          md: `${350 + idx * 18}px`,
+          lg: `${420 + idx * 20}px`,
+          xl: `${420 + idx * 20}px`,
+          xxl: `${480 + idx * 25}px`,
+        },
         borderRadius: '30px 30px 0 0',
         display: 'flex',
         flexDirection: 'column',
         alignContent: 'flex-start',
         cursor: 'pointer',
-        width: { lg: 200, xl: 262 },
+        width: { sm: 150, md: 170, lg: 200, xl: 262, xxl: 300 },
         flexShrink: 0,
         position: 'relative',
         color: INNER_TEXT_COLOR,
@@ -44,7 +50,7 @@ const GradientCard: React.FC<GradientCardProps> = ({
         '&:hover': {
           transform: 'scale(1.02)',
           transition: 'transform 0.5s ease-in-out',
-          '& .description-text': {
+          '& .MuiTypography-root:last-child': {
             minHeight: idx === 3 ? 484 : 280 + idx * 15,
             WebkitLineClamp: 99,
             color:
@@ -60,25 +66,30 @@ const GradientCard: React.FC<GradientCardProps> = ({
     >
       <Typography
         color={STANDARD_TEXT_COLOR}
-        fontSize={{ lg: 20, xl: 32 }}
+        fontSize={{ sm: 14, md: 16, lg: 20, xl: 32, xxl: 36 }}
         fontWeight={500}
         textAlign='center'
-        my={4}
+        my={{ sm: 2, md: 3, lg: 4, xl: 4, xxl: 5 }}
       >
         {title}
       </Typography>
 
       <Typography
         color='rgba(102, 102, 102, 1)'
-        fontSize={{ lg: 14, xl: 18 }}
-        className='description-text'
+        fontSize={{ sm: 10, md: 12, lg: 14, xl: 18, xxl: 20 }}
         sx={{
           m: 0,
-          pt: 3,
-          pl: 2.5,
-          pr: 2.2,
+          pt: { sm: 1.5, md: 2, lg: 3, xl: 3, xxl: 3.5 },
+          pl: { sm: 1.5, md: 2, lg: 2.5, xl: 2.5, xxl: 3 },
+          pr: { sm: 1.2, md: 1.8, lg: 2.2, xl: 2.2, xxl: 2.5 },
           pb: 0,
-          height: idx === 3 ? 306 : 300 + idx * 25,
+          height: {
+            sm: idx === 3 ? 200 : 180 + idx * 15,
+            md: idx === 3 ? 250 : 220 + idx * 18,
+            lg: idx === 3 ? 306 : 300 + idx * 25,
+            xl: idx === 3 ? 306 : 300 + idx * 25,
+            xxl: idx === 3 ? 350 : 340 + idx * 30,
+          },
           background: '#fff',
           borderRadius: '30px 30px 0 0',
           display: '-webkit-box',
@@ -87,7 +98,13 @@ const GradientCard: React.FC<GradientCardProps> = ({
           overflow: 'hidden',
           wordBreak: 'break-word',
           textOverflow: 'ellipsis',
-          lineHeight: '28px',
+          lineHeight: {
+            sm: '18px',
+            md: '22px',
+            lg: '28px',
+            xl: '28px',
+            xxl: '32px',
+          },
         }}
       >
         {description}

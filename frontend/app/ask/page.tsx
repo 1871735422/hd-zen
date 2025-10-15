@@ -22,7 +22,20 @@ export default async function QuestionCollectPage() {
     <Box
       sx={{
         display: 'flex',
-        height: '100%',
+        minHeight: {
+          sm: 'calc(100vh - 92px)',
+          md: 'calc(100vh - 98px)',
+          lg: 'calc(100vh - 104px)',
+          xl: 'calc(100vh - 121px)',
+          xxl: 'calc(100vh - 142px)',
+        }, // 减去 Header 和 Footer 的高度
+        height: {
+          sm: 'calc(100vh - 92px)',
+          md: 'calc(100vh - 98px)',
+          lg: 'calc(100vh - 104px)',
+          xl: 'calc(100vh - 121px)',
+          xxl: 'calc(100vh - 142px)',
+        },
         flexGrow: 1,
         alignItems: 'center',
         justifyContent: 'center',
@@ -46,12 +59,18 @@ export default async function QuestionCollectPage() {
         sx={{
           background:
             'linear-gradient(229.09deg, rgba(255, 255, 255, 1) 0.02%, rgba(255, 255, 255, 0.28) 100%)',
-          borderRadius: { lg: '25px', xl: '30px' },
-          width: { lg: 650, xl: 830 },
-          py: 4,
-          px: 9,
-          mt: 12,
-          mb: 16,
+          borderRadius: {
+            sm: '15px',
+            md: '20px',
+            lg: '25px',
+            xl: '30px',
+            xxl: '35px',
+          },
+          width: { sm: '90%', md: '85%', lg: 650, xl: 830, xxl: 950 },
+          py: { sm: 2, md: 3, lg: 4, xl: 4, xxl: 5 },
+          px: { sm: 3, md: 5, lg: 9, xl: 9, xxl: 12 },
+          mt: { sm: 4, md: 6, lg: 12, xl: 12, xxl: 16 },
+          mb: { sm: 4, md: 6, lg: 16, xl: 16, xxl: 20 },
           textAlign: 'left',
           backdropFilter: 'blur(10px)',
         }}
@@ -65,19 +84,25 @@ export default async function QuestionCollectPage() {
           sx={{
             width: '100%',
             height: 'auto',
-            maxWidth: { lg: 630, xl: 830 },
+            maxWidth: { sm: '100%', md: '100%', lg: 630, xl: 830, xxl: 950 },
             display: 'block',
           }}
         />
         <Box
           sx={{
-            mx: 1.5,
-            my: 3,
+            mx: { sm: 1, md: 1.2, lg: 1.5, xl: 1.5, xxl: 2 },
+            my: { sm: 2, md: 2.5, lg: 3, xl: 3, xxl: 3.5 },
             background: 'rgba(255, 255, 255, 0.7)',
             position: 'relative',
-            borderRadius: '25px',
-            px: 5,
-            py: 2,
+            borderRadius: {
+              sm: '15px',
+              md: '20px',
+              lg: '25px',
+              xl: '25px',
+              xxl: '30px',
+            },
+            px: { sm: 3, md: 4, lg: 5, xl: 5, xxl: 6 },
+            py: { sm: 1.5, md: 1.8, lg: 2, xl: 2, xxl: 2.5 },
           }}
         >
           <a href={result?.find(item => item.key === 'qa_link')?.value || '#'}>
@@ -94,7 +119,13 @@ export default async function QuestionCollectPage() {
                 cursor: 'pointer',
                 width: '100%',
                 height: 'auto',
-                maxWidth: { lg: 560, xl: 720 },
+                maxWidth: {
+                  sm: '100%',
+                  md: '100%',
+                  lg: 560,
+                  xl: 720,
+                  xxl: 850,
+                },
                 display: 'block',
               }}
             />
@@ -107,9 +138,9 @@ export default async function QuestionCollectPage() {
               display: 'flex',
               justifyContent: 'center',
 
-              width: { lg: 200, xl: 270 },
+              width: { sm: 120, md: 150, lg: 200, xl: 270, xxl: 300 },
               margin: '0 auto',
-              marginBottom: 4,
+              marginBottom: { sm: 2, md: 3, lg: 4, xl: 4, xxl: 5 },
             }}
           />
         </Box>

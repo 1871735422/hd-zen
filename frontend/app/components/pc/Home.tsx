@@ -24,7 +24,7 @@ const Home: React.FC = async () => {
       {/* 主内容区域 */}
       <Box
         sx={{
-          height: { lg: 480, xl: 686 },
+          height: { sm: 300, md: 380, lg: 480, xl: 686, xxl: 800 },
           width: '100%',
           backgroundImage: 'url(/images/hero-bg.png)',
           backgroundPosition: 'center',
@@ -37,7 +37,7 @@ const Home: React.FC = async () => {
         <Box
           sx={{
             height: '100%',
-            width: { lg: 522, xl: 722 },
+            width: { sm: '90%', md: '85%', lg: 522, xl: 722, xxl: 900 },
             position: 'absolute',
             top: 0,
             left: 0,
@@ -48,27 +48,51 @@ const Home: React.FC = async () => {
             // 使用 clip-path 排除右下角底边很长、高度很小的三角形区域
             clipPath: 'polygon(0% 0%, 100% 0%, 100% 83.5%, 0% 100%)',
             '& .MuiTypography-root': {
-              ml: '97px',
-              mr: '101px',
+              ml: {
+                sm: '20px',
+                md: '40px',
+                lg: '97px',
+                xl: '101px',
+                xxl: '120px',
+              },
+              mr: {
+                sm: '20px',
+                md: '40px',
+                lg: '101px',
+                xl: '101px',
+                xxl: '120px',
+              },
             },
             '& .MuiTypography-body1': {
               color: DESC_TEXT_COLOR,
-              fontSize: { lg: 16, xl: 22 },
-              lineHeight: { lg: 1.2, xl: '36px' },
+              fontSize: { sm: 12, md: 14, lg: 16, xl: 22, xxl: 24 },
+              lineHeight: {
+                sm: 1.3,
+                md: 1.25,
+                lg: 1.2,
+                xl: '36px',
+                xxl: '40px',
+              },
             },
             '& .MuiTypography-body1:nth-child(3)': {
-              py: 3,
+              py: { sm: 1.5, md: 2, lg: 3, xl: 3, xxl: 4 },
             },
           }}
         >
           <Typography
-            fontSize={{ lg: 28, xl: 39 }}
+            fontSize={{ sm: 20, md: 24, lg: 28, xl: 39, xxl: 44 }}
             fontWeight={500}
-            lineHeight={'57px'}
+            lineHeight={{
+              sm: '28px',
+              md: '32px',
+              lg: '40px',
+              xl: '57px',
+              xxl: '64px',
+            }}
             color={TITLE_COLOR}
             textAlign='center'
-            mt={'51px'}
-            mb={'10px'}
+            mt={{ sm: '20px', md: '30px', lg: '51px', xl: '51px', xxl: '60px' }}
+            mb={{ sm: '5px', md: '8px', lg: '10px', xl: '10px', xxl: '12px' }}
             variant='h2'
           >
             慧灯禅修课简介

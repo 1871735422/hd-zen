@@ -20,7 +20,7 @@ const LessonLayout = async ({
   // console.log('course', course);
   const courseId = course?.id || '';
   const { items: courseTopics } = await getCourseTopicsByCourse(courseId);
-  console.log('courseTopics', courseTopics);
+  // console.log('courseTopics', courseTopics);
   const courseName = course?.title ?? '';
   const lessonName =
     courseTopics.find(topic => topic.ordering + '' === lessonOrder)?.title ??
@@ -53,8 +53,8 @@ const LessonLayout = async ({
           color: 'transparent',
           fontSize: 30,
           position: 'absolute',
-          left: { xl: 577, lg: 525 },
-          top: { xl: 73, lg: 60 },
+          left: { xl: 577, lg: 525, md: 340, sm: 335 },
+          top: { xl: 73, lg: 60, md: 18, sm: 18 },
         }}
       >
         {subTitle}

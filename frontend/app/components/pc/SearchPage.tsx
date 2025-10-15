@@ -296,9 +296,9 @@ const SearchPage = () => {
         sx={{
           position: 'relative',
           zIndex: 1,
-          width: '56%',
-          mr: '30%',
-          ml: '14%',
+          width: { lg: 1200, xl: 1600, xxl: 1920 },
+          mr: { xs: 0, sm: 0, md: '10%', lg: '20%', xl: '30%', xxl: '30%' },
+          ml: { xs: 0, sm: 0, md: '0%', lg: '8%', xl: '12%', xxl: '14%' },
           px: 2,
           '& .MuiTypography-body1': {
             fontSize: 14,

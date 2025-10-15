@@ -19,7 +19,7 @@ const LessonLayout = async ({
   const lessonCrumbLabel = bookChapters[0]?.article_title ?? '';
   const menuData = await getCategories('学修参考资料');
   const courseName =
-    menuData[0].subMenu?.find(item => item.slug === courseOrder)?.name ?? '';
+    menuData[0]?.subMenu?.find(item => item.slug === courseOrder)?.name ?? '';
 
   const breadcrumbItems = [
     { label: '首页', href: '/' },

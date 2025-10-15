@@ -22,13 +22,15 @@ const LessonLayout = async ({
 
   const course = await getCourseByDisplayOrder(courseOrder);
   const courseId = course?.id || '';
-  const { items: courseTopics } = await getCourseTopicsByCourse(courseId);
+  const { items: courseTopics } = (await getCourseTopicsByCourse(courseId)) || {
+    items: [],
+  };
   const lessonCrumbLabel =
     courseTopics.find(topic => topic.ordering + '' === lessonOrder)?.title ??
     '';
   const menuData = await getCategories('慧灯禅修课');
   const courseName =
-    menuData[0].subMenu?.find(item => item.slug === courseOrder)?.name ?? '';
+    menuData[0]?.subMenu?.find(item => item.slug === courseOrder)?.name ?? '';
 
   const breadcrumbItems = [
     { label: '首页', href: '/' },

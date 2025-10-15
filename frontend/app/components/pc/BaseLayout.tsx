@@ -24,7 +24,7 @@ function BaseLayout({
       sx={{
         position: 'relative',
         m: 0,
-        px: { lg: 25, xl: 32 },
+        px: { sm: 2, md: 4, lg: 25, xl: 32, xxl: 40 },
         backgroundImage: `
           linear-gradient(180deg, rgba(224, 241, 255, 0.7) 0%, rgba(255, 255, 255, 0) 20.05%, rgba(217, 234, 252, 0.7) 33.35%, rgba(241, 247, 254, 0.7) 63.87%, rgba(245, 247, 251, 0.7) 100%),
           url(/images/course-bg-h.png),
@@ -38,12 +38,12 @@ function BaseLayout({
       <TitleBanner title={title} />
       {description && (
         <Typography
-          fontSize={{ lg: 16, xl: 18 }}
+          fontSize={{ sm: 12, md: 14, lg: 16, xl: 18, xxl: 20 }}
           sx={{
             color: 'rgba(127, 173, 235, 1)',
-            mt: -6,
-            mb: 6,
-            px: 3,
+            mt: { sm: -3, md: -4, lg: -6, xl: -6, xxl: -8 },
+            mb: { sm: 3, md: 4, lg: 6, xl: 6, xxl: 8 },
+            px: { sm: 1.5, md: 2, lg: 3, xl: 3, xxl: 4 },
           }}
         >
           {description?.split('\n')[0]}

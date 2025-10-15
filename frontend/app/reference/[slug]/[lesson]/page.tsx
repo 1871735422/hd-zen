@@ -144,7 +144,7 @@ const refPage = async ({ params, searchParams }: refPageProps) => {
       <Box
         sx={{
           backgroundColor: 'white',
-          ml: '5%',
+          ml: { lg: '50px', xl: '66px' },
           pl: 14,
           pr: 18,
           display: 'flex',

@@ -25,12 +25,12 @@ const MenuItemComponent: React.FC<MenuItemProps> = ({ item }) => {
     color:
       pathname.split('/')[1] === item.slug ? NAV_COLOR : STANDARD_TEXT_COLOR,
     fontWeight: 500,
-    fontSize: { lg: 18, xl: 20 },
+    fontSize: { sm: 14, md: 16, lg: 18, xl: 20, xxl: 22 },
     '&:hover': {
       color: NAV_COLOR,
       backgroundColor: 'transparent',
     },
-    px: {lg: 1, xl: 2.5 },
+    px: { sm: 0.5, md: 0.8, lg: 1, xl: 2.5, xxl: 3 },
   };
 
   if (hasChildren) {
@@ -38,7 +38,7 @@ const MenuItemComponent: React.FC<MenuItemProps> = ({ item }) => {
       <Box
         sx={{
           position: 'relative',
-          '&:hover .menu-dropdown': {
+          '&:hover > div': {
             opacity: 1,
             visibility: 'visible',
           },
@@ -57,20 +57,19 @@ const MenuItemComponent: React.FC<MenuItemProps> = ({ item }) => {
           {item.name}
         </Button>
         <Box
-          className='menu-dropdown'
           sx={{
             position: 'absolute',
-            top: 68,
-            left: -10,
+            top: { sm: 48, md: 56, lg: 68, xl: 76, xxl: 84 },
+            left: { sm: -5, md: -8, lg: -10, xl: -10, xxl: -12 },
             zIndex: 1000,
             opacity: 0,
-            p: 1,
+            p: { sm: 0.5, md: 0.8, lg: 1, xl: 1.2, xxl: 1.5 },
             visibility: 'hidden',
             transform: 'translateY(-10px)',
             transition: 'all 0.2s ease-in-out',
             background: 'white',
             borderRadius: '0 0 20px 20px',
-            minWidth: 180,
+            minWidth: { sm: 120, md: 150, lg: 180, xl: 200, xxl: 220 },
             width: 'fit-content',
             borderTop: '2px solid rgba(131, 181, 247, 1)',
             boxShadow: '0px 5px 20px  rgba(131, 181, 247, 0.3)',
@@ -84,8 +83,8 @@ const MenuItemComponent: React.FC<MenuItemProps> = ({ item }) => {
               content: '""',
               position: 'absolute',
               backgroundColor: 'rgba(130, 178, 232, 1)',
-              left: 53,
-              top: -26,
+              left: { sm: 35, md: 44, lg: 53, xl: 53, xxl: 60 },
+              top: { sm: -18, md: -22, lg: -26, xl: -26, xxl: -30 },
             },
           }}
         >
@@ -96,10 +95,16 @@ const MenuItemComponent: React.FC<MenuItemProps> = ({ item }) => {
                   key={subItem.name}
                   onClick={() => router.push(`/${item.slug}/${subItem.slug}`)}
                   sx={{
-                    fontSize: 16,
+                    fontSize: { sm: 12, md: 14, lg: 16, xl: 16, xxl: 18 },
                     fontWeight: 400,
                     color: STANDARD_TEXT_COLOR,
-                    padding: '8px 16px',
+                    padding: {
+                      sm: '4px 8px',
+                      md: '6px 12px',
+                      lg: '8px 16px',
+                      xl: '8px 16px',
+                      xxl: '10px 20px',
+                    },
                     width: '100%',
                     justifyContent: 'flex-start',
                     borderRadius: 0,

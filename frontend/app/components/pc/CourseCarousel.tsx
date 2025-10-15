@@ -1,5 +1,3 @@
-'use client';
-
 import { Box, Grid } from '@mui/material';
 import React from 'react';
 import GradientCard from './GradientCard';
@@ -19,18 +17,22 @@ const CourseCarousel: React.FC<CourseCarouselProps> = ({ cards }) => {
   return (
     <Box
       sx={{
-        py: { xs: 2, sm: 4, md: 6 },
-        mb: 10,
+        py: { sm: 4, md: 6, lg: 8, xl: 10, xxl: 12 },
+        mb: { sm: 6, md: 8, lg: 10, xl: 12, xxl: 14 },
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'flex-start',
         justifyContent: 'center',
-        gap: 1,
+        gap: { sm: 0.5, md: 0.8, lg: 1, xl: 1.2, xxl: 1.5 },
         width: '100%',
         overflow: 'hidden',
       }}
     >
-      <Grid container spacing={2} pb={12}>
+      <Grid
+        container
+        spacing={{ sm: 1, md: 1.5, lg: 2, xl: 2.5, xxl: 3 }}
+        pb={{ sm: 6, md: 8, lg: 12, xl: 14, xxl: 16 }}
+      >
         {cards.map((card, idx) => (
           <GradientCard
             key={card.id}

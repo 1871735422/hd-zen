@@ -40,8 +40,8 @@ export default async function QaPage({ params, searchParams }: QaPageProps) {
 
   try {
     // Fetch course details and topics
-    const courseTopics = (await getCourseTopicsByDisplayOrder(displayOrder))
-      ?.items;
+    const courseTopics =
+      (await getCourseTopicsByDisplayOrder(displayOrder))?.items || [];
     const questions = await getAnswerMediasByOrder(displayOrder, lessonOrder);
     // console.log({ courseTopics, questions });
     const sidebarData = courseTopics.map(item => ({
@@ -86,10 +86,7 @@ export default async function QaPage({ params, searchParams }: QaPageProps) {
             size={9}
           >
             {questions.map(question => (
-              <Grid
-                key={question.questionOrder}
-                size={{ xs: 12, sm: 6, md: 4 }}
-              >
+              <Grid key={question.questionOrder} size={{ sm: 6, md: 4 }}>
                 <CourseCard
                   item={{
                     idx: Number(question.questionOrder),
@@ -103,7 +100,7 @@ export default async function QaPage({ params, searchParams }: QaPageProps) {
               </Grid>
             ))}
             {questions.length === 0 && (
-              <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+              <Grid size={{ sm: 6, md: 4 }}>
                 <Typography variant='h5'>即将推出</Typography>
               </Grid>
             )}

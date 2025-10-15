@@ -17,13 +17,25 @@ const BookCard: React.FC<BookCardProps> = ({ title, description, idx }) => {
       component={'a'}
       href={`/course/${idx + 1}`}
       sx={{
-        width: { lg: 230, xl: 286 },
-        height: { lg: 230 * 1.55, xl: 286 * 1.55 }, // 高度按比例
-        mx: { lg: 1.5, xl: 2.5 },
+        width: { sm: 180, md: 200, lg: 230, xl: 286, xxl: 320 },
+        height: {
+          sm: 180 * 1.55,
+          md: 200 * 1.55,
+          lg: 230 * 1.55,
+          xl: 286 * 1.55,
+          xxl: 320 * 1.55,
+        }, // 高度按比例
+        mx: { sm: 0.5, md: 1, lg: 1.5, xl: 2.5, xxl: 3 },
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-        borderRadius: { lg: '24px', xl: '30px' },
+        borderRadius: {
+          sm: '16px',
+          md: '20px',
+          lg: '24px',
+          xl: '30px',
+          xxl: '36px',
+        },
         boxShadow: 'none',
         cursor: 'pointer',
         transition: 'background 0.3s ease-in-out',
@@ -41,25 +53,31 @@ const BookCard: React.FC<BookCardProps> = ({ title, description, idx }) => {
             pointerEvents: 'none',
             textAlign: 'center',
             color: 'rgba(70, 114, 166, 1)',
-            fontSize: { lg: 22, xl: 24 },
+            fontSize: { sm: 16, md: 18, lg: 22, xl: 24, xxl: 26 },
             fontWeight: '500',
-            pt: idx === 3 ? { xl: 7, lg: 4 } : {lg: 8,xl: 12},
+            pt:
+              idx === 3
+                ? { sm: 2, md: 3, xl: 7, lg: 4, xxl: 8 }
+                : { sm: 3, md: 4, lg: 8, xl: 12, xxl: 14 },
           },
           '&::after': {
             position: 'absolute',
             inset: 0,
             content: `'${description}'`,
             display: '-webkit-box',
-            px: { lg: 3, xl: 4.5 },
+            px: { sm: 2, md: 2.5, lg: 3, xl: 4.5, xxl: 5 },
             color: 'text.secondary',
             textAlign: 'left',
             WebkitBoxOrient: 'vertical',
             overflow: 'hidden',
-            fontSize: { lg: 12, xl: 14 },
+            fontSize: { sm: 10, md: 11, lg: 12, xl: 14, xxl: 16 },
             fontWeight: '500',
             zIndex: 2,
             pointerEvents: 'none',
-            pt: idx === 3 ? { xl: 14, lg: 8 } : {lg: 15,xl: 20},
+            pt:
+              idx === 3
+                ? { sm: 4, md: 6, xl: 14, lg: 8, xxl: 16 }
+                : { sm: 5, md: 7, lg: 15, xl: 20, xxl: 22 },
             lineHeight: 1.8,
           },
         },
@@ -67,7 +85,7 @@ const BookCard: React.FC<BookCardProps> = ({ title, description, idx }) => {
     >
       <CardMedia
         sx={{
-          height: { lg: 230, xl: 286 },
+          height: { sm: 180, md: 200, lg: 230, xl: 286, xxl: 320 },
           position: 'relative',
           overflow: 'hidden',
         }}
@@ -88,7 +106,7 @@ const BookCard: React.FC<BookCardProps> = ({ title, description, idx }) => {
       <CardContent
         sx={{
           backgroundColor: '#fff',
-          padding: 2,
+          padding: { sm: 1.5, md: 1.8, lg: 2, xl: 2.5, xxl: 3 },
           flexGrow: 1,
           display: 'flex',
           flexDirection: 'column',
@@ -98,7 +116,7 @@ const BookCard: React.FC<BookCardProps> = ({ title, description, idx }) => {
         <Typography
           sx={{
             color: 'rgba(70, 114, 166, 1)',
-            fontSize: { lg: 22, xl: 24 },
+            fontSize: { sm: 16, md: 18, lg: 22, xl: 24, xxl: 26 },
             fontWeight: '500',
             textAlign: 'center',
           }}
@@ -108,8 +126,8 @@ const BookCard: React.FC<BookCardProps> = ({ title, description, idx }) => {
         </Typography>
         <Typography
           sx={{
-            mt: 1.5,
-            px: 1,
+            mt: { sm: 1, md: 1.2, lg: 1.5, xl: 1.8, xxl: 2 },
+            px: { sm: 0.5, md: 0.8, lg: 1, xl: 1.2, xxl: 1.5 },
             color: 'text.secondary',
             textAlign: 'left',
             display: '-webkit-box',
@@ -117,7 +135,7 @@ const BookCard: React.FC<BookCardProps> = ({ title, description, idx }) => {
             WebkitLineClamp: 2,
             overflow: 'hidden',
             lineHeight: 2,
-            fontSize: { lg: 12, xl: 14 },
+            fontSize: { sm: 10, md: 11, lg: 12, xl: 14, xxl: 16 },
           }}
         >
           {description}

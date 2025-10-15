@@ -16,7 +16,14 @@ const StyledChip = styled(Chip)(() => ({
     backgroundColor: '#A5C9F2',
   },
   '& .MuiChip-label': {
-    padding: '2px 10px',
+    padding: {
+      sm: '1px 6px',
+      md: '1.5px 8px',
+      lg: '2px 10px',
+      xl: '2px 10px',
+      xxl: '3px 12px',
+    },
+    fontSize: { sm: '10px', md: '11px', lg: '12px', xl: '12px', xxl: '14px' },
   },
 }));
 

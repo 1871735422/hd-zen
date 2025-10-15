@@ -71,9 +71,9 @@ const MediaDownloadButton: React.FC<MediaDownloadButtonProps> = ({
       disabled={disabled}
       onClick={handleDownload}
       sx={{
-        width: { lg: 60, xl: 76 },
-        height: { lg: 60, xl: 76 },
-        fontSize: { lg: 10, xl: 12 },
+        width: { sm: 40, md: 50, lg: 60, xl: 76, xxl: 84 },
+        height: { sm: 40, md: 50, lg: 60, xl: 76, xxl: 84 },
+        fontSize: { sm: 8, md: 9, lg: 10, xl: 12, xxl: 14 },
         borderRadius: '50%',
         background: 'rgba(255, 168, 184, 1)',
         color: 'white',
@@ -81,7 +81,7 @@ const MediaDownloadButton: React.FC<MediaDownloadButtonProps> = ({
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: 0.5,
+        gap: { sm: 0.2, md: 0.3, lg: 0.5, xl: 0.5, xxl: 0.6 },
         minWidth: 'unset',
         '&:hover': {
           background: 'rgba(255, 168, 184, 0.8)',
@@ -100,14 +100,14 @@ const MediaDownloadButton: React.FC<MediaDownloadButtonProps> = ({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          fontSize: { lg: 20, xl: 22 },
+          fontSize: { sm: 14, md: 16, lg: 20, xl: 22, xxl: 24 },
           zIndex: 1,
         }}
       />
       <Typography
         variant='caption'
         sx={{
-          fontSize: { lg: 10, xl: 12 },
+          fontSize: { sm: 8, md: 9, lg: 10, xl: 12, xxl: 14 },
           fontWeight: 500,
           lineHeight: 1,
           textAlign: 'center',
