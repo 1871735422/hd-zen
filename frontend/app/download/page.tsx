@@ -29,30 +29,18 @@ export default async function DownloadPage() {
     <Box
       sx={{
         width: '100%',
-        minHeight: {
-          sm: 'calc(100vh - 92px)',
-          md: 'calc(100vh - 98px)',
-          lg: 'calc(100vh - 104px)',
-          xl: 'calc(100vh - 121px)',
-          xxl: 'calc(100vh - 142px)',
-        },
-        height: {
-          sm: 'calc(100vh - 92px)',
-          md: 'calc(100vh - 98px)',
-          lg: 'calc(100vh - 104px)',
-          xl: 'calc(100vh - 121px)',
-          xxl: 'calc(100vh - 142px)',
-        },
         backgroundImage: 'url(/images/course-bg-h.png)',
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',
         backgroundPosition: 'center',
         opacity: 0.9,
         display: 'flex',
+        flexGrow: 1,
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'flex-start',
         position: 'relative',
+        boxSizing: 'border-box',
       }}
     >
       <Container
@@ -60,14 +48,14 @@ export default async function DownloadPage() {
         sx={{
           position: 'relative',
           zIndex: 1,
-          pb: { sm: 3, md: 4, lg: 5, xl: 5, xxl: 6 },
+          width: '100%',
         }}
       >
         <TitleBanner title='下载' />
         <Box
           sx={{
             bgcolor: 'rgba(255, 255, 255, 0.5)',
-            mx: { sm: 2, md: 4, lg: 10, xl: 10, xxl: 12 },
+            mx: { sm: 2, md: 4, lg: 12, xl: 12, xxl: 12 },
             px: { sm: 1.5, md: 2, lg: 2, xl: 2.5, xxl: 3 },
             pt: { sm: 2, md: 2.5, lg: 3, xl: 3, xxl: 3.5 },
             pb: { sm: 4, md: 5, lg: 7, xl: 7, xxl: 8 },

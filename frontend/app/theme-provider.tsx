@@ -127,6 +127,16 @@ const createAppTheme = () =>
           disableScrollLock: true,
         },
       },
+      MuiLink: {
+        styleOverrides: {
+          root: {
+            textDecoration: 'none',
+            '&:hover': {
+              textDecoration: 'none',
+            },
+          },
+        },
+      },
     },
   });
 

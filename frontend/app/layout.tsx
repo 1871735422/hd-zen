@@ -39,6 +39,8 @@ export default function RootLayout({
                 p: { xs: 0, sm: 0, md: 0, lg: 0, xl: 0, xxl: 0 },
                 m: { xs: 0, sm: 0, md: 0, lg: 0, xl: 0, xxl: 0 },
                 flexGrow: 1,
+                display: 'flex',
+                flexDirection: 'column',
               }}
             >
               {children}
