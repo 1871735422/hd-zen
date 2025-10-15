@@ -59,7 +59,7 @@ export default function CourseCard({
             overflow: 'hidden',
             lineHeight: 1.5,
             textOverflow: 'ellipsis',
-            fontWeight: 500,
+            fontWeight: 600,
             fontSize: isQa ? { lg: 16, xl: 18 } : { lg: 20, xl: 24 },
             minHeight: isQa ? 60 : 20,
           }}

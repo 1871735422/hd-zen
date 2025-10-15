@@ -10,12 +10,20 @@ export default async function QuestionCollectPage() {
   const resultList = await pb.collection('dicts').getList(1, 50, {
     filter: 'key="qa_qrcode_url"||key="qa_link"',
   });
-  const result = resultList.items as unknown as Dict[];
+  let result: Dict[] = [];
+
+  try {
+    result = resultList.items as unknown as Dict[];
+  } catch (error) {
+    console.error(error);
+  }
   // console.log(result);
   return (
     <Box
       sx={{
         display: 'flex',
+        height: '100%',
+        flexGrow: 1,
         alignItems: 'center',
         justifyContent: 'center',
         position: 'relative',
@@ -72,12 +80,12 @@ export default async function QuestionCollectPage() {
             py: 2,
           }}
         >
-          <a href={result.find(item => item.key === 'qa_link')?.value || '#'}>
+          <a href={result?.find(item => item.key === 'qa_link')?.value || '#'}>
             <Box
               component={'img'}
               alt='参与方式：请扫描下方二维码或点击 问卷链接 填写您的问题。'
               src={
-                result.find(item => item.key === 'qa_qrcode_url')?.value ||
+                result?.find(item => item.key === 'qa_qrcode_url')?.value ||
                 '/images/join-way.png'
               }
               width={0}

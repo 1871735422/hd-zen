@@ -33,7 +33,7 @@ export default function LessonMeta({
       alignItems={isQuestion ? 'flex-start' : 'center'}
     >
       <Typography
-        fontWeight={500}
+        fontWeight={600}
         px={0}
         fontSize={{ lg: 28, xl: isQuestion ? 32 : 36 }}
         color={STANDARD_TEXT_COLOR}

@@ -57,7 +57,7 @@ async function CoursePage() {
         container
         justifyContent='center'
         alignItems='center'
-        width={'60%'}
+        width={{lg: '61%',xl: '66%'}}
         px={{ lg: 0, xl: 3.5 }}
         sx={{ position: 'relative', zIndex: 2 }}
         gap={5}

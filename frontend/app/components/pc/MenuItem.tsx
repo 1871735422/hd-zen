@@ -30,7 +30,7 @@ const MenuItemComponent: React.FC<MenuItemProps> = ({ item }) => {
       color: NAV_COLOR,
       backgroundColor: 'transparent',
     },
-    px: 2.5,
+    px: {lg: 1, xl: 2.5 },
   };
 
   if (hasChildren) {
@@ -86,9 +86,6 @@ const MenuItemComponent: React.FC<MenuItemProps> = ({ item }) => {
               backgroundColor: 'rgba(130, 178, 232, 1)',
               left: 53,
               top: -26,
-            },
-            '& .MuiButtonBase-root:last-child': {
-              // justifyContent: 'center',
             },
           }}
         >

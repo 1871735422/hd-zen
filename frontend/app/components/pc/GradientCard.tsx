@@ -59,7 +59,6 @@ const GradientCard: React.FC<GradientCardProps> = ({
       }}
     >
       <Typography
-        variant='h1'
         color={STANDARD_TEXT_COLOR}
         fontSize={{ lg: 20, xl: 32 }}
         fontWeight={500}
