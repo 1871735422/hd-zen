@@ -54,20 +54,20 @@ const createAppTheme = () =>
     unstable_strictMode: true,
     breakpoints: {
       values: {
-        xs: 0,
-        sm: 601,
-        md: 901,
-        lg: 1201,
-        xl: 1921,
-        xxl: 2561,
+        xs: 0,      // 0px
+        sm: 600,    // 600px
+        md: 960,    // 960px
+        lg: 1280,   // 1280px
+        xl: 1920,   // 1920px
+        xxl: 2560,  // 2560px
       },
     },
     layout: {
       maxWidth: {
-        md: 900,
-        lg: 1200,
-        xl: 1600,
-        xxl: 1920,
+        md: 960,    // 960px
+        lg: 1280,   // 1280px
+        xl: 1920,   // 1920px
+        xxl: 2560,  // 2560px
       },
       gutterX: {
         md: 24,
