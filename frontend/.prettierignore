@@ -1,0 +1,32 @@
+# Dependency lock files
+pnpm-lock.yaml
+yarn.lock
+package-lock.json
+
+# Build outputs
+.next/
+out/
+dist/
+build/
+
+# Cache directories
+.cache/
+.turbo/
+node_modules/
+
+# Generated files
+*.tsbuildinfo
+next-env.d.ts
+
+# Auto-generated or binary files
+public/fonts/
+*.woff
+*.woff2
+*.ttf
+*.otf
+*.eot
+
+# Other files that shouldn't be formatted
+CHANGELOG.md
+*.tar
+*.tar.gz
