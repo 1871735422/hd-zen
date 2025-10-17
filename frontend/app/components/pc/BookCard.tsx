@@ -17,11 +17,11 @@ const BookCard: React.FC<BookCardProps> = ({ title, description, idx }) => {
       component={'a'}
       href={`/course/${idx + 1}`}
       sx={{
-        width: { sm: 180, md: 200, lg: 230, xl: 286, xxl: 320 },
+        width: { sm: 180, md: 200, lg: 203, xl: 286, xxl: 320 },
         height: {
           sm: 180 * 1.55,
           md: 200 * 1.55,
-          lg: 230 * 1.55,
+          lg: 203 * 1.55,
           xl: 286 * 1.55,
           xxl: 320 * 1.55,
         }, // 高度按比例
@@ -57,8 +57,8 @@ const BookCard: React.FC<BookCardProps> = ({ title, description, idx }) => {
             fontWeight: '500',
             pt:
               idx === 3
-                ? { sm: 2, md: 3, xl: 7, lg: 4, xxl: 8 }
-                : { sm: 3, md: 4, lg: 8, xl: 12, xxl: 14 },
+                ? { sm: 2, md: 3, lg: 2.5, xl: 7, xxl: 8 }
+                : { sm: 3, md: 4, lg: 5, xl: 12, xxl: 14 },
           },
           '&::after': {
             position: 'absolute',
@@ -67,7 +67,7 @@ const BookCard: React.FC<BookCardProps> = ({ title, description, idx }) => {
             display: '-webkit-box',
             px: { sm: 2, md: 2.5, lg: 3, xl: 4.5, xxl: 5 },
             color: 'text.secondary',
-            textAlign: 'left',
+            textAlign: 'justify',
             WebkitBoxOrient: 'vertical',
             overflow: 'hidden',
             fontSize: { sm: 10, md: 11, lg: 12, xl: 14, xxl: 16 },
@@ -76,16 +76,16 @@ const BookCard: React.FC<BookCardProps> = ({ title, description, idx }) => {
             pointerEvents: 'none',
             pt:
               idx === 3
-                ? { sm: 4, md: 6, xl: 14, lg: 8, xxl: 16 }
-                : { sm: 5, md: 7, lg: 15, xl: 20, xxl: 22 },
-            lineHeight: 1.8,
+                ? { sm: 4, md: 6, lg: 7, xl: 14, xxl: 16 }
+                : { sm: 5, md: 7, lg: 11, xl: 20, xxl: 22 },
+            lineHeight: idx === 3 ? 1.4 : 1.8,
           },
         },
       }}
     >
       <CardMedia
         sx={{
-          height: { sm: 180, md: 200, lg: 230, xl: 286, xxl: 320 },
+          height: { sm: 180, md: 200, lg: 203, xl: 286, xxl: 320 },
           position: 'relative',
           overflow: 'hidden',
         }}
@@ -116,7 +116,7 @@ const BookCard: React.FC<BookCardProps> = ({ title, description, idx }) => {
         <Typography
           sx={{
             color: 'rgba(70, 114, 166, 1)',
-            fontSize: { sm: 16, md: 18, lg: 22, xl: 24, xxl: 26 },
+            fontSize: { sm: 16, md: 18, lg: 17, xl: 24, xxl: 28 },
             fontWeight: '500',
             textAlign: 'center',
           }}

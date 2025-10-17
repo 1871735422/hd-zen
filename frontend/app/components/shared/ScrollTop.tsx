@@ -41,7 +41,7 @@ export default function ScrollTop({ bgColor = color, visible = false }) {
           color: bgColor,
           zIndex: 1000,
           '& svg': {
-            fontSize: { lg: 50, xl: 64 },
+            fontSize: { lg: 45, xl: 64, xxl: 72 },
           },
         }}
       >

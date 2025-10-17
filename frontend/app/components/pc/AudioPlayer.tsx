@@ -100,12 +100,12 @@ export default function AudioPlayer({ src }: AudioPlayerProps) {
         width: '90%',
         backgroundColor: 'rgba(242, 248, 255, 0.75)',
         borderRadius: 999,
-        px: { lg: 2, xl: 3 },
-        py: { lg: 1, xl: 1.5 },
+        px: { lg: 2, xl: 3, xxl: 4 },
+        py: { lg: 1, xl: 1.5, xxl: 2 },
         gap: 1.5,
         '& .MuiTypography-root': {
           color: 'rgba(102, 102, 102, 1)',
-          fontSize: { lg: 14, xl: 16 },
+          fontSize: { lg: 11, xl: 16, xxl: 18 },
         },
       }}
     >
@@ -121,7 +121,7 @@ export default function AudioPlayer({ src }: AudioPlayerProps) {
         <Typography
           variant='body2'
           color='text.secondary'
-          sx={{ minWidth: { lg: 40, xl: 50 }, textAlign: 'center' }}
+          sx={{ minWidth: { lg: 36, xl: 50, xxl: 60 }, textAlign: 'center' }}
         >
           {formatTime(currentTime)}
         </Typography>
@@ -145,8 +145,8 @@ export default function AudioPlayer({ src }: AudioPlayerProps) {
               'linear-gradient(270deg, rgba(78, 144, 237, 1) 0%, rgba(176, 222, 255, 1) 100%)',
           },
           '& .MuiSlider-thumb': {
-            width: { lg: 16, xl: 20 },
-            height: { lg: 16, xl: 20 },
+            width: { lg: 14, xl: 20, xxl: 24 },
+            height: { lg: 14, xl: 20, xxl: 24 },
             backgroundColor: '#7DB1F8',
             boxShadow: '3px 0 0 0 rgba(245, 249, 252, 1)',
           },
@@ -157,7 +157,7 @@ export default function AudioPlayer({ src }: AudioPlayerProps) {
         <Typography
           variant='body2'
           color='text.secondary'
-          sx={{ minWidth: { lg: 40, xl: 50 }, textAlign: 'center' }}
+          sx={{ minWidth: { lg: 36, xl: 50, xxl: 60 }, textAlign: 'center' }}
         >
           {formatTime(duration)}
         </Typography>
@@ -169,7 +169,7 @@ export default function AudioPlayer({ src }: AudioPlayerProps) {
             isMuted
               ? {
                   '& svg': {
-                    fontSize: { lg: 24, xl: 28 },
+                    fontSize: { lg: 20, xl: 28, xxl: 32 },
                   },
                   position: 'relative',
                   '&::after': {
@@ -177,7 +177,7 @@ export default function AudioPlayer({ src }: AudioPlayerProps) {
                     position: 'absolute',
                     top: '50%',
                     left: '50%',
-                    width: { lg: 24, xl: 28 },
+                    width: { lg: 20, xl: 28, xxl: 32 },
                     height: 2,
                     transform: 'translate(-50%, -50%) rotate(45deg)',
                     background:
@@ -188,7 +188,7 @@ export default function AudioPlayer({ src }: AudioPlayerProps) {
                 }
               : {
                   '& svg': {
-                    fontSize: { lg: 24, xl: 28 },
+                    fontSize: { lg: 20, xl: 28, xxl: 32 },
                   },
                 }
           }

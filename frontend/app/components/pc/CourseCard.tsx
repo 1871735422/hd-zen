@@ -27,9 +27,13 @@ export default function CourseCard({
       href={`/${slug}/${courseOrder}/lesson${item.idx}${questionOrder ? `?tab=question${questionOrder}` : ''}`}
       component={'a'}
       sx={{
-        width: isQa ? { lg: 255, xl: 308 } : { lg: 362, xl: 437 },
-        height: isQa ? { lg: 174, xl: 210 } : { lg: 177, xl: 214 },
-        borderRadius: { lg: '20px', xl: '25px' },
+        width: isQa
+          ? { lg: 206, xl: 308, xxl: 350 }
+          : { lg: 293, xl: 437, xxl: 480 },
+        height: isQa
+          ? { lg: 140, xl: 210, xxl: 240 }
+          : { lg: 143, xl: 214, xxl: 250 },
+        borderRadius: { lg: '20px', xl: '25px', xxl: '30px' },
         position: 'relative',
         boxShadow: '0 4px 20px rgba(131, 181, 247, 0.3)',
         display: 'flex',
@@ -44,14 +48,14 @@ export default function CourseCard({
           justifyContent: 'space-between',
           minHeight: isQa ? 60 : 100,
           flex: 1,
-          px: isQa ? { lg: 1, xl: 3 } : { lg: 2, xl: 5 },
-          pt: { lg: 1, xl: 3 },
+          px: isQa ? { lg: 2, xl: 3, xxl: 4 } : { lg: 3.3, xl: 5, xxl: 6 },
+          pt: { lg: 2, xl: 3, xxl: 4 },
           pb: isQa ? '16px !important' : '',
         }}
       >
         <Typography
           sx={{
-            mb: { lg: 1, xl: 1.5 },
+            mb: { lg: 1, xl: 1.5, xxl: 2 },
             pr: isQa ? 4.5 : 7,
             display: '-webkit-box',
             WebkitBoxOrient: 'vertical',
@@ -60,7 +64,9 @@ export default function CourseCard({
             lineHeight: 1.5,
             textOverflow: 'ellipsis',
             fontWeight: 600,
-            fontSize: isQa ? { lg: 16, xl: 18 } : { lg: 20, xl: 24 },
+            fontSize: isQa
+              ? { lg: 12, xl: 18, xxl: 20 }
+              : { lg: 16, xl: 24, xxl: 26 },
             minHeight: isQa ? 60 : 20,
           }}
         >
@@ -82,7 +88,7 @@ export default function CourseCard({
               WebkitBoxOrient: 'vertical',
               WebkitLineClamp: isQa ? 1 : 2,
               overflow: 'hidden',
-              fontSize: { lg: 12, xl: 14 },
+              fontSize: { lg: 9, xl: 14, xxl: 16 },
               lineHeight: '23px',
               textOverflow: 'ellipsis',
               wordBreak: 'break-word',
@@ -97,8 +103,12 @@ export default function CourseCard({
       <CourseActionButton
         sx={{
           m: '0 auto',
-          mb: isQa ? { lg: 1.4, xl: 1.7 } : { lg: '22px', xl: '27px' },
-          width: isQa ? { lg: 227, xl: 274 } : { lg: 282, xl: 340 },
+          mb: isQa
+            ? { lg: 1.1, xl: 1.7, xxl: 2 }
+            : { lg: '18px', xl: '27px', xxl: '32px' },
+          width: isQa
+            ? { lg: 183, xl: 274, xxl: 310 }
+            : { lg: 228, xl: 340, xxl: 400 },
         }}
       >
         {isQa ? '观看视频' : '点击进入'}

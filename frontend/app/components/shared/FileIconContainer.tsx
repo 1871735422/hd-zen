@@ -14,8 +14,8 @@ const FileIconContainer = styled(Link)({
     color: 'rgba(255, 94, 124, 1) !important',
   },
   '& svg': {
-    width: 30,
-    hegit: 30,
+    width: { lg: 28, xl: 30, xxl: 34 },
+    height: { lg: 28, xl: 30, xxl: 34 },
   },
 });
 

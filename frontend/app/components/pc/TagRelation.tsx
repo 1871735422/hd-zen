@@ -102,7 +102,7 @@ export default function TagRelation({ tag, refCourses }: TagRelationProps) {
         {/* 页面标题 */}
         <Typography
           sx={{
-            fontSize: { lg: 20, xl: 26 },
+            fontSize: { lg: 18, xl: 26, xxl: 30 },
             fontWeight: 500,
             color: STANDARD_TEXT_COLOR,
             mb: 1,
@@ -136,9 +136,11 @@ export default function TagRelation({ tag, refCourses }: TagRelationProps) {
                 justifyContent: 'flex-end',
                 alignItems: 'center',
                 gap: 1,
-                '& .MuiTypography-root': { fontSize: { lg: 13, xl: 16 } },
+                '& .MuiTypography-root': {
+                  fontSize: { lg: 11, xl: 16, xxl: 18 },
+                },
                 '& .MuiSelect-select': {
-                  fontSize: { lg: 12, xl: 14 },
+                  fontSize: { lg: 10, xl: 14, xxl: 16 },
                   color: STANDARD_TEXT_COLOR,
                   py: '2px',
                 },
@@ -166,9 +168,9 @@ export default function TagRelation({ tag, refCourses }: TagRelationProps) {
             <TableContainer
               sx={{
                 margin: '0 auto',
-                fontSize: { lg: 14, xl: 18 },
+                fontSize: { lg: 13, xl: 18, xxl: 20 },
                 '& .MuiTableCell-root': {
-                  fontSize: { lg: 14, xl: 18 },
+                  fontSize: { lg: 13, xl: 18, xxl: 20 },
                 },
               }}
             >

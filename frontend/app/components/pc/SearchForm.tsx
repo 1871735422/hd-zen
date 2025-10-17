@@ -16,7 +16,7 @@ const SearchForm: React.FC = () => {
         width: {
           sm: '180px',
           md: '200px',
-          lg: '240px',
+          lg: '199px',
           xl: '280px',
           xxl: '320px',
         },
@@ -33,16 +33,16 @@ const SearchForm: React.FC = () => {
         required
         name='query'
         sx={{
-          width: { sm: 120, md: 140, lg: 160, xl: 180, xxl: 200 },
+          width: { sm: 120, md: 140, lg: 128, xl: 180, xxl: 200 },
           '& .MuiOutlinedInput-root': {
-            height: { sm: 20, md: 22, lg: 25, xl: 32, xxl: 36 },
-            fontSize: { sm: 12, md: 14, lg: 15, xl: 16, xxl: 18 },
+            height: { sm: 20, md: 22, lg: 23, xl: 32, xxl: 36 },
+            fontSize: { sm: 12, md: 14, lg: 11, xl: 16, xxl: 18 },
             color: STANDARD_TEXT_COLOR,
             borderRadius: '5px',
             backgroundColor: 'transparent',
           },
           '& .MuiInputBase-input': {
-            fontSize: { sm: 12, md: 14, lg: 15, xl: 16, xxl: 18 },
+            fontSize: { sm: 12, md: 14, lg: 11, xl: 16, xxl: 18 },
           },
         }}
       />

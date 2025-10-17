@@ -35,10 +35,14 @@ export default function LessonMeta({
       <Typography
         fontWeight={600}
         px={0}
-        fontSize={{ lg: 28, xl: isQuestion ? 32 : 36 }}
+        fontSize={{
+          lg: 30,
+          xl: isQuestion ? 32 : 36,
+          xxl: isQuestion ? 36 : 40,
+        }}
         color={STANDARD_TEXT_COLOR}
-        mb={tags?.length ? { lg: 4, xl: 8 } : 1}
-        mt={isQuestion ? 0 : { lg: 7, xl: 9 }}
+        mb={tags?.length ? { lg: 5.7, xl: 8, xxl: 10 } : 1}
+        mt={isQuestion ? 0 : { lg: 6.4, xl: 9, xxl: 11 }}
       >
         {clearCourseTitle(title)}
       </Typography>
@@ -63,8 +67,8 @@ export default function LessonMeta({
                   zIndex: -1,
                 },
             borderRadius: '20px',
-            px: { lg: 3, xl: 4 },
-            pt: { lg: 3, xl: 3.5 },
+            px: { lg: 2.8, xl: 4, xxl: 5 },
+            pt: { lg: 2.5, xl: 3.5, xxl: 4 },
             pb: 3,
             position: 'relative',
             backdropFilter: 'blur(12px)',
@@ -74,7 +78,7 @@ export default function LessonMeta({
               mr: 0.7,
               color: 'rgba(102, 102, 102, 1)',
               fontWeight: 500,
-              fontSize: { lg: 16, xl: 18 },
+              fontSize: { lg: 13, xl: 18, xxl: 20 },
             },
           }}
         >

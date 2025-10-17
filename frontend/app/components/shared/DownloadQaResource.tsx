@@ -32,12 +32,16 @@ export default function DownloadQaResource({
         right: 30,
         color: '#fff',
         backgroundColor: 'rgba(255, 168, 184, 1)',
-        borderRadius: { lg: '25px 25px 0 0 ', xl: '30px 30px 0px 0px' },
+        borderRadius: {
+          lg: '25px 25px 0 0 ',
+          xl: '30px 30px 0px 0px',
+          xxl: '35px 35px 0px 0px',
+        },
         px: 2,
         pt: 1,
         pb: 0.4,
         '& svg': {
-          fontSize: { lg: 24, xl: 28 },
+          fontSize: { lg: 24, xl: 28, xxl: 32 },
         },
       }}
     >

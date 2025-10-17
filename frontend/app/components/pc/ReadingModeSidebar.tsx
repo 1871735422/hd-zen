@@ -25,7 +25,7 @@ const CircleButton = styled(Button)(({ theme }) => ({
   [theme.breakpoints.up('lg')]: {
     width: 36,
     height: 36,
-    fontSize: 18,
+    fontSize: 17,
   },
   [theme.breakpoints.up('xl')]: {
     width: 50,
@@ -56,8 +56,8 @@ const ThemeColorButton = styled(Button)(({ theme }) => ({
     height: 10,
   },
   [theme.breakpoints.up('lg')]: {
-    width: 12,
-    height: 12,
+    width: 11,
+    height: 11,
   },
   [theme.breakpoints.up('xl')]: {
     width: 16,

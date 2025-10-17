@@ -4,7 +4,7 @@ import {
   getCourses,
 } from '@/app/api';
 import CourseCard from '@/app/components/pc/CourseCard';
-import { Box, Container, Grid, Typography } from '@mui/material';
+import { Box, Container, Typography } from '@mui/material';
 import { notFound } from 'next/navigation';
 
 // 15分钟缓存
@@ -52,23 +52,42 @@ export default async function CoursePage({ params }: CoursePageProps) {
           paddingX: '0px !important',
         }}
       >
-        {/* Course Topics Grid */}
-        <Grid container spacing={5}>
-          {courseTopics.map(topic => (
-            <Grid key={topic.id} size={{ lg: 4 }}>
-              <CourseCard
-                item={{
-                  idx: topic.ordering,
-                  title: topic.article_title || topic.title || '',
-                  description:
-                    topic.article_introtext || topic.description || '',
-                }}
-                courseOrder={course.displayOrder}
-                slug='course'
-              />
-            </Grid>
-          ))}
-        </Grid>
+        {/* Course Topics Flex Layout */}
+        <Box>
+          {(() => {
+            const rows = [];
+            for (let i = 0; i < courseTopics.length; i += 3) {
+              const rowItems = courseTopics.slice(i, i + 3);
+              rows.push(
+                <Box
+                  key={i}
+                  sx={{
+                    display: 'flex',
+                    justifyContent:
+                      rowItems.length === 3 ? 'space-between' : 'flex-start',
+                    gap: rowItems.length < 3 ? 5 : 0,
+                    mb: 5,
+                  }}
+                >
+                  {rowItems.map(topic => (
+                    <CourseCard
+                      key={topic.id}
+                      item={{
+                        idx: topic.ordering,
+                        title: topic.article_title || topic.title || '',
+                        description:
+                          topic.article_introtext || topic.description || '',
+                      }}
+                      courseOrder={course.displayOrder}
+                      slug='course'
+                    />
+                  ))}
+                </Box>
+              );
+            }
+            return rows;
+          })()}
+        </Box>
 
         {/* Empty state */}
         {courseTopics.length === 0 && (

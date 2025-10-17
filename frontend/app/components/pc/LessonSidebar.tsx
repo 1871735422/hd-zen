@@ -58,7 +58,7 @@ export default async function LessonSidebar({
         top: 0,
         left: 0,
         zIndex: 1000,
-        width: { lg: 80, xl: 96 },
+        width: { lg: 68, xl: 96, xxl: 110 },
         background:
           'linear-gradient(180deg, rgba(157, 208, 250, 1) 0%, rgba(255, 166, 224, 1) 99.96%)',
         borderTopRightRadius: 10,
@@ -66,13 +66,13 @@ export default async function LessonSidebar({
         borderBottomLeftRadius: 20,
         borderTopLeftRadius: 20,
         px: 0,
-        py: { xl: 0.5 },
+        py: { xl: 0.5, xxl: 0.8 },
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         '& svg': {
-          width: { lg: 16, xl: 24 },
-          height: { lg: 16, xl: 24 },
+          width: { lg: 17, xl: 24, xxl: 28 },
+          height: { lg: 17, xl: 24, xxl: 28 },
         },
       }}
     >
@@ -83,7 +83,7 @@ export default async function LessonSidebar({
           color: '#fff',
           mt: 1,
           mb: 0.5,
-          fontSize: { lg: 14, xl: 16 },
+          fontSize: { lg: 11, xl: 16, xxl: 18 },
           fontWeight: 700,
         }}
       >
@@ -98,7 +98,7 @@ export default async function LessonSidebar({
           alignItems: 'center',
           justifyContent: 'center',
           '& .MuiTypography-root': {
-            fontSize: { lg: 14, xl: 16 },
+            fontSize: { lg: 11, xl: 16, xxl: 18 },
           },
         }}
       >
@@ -123,7 +123,7 @@ export default async function LessonSidebar({
                 }
                 sx={{
                   width: 100,
-                  height: { lg: 80, xl: 94 },
+                  height: { lg: 80, xl: 94, xxl: 108 },
                   borderLeft: isSelected ? '8px solid transparent' : 'none',
                   boxSizing: 'border-box',
                 }}
@@ -131,7 +131,7 @@ export default async function LessonSidebar({
                 <ListItemButton
                   selected={isSelected}
                   sx={{
-                    height: { lg: 46, xl: 56 },
+                    height: { lg: 46, xl: 56, xxl: 64 },
                     p: 0,
                     alignItems: 'center',
                     background: isSelected ? 'white !important' : 'transparent',
@@ -141,11 +141,11 @@ export default async function LessonSidebar({
                     '&:before': isSelected
                       ? {
                           position: 'absolute',
-                          top: { lg: -25, xl: -30 },
+                          top: { lg: -25, xl: -30, xxl: -35 },
                           right: -8,
                           content: '""',
                           background: '#fff',
-                          height: { lg: 25, xl: 30 },
+                          height: { lg: 25, xl: 30, xxl: 35 },
                           aspectRatio: 1,
                           WebkitMask:
                             'radial-gradient(100% 100% at 0% 0%, transparent 0 100%, white 100%)', // 正方形角在右下
@@ -155,11 +155,11 @@ export default async function LessonSidebar({
                     '&:after': isSelected
                       ? {
                           position: 'absolute',
-                          bottom: { lg: -25, xl: -30 },
+                          bottom: { lg: -25, xl: -30, xxl: -35 },
                           right: -8,
                           content: '""',
                           background: '#fff',
-                          height: { lg: 25, xl: 30 },
+                          height: { lg: 25, xl: 30, xxl: 35 },
                           aspectRatio: 1,
                           WebkitMask:
                             'radial-gradient(100% 100% at 0% 100%, transparent 0 100%, white 100%)', // 正方形角在右上

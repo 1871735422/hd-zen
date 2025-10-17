@@ -71,14 +71,14 @@ export default function VideoPlayer({
   };
 
   return (
-    <Box sx={{ overflow: 'hidden', mb: { lg: 5, xl: 10 } }}>
+    <Box sx={{ overflow: 'hidden', mb: { lg: 5, xl: 10, xxl: 12 } }}>
       {title && (
         <Typography
           variant='h1'
           sx={{
             fontWeight: 500,
             my: 2,
-            fontSize: { lg: 17, xl: 20 },
+            fontSize: { lg: 14, xl: 20, xxl: 24 },
             color: 'rgba(102, 102, 102, 1)',
           }}
         >

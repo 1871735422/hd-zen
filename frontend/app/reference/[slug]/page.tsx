@@ -1,6 +1,6 @@
 import { getBookChapters } from '@/app/api';
 import CourseCard from '@/app/components/pc/CourseCard';
-import { Container, Grid, Typography } from '@mui/material';
+import { Box, Container, Typography } from '@mui/material';
 import { notFound } from 'next/navigation';
 
 export default async function ReferencePage({
@@ -26,32 +26,49 @@ export default async function ReferencePage({
         paddingX: '0 !important',
       }}
     >
-      <Grid
-        container
-        spacing={5}
+      <Box
         sx={{
           mt: 6,
           pb: 16,
         }}
       >
         {books?.length ? (
-          books.map(item => (
-            <Grid key={item.id} size={{ md: 4 }}>
-              <CourseCard
-                courseOrder={item?.expand?.bookId?.displayOrder}
-                slug='reference'
-                item={{
-                  idx: item.ordering,
-                  title: item.article_title,
-                  description: item.article_summary || '',
-                }}
-              />
-            </Grid>
-          ))
+          (() => {
+            const rows = [];
+            for (let i = 0; i < books.length; i += 3) {
+              const rowItems = books.slice(i, i + 3);
+              rows.push(
+                <Box
+                  key={i}
+                  sx={{
+                    display: 'flex',
+                    justifyContent:
+                      rowItems.length === 3 ? 'space-between' : 'flex-start',
+                    gap: rowItems.length < 3 ? 5 : 0,
+                    mb: 5,
+                  }}
+                >
+                  {rowItems.map(item => (
+                    <CourseCard
+                      key={item.id}
+                      courseOrder={item?.expand?.bookId?.displayOrder}
+                      slug='reference'
+                      item={{
+                        idx: item.ordering,
+                        title: item.article_title,
+                        description: item.article_summary || '',
+                      }}
+                    />
+                  ))}
+                </Box>
+              );
+            }
+            return rows;
+          })()
         ) : (
           <Typography>即将推出</Typography>
         )}
-      </Grid>
+      </Box>
     </Container>
   );
 }

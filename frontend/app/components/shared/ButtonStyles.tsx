@@ -8,8 +8,8 @@ export const sharedButtonStyles = {
   borderRadius: '25px',
   textTransform: 'none' as const, // 阻止浏览器自动将文本转换为大写
   fontWeight: 500,
-  fontSize: { sm: '12px', md: '13px', lg: '14px', xl: '16px', xxl: '18px' },
-  minHeight: { sm: '28px', md: '32px', lg: '36px', xl: '40px', xxl: '44px' },
+  fontSize: { sm: '12px', md: '13px', lg: '11px', xl: '16px', xxl: '18px' },
+  minHeight: { sm: '28px', md: '32px', lg: '28px', xl: '40px', xxl: '44px' },
   border: '1px solid rgba(154, 189, 230, 1)',
   color: 'rgba(154, 189, 230, 1)',
 

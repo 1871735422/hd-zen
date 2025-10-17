@@ -53,8 +53,8 @@ const LessonLayout = async ({
           color: 'transparent',
           fontSize: 30,
           position: 'absolute',
-          left: { xl: 577, lg: 525, md: 340, sm: 335 },
-          top: { xl: 73, lg: 60, md: 18, sm: 18 },
+          left: { xxl: 633, xl: 577, lg: 505, md: 340, sm: 335 },
+          top: { xxl: 80, xl: 73, lg: 56, md: 18, sm: 18 },
         }}
       >
         {subTitle}

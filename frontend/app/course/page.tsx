@@ -1,4 +1,4 @@
-import { Container, Grid } from '@mui/material';
+import { Box, Container } from '@mui/material';
 import { getCourses } from '../api';
 import BookCard from '../components/pc/BookCard';
 
@@ -15,14 +15,14 @@ async function CoursePage() {
       maxWidth={false}
       sx={{
         position: 'relative',
+        flexGrow: 1,
         display: 'flex',
         inset: 0,
         flexWrap: 'wrap',
         justifyContent: 'center',
         width: '100%',
         mx: 0,
-        pt: { sm: 3, md: 4, lg: 6, xl: 6, xxl: 8 },
-        pb: { sm: 6, md: 8, lg: 12, xl: 12, xxl: 16 },
+        pt: { sm: 3, md: 4, lg: 6, xl: 8, xxl: 10 },
         '&:before': {
           content: '""',
           position: 'absolute',
@@ -53,25 +53,51 @@ async function CoursePage() {
         },
       }}
     >
-      <Grid
-        container
-        justifyContent='center'
-        alignItems='center'
-        width={{ sm: 600, md: 800, lg: 1000, xl: 1200, xxl: 1400 }}
-        px={{ sm: 2, md: 3, lg: 0, xl: 3.5, xxl: 4 }}
-        sx={{ position: 'relative', zIndex: 2 }}
-        gap={{ sm: 2, md: 3, lg: 5, xl: 5, xxl: 6 }}
-        marginTop={{ sm: 1, md: 1.5, lg: 0, xl: 1.25, xxl: 2 }}
+      <Box
+        sx={{
+          width: { sm: 600, md: 800, lg: 1000, xl: 1300, xxl: 1600 },
+          position: 'relative',
+          zIndex: 2,
+          mt: { sm: 1, md: 1.5, lg: 0, xl: 1.5, xxl: 2 },
+        }}
       >
-        {courses.map((course, idx) => (
-          <BookCard
-            key={course.id}
-            idx={idx}
-            title={course.title}
-            description={course.description || ''}
-          />
-        ))}
-      </Grid>
+        {(() => {
+          const rows = [];
+          const itemsPerRow = 3; // 每行3个卡片
+
+          for (let i = 0; i < courses.length; i += itemsPerRow) {
+            const rowItems = courses.slice(i, i + itemsPerRow);
+            rows.push(
+              <Box
+                key={i}
+                sx={{
+                  display: 'flex',
+                  justifyContent:
+                    rowItems.length === itemsPerRow
+                      ? 'space-between'
+                      : 'flex-start',
+                  gap:
+                    rowItems.length < itemsPerRow
+                      ? { sm: 2, md: 3, lg: 5, xl: 6, xxl: 7 }
+                      : 0,
+                  mb: { sm: 2, md: 3, lg: 5, xl: 6, xxl: 7 },
+                  px: { sm: 2, md: 3, lg: 14, xl: 15, xxl: 18 },
+                }}
+              >
+                {rowItems.map((course, idx) => (
+                  <BookCard
+                    key={course.id}
+                    idx={i + idx}
+                    title={course.title}
+                    description={course.description || ''}
+                  />
+                ))}
+              </Box>
+            );
+          }
+          return rows;
+        })()}
+      </Box>
     </Container>
   );
 }

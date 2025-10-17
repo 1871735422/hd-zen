@@ -112,17 +112,25 @@ export default function ReadingModeContainer({
           elevation={0}
           sx={{
             backgroundColor: theme.main,
-            borderRadius: { lg: '20px 20px 0 0', xl: '30px 30px 0 0' },
-            p: { lg: 12, xl: 18 },
+            borderRadius: {
+              lg: '20px 20px 0 0',
+              xl: '30px 30px 0 0',
+              xxl: '35px 35px 0 0',
+            },
+            p: { lg: 12, xl: 18, xxl: 22 },
             minHeight: 'calc(100vh - 160px)',
             ':before': {
               content: '""',
               position: 'absolute',
-              top: { lg: -14, xl: -18 },
+              top: { lg: -14, xl: -18, xxl: -22 },
               left: '1%',
               width: '98%',
               height: 32,
-              borderRadius: { lg: '20px 20px 0 0', xl: '30px 30px 0 0' },
+              borderRadius: {
+                lg: '20px 20px 0 0',
+                xl: '30px 30px 0 0',
+                xxl: '35px 35px 0 0',
+              },
               backgroundColor: theme.main?.replace('1)', '0.5)'),
               '& .MuiTypography-root': {
                 fontSize: state.fontSize,
@@ -141,9 +149,9 @@ export default function ReadingModeContainer({
               fontWeight: 'bold',
               color: theme.text,
               mt: -2,
-              mb: { lg: 7, xl: 10 },
-              fontSize: { lg: 28, xl: 36 },
-              lineHeight: { lg: '40px', xl: '52px' },
+              mb: { lg: 7, xl: 10, xxl: 12 },
+              fontSize: { lg: 26, xl: 36, xxl: 40 },
+              lineHeight: { lg: '37px', xl: '52px', xxl: '58px' },
             }}
           >
             {title}

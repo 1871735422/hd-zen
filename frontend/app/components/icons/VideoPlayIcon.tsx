@@ -3,7 +3,7 @@ import { SvgIcon } from '@mui/material';
 const VideoPlayIcon = () => (
   <SvgIcon
     sx={{
-      fontSize: { lg: 48, xl: 60 },
+      fontSize: { lg: 48, xl: 60, xxl: 72 },
     }}
   >
     <svg

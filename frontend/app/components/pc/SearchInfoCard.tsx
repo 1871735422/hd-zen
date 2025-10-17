@@ -11,8 +11,8 @@ import React, { useEffect, useState } from 'react';
 import BookExpandIcon from '../icons/BookExpandIcon';
 import BookIcon from '../icons/BookIcon';
 import FoldResultIcon from '../icons/FoldResultIcon';
-import VideoCamIcon from '../icons/VideoCamIcon';
 import PlayMediaIcon from '../icons/PlayMediaIcon';
+import VideoCamIcon from '../icons/VideoCamIcon';
 
 export type SearchInfoCardType = '文章' | '音视频';
 
@@ -156,12 +156,12 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
         {typeof index === 'number' && (
           <Box
             sx={{
-              minWidth: { lg: 19, xl: 22 },
-              height: { lg: 19, xl: 22 },
+              minWidth: { lg: 16, xl: 22, xxl: 26 },
+              height: { lg: 16, xl: 22, xxl: 26 },
               borderRadius: '50%',
               bgcolor: 'rgba(86, 137, 204, 1)',
               color: '#fff',
-              fontSize: { lg: 13, xl: 16 },
+              fontSize: { lg: 11, xl: 16, xxl: 18 },
               fontWeight: 500,
               display: 'inline-flex',
               alignItems: 'center',
@@ -175,7 +175,7 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
         <Typography
           variant='h2'
           sx={{
-            fontSize: { lg: 16, xl: 18 },
+            fontSize: { lg: 13, xl: 18, xxl: 20 },
             fontWeight: 500,
             color: 'rgba(86, 137, 204, 1)',
             ml: '8px !important',
@@ -191,7 +191,7 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
           sx={{
             color: 'rgba(194, 194, 194, 1)',
             cursor: 'default',
-            fontSize: { lg: 14, xl: 16 },
+            fontSize: { lg: 11, xl: 16, xxl: 18 },
             lineHeight: '27px',
             gap: 0.5,
           }}
@@ -207,7 +207,7 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
           position: 'relative',
           mt: 1.25,
           color: 'text.secondary',
-          fontSize: { lg: 14, xl: 16 },
+          fontSize: { lg: 11, xl: 16, xxl: 18 },
           lineHeight: '27px',
           overflow: 'hidden',
           maxHeight: expanded ? 'none' : `${height}px`,
@@ -282,7 +282,7 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
           {from && (
             <Typography
               variant='body2'
-              fontSize={{ lg: 12, xl: 14 }}
+              fontSize={{ lg: 10, xl: 14, xxl: 16 }}
               sx={{ color: 'rgba(194, 194, 194, 1)' }}
             >
               来源：{from}

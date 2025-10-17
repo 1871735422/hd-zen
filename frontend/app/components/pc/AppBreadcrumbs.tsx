@@ -46,7 +46,7 @@ export default function AppBreadcrumbs({
           href={item.href || ''}
           underline='hover'
           color='inherit'
-          fontSize={{ lg: 14, xl: 16 }}
+          fontSize={{ lg: 11, xl: 16, xxl: 18 }}
         >
           {item.label}
         </Link>

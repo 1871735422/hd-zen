@@ -11,11 +11,11 @@ export default function CourseActionButton({
     <Button
       variant='outlined'
       sx={{
-        borderRadius: { lg: '25px', xl: '30px' },
+        borderRadius: { lg: '25px', xl: '30px', xxl: '35px' },
         cursor: 'pointer',
         fontWeight: 500,
-        fontSize: { lg: 14, xl: 18 },
-        minHeight: { lg: '36px', xl: '46px' },
+        fontSize: { lg: 13, xl: 18, xxl: 20 },
+        minHeight: { lg: '33px', xl: '46px', xxl: '52px' },
         border: '2px solid rgba(186, 213, 245, 1)',
         boxSizing: 'border-box',
         py: 0.75,

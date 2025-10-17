@@ -207,7 +207,7 @@ const qaPage = async ({ params, searchParams }: qaPageProps) => {
                 direction='row'
                 justifyContent='space-between'
                 sx={{
-                  mt: { xl: -10 },
+                  mt: { xxl: -12, xl: -10, lg: -6, md: -4, sm: -4 },
                   '& .MuiButton-root>a': {
                     fontSize: 18,
                     pr: '2px',

@@ -100,7 +100,7 @@ export default function Pagination({
         sx={{
           '& .MuiButton-root span': {
             fontSize: 24,
-            pb: { lg: '3px', xl: '5px' },
+            pb: { lg: '3px', xl: '5px', xxl: '6px' },
             color: 'rgba(86, 137, 204, 1)',
           },
         }}

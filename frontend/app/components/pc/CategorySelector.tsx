@@ -23,7 +23,7 @@ export default function CategorySelector({
   const getBtnPx = (zoom = 1) => {
     if (categories.length > 10) return 'auto';
     else if (categories.length > 6 || pathname.startsWith('/reference'))
-      return 2 * zoom;
+      return 1.5 * zoom;
     else return 4 * zoom;
   };
 
@@ -58,11 +58,10 @@ export default function CategorySelector({
             px: {
               sm: categories.length > 6 ? 1 : 2,
               md: categories.length > 6 ? 2 : 4,
-              lg: categories.length > 6 ? 3 : 7,
+              lg: categories.length > 6 ? 2 : 5,
               xl: categories.length > 6 ? 3 : 7,
               xxl: categories.length > 6 ? 4 : 8,
             },
-            mx: { sm: 0.5, md: 0.8, lg: 1, xl: 1, xxl: 1.2 },
             flexWrap: 'nowrap',
             overflowX: 'auto',
             borderRadius: '80px',
@@ -90,7 +89,7 @@ export default function CategorySelector({
               borderRadius: '80px',
               textWrap: 'nowrap',
               color: STANDARD_TEXT_COLOR,
-              fontSize: { sm: 12, md: 14, lg: 16, xl: 20, xxl: 22 },
+              fontSize: { sm: 12, md: 14, lg: 14, xl: 20, xxl: 22 },
               fontWeight: 500,
               border: 'none',
               '&.Mui-selected': {

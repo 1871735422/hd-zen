@@ -24,7 +24,7 @@ const Home: React.FC = async () => {
       {/* 主内容区域 */}
       <Box
         sx={{
-          height: { sm: 300, md: 380, lg: 480, xl: 686, xxl: 800 },
+          height: { sm: 300, md: 380, lg: 487, xl: 686, xxl: 800 },
           width: '100%',
           backgroundImage: 'url(/images/hero-bg.png)',
           backgroundPosition: 'center',
@@ -37,7 +37,7 @@ const Home: React.FC = async () => {
         <Box
           sx={{
             height: '100%',
-            width: { sm: '90%', md: '85%', lg: 522, xl: 722, xxl: 900 },
+            width: { sm: '90%', md: '85%', lg: 513, xl: 722, xxl: 900 },
             position: 'absolute',
             top: 0,
             left: 0,

@@ -24,7 +24,7 @@ function BaseLayout({
       sx={{
         position: 'relative',
         m: 0,
-        px: { sm: 2, md: 4, lg: 25, xl: 32, xxl: 40 },
+        px: { sm: 2, md: 4, lg: 23, xl: 32, xxl: 40 },
         backgroundImage: `
           linear-gradient(180deg, rgba(224, 241, 255, 0.7) 0%, rgba(255, 255, 255, 0) 20.05%, rgba(217, 234, 252, 0.7) 33.35%, rgba(241, 247, 254, 0.7) 63.87%, rgba(245, 247, 251, 0.7) 100%),
           url(/images/course-bg-h.png),
@@ -38,12 +38,12 @@ function BaseLayout({
       <TitleBanner title={title} />
       {description && (
         <Typography
-          fontSize={{ sm: 12, md: 14, lg: 16, xl: 18, xxl: 20 }}
+          fontSize={{ sm: 12, md: 14, lg: 13, xl: 18, xxl: 22 }}
           sx={{
             color: 'rgba(127, 173, 235, 1)',
-            mt: { sm: -3, md: -4, lg: -6, xl: -6, xxl: -8 },
-            mb: { sm: 3, md: 4, lg: 6, xl: 6, xxl: 8 },
-            px: { sm: 1.5, md: 2, lg: 3, xl: 3, xxl: 4 },
+            mt: { sm: -3, md: -4, lg: -4.3, xl: -6, xxl: -8 },
+            mb: { sm: 3, md: 4, lg: 4.3, xl: 6, xxl: 8 },
+            px: { sm: 1.5, md: 2, lg: 2.1, xl: 3, xxl: 4 },
           }}
         >
           {description?.split('\n')[0]}

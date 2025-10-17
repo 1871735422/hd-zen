@@ -53,7 +53,7 @@ export default function AudioPage({
                 variant='body1'
                 fontWeight={500}
                 my={2}
-                fontSize={{ lg: 18, xl: 20 }}
+                fontSize={{ lg: 14, xl: 20, xxl: 22 }}
               >
                 {item.title}
               </Typography>
