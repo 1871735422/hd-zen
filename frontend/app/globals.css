@@ -12,17 +12,19 @@
   font-family: 'FZQuanfu', Arial, Helvetica, sans-serif;
 } */
 
-/* 北方行书 for subtitles */
+/* 北方行书 for subtitles - Optimized subset only 5.72KB */
+/* Characters used: 第一二三四五六七八九十册空性寂止的修法 */
 @font-face {
   font-family: 'BeiFangXingShu';
-  src: url('https://d2e6j3zdpz3g2k.cloudfront.net/fhfy/cdn/fonts/北方行书.woff2')
-    format('woff2');
+  src: url('/fonts/subsets/北方行书.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
 }
 
-.bei-fang {
+/* 高特异性选择器，确保覆盖 MUI Typography 样式 */
+.bei-fang,
+.bei-fang.bei-fang {
   font-family:
     'BeiFangXingShu',
     system-ui,
@@ -30,7 +32,7 @@
     'PingFang SC',
     'Hiragino Sans GB',
     'Microsoft Yahei',
-    sans-serif;
+    sans-serif !important;
 }
 
 body,
@@ -70,6 +72,24 @@ span {
     -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial,
     'Noto Sans', Roboto, system-ui, sans-serif;
 }
+
+@font-face {
+  font-family: 'iconfont' !important;
+  src:
+    url('/fonts/iconfont.woff2') format('woff2'),
+    url('/fonts/iconfont.woff') format('woff'),
+    url('/fonts/iconfont.ttf') format('truetype');
+}
+
+.iconfont_s {
+  font-family: 'iconfont' !important;
+  font-size: inherit;
+  font-weight: inherit;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 body {
   font-family: var(--font-sans);
 }
@@ -106,3 +126,44 @@ a {
     color-scheme: dark;
   }
 } */
+
+/* Icon class definitions */
+.icon-ra-pc:before {
+  content: '\e61b';
+}
+
+.icon-nia-PC:before {
+  content: '\e61c';
+}
+
+.icon-yabujie:before {
+  content: '\e612';
+}
+
+.icon-riyuemingdian_:before {
+  content: '\e60f';
+}
+
+.icon-ra:before {
+  content: '\e609';
+}
+
+.icon-nia:before {
+  content: '\e60b';
+}
+
+.icon-qingxidujian:before {
+  content: '\e60c';
+}
+
+.icon-cangwenyangyue:before {
+  content: '\e603';
+}
+
+.icon-xiayinmu:before {
+  content: '\e604';
+}
+
+.icon-nada:before {
+  content: '\e606';
+}

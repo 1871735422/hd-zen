@@ -1,9 +1,8 @@
+import Clarity from '@microsoft/clarity';
 import { Container } from '@mui/material';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import Footer from './components/pc/Footer';
 import Header from './components/pc/Header';
-// @ts-ignore
-import Clarity from '@microsoft/clarity';
 import './globals.css';
 import MuiThemeProvider from './theme-provider';
 

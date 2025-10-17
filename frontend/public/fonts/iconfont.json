@@ -1,0 +1,79 @@
+{
+  "id": "240782",
+  "name": "藏文",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "16099525",
+      "name": "ra-pc",
+      "font_class": "ra-pc",
+      "unicode": "e61b",
+      "unicode_decimal": 58907
+    },
+    {
+      "icon_id": "16099526",
+      "name": "nia-PC",
+      "font_class": "nia-PC",
+      "unicode": "e61c",
+      "unicode_decimal": 58908
+    },
+    {
+      "icon_id": "5421308",
+      "name": "雅布杰",
+      "font_class": "yabujie",
+      "unicode": "e612",
+      "unicode_decimal": 58898
+    },
+    {
+      "icon_id": "5421281",
+      "name": "日月明点_2",
+      "font_class": "riyuemingdian_",
+      "unicode": "e60f",
+      "unicode_decimal": 58895
+    },
+    {
+      "icon_id": "1721408",
+      "name": "ra",
+      "font_class": "ra",
+      "unicode": "e609",
+      "unicode_decimal": 58889
+    },
+    {
+      "icon_id": "1721413",
+      "name": "nia",
+      "font_class": "nia",
+      "unicode": "e60b",
+      "unicode_decimal": 58891
+    },
+    {
+      "icon_id": "2103978",
+      "name": "清晰度键",
+      "font_class": "qingxidujian",
+      "unicode": "e60c",
+      "unicode_decimal": 58892
+    },
+    {
+      "icon_id": "1054935",
+      "name": "藏文- 仰月",
+      "font_class": "cangwenyangyue",
+      "unicode": "e603",
+      "unicode_decimal": 58883
+    },
+    {
+      "icon_id": "1054937",
+      "name": "下音母",
+      "font_class": "xiayinmu",
+      "unicode": "e604",
+      "unicode_decimal": 58884
+    },
+    {
+      "icon_id": "1054964",
+      "name": "那达",
+      "font_class": "nada",
+      "unicode": "e606",
+      "unicode_decimal": 58886
+    }
+  ]
+}

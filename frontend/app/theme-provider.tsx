@@ -54,31 +54,31 @@ const createAppTheme = () =>
     unstable_strictMode: true,
     breakpoints: {
       values: {
-        xs: 0, // 0px
-        sm: 600, // 600px
-        md: 960, // 960px
-        lg: 1280, // 1280px
-        xl: 1920, // 1920px
-        xxl: 2560, // 2560px
+        xs: 0, // 手机 (≥ 0px, < 600px)
+        sm: 600, // 小平板 (≥ 600px, < 960px)
+        md: 960, // 平板 (≥ 960px, < 1280px)
+        lg: 1280, // 小桌面 (≥ 1280px, < 1600px, 包含 Surface Pro)
+        xl: 1600, // 大桌面 (≥ 1600px, < 2560px)
+        xxl: 2560, // 超大桌面 (≥ 2560px)
       },
     },
     layout: {
       maxWidth: {
         md: 960, // 960px
-        lg: 1280, // 1280px
-        xl: 1920, // 1920px
-        xxl: 2560, // 2560px
+        lg: 1240, // 1240px - 优化后更好适配 Surface 等设备
+        xl: 1560, // 1560px - 与新的 xl 断点匹配
+        xxl: 2520, // 2520px - 略小于 xxl 断点，留出边距
       },
       gutterX: {
         md: 24,
-        lg: 32,
-        xl: 40,
+        lg: 32, // 适合大多数中等屏幕设备
+        xl: 40, // 更大屏幕使用更大间距
         xxl: 48,
       },
       headerHeight: {
         md: 60,
-        lg: 68,
-        xl: 80,
+        lg: 68, // 适合 Surface Pro 等设备
+        xl: 80, // 更大屏幕使用更高的头部
         xxl: 92,
       },
     },

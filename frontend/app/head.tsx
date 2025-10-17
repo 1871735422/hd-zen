@@ -1,3 +1,5 @@
+import Script from 'next/script';
+
 // app/head.tsx
 export default function Head() {
   return (
@@ -12,6 +14,7 @@ export default function Head() {
       <link rel='icon' type='image/png' href='/favicon.png' />
       <link rel='shortcut icon' href='/favicon.ico' />
       <link rel='apple-touch-icon' href='/favicon.png' />
+      <Script src='/fonts/iconfont.js' strategy='beforeInteractive' />
     </>
   );
 }
