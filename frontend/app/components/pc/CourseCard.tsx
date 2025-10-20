@@ -32,8 +32,8 @@ export default function CourseCard({
           : { lg: 330, xl: 437, xxl: 480 },
         height: isQa
           ? { lg: 165, xl: 215, xxl: 240 }
-          : { lg: 180, xl: 214, xxl: 250 },
-        borderRadius: { lg: '20px', xl: '25px', xxl: '30px' },
+          : { lg: 180, xl: 214, xxl: 255 },
+        borderRadius: { lg: '20px', xl: '25px', xxl: '33px' },
         position: 'relative',
         boxShadow: '0 4px 20px rgba(131, 181, 247, 0.3)',
         display: 'flex',
