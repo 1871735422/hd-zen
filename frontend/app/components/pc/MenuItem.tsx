@@ -79,7 +79,7 @@ const MenuItemComponent: React.FC<MenuItemProps> = ({ item }) => {
             },
             '&:before': {
               width: 2,
-              height: 24,
+              height: { lg: 18, xl: 24, xxl: 30 },
               content: '""',
               position: 'absolute',
               backgroundColor: 'rgba(130, 178, 232, 1)',

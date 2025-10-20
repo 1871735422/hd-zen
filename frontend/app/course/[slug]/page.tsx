@@ -48,7 +48,7 @@ export default async function CoursePage({ params }: CoursePageProps) {
       <Container
         maxWidth='xl'
         sx={{
-          py: { lg: 4, xl: 5 },
+          py: { lg: 3, xl: 5 },
           paddingX: '0px !important',
         }}
       >

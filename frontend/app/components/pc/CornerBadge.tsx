@@ -17,7 +17,7 @@ export default function CornerBadge({ content }: CornerBadgeProps) {
           xl: content ? 100 : 110,
           xxl: content ? 120 : 130,
         },
-        height: content ? 60 : 80,
+        height: content ? 60 : { lg: 65, xl: 80, xxl: 95 },
         display: 'flex',
         zIndex: 1,
         background: 'url(/images/course-badge.png) no-repeat center center',

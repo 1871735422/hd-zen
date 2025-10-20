@@ -22,7 +22,7 @@ export default async function QaSidebar({
   return (
     <Box
       sx={{
-        width: '98%',
+        width: '100%',
         height: '100%',
         background:
           'linear-gradient(175.97deg, rgba(232, 247, 255, 1) 0%, rgba(224, 226, 255, 1) 99.94%)',
@@ -127,7 +127,7 @@ export default async function QaSidebar({
                   >
                     <Avatar
                       sx={{
-                        mx: 2,
+                        mx: { lg: 1.5, xl: 2, xxl: 2.5 },
                         color: !isSelected ? MAIN_BLUE_COLOR : '#fff',
                         bgcolor: isSelected ? MAIN_BLUE_COLOR : '#fff',
                         width: 28,
@@ -135,7 +135,7 @@ export default async function QaSidebar({
                       }}
                     >
                       <Typography
-                        fontSize={{ lg: 17, xl: 20, xxl: 22 }}
+                        fontSize={{ lg: 16, xl: 20, xxl: 22 }}
                         fontWeight={700}
                       >
                         {idx + 1}
@@ -146,7 +146,7 @@ export default async function QaSidebar({
                         <Typography
                           fontWeight={isSelected ? 700 : 'inherit'}
                           fontSize={{ lg: 17, xl: 20, xxl: 22 }}
-                          marginRight={2}
+                          marginRight={{ lg: 1, xl: 2, xxl: 2.5 }}
                           sx={{
                             display: '-webkit-box',
                             WebkitLineClamp: 2,
