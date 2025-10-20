@@ -36,13 +36,13 @@ const SearchForm: React.FC = () => {
           width: { sm: 120, md: 140, lg: 128, xl: 180, xxl: 200 },
           '& .MuiOutlinedInput-root': {
             height: { sm: 20, md: 22, lg: 23, xl: 32, xxl: 36 },
-            fontSize: { sm: 12, md: 14, lg: 11, xl: 16, xxl: 18 },
+            fontSize: { sm: 12, md: 14, lg: 13, xl: 16, xxl: 18 },
             color: STANDARD_TEXT_COLOR,
             borderRadius: '5px',
             backgroundColor: 'transparent',
           },
           '& .MuiInputBase-input': {
-            fontSize: { sm: 12, md: 14, lg: 11, xl: 16, xxl: 18 },
+            fontSize: { sm: 12, md: 14, lg: 13, xl: 16, xxl: 18 },
           },
         }}
       />

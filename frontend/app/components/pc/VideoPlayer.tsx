@@ -78,7 +78,7 @@ export default function VideoPlayer({
           sx={{
             fontWeight: 500,
             my: 2,
-            fontSize: { lg: 14, xl: 20, xxl: 24 },
+            fontSize: { lg: 18, xl: 24, xxl: 28 },
             color: 'rgba(102, 102, 102, 1)',
           }}
         >

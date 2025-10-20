@@ -39,7 +39,6 @@ export default function ReadingModeContainer({
     display: 'flex',
     flexWrap: 'wrap',
     gap: '8px',
-    justifyContent: 'center',
     '& a:hover': { opacity: 0.7 },
   };
 
@@ -209,7 +208,7 @@ export default function ReadingModeContainer({
               <Typography
                 sx={{
                   color: theme.text,
-                  lineHeight: state.lineSpacing,
+                  lineHeight: 1.7,
                   opacity: 0.8,
                 }}
               >

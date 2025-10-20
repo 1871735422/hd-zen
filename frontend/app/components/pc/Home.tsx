@@ -24,8 +24,7 @@ const Home: React.FC = async () => {
       {/* 主内容区域 */}
       <Box
         sx={{
-          height: { sm: 300, md: 380, lg: 487, xl: 686, xxl: 800 },
-          width: '100%',
+          height: { sm: 300, md: 380, lg: 580, xl: 686, xxl: 900 },
           backgroundImage: 'url(/images/hero-bg.png)',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
@@ -36,8 +35,8 @@ const Home: React.FC = async () => {
         {/* hero 头图 */}
         <Box
           sx={{
-            height: '100%',
-            width: { sm: '90%', md: '85%', lg: 513, xl: 722, xxl: 900 },
+            height: { xl: '100%', lg: 575 },
+            width: { lg: 575, xl: 722, xxl: 920 },
             position: 'absolute',
             top: 0,
             left: 0,
@@ -48,30 +47,24 @@ const Home: React.FC = async () => {
             // 使用 clip-path 排除右下角底边很长、高度很小的三角形区域
             clipPath: 'polygon(0% 0%, 100% 0%, 100% 83.5%, 0% 100%)',
             '& .MuiTypography-root': {
-              ml: {
+              mx: {
                 sm: '20px',
                 md: '40px',
-                lg: '97px',
+                lg: '77px',
                 xl: '101px',
-                xxl: '120px',
-              },
-              mr: {
-                sm: '20px',
-                md: '40px',
-                lg: '101px',
-                xl: '101px',
-                xxl: '120px',
+                xxl: '110px',
               },
             },
             '& .MuiTypography-body1': {
+              textAlign: 'justify',
               color: DESC_TEXT_COLOR,
-              fontSize: { sm: 12, md: 14, lg: 16, xl: 22, xxl: 24 },
+              fontSize: { sm: 12, md: 14, lg: 18, xl: 22, xxl: 30 },
               lineHeight: {
-                sm: 1.3,
-                md: 1.25,
-                lg: 1.2,
+                sm: '24px',
+                md: '28px',
+                lg: '28px',
                 xl: '36px',
-                xxl: '40px',
+                xxl: '48px',
               },
             },
             '& .MuiTypography-body1:nth-child(3)': {
@@ -80,8 +73,10 @@ const Home: React.FC = async () => {
           }}
         >
           <Typography
-            fontSize={{ sm: 20, md: 24, lg: 28, xl: 39, xxl: 44 }}
+            variant='h2'
+            fontSize={{ sm: 20, md: 24, lg: 32, xl: 39, xxl: 52 }}
             fontWeight={500}
+            textAlign='center'
             lineHeight={{
               sm: '28px',
               md: '32px',
@@ -90,10 +85,8 @@ const Home: React.FC = async () => {
               xxl: '64px',
             }}
             color={TITLE_COLOR}
-            textAlign='center'
             mt={{ sm: '20px', md: '30px', lg: '51px', xl: '51px', xxl: '60px' }}
             mb={{ sm: '5px', md: '8px', lg: '10px', xl: '10px', xxl: '12px' }}
-            variant='h2'
           >
             慧灯禅修课简介
           </Typography>

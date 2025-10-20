@@ -78,34 +78,36 @@ export default function LessonMeta({
               mr: 0.7,
               color: 'rgba(102, 102, 102, 1)',
               fontWeight: 500,
-              fontSize: { lg: 13, xl: 18, xxl: 20 },
+              fontSize: { lg: 16, xl: 18, xxl: 20 },
+              minWidth: 'max-content',
             },
           }}
         >
           {tags && tags.length > 0 && (
-            <Stack
-              direction='row'
-              spacing={1}
-              mb={1}
-              alignItems='center'
-              flexWrap='wrap'
-              sx={{
-                '& .MuiTypography-root, .MuiChip-root': {
-                  fontSize: { lg: 16, xl: 18 },
-                  lineHeight: { lg: '24px', xl: '28px' },
-                },
-              }}
-            >
+            <Box sx={{ display: 'flex', gap: 1 }}>
               <Typography variant='subtitle1'>标签：</Typography>
-              {tags.map((tag, idx) => (
-                <Fragment key={idx}>
-                  <CourseTag label={tag} />
-                </Fragment>
-              ))}
-            </Stack>
+              <Stack
+                direction='row'
+                alignItems='center'
+                flexWrap='wrap'
+                gap={1}
+                sx={{
+                  '& .MuiTypography-root, .MuiChip-root': {
+                    fontSize: { lg: 16, xl: 18 },
+                    lineHeight: { lg: '24px', xl: '28px' },
+                  },
+                }}
+              >
+                {tags.map((tag, idx) => (
+                  <Fragment key={idx}>
+                    <CourseTag label={tag} />
+                  </Fragment>
+                ))}
+              </Stack>
+            </Box>
           )}
           <Stack flexDirection={'row'} mt={2}>
-            <Typography variant='subtitle1' sx={{ minWidth: 60 }}>
+            <Typography variant='subtitle1'>
               {`${isQuestion ? '问题' : '概述'}`}：
             </Typography>
             <Typography

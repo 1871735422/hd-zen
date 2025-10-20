@@ -47,8 +47,8 @@ const Header: React.FC = async () => {
           <LogoIcon />
           <Typography
             sx={{ color: STANDARD_TEXT_COLOR }}
-            fontWeight={500}
-            fontSize={{ sm: 20, md: 20, lg: 17, xl: 24, xxl: 28 }}
+            fontWeight={{ xl: 500, lg: 600 }}
+            fontSize={{ sm: 20, md: 20, lg: 18, xl: 24, xxl: 28 }}
           >
             <Link href='/'>慧灯禅修</Link>
           </Typography>

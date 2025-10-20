@@ -161,7 +161,7 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
               borderRadius: '50%',
               bgcolor: 'rgba(86, 137, 204, 1)',
               color: '#fff',
-              fontSize: { lg: 11, xl: 16, xxl: 18 },
+              fontSize: { lg: 13, xl: 16, xxl: 18 },
               fontWeight: 500,
               display: 'inline-flex',
               alignItems: 'center',
@@ -191,7 +191,7 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
           sx={{
             color: 'rgba(194, 194, 194, 1)',
             cursor: 'default',
-            fontSize: { lg: 11, xl: 16, xxl: 18 },
+            fontSize: { lg: 13, xl: 16, xxl: 18 },
             lineHeight: '27px',
             gap: 0.5,
           }}
@@ -207,7 +207,7 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
           position: 'relative',
           mt: 1.25,
           color: 'text.secondary',
-          fontSize: { lg: 11, xl: 16, xxl: 18 },
+          fontSize: { lg: 13, xl: 16, xxl: 18 },
           lineHeight: '27px',
           overflow: 'hidden',
           maxHeight: expanded ? 'none' : `${height}px`,

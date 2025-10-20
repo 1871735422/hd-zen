@@ -42,7 +42,7 @@ export default function AudioPage({
     : audioBookUrl;
 
   return (
-    <Box sx={{ py: 0, gap: 2, mr: 5 }}>
+    <Box sx={{ py: 0, gap: 2 }}>
       <Box
         sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 2 }}
       >
@@ -52,8 +52,9 @@ export default function AudioPage({
               <Typography
                 variant='body1'
                 fontWeight={500}
+                color='#444'
                 my={2}
-                fontSize={{ lg: 14, xl: 20, xxl: 22 }}
+                fontSize={{ lg: 18, xl: 24, xxl: 28 }}
               >
                 {item.title}
               </Typography>

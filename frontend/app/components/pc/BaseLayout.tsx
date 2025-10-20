@@ -24,7 +24,7 @@ function BaseLayout({
       sx={{
         position: 'relative',
         m: 0,
-        px: { sm: 2, md: 4, lg: 23, xl: 32, xxl: 40 },
+        px: { sm: 2, md: 4, lg: 15, xl: 32, xxl: 40 },
         backgroundImage: `
           linear-gradient(180deg, rgba(224, 241, 255, 0.7) 0%, rgba(255, 255, 255, 0) 20.05%, rgba(217, 234, 252, 0.7) 33.35%, rgba(241, 247, 254, 0.7) 63.87%, rgba(245, 247, 251, 0.7) 100%),
           url(/images/course-bg-h.png),

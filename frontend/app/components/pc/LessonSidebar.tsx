@@ -58,7 +58,7 @@ export default async function LessonSidebar({
         top: 0,
         left: 0,
         zIndex: 1000,
-        width: { lg: 68, xl: 96, xxl: 110 },
+        width: { lg: 80, xl: 96, xxl: 120 },
         background:
           'linear-gradient(180deg, rgba(157, 208, 250, 1) 0%, rgba(255, 166, 224, 1) 99.96%)',
         borderTopRightRadius: 10,
@@ -71,8 +71,8 @@ export default async function LessonSidebar({
         flexDirection: 'column',
         alignItems: 'center',
         '& svg': {
-          width: { lg: 17, xl: 24, xxl: 28 },
-          height: { lg: 17, xl: 24, xxl: 28 },
+          width: { lg: 20, xl: 24, xxl: 28 },
+          height: { lg: 20, xl: 24, xxl: 28 },
         },
       }}
     >
@@ -81,9 +81,9 @@ export default async function LessonSidebar({
       <Typography
         sx={{
           color: '#fff',
-          mt: 1,
-          mb: 0.5,
-          fontSize: { lg: 11, xl: 16, xxl: 18 },
+          mt: { lg: 1.5, xl: 1, xxl: 2 },
+          mb: { lg: 0.5, xl: 0.5, xxl: 1 },
+          fontSize: { lg: 14, xl: 16, xxl: 20 },
           fontWeight: 700,
         }}
       >
@@ -98,7 +98,7 @@ export default async function LessonSidebar({
           alignItems: 'center',
           justifyContent: 'center',
           '& .MuiTypography-root': {
-            fontSize: { lg: 11, xl: 16, xxl: 18 },
+            fontSize: { lg: 13, xl: 16, xxl: 18 },
           },
         }}
       >
@@ -122,9 +122,9 @@ export default async function LessonSidebar({
                     : `${path}${item.key ? '?tab=' + item.key : ''}`
                 }
                 sx={{
-                  width: 100,
-                  height: { lg: 80, xl: 94, xxl: 108 },
-                  borderLeft: isSelected ? '8px solid transparent' : 'none',
+                  width: { lg: 80, xl: 100, xxl: 120 },
+                  height: { lg: 80, xl: 100, xxl: 120 },
+                  borderLeft: isSelected ? '10px solid transparent' : 'none',
                   boxSizing: 'border-box',
                 }}
               >
@@ -141,11 +141,11 @@ export default async function LessonSidebar({
                     '&:before': isSelected
                       ? {
                           position: 'absolute',
-                          top: { lg: -25, xl: -30, xxl: -35 },
+                          top: { lg: -25, xl: -30, xxl: -50 },
                           right: -8,
                           content: '""',
                           background: '#fff',
-                          height: { lg: 25, xl: 30, xxl: 35 },
+                          height: { lg: 25, xl: 30, xxl: 50 },
                           aspectRatio: 1,
                           WebkitMask:
                             'radial-gradient(100% 100% at 0% 0%, transparent 0 100%, white 100%)', // 正方形角在右下
@@ -155,11 +155,11 @@ export default async function LessonSidebar({
                     '&:after': isSelected
                       ? {
                           position: 'absolute',
-                          bottom: { lg: -25, xl: -30, xxl: -35 },
+                          bottom: { lg: -25, xl: -30, xxl: -50 },
                           right: -8,
                           content: '""',
                           background: '#fff',
-                          height: { lg: 25, xl: 30, xxl: 35 },
+                          height: { lg: 25, xl: 30, xxl: 50 },
                           aspectRatio: 1,
                           WebkitMask:
                             'radial-gradient(100% 100% at 0% 100%, transparent 0 100%, white 100%)', // 正方形角在右上

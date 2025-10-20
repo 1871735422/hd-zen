@@ -137,7 +137,7 @@ export default function TagRelation({ tag, refCourses }: TagRelationProps) {
                 alignItems: 'center',
                 gap: 1,
                 '& .MuiTypography-root': {
-                  fontSize: { lg: 11, xl: 16, xxl: 18 },
+                  fontSize: { lg: 13, xl: 16, xxl: 18 },
                 },
                 '& .MuiSelect-select': {
                   fontSize: { lg: 10, xl: 14, xxl: 16 },

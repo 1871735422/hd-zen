@@ -28,18 +28,16 @@ const GradientCard: React.FC<GradientCardProps> = ({
         px: { sm: 0.2, md: 0.3, lg: 0.71, xl: 1, xxl: 1.2 },
         mt: `${(1 - idx) * 10}px`,
         height: {
-          sm: `${300 + idx * 15}px`,
-          md: `${350 + idx * 18}px`,
-          lg: `${299 + idx * 14}px`,
+          lg: `${300 + idx * 15}px`,
           xl: `${420 + idx * 20}px`,
-          xxl: `${500 + idx * 25}px`,
+          xxl: `${540 + idx * 25}px`,
         },
         borderRadius: '30px 30px 0 0',
         display: 'flex',
         flexDirection: 'column',
         alignContent: 'flex-start',
         cursor: 'pointer',
-        width: { sm: 150, md: 170, lg: 186, xl: 262, xxl: 320 },
+        width: { sm: 150, md: 170, lg: 206, xl: 262, xxl: 360 },
         flexShrink: 0,
         position: 'relative',
         color: INNER_TEXT_COLOR,
@@ -66,22 +64,22 @@ const GradientCard: React.FC<GradientCardProps> = ({
     >
       <Typography
         color={STANDARD_TEXT_COLOR}
-        fontSize={{ sm: 14, md: 16, lg: 20, xl: 28, xxl: 32 }}
+        fontSize={{ sm: 14, md: 16, lg: 24, xl: 28, xxl: 38 }}
         fontWeight={500}
         textAlign='center'
-        my={{ sm: 2, md: 3, lg: 4, xl: 4, xxl: 5 }}
+        my={{ sm: 2, md: 2, lg: 3, xl: 4, xxl: 4.5 }}
       >
         {title}
       </Typography>
 
       <Typography
         color='rgba(102, 102, 102, 1)'
-        fontSize={{ sm: 10, md: 12, lg: 11, xl: 16, xxl: 18 }}
+        fontSize={{ sm: 10, md: 12, lg: 13, xl: 16, xxl: 22 }}
+        textAlign='justify'
         sx={{
           m: 0,
-          pt: { sm: 1.5, md: 2, lg: 3, xl: 3, xxl: 3.5 },
-          pl: { sm: 1.5, md: 2, lg: 2.5, xl: 2.5, xxl: 3 },
-          pr: { sm: 1.2, md: 1.8, lg: 2.2, xl: 2.2, xxl: 2.5 },
+          pt: { sm: 1.5, md: 2, lg: 2, xl: 3, xxl: 3.5 },
+          px: { sm: 1.5, md: 2, lg: 2, xl: 2.5, xxl: 3 },
           pb: 0,
           height: {
             sm: idx === 3 ? 200 : 180 + idx * 15,
@@ -94,7 +92,7 @@ const GradientCard: React.FC<GradientCardProps> = ({
           borderRadius: '30px 30px 0 0',
           display: '-webkit-box',
           WebkitBoxOrient: 'vertical',
-          WebkitLineClamp: idx === 3 ? 11 : 20,
+          WebkitLineClamp: idx === 3 ? { xl: 11, lg: 10 } : { xl: 20, lg: 18 },
           overflow: 'hidden',
           wordBreak: 'break-word',
           textOverflow: 'ellipsis',

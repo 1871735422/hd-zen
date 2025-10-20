@@ -17,7 +17,7 @@ const BookCard: React.FC<BookCardProps> = ({ title, description, idx }) => {
       component={'a'}
       href={`/course/${idx + 1}`}
       sx={{
-        width: { sm: 180, md: 200, lg: 203, xl: 286, xxl: 320 },
+        width: { sm: 180, md: 200, lg: 223, xl: 286, xxl: 320 },
         height: {
           sm: 180 * 1.55,
           md: 200 * 1.55,
@@ -53,12 +53,12 @@ const BookCard: React.FC<BookCardProps> = ({ title, description, idx }) => {
             pointerEvents: 'none',
             textAlign: 'center',
             color: 'rgba(70, 114, 166, 1)',
-            fontSize: { sm: 16, md: 18, lg: 22, xl: 24, xxl: 26 },
+            fontSize: { sm: 16, md: 18, lg: 20, xl: 24, xxl: 28 },
             fontWeight: '500',
             pt:
               idx === 3
-                ? { sm: 2, md: 3, lg: 2.5, xl: 7, xxl: 8 }
-                : { sm: 3, md: 4, lg: 5, xl: 12, xxl: 14 },
+                ? { sm: 2, md: 3, lg: 1.2, xl: 7, xxl: 8 }
+                : { sm: 3, md: 4, lg: 4, xl: 9, xxl: 12 },
           },
           '&::after': {
             position: 'absolute',
@@ -70,15 +70,15 @@ const BookCard: React.FC<BookCardProps> = ({ title, description, idx }) => {
             textAlign: 'justify',
             WebkitBoxOrient: 'vertical',
             overflow: 'hidden',
-            fontSize: { sm: 10, md: 11, lg: 12, xl: 14, xxl: 16 },
+            fontSize: { sm: 10, md: 11, lg: 14, xl: 16, xxl: 18 },
             fontWeight: '500',
             zIndex: 2,
             pointerEvents: 'none',
             pt:
               idx === 3
-                ? { sm: 4, md: 6, lg: 7, xl: 14, xxl: 16 }
-                : { sm: 5, md: 7, lg: 11, xl: 20, xxl: 22 },
-            lineHeight: idx === 3 ? 1.4 : 1.8,
+                ? { sm: 4, md: 6, lg: 5, xl: 14, xxl: 16 }
+                : { sm: 5, md: 7, lg: 9, xl: 17, xxl: 22 },
+            lineHeight: idx === 3 ? { lg: 1.3, xl: 1.4 } : 1.7,
           },
         },
       }}
@@ -116,7 +116,7 @@ const BookCard: React.FC<BookCardProps> = ({ title, description, idx }) => {
         <Typography
           sx={{
             color: 'rgba(70, 114, 166, 1)',
-            fontSize: { sm: 16, md: 18, lg: 17, xl: 24, xxl: 28 },
+            fontSize: { sm: 16, md: 18, lg: 20, xl: 24, xxl: 28 },
             fontWeight: '500',
             textAlign: 'center',
           }}
@@ -129,13 +129,13 @@ const BookCard: React.FC<BookCardProps> = ({ title, description, idx }) => {
             mt: { sm: 1, md: 1.2, lg: 1.5, xl: 1.8, xxl: 2 },
             px: { sm: 0.5, md: 0.8, lg: 1, xl: 1.2, xxl: 1.5 },
             color: 'text.secondary',
-            textAlign: 'left',
+            textAlign: 'justify',
             display: '-webkit-box',
             WebkitBoxOrient: 'vertical',
             WebkitLineClamp: 2,
             overflow: 'hidden',
-            lineHeight: 2,
-            fontSize: { sm: 10, md: 11, lg: 12, xl: 14, xxl: 16 },
+            lineHeight: 1.7,
+            fontSize: { sm: 10, md: 11, lg: 14, xl: 16, xxl: 18 },
           }}
         >
           {description}

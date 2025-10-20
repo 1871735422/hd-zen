@@ -1,5 +1,5 @@
 'use client';
-import { Box, Button, IconButton, Stack } from '@mui/material';
+import { Box, Button, IconButton, Stack, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import LineSpaceDecreaseIcon from '../icons/LineSpaceDecreaseIcon';
 import LineSpaceIncreaseIcon from '../icons/LineSpaceIncreaseIcon';
@@ -263,11 +263,23 @@ export default function ReadingModeSidebar({
               }}
             >
               <CircleButton onClick={increaseFontSize} title='增大字体'>
-                <span style={{ fontSize: '27px' }}>A</span>+
+                <Typography
+                  component='span'
+                  sx={{ fontSize: { lg: 22, xl: 27, xxl: 32 } }}
+                >
+                  A
+                </Typography>
+                +
               </CircleButton>
 
               <CircleButton onClick={decreaseFontSize} title='减小字体'>
-                <span style={{ fontSize: '20px' }}>A</span>-
+                <Typography
+                  component='span'
+                  sx={{ fontSize: { lg: 16, xl: 20, xxl: 24 } }}
+                >
+                  A
+                </Typography>
+                -
               </CircleButton>
 
               <CircleButton

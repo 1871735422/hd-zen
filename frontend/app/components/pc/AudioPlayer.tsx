@@ -97,7 +97,7 @@ export default function AudioPlayer({ src }: AudioPlayerProps) {
       sx={{
         display: 'flex',
         alignItems: 'center',
-        width: '90%',
+        width: '100%',
         backgroundColor: 'rgba(242, 248, 255, 0.75)',
         borderRadius: 999,
         px: { lg: 2, xl: 3, xxl: 4 },
@@ -105,7 +105,7 @@ export default function AudioPlayer({ src }: AudioPlayerProps) {
         gap: 1.5,
         '& .MuiTypography-root': {
           color: 'rgba(102, 102, 102, 1)',
-          fontSize: { lg: 11, xl: 16, xxl: 18 },
+          fontSize: { lg: 13, xl: 16, xxl: 18 },
         },
       }}
     >

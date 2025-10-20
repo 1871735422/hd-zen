@@ -100,7 +100,7 @@ export default function ReadingSidebar({
     fontFamily: 'Montserrat, "Segoe UI", "Arial Narrow", Arial, sans-serif',
     fontWeight: 500,
     '& svg': {
-      fontSize: { lg: 13, xl: 18, xxl: 22 },
+      fontSize: { lg: 14, xl: 18, xxl: 22 },
     },
   };
 
@@ -110,7 +110,7 @@ export default function ReadingSidebar({
       alignItems='center'
       sx={{
         position: 'absolute',
-        right: { lg: -50, xl: -70, xxl: -80 },
+        right: { lg: -50, xl: -80, xxl: -80 },
         top: 0,
         zIndex: 10,
         fontWeight: 500,
