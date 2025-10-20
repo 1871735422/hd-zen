@@ -16,9 +16,9 @@ const SearchForm: React.FC = () => {
         width: {
           sm: '180px',
           md: '200px',
-          lg: '199px',
+          lg: '260px',
           xl: '280px',
-          xxl: '320px',
+          xxl: '340px',
         },
         display: 'flex',
         alignItems: 'center',

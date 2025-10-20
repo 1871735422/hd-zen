@@ -99,9 +99,7 @@ const MenuItemComponent: React.FC<MenuItemProps> = ({ item }) => {
                     fontWeight: 400,
                     color: STANDARD_TEXT_COLOR,
                     padding: {
-                      sm: '4px 8px',
-                      md: '6px 12px',
-                      lg: '8px 16px',
+                      lg: '6px 12px',
                       xl: '8px 16px',
                       xxl: '10px 20px',
                     },

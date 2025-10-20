@@ -68,7 +68,7 @@ export default function CourseCard({
             fontWeight: { lg: 500, xl: 600, xxl: 600 },
             fontSize: isQa
               ? { lg: 15, xl: 18, xxl: 20 }
-              : { lg: 20, xl: 24, xxl: 26 },
+              : { lg: 18, xl: 24, xxl: 26 },
             minHeight: isQa ? 70 : 30,
           }}
         >

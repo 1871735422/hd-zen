@@ -38,7 +38,7 @@ function BaseLayout({
       <TitleBanner title={title} />
       {description && (
         <Typography
-          fontSize={{ sm: 12, md: 14, lg: 13, xl: 18, xxl: 22 }}
+          fontSize={{ sm: 12, md: 14, lg: 14, xl: 18, xxl: 24 }}
           sx={{
             color: 'rgba(127, 173, 235, 1)',
             mt: { sm: -3, md: -4, lg: -4.3, xl: -6, xxl: -8 },
