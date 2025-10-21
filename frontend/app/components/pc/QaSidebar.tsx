@@ -138,7 +138,7 @@ export default async function QaSidebar({
                         fontSize={{ lg: 16, xl: 20, xxl: 22 }}
                         fontWeight={700}
                       >
-                        {idx + 1}
+                        {item.path.slice(item.path.lastIndexOf('question') + 8)}
                       </Typography>
                     </Avatar>
                     <ListItemText

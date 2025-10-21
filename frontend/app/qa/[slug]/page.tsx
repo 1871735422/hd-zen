@@ -89,7 +89,7 @@ export default async function QaPage({ params, searchParams }: QaPageProps) {
               <Grid key={question.questionOrder} size={{ sm: 6, md: 4 }}>
                 <CourseCard
                   item={{
-                    idx: Number(question.questionOrder),
+                    idx: Number(lessonOrder),
                     title: question.questionTitle || '',
                     description: question.description || '',
                   }}

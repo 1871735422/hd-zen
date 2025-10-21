@@ -109,11 +109,14 @@ const qaPage = async ({ params, searchParams }: qaPageProps) => {
     undefined,
     true
   );
+  // console.log('questions', questions);
 
   if (!questions.length) {
     notFound();
   }
-  const currentQuestion = questions[Number(questionOrder) - 1];
+  const currentQuestion = questions.find(
+    question => question.questionOrder + '' === questionOrder
+  );
 
   return (
     <Container
@@ -142,7 +145,9 @@ const qaPage = async ({ params, searchParams }: qaPageProps) => {
               label: question.questionTitle || '',
               path: `/qa/${courseOrder}/lesson${lessonOrder}?tab=question${question.questionOrder}`,
             }))}
-            selectedIdx={Number(questionOrder) - 1}
+            selectedIdx={questions.findIndex(
+              question => question.questionOrder + '' === questionOrder
+            )}
           />
         </Grid>
         <Grid container spacing={4} sx={{ px: 9, py: 4 }} size={9}>
@@ -157,48 +162,50 @@ const qaPage = async ({ params, searchParams }: qaPageProps) => {
               width: '100%',
             }}
           >
-            <LessonMeta
-              title={`${questionOrder}. ${currentQuestion?.questionTitle}`}
-              author='作者：慈诚罗珠堪布'
-              date={formatDate(currentQuestion?.questionCreated)}
-              refCourse={`${courseName} > ${lessonName}`}
-              refUrl={`/course/${courseOrder}/lesson${lessonOrder}`}
-            />
-            <>
-              <MediaDownloadButton
-                sx={{
-                  alignSelf: 'flex-end',
-                  mt: { lg: -8, xl: -14 },
-                }}
-                mediaType='video'
-                downloadUrls={[currentQuestion.url_downmp4 || '']}
+            {currentQuestion?.questionTitle && (
+              <LessonMeta
+                title={`${questionOrder}. ${currentQuestion?.questionTitle}`}
+                author='作者：慈诚罗珠堪布'
+                date={formatDate(currentQuestion?.questionCreated || '')}
+                refCourse={`${courseName} > ${lessonName}`}
+                refUrl={`/course/${courseOrder}/lesson${lessonOrder}`}
               />
-              {currentQuestion.url_hd && (
-                <>
-                  {currentQuestion.url_hd ? (
-                    <VideoPlayer
-                      poster={currentQuestion.url_image || ''}
-                      title={currentQuestion.title || ''}
-                      sources={[
-                        {
-                          src: currentQuestion.url_sd || currentQuestion.url_hd,
-                          size: 720,
-                          type: 'video/mp4',
-                        },
-                        {
-                          src: currentQuestion.url_hd,
-                          size: 1080,
-                          type: 'video/mp4',
-                        },
-                      ]}
-                    />
-                  ) : (
-                    <Typography>
-                      视频资源不可用：{currentQuestion.title}{' '}
-                    </Typography>
-                  )}
-                </>
+            )}
+            <>
+              {currentQuestion?.url_downmp4 && (
+                <MediaDownloadButton
+                  sx={{
+                    alignSelf: 'flex-end',
+                    mt: { lg: -8, xl: -14 },
+                  }}
+                  mediaType='video'
+                  downloadUrls={[currentQuestion?.url_downmp4 || '']}
+                />
               )}
+              <>
+                {currentQuestion?.url_hd || currentQuestion?.url_sd ? (
+                  <VideoPlayer
+                    poster={currentQuestion.url_image || ''}
+                    title={currentQuestion.title || ''}
+                    sources={[
+                      {
+                        src: currentQuestion?.url_sd || '',
+                        size: 720,
+                        type: 'video/mp4',
+                      },
+                      {
+                        src: currentQuestion?.url_hd || '',
+                        size: 1080,
+                        type: 'video/mp4',
+                      },
+                    ]}
+                  />
+                ) : (
+                  <Typography>
+                    视频资源不可用：{currentQuestion?.questionTitle || ''}
+                  </Typography>
+                )}
+              </>
               <Stack
                 direction='row'
                 justifyContent='space-between'
