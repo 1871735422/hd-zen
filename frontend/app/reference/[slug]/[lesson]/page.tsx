@@ -87,7 +87,7 @@ export async function generateMetadata({
       url,
       type: 'article',
       publishedTime: media.created,
-      authors: ['作者：慈诚罗珠堪布'],
+      authors: [media.author ?? '作者：慈诚罗珠堪布'],
     },
   };
 }
@@ -105,7 +105,7 @@ const refPage = async ({ params, searchParams }: refPageProps) => {
   const chapterOrder = resolvedParams.lesson?.replace('lesson', '');
   const bookMedia = await getBookMediaByOrder(bookOrder, chapterOrder);
 
-  console.log('bookMedia', bookMedia);
+  // console.log('bookMedia', bookMedia);
 
   if (!bookMedia) {
     notFound();
@@ -160,7 +160,7 @@ const refPage = async ({ params, searchParams }: refPageProps) => {
             bookTags?.length ? bookTags.map((tag: string) => tag.trim()) : []
           }
           description={bookMedia[0]?.article_summary ?? ''}
-          author='作者：慈诚罗珠堪布'
+          author={media.author ?? '作者：慈诚罗珠堪布'}
           date={bookMedia[0]?.created}
         />
         <TabRender />

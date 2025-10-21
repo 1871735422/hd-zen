@@ -681,7 +681,7 @@ export const getBookMediaByOrder = async (
       filter: filters.join(' && '),
     });
     // console.log({ courseOrder, topicOrder });
-    // console.log(result?.items);
+    console.log({ result });
     return result?.items as unknown as TopicMediaX[];
   } catch (error) {
     console.error(

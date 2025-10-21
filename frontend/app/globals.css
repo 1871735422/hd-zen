@@ -35,6 +35,23 @@
     sans-serif !important;
 }
 
+@font-face {
+  font-family: 'iconfont';
+  src:
+    url('/fonts/iconfont.woff2') format('woff2'),
+    url('/fonts/iconfont.woff') format('woff'),
+    url('/fonts/iconfont.ttf') format('truetype');
+}
+
+.iconfont_s {
+  font-family: 'iconfont' !important;
+  font-size: inherit;
+  font-weight: inherit;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 body,
 button,
 input,
@@ -71,23 +88,6 @@ span {
     'PingFang SC', 'Hiragino Sans GB', 'Microsoft Yahei', 'Noto Sans CJK SC',
     -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial,
     'Noto Sans', Roboto, system-ui, sans-serif;
-}
-
-@font-face {
-  font-family: 'iconfont' !important;
-  src:
-    url('/fonts/iconfont.woff2') format('woff2'),
-    url('/fonts/iconfont.woff') format('woff'),
-    url('/fonts/iconfont.ttf') format('truetype');
-}
-
-.iconfont_s {
-  font-family: 'iconfont' !important;
-  font-size: inherit;
-  font-weight: inherit;
-  font-style: normal;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 body {

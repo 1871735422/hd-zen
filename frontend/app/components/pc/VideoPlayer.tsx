@@ -104,7 +104,7 @@ export default function VideoPlayer({
         };
       }
     } catch (e) {
-      // ignore
+      console.error(e);
     }
 
     // Preserve playback state/time

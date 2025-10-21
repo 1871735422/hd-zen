@@ -145,7 +145,9 @@ export interface TopicMedia extends BaseModel {
   media?: Media;
 }
 
-export interface TopicMediaX extends Article, Omit<Media, 'summary'> {}
+export interface TopicMediaX extends Article, Omit<Media, 'summary'> {
+  author?: string;
+}
 // API Response types
 export interface PaginatedResponse<T> {
   items: T[];

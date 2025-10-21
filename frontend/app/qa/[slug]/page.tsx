@@ -47,6 +47,7 @@ export default async function QaPage({ params, searchParams }: QaPageProps) {
     const sidebarData = courseTopics.map(item => ({
       label: item.article_title,
       path: `/qa/${displayOrder}?tab=lesson${item.ordering}`,
+      displayOrder: Number(item.ordering),
     }));
     return (
       <Container

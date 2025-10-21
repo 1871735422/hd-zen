@@ -144,6 +144,7 @@ const qaPage = async ({ params, searchParams }: qaPageProps) => {
             lesson={questions.map(question => ({
               label: question.questionTitle || '',
               path: `/qa/${courseOrder}/lesson${lessonOrder}?tab=question${question.questionOrder}`,
+              displayOrder: Number(question.questionOrder),
             }))}
             selectedIdx={questions.findIndex(
               question => question.questionOrder + '' === questionOrder

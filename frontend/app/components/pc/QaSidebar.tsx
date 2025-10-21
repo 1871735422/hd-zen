@@ -11,7 +11,7 @@ import {
 import { MAIN_BLUE_COLOR, STANDARD_TEXT_COLOR } from '../../constants/colors';
 
 export interface LessonSidebarProps {
-  lesson: { label: string; path: string }[];
+  lesson: { label: string; path: string; displayOrder: number }[];
   selectedIdx: number;
 }
 
@@ -138,7 +138,7 @@ export default async function QaSidebar({
                         fontSize={{ lg: 16, xl: 20, xxl: 22 }}
                         fontWeight={700}
                       >
-                        {item.path.slice(item.path.lastIndexOf('question') + 8)}
+                        {item.displayOrder}
                       </Typography>
                     </Avatar>
                     <ListItemText
