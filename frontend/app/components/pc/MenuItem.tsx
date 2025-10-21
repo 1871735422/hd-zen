@@ -1,7 +1,8 @@
 'use client';
 import { Box } from '@mui/material';
 import Button from '@mui/material/Button';
-import { usePathname, useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import React from 'react';
 import { NAV_COLOR } from '../../constants';
 import { STANDARD_TEXT_COLOR } from '../../constants/colors';
@@ -18,7 +19,6 @@ interface MenuItemProps {
 }
 const MenuItemComponent: React.FC<MenuItemProps> = ({ item }) => {
   const hasChildren = !!item.subMenu;
-  const router = useRouter();
   const pathname = usePathname();
 
   const buttonSx = {
@@ -47,14 +47,10 @@ const MenuItemComponent: React.FC<MenuItemProps> = ({ item }) => {
           },
         }}
       >
-        <Button
-          sx={buttonSx}
-          endIcon={<DropDownIcon />}
-          onClick={() =>
-            router.push(`/${item.slug}${item?.slug === 'course' ? '' : '/1'}`)
-          }
-        >
-          {item.name}
+        <Button sx={buttonSx} endIcon={<DropDownIcon />}>
+          <Link href={`/${item.slug}${item?.slug === 'course' ? '' : '/1'}`}>
+            {item.name}
+          </Link>
         </Button>
         <Box
           sx={{
@@ -93,7 +89,6 @@ const MenuItemComponent: React.FC<MenuItemProps> = ({ item }) => {
               return (
                 <Button
                   key={subItem.name}
-                  onClick={() => router.push(`/${item.slug}/${subItem.slug}`)}
                   sx={{
                     fontSize: { sm: 12, md: 14, lg: 14, xl: 16, xxl: 18 },
                     fontWeight: 400,
@@ -113,7 +108,10 @@ const MenuItemComponent: React.FC<MenuItemProps> = ({ item }) => {
                     },
                   }}
                 >
-                  {subItem.name}
+                  <Link href={`/${item.slug}/${subItem.slug}`}>
+                    {' '}
+                    {subItem.name}
+                  </Link>
                 </Button>
               );
             })}
@@ -123,8 +121,8 @@ const MenuItemComponent: React.FC<MenuItemProps> = ({ item }) => {
   }
 
   return (
-    <Button onClick={() => router.push(`/${item.slug}`)} sx={buttonSx}>
-      {item.name}
+    <Button sx={buttonSx}>
+      <Link href={`/${item.slug}`}>{item.name}</Link>
     </Button>
   );
 };
