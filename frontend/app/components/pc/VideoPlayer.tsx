@@ -16,15 +16,30 @@ export default function VideoPlayer({
 }) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const playerRef = useRef<Plyr | null>(null);
-  // console.log('sources', sources);
+
+  // Helper: build plyr-compatible source list
+  const buildPlyrSources = (list: Source[]) =>
+    list.map(s => ({
+      src: s.src,
+      type: s.type ?? 'video/mp4',
+      size: s.size ?? 0,
+    }));
+
   useEffect(() => {
     let mounted = true;
-    // 动态导入 plyr，仅在客户端运行
     (async () => {
       const PlyrModule = await import('plyr');
-      const Plyr = PlyrModule.default ?? PlyrModule;
+      const PlyrLib = PlyrModule.default ?? PlyrModule;
       if (!mounted || !videoRef.current) return;
-      playerRef.current = new Plyr(videoRef.current, {
+
+      // Prepare quality options from sources (unique, sorted desc)
+      const qualityOptions = Array.from(
+        new Set(sources.map(s => s.size).filter(Boolean) as number[])
+      )
+        .sort((a, b) => a - b)
+        .map(n => Number(n));
+
+      playerRef.current = new PlyrLib(videoRef.current, {
         controls: [
           'play-large',
           'play',
@@ -35,12 +50,23 @@ export default function VideoPlayer({
           'settings',
           'fullscreen',
         ],
+        // settings must include 'quality' to show quality in settings menu
         settings: ['quality', 'loop'],
         quality: {
-          default: sources[0]?.size ?? 720,
-          options: [720, 1080],
+          default: qualityOptions[0] ?? sources[0]?.size ?? 720,
+          options: qualityOptions.length ? qualityOptions : [720],
+          forced: true, // ensure plyr will force quality changes by replacing src
         },
       });
+
+      // set initial source in plyr format
+      if (playerRef.current) {
+        playerRef.current.source = {
+          type: 'video',
+          title: title ?? '',
+          sources: buildPlyrSources(sources),
+        };
+      }
     })();
 
     return () => {
@@ -50,34 +76,59 @@ export default function VideoPlayer({
     };
   }, []);
 
-  // 切源逻辑
+  // Update player source when sources prop changes
   useEffect(() => {
     const player = playerRef.current;
+    if (!player) return;
 
-    if (player) {
-      player.source = {
-        type: 'video',
-        title: title || '',
-        sources: sources,
-      };
-      // console.log('player.source', player.source);
+    // rebuild quality options
+    const qualityOptions = Array.from(
+      new Set(sources.map(s => s.size).filter(Boolean) as number[])
+    )
+      .sort((a, b) => b - a)
+      .map(n => Number(n));
+
+    // Update quality config if changed
+    try {
+      // @ts-ignore - Plyr types may not expose runtime config update; update internal config
+      if (qualityOptions.length) {
+        // update config so settings menu reflects available qualities
+        // NOTE: this updates the internal options used by settings menu
+        // Some Plyr versions read config only on init; forced:true helps
+        // But updating .options may help the UI
+        // @ts-ignore
+        player.options.quality = {
+          default: qualityOptions[0],
+          options: qualityOptions,
+          forced: true,
+        };
+      }
+    } catch (e) {
+      // ignore
     }
+
+    // Preserve playback state/time
     const v = videoRef.current;
     if (!v) return;
     const wasPlaying = !v.paused && !v.ended;
     const curTime = v.currentTime || 0;
-    v.pause();
-    v.src = sources[0]?.src ?? '';
-    if (poster) v.poster = poster;
-    v.load();
+
+    player.source = {
+      type: 'video',
+      title: title ?? '',
+      sources: buildPlyrSources(sources),
+    };
+
+    // Try to restore time/play state after switching source
     v.currentTime = Math.min(curTime, Number.POSITIVE_INFINITY);
     if (wasPlaying) {
       v.play().catch(() => {});
     }
-  }, [sources, poster, playerRef?.current]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sources, poster, title]);
 
   return (
-    <Box sx={{ '& .plyr--full-ui': { borderRadius: '25px' } }}>
+    <Box sx={{ '& .plyr--full-ui': { borderRadius: '12px' } }}>
       {title && (
         <Typography
           sx={{
