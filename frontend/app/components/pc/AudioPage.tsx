@@ -40,7 +40,7 @@ export default function AudioPage({
         url_mp3: item?.url_mp3,
       }))
     : audioBookUrl;
-
+  // console.log('mp3Urls', mp3Urls);
   return (
     <Box sx={{ py: 0, gap: 2 }}>
       <Box
@@ -68,7 +68,7 @@ export default function AudioPage({
                 gap: 1,
               }}
             >
-              <AudioPlayer src={item?.url_mp3 ?? ''} />
+              {item?.url_mp3 && <AudioPlayer src={item?.url_mp3} />}
               {bookUrls ? (
                 <Box display={'flex'}>
                   <MediaDownloadButton

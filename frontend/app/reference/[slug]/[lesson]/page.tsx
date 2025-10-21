@@ -1,11 +1,11 @@
+import AudioPage from '@/app/components/pc/AudioPage';
+import ReadingPage from '@/app/components/pc/ReadingPage';
 import { Box } from '@mui/material';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next/types';
 import { getBookChapters, getBookMediaByOrder } from '../../../api';
 import LessonMeta from '../../../components/pc/LessonMeta';
 import LessonSidebar from '../../../components/pc/LessonSidebar';
-import ReadingPage from '@/app/components/pc/ReadingPage';
-import AudioPage from '@/app/components/pc/AudioPage';
 import { BookChapter } from '../../../types/models';
 
 // 15分钟缓存
@@ -105,7 +105,7 @@ const refPage = async ({ params, searchParams }: refPageProps) => {
   const chapterOrder = resolvedParams.lesson?.replace('lesson', '');
   const bookMedia = await getBookMediaByOrder(bookOrder, chapterOrder);
 
-  // console.log('bookMedia', bookMedia);
+  console.log('bookMedia', bookMedia);
 
   if (!bookMedia) {
     notFound();

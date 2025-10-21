@@ -177,22 +177,18 @@ const qaPage = async ({ params, searchParams }: qaPageProps) => {
                 <>
                   {currentQuestion.url_hd ? (
                     <VideoPlayer
-                      poster={
-                        currentQuestion.url_image ||
-                        currentQuestion.image1_url ||
-                        ''
-                      }
-                      title={''}
+                      poster={currentQuestion.url_image || ''}
+                      title={currentQuestion.title || ''}
                       sources={[
                         {
-                          src: currentQuestion.url_hd,
-                          quality: 'HD',
-                          label: '高清',
+                          src: currentQuestion.url_sd || currentQuestion.url_hd,
+                          size: 720,
+                          type: 'video/mp4',
                         },
                         {
-                          src: currentQuestion.url_sd || currentQuestion.url_hd,
-                          quality: 'SD',
-                          label: '标清',
+                          src: currentQuestion.url_hd,
+                          size: 1080,
+                          type: 'video/mp4',
                         },
                       ]}
                     />
@@ -207,7 +203,6 @@ const qaPage = async ({ params, searchParams }: qaPageProps) => {
                 direction='row'
                 justifyContent='space-between'
                 sx={{
-                  mt: { xxl: -12, xl: -10, lg: -6, md: -4, sm: -4 },
                   '& .MuiButton-root>a': {
                     fontSize: 18,
                     pr: '2px',

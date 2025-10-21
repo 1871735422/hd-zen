@@ -181,14 +181,14 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
                 title={media?.title || ''}
                 sources={[
                   {
-                    src: media?.url_hd,
-                    quality: 'HD',
-                    label: '高清',
+                    src: media?.url_sd || media?.url_hd,
+                    size: 720,
+                    type: 'video/mp4',
                   },
                   {
-                    src: media?.url_sd || media?.url_hd,
-                    quality: 'SD',
-                    label: '标清',
+                    src: media?.url_hd,
+                    size: 1080,
+                    type: 'video/mp4',
                   },
                 ]}
               />
