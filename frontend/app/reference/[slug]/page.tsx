@@ -44,7 +44,14 @@ export default async function ReferencePage({
                     display: 'flex',
                     justifyContent:
                       rowItems.length === 3 ? 'space-between' : 'flex-start',
-                    gap: rowItems.length < 3 ? 5 : 0,
+                    gap:
+                      rowItems.length < 3
+                        ? {
+                            lg: `calc((100% - 330px * 3) / 2) `,
+                            xl: `calc((100% - 437px * 3) / 2) `,
+                            xxl: `calc((100% - 480px * 3) / 2) `,
+                          }
+                        : 0,
                     mb: 5,
                   }}
                 >

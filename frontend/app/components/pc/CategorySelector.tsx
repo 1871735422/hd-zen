@@ -34,7 +34,14 @@ export default function CategorySelector({
           value={selectedCategory}
           exclusive
           onChange={(_, value) => {
+            // console.log({ pathname,isLessonPage, value, categories });
+
+            if (!value && pathname.includes('lesson')) {
+              router.push(pathname.replace(/lesson\d+/, ''));
+            }
+
             if (!value) return;
+
             const categoryIndex = categories.indexOf(value);
             // console.log({ categoryIndex, isLessonPage, value, categories });
 
@@ -45,9 +52,13 @@ export default function CategorySelector({
                   `lesson${Math.max(1, categoryIndex + 1)}`
                 )
               );
-            } else if (pathname.includes('lesson')) {
-              router.push(pathname.slice(0, pathname.lastIndexOf('/')));
+              // } else if (pathname.includes('lesson')) {
+              //   router.push(pathname.slice(0, pathname.lastIndexOf('/')));
             } else {
+              // console.log(
+              //   '非 问答课程 跳转：',
+              //   `/${pathname.split('/')[1]}/${categoryIndex + 1}`
+              // );
               router.push(`/${pathname.split('/')[1]}/${categoryIndex + 1}`);
             }
           }}
