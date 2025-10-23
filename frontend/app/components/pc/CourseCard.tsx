@@ -27,9 +27,7 @@ export default function CourseCard({
       href={`/${slug}/${courseOrder}/lesson${item.idx}${questionOrder ? `?tab=question${questionOrder}` : ''}`}
       component={'a'}
       sx={{
-        width: isQa
-          ? { lg: 240, xl: 308, xxl: 420 }
-          : { lg: 330, xl: 437, xxl: 480 },
+        width: isQa ? { lg: 240, xl: 308, xxl: 360 } : { lg: 330, xl: 437 },
         height: isQa
           ? { lg: 165, xl: 215, xxl: 240 }
           : { lg: 180, xl: 214, xxl: 255 },

@@ -155,7 +155,7 @@ const refPage = async ({ params, searchParams }: refPageProps) => {
         }}
       >
         <LessonMeta
-          title={bookMedia[0]?.title}
+          title={bookMedia[0]?.article_title}
           tags={
             bookTags?.length ? bookTags.map((tag: string) => tag.trim()) : []
           }

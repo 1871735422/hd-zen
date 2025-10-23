@@ -28,7 +28,7 @@ const Home: React.FC = async () => {
           backgroundImage: 'url(/images/hero-bg.png)',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
-          backgroundSize: 'cover',
+          backgroundSize: 'contain',
           position: 'relative',
         }}
       >

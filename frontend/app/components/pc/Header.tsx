@@ -18,10 +18,10 @@ const Header: React.FC = async () => {
       id='back-to-top-anchor'
       position='static'
       sx={{
+        maxWidth: 'xxl',
         background: 'transparent',
         boxShadow: 'none',
         width: '100%',
-        maxWidth: '100%',
         justifyContent: 'center',
       }}
       component='header'

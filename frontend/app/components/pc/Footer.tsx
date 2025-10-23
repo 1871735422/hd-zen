@@ -2,6 +2,7 @@ import { Box, Typography } from '@mui/material';
 const Footer: React.FC = () => {
   return (
     <Box
+      maxWidth={'xxl'}
       display='flex'
       justifyContent='center'
       alignItems='center'

@@ -137,10 +137,11 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
     excludeLabels.push('文字');
   }
 
+  // console.log(!selectedKey, excludeLabels?.includes('视频'), media?.url_mp3);
   const TabRender = () => {
     if (
       selectedKey === 'audio' ||
-      (excludeLabels?.includes('视频') && media?.url_mp3)
+      (!selectedKey && excludeLabels?.includes('视频') && media?.url_mp3)
     )
       return <AudioPage topicMedia={topicMedia} />;
     if (

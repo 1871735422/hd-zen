@@ -45,7 +45,7 @@
 
 .iconfont_s {
   font-family: 'iconfont' !important;
-  font-size: inherit;
+  font-size: calc(1.05em); /* inherit * 1.2 */
   font-weight: inherit;
   font-style: normal;
   -webkit-font-smoothing: antialiased;

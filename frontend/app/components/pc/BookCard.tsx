@@ -70,15 +70,18 @@ const BookCard: React.FC<BookCardProps> = ({ title, description, idx }) => {
             textAlign: 'justify',
             WebkitBoxOrient: 'vertical',
             overflow: 'hidden',
-            fontSize: { sm: 10, md: 11, lg: 14, xl: 16, xxl: 18 },
+            fontSize:
+              idx === 3
+                ? { lg: 13, xl: 15.5, xxl: 17.5 }
+                : { sm: 10, md: 11, lg: 14, xl: 16, xxl: 18 },
             fontWeight: '500',
             zIndex: 2,
             pointerEvents: 'none',
             pt:
               idx === 3
-                ? { sm: 4, md: 6, lg: 5, xl: 14, xxl: 16 }
+                ? { sm: 4, md: 6, lg: 5.5, xl: 14, xxl: 16 }
                 : { sm: 5, md: 7, lg: 9, xl: 17, xxl: 22 },
-            lineHeight: idx === 3 ? { lg: 1.3, xl: 1.4 } : 1.7,
+            lineHeight: idx === 3 ? { lg: 1.4, xl: 1.4 } : 1.7,
           },
         },
       }}

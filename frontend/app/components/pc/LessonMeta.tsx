@@ -41,7 +41,7 @@ export default function LessonMeta({
           xxl: isQuestion ? 36 : 40,
         }}
         color={STANDARD_TEXT_COLOR}
-        mb={tags?.length ? { lg: 5.7, xl: 8, xxl: 10 } : 1}
+        mb={tags?.length || description ? { lg: 5.7, xl: 8, xxl: 10 } : 1}
         mt={isQuestion ? 0 : { lg: 6.4, xl: 9, xxl: 11 }}
       >
         {clearCourseTitle(title)}

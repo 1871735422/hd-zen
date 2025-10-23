@@ -1,7 +1,8 @@
 'use client';
-import { Box, Typography } from '@mui/material';
+import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
+import { Box, IconButton, Typography } from '@mui/material';
 import 'plyr/dist/plyr.css';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 type Source = { src: string; type?: string; size?: number };
 
@@ -16,6 +17,7 @@ export default function VideoPlayer({
 }) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const playerRef = useRef<Plyr | null>(null);
+  const [played, setPlayed] = useState(false);
 
   // Helper: build plyr-compatible source list
   const buildPlyrSources = (list: Source[]) =>
@@ -92,10 +94,6 @@ export default function VideoPlayer({
     try {
       // @ts-ignore - Plyr types may not expose runtime config update; update internal config
       if (qualityOptions.length) {
-        // update config so settings menu reflects available qualities
-        // NOTE: this updates the internal options used by settings menu
-        // Some Plyr versions read config only on init; forced:true helps
-        // But updating .options may help the UI
         // @ts-ignore
         player.options.quality = {
           default: qualityOptions[0],
@@ -125,10 +123,45 @@ export default function VideoPlayer({
       v.play().catch(() => {});
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sources, poster, title]);
+  }, [sources, title]);
 
   return (
-    <Box sx={{ '& .plyr--full-ui': { borderRadius: '12px' } }}>
+    <Box
+      sx={{
+        position: 'relative',
+        '& .plyr--full-ui': { borderRadius: '12px' },
+        '& .plyr--full-ui:before': {
+          position: 'absolute',
+          inset: 0,
+          content: '""',
+          display: played ? 'none' : 'block',
+          zIndex: 10,
+          width: '100%',
+          height: '100%',
+          backgroundImage: `url(${poster})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        },
+      }}
+    >
+      {!played && (
+        <IconButton
+          onClick={() => {
+            playerRef.current?.play();
+            setPlayed(true);
+          }}
+          sx={{
+            position: 'absolute',
+            bottom: '5%',
+            left: '3%',
+            color: 'white',
+            fontSize: '2.5em',
+            zIndex: 11,
+          }}
+        >
+          <PlayCircleOutlineIcon sx={{ fontSize: 80 }} />
+        </IconButton>
+      )}
       {title && (
         <Typography
           sx={{
@@ -150,7 +183,6 @@ export default function VideoPlayer({
           minHeight: '400px',
           objectFit: 'contain',
         }}
-        poster={poster}
         preload='metadata'
       />
     </Box>

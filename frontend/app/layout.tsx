@@ -25,6 +25,7 @@ export default function RootLayout({
           minHeight: '100vh',
           display: 'flex',
           flexDirection: 'column',
+          alignItems: 'center',
           boxSizing: 'border-box',
         }}
       >
@@ -32,7 +33,7 @@ export default function RootLayout({
           <MuiThemeProvider>
             <Header />
             <Container
-              maxWidth={false}
+              maxWidth={'xxl'}
               component='main'
               sx={{
                 p: { xs: 0, sm: 0, md: 0, lg: 0, xl: 0, xxl: 0 },

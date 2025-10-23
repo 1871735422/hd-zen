@@ -9,6 +9,7 @@ declare module '@mui/material/styles' {
     sm: true;
     md: true;
     lg: true;
+    xlg: true;
     xl: true;
     xxl: true;
   }
@@ -18,18 +19,21 @@ declare module '@mui/material/styles' {
       maxWidth: {
         md: number;
         lg: number;
+        xlg: number;
         xl: number;
         xxl: number;
       };
       gutterX: {
         md: number;
         lg: number;
+        xlg: number;
         xl: number;
         xxl: number;
       };
       headerHeight: {
         md: number;
         lg: number;
+        xlg: number;
         xl: number;
         xxl: number;
       };
@@ -38,9 +42,11 @@ declare module '@mui/material/styles' {
 
   interface ThemeOptions {
     layout?: {
-      maxWidth?: Partial<Record<'md' | 'lg' | 'xl' | 'xxl', number>>;
-      gutterX?: Partial<Record<'md' | 'lg' | 'xl' | 'xxl', number>>;
-      headerHeight?: Partial<Record<'md' | 'lg' | 'xl' | 'xxl', number>>;
+      maxWidth?: Partial<Record<'md' | 'lg' | 'xlg' | 'xl' | 'xxl', number>>;
+      gutterX?: Partial<Record<'md' | 'lg' | 'xlg' | 'xl' | 'xxl', number>>;
+      headerHeight?: Partial<
+        Record<'md' | 'lg' | 'xlg' | 'xl' | 'xxl', number>
+      >;
     };
   }
 }
@@ -58,6 +64,7 @@ const createAppTheme = () =>
         sm: 600, // 小平板 (≥ 600px, < 960px)
         md: 960, // 平板 (≥ 960px, < 1280px)
         lg: 1280, // 小桌面 (≥ 1280px, < 1600px, 包含 Surface Pro)
+        xlg: 1536, // 中桌面 (≥ 1536px, < 1920px)
         xl: 1920, // 大桌面 (≥ 1600px, < 2560px)  改为1920px，匹配设计稿
         xxl: 2560, // 超大桌面 (≥ 2560px)
       },
@@ -66,18 +73,21 @@ const createAppTheme = () =>
       maxWidth: {
         md: 960, // 960px
         lg: 1240, // 1240px - 优化后更好适配 Surface 等设备
+        xlg: 1500, // 1500px - 适合 1536px 屏幕
         xl: 1560, // 1560px - 与新的 xl 断点匹配
         xxl: 2520, // 2520px - 略小于 xxl 断点，留出边距
       },
       gutterX: {
         md: 24,
         lg: 32, // 适合大多数中等屏幕设备
+        xlg: 36, // 中等桌面屏幕的间距
         xl: 40, // 更大屏幕使用更大间距
         xxl: 48,
       },
       headerHeight: {
         md: 60,
         lg: 68, // 适合 Surface Pro 等设备
+        xlg: 72, // 中等桌面屏幕的头部高度
         xl: 80, // 更大屏幕使用更高的头部
         xxl: 92,
       },

@@ -14,7 +14,6 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Box, Button, Container, Grid, Stack, Typography } from '@mui/material';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
 
 // 15分钟缓存
 export const revalidate = 900;
@@ -112,7 +111,11 @@ const qaPage = async ({ params, searchParams }: qaPageProps) => {
   // console.log('questions', questions);
 
   if (!questions.length) {
-    notFound();
+    return (
+      <Typography variant='h5' textAlign='center'>
+        即将推出
+      </Typography>
+    );
   }
   const currentQuestion = questions.find(
     question => question.questionOrder + '' === questionOrder

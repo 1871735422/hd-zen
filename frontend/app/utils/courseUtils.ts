@@ -98,8 +98,8 @@ export function formatDate(input: string): string {
 export function buildLessonsTitle(size: number) {
   const lessons = [];
   for (let i = 0; i < size; i++) {
-    if (i <= 10) lessons.push(`第${ONE_TO_TEN_CHAR[i]}课`);
-    if (i > 10 && i < 20) lessons.push(`第十${ONE_TO_TEN_CHAR[i % 10]}课`);
+    if (i < 10) lessons.push(`第${ONE_TO_TEN_CHAR[i]}课`);
+    if (i >= 10 && i < 20) lessons.push(`第十${ONE_TO_TEN_CHAR[i % 10]}课`);
     if (i >= 20) break;
   }
 

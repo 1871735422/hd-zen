@@ -60,10 +60,7 @@ export default function TagRelation({ tag, refCourses }: TagRelationProps) {
           content: '""',
           position: 'absolute',
           width: '100%',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
+          inset: 0,
           // 渐变背景 - 从上到下的多层渐变效果
           background: `
             linear-gradient(
