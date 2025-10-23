@@ -27,6 +27,7 @@ export default function RootLayout({
           flexDirection: 'column',
           alignItems: 'center',
           boxSizing: 'border-box',
+          minWidth: '1280px',
         }}
       >
         <AppRouterCacheProvider options={{ enableCssLayer: false }}>

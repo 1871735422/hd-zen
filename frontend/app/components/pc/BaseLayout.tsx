@@ -23,6 +23,7 @@ function BaseLayout({
       maxWidth={'xxl'}
       sx={{
         position: 'relative',
+        flexGrow: 1,
         m: 0,
         px: { sm: 2, md: 4, lg: 15, xlg: 28, xl: 32, xxl: 62 },
         backgroundImage: `
