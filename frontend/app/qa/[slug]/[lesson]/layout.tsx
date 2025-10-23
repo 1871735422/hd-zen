@@ -2,9 +2,8 @@ import AppBreadcrumbs, {
   BreadcrumbProvider,
 } from '@/app/components/pc/AppBreadcrumbs';
 import CategorySelector from '@/app/components/pc/CategorySelector';
-import { ONE_TO_TEN_CHAR } from '@/app/constants';
 import { buildLessonsTitle } from '@/app/utils/courseUtils';
-import { Box, Container, Typography } from '@mui/material';
+import { Box, Container } from '@mui/material';
 import { getCourseByDisplayOrder, getCourseTopicsByCourse } from '../../../api';
 
 const LessonLayout = async ({
@@ -37,28 +36,9 @@ const LessonLayout = async ({
 
   const categories = buildLessonsTitle(courseTopics.length);
   const selectedCategory = categories[Number(lessonOrder) - 1];
-  const subTitle = `第${ONE_TO_TEN_CHAR[Number(courseOrder) - 1]}册`;
 
   return (
     <>
-      <Typography
-        variant='h2'
-        className='bei-fang'
-        lineHeight={2}
-        sx={{
-          background:
-            'linear-gradient(222deg, rgba(255, 168, 184, 1) 0%, rgba(255, 106, 114, 1) 69.37%)',
-          backgroundClip: 'text',
-          WebkitBackgroundClip: 'text',
-          color: 'transparent',
-          fontSize: 30,
-          position: 'absolute',
-          left: { xxl: 805, xl: 577, lg: 440, xlg: 540, md: 355, sm: 345 },
-          top: { xxl: 80, xl: 73, lg: 55, xlg: 60, md: 43, sm: 35 },
-        }}
-      >
-        {subTitle}
-      </Typography>
       <Box mb={3}>
         <CategorySelector
           categories={categories}

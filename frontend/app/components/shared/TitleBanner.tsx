@@ -1,10 +1,16 @@
-import { Stack } from '@mui/material';
+'use client';
+import { ONE_TO_TEN_CHAR } from '@/app/constants';
+import { Stack, Typography } from '@mui/material';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 
 interface TitleBannerProps {
   title: string;
 }
 function TitleBanner({ title }: TitleBannerProps) {
+  const pathname = usePathname();
+  const courseOrder = pathname.split('/')[2]?.replace('lesson', '');
+  const subTitle = `第${ONE_TO_TEN_CHAR[Number(courseOrder) - 1]}册`;
   return (
     <Stack
       sx={{
@@ -26,6 +32,24 @@ function TitleBanner({ title }: TitleBannerProps) {
           marginLeft: title === '学修参考资料' ? '25px' : 0,
         }}
       />
+      {pathname.startsWith('/qa') && (
+        <Typography
+          className='bei-fang'
+          lineHeight={2}
+          sx={{
+            background:
+              'linear-gradient(222deg, rgba(255, 168, 184, 1) 0%, rgba(255, 106, 114, 1) 69.37%)',
+            backgroundClip: 'text',
+            WebkitBackgroundClip: 'text',
+            color: 'transparent',
+            fontSize: 30,
+            ml: -4,
+            pb: 0.3,
+          }}
+        >
+          {subTitle}
+        </Typography>
+      )}
     </Stack>
   );
 }

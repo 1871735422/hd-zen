@@ -5,7 +5,7 @@ import {
 } from '@/app/api';
 import CourseCard from '@/app/components/pc/CourseCard';
 import DownloadQaResource from '@/app/components/shared/DownloadQaResource';
-import { Container, Grid, Typography } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import QaSidebar from '../../components/pc/QaSidebar';
 
 // 15分钟缓存
@@ -50,64 +50,57 @@ export default async function QaPage({ params, searchParams }: QaPageProps) {
       displayOrder: Number(item.ordering),
     }));
     return (
-      <Container
-        maxWidth='xl'
+      <Grid
+        container
         sx={{
-          py: 5,
-          px: '0 !important',
+          backgroundColor: '#fff',
+          borderRadius: '25px',
+          py: 0,
+          mt: 7,
+          mb: 9,
+          height: 'fit-content',
+          position: 'relative',
         }}
       >
+        <DownloadQaResource volumeName={questions[0]?.courseTitle} />
+        <Grid size={3}>
+          <QaSidebar
+            lesson={sidebarData}
+            selectedIdx={Number(lessonOrder) - 1}
+          />
+        </Grid>
         <Grid
           container
+          spacing={3.5}
           sx={{
-            backgroundColor: '#fff',
-            borderRadius: '25px',
-            py: 0,
-            mb: 9,
+            px: 3,
+            pt: 5,
+            pb: 5,
             height: 'fit-content',
-            position: 'relative',
           }}
+          size={9}
         >
-          <DownloadQaResource volumeName={questions[0]?.courseTitle} />
-          <Grid size={3}>
-            <QaSidebar
-              lesson={sidebarData}
-              selectedIdx={Number(lessonOrder) - 1}
-            />
-          </Grid>
-          <Grid
-            container
-            spacing={3.5}
-            sx={{
-              px: 3,
-              pt: 5,
-              pb: 5,
-              height: 'fit-content',
-            }}
-            size={9}
-          >
-            {questions.map(question => (
-              <Grid key={question.questionOrder} size={{ sm: 6, md: 4 }}>
-                <CourseCard
-                  item={{
-                    idx: Number(lessonOrder),
-                    title: question.questionTitle || '',
-                    description: question.description || '',
-                  }}
-                  courseOrder={Number(displayOrder)}
-                  slug='qa'
-                  questionOrder={question.questionOrder}
-                />
-              </Grid>
-            ))}
-            {questions.length === 0 && (
-              <Grid size={{ sm: 6, md: 4 }}>
-                <Typography variant='h5'>即将推出</Typography>
-              </Grid>
-            )}
-          </Grid>
+          {questions.map(question => (
+            <Grid key={question.questionOrder} size={{ sm: 6, md: 4 }}>
+              <CourseCard
+                item={{
+                  idx: Number(lessonOrder),
+                  title: question.questionTitle || '',
+                  description: question.description || '',
+                }}
+                courseOrder={Number(displayOrder)}
+                slug='qa'
+                questionOrder={question.questionOrder}
+              />
+            </Grid>
+          ))}
+          {questions.length === 0 && (
+            <Grid size={{ sm: 6, md: 4 }}>
+              <Typography variant='h5'>即将推出</Typography>
+            </Grid>
+          )}
         </Grid>
-      </Container>
+      </Grid>
     );
   } catch (error) {
     console.error('Error loading course:', error);

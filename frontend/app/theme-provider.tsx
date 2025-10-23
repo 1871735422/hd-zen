@@ -148,6 +148,27 @@ const createAppTheme = () =>
           },
         },
       },
+      MuiTypography: {
+        styleOverrides: {
+          root: {
+            fontFamily: [
+              'PingFang SC',
+              'Hiragino Sans GB',
+              'Microsoft Yahei',
+              'Noto Sans CJK SC',
+              '-apple-system',
+              'BlinkMacSystemFont',
+              'Segoe UI',
+              'Helvetica Neue',
+              'Arial',
+              'Noto Sans',
+              'Roboto',
+              'system-ui',
+              'sans-serif',
+            ].join(','),
+          },
+        },
+      },
     },
   });
 
