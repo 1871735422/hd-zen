@@ -156,14 +156,14 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
         {typeof index === 'number' && (
           <Box
             sx={{
-              minWidth: { lg: 16, xl: 22, xxl: 26 },
-              height: { lg: 16, xl: 22, xxl: 26 },
+              minWidth: { sm: 19, md: 19, lg: 16, xl: 22, xxl: 26 },
+              aspectRatio: '1 / 1',
               borderRadius: '50%',
               bgcolor: 'rgba(86, 137, 204, 1)',
               color: '#fff',
               fontSize: { lg: 13, xl: 16, xxl: 18 },
               fontWeight: 500,
-              display: 'inline-flex',
+              display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
             }}
@@ -173,7 +173,7 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
           </Box>
         )}
         <Typography
-          variant='h2'
+          variant='h6'
           sx={{
             fontSize: { lg: 13, xl: 18, xxl: 20 },
             fontWeight: 500,

@@ -60,12 +60,13 @@ const createAppTheme = () =>
     unstable_strictMode: true,
     breakpoints: {
       values: {
-        xs: 0, // 手机 (≥ 0px, < 600px)
-        sm: 600, // 小平板 (≥ 600px, < 960px)
-        md: 960, // 平板 (≥ 960px, < 1280px)
-        lg: 1280, // 小桌面 (≥ 1280px, < 1600px, 包含 Surface Pro)
+        xs: 0, // 手机 (≥ 0px, < 600px) - 强制使用lg样式
+        sm: 600, // 小平板 (≥ 600px, < 960px) - 强制使用lg样式
+        md: 960, // 平板 (≥ 960px, < 1280px) - 强制使用lg样式
+        // lg: 1280, // 小桌面 (≥ 1280px, < 1600px, 包含 Surface Pro)
+        lg: 0, // 强制所有屏幕都使用lg样式
         xlg: 1536, // 中桌面 (≥ 1536px, < 1920px)
-        xl: 1920, // 大桌面 (≥ 1600px, < 2560px)  改为1920px，匹配设计稿
+        xl: 1920, // 大桌面 (≥ 1920px, < 2560px)
         xxl: 2560, // 超大桌面 (≥ 2560px)
       },
     },
