@@ -31,14 +31,14 @@ const GradientCard: React.FC<GradientCardProps> = ({
           lg: `${300 + idx * 15}px`,
           xlg: `${395 + idx * 20}px`,
           xl: `${420 + idx * 20}px`,
-          xxl: `${540 + idx * 25}px`,
+          xxl: `${460 + idx * 25}px`,
         },
         borderRadius: '30px 30px 0 0',
         display: 'flex',
         flexDirection: 'column',
         alignContent: 'flex-start',
         cursor: 'pointer',
-        width: { lg: 190, xlg: 230, xl: 262, xxl: 360 },
+        width: { lg: 190, xlg: 230, xl: 262, xxl: 320 },
         flexShrink: 0,
         position: 'relative',
         color: INNER_TEXT_COLOR,
@@ -50,7 +50,7 @@ const GradientCard: React.FC<GradientCardProps> = ({
           transform: 'scale(1.02)',
           transition: 'transform 0.5s ease-in-out',
           '& .MuiTypography-root:last-child': {
-            minHeight: idx === 3 ? 500 : 260 + idx * 12,
+            minHeight: idx === 3 ? 590 : 260 + idx * 12,
             WebkitLineClamp: 99,
             color:
               idx <= 3
@@ -68,7 +68,7 @@ const GradientCard: React.FC<GradientCardProps> = ({
         fontSize={{ lg: 24, xlg: 26, xl: 28, xxl: 38 }}
         fontWeight={500}
         textAlign='center'
-        my={{ lg: 2.5, xlg: 3, xl: 4, xxl: 4.5 }}
+        my={{ lg: 2.5, xlg: 3, xl: 4, xxl: 4.2 }}
       >
         {title}
       </Typography>
@@ -86,16 +86,14 @@ const GradientCard: React.FC<GradientCardProps> = ({
             lg: idx === 3 ? 234 : 214 + idx * 18,
             xlg: idx === 3 ? 315 : 270 + idx * 20,
             xl: idx === 3 ? 330 : 300 + idx * 25,
-            xxl: idx === 3 ? 418 : 370 + idx * 32,
+            xxl: idx === 3 ? 450 : 370 + idx * 32,
           },
           background: '#fff',
           borderRadius: '30px 30px 0 0',
           display: '-webkit-box',
           WebkitBoxOrient: 'vertical',
           WebkitLineClamp:
-            idx === 3
-              ? { xlg: 12, xl: 11, lg: 11, xxl: 12 }
-              : { xlg: 22, xl: 20, lg: 18 },
+            idx === 3 ? { xlg: 12, xl: 11, lg: 11, xxl: 12 } : {},
           overflow: 'hidden',
           wordBreak: 'break-word',
           textOverflow: 'ellipsis',

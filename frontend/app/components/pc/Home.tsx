@@ -24,7 +24,7 @@ const Home: React.FC = async () => {
       {/* 主内容区域 */}
       <Box
         sx={{
-          height: { lg: 480, xlg: 580, xl: 686, xxl: 900 },
+          minHeight: { lg: 480, xlg: 580, xl: 686, xxl: 900 },
           backgroundImage: 'url(/images/hero-bg.webp)',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',

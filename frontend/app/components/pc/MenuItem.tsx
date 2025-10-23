@@ -30,7 +30,7 @@ const MenuItemComponent: React.FC<MenuItemProps> = ({ item }) => {
       color: NAV_COLOR,
       backgroundColor: 'transparent',
     },
-    px: { sm: 0.5, md: 0.8, lg: 1.5, xl: 2.5, xxl: 3 },
+    px: { lg: 2, xlg: 2.2, xl: 2.5, xxl: 3 },
   };
 
   if (hasChildren) {

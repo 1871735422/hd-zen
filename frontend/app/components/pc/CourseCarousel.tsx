@@ -17,13 +17,13 @@ const CourseCarousel: React.FC<CourseCarouselProps> = ({ cards }) => {
   return (
     <Box
       sx={{
-        py: { sm: 4, md: 6, lg: 8, xl: 10, xxl: 12 },
-        mb: { sm: 6, md: 8, lg: 10, xl: 12, xxl: 14 },
+        py: { lg: 8, xl: 10, xxl: 12 },
+        mb: { lg: 10, xl: 12, xxl: 14 },
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'flex-start',
         justifyContent: 'center',
-        gap: { sm: 0.5, md: 0.8, lg: 1, xl: 1.2, xxl: 1.5 },
+        gap: { lg: 1, xl: 1.2, xxl: 1.5 },
         width: '100%',
         overflow: 'hidden',
       }}
