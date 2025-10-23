@@ -24,8 +24,8 @@ const Home: React.FC = async () => {
       {/* 主内容区域 */}
       <Box
         sx={{
-          height: { lg: 580, xlg: 640, xl: 686, xxl: 900 },
-          backgroundImage: 'url(/images/hero-bg.png)',
+          height: { lg: 480, xlg: 580, xl: 686, xxl: 900 },
+          backgroundImage: 'url(/images/hero-bg.webp)',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
           backgroundSize: 'cover', // 宽、高度定了，只能用cover
@@ -35,8 +35,8 @@ const Home: React.FC = async () => {
         {/* hero 头图 */}
         <Box
           sx={{
-            height: { xl: '100%', lg: 575, xlg: 635 },
-            width: { lg: 575, xlg: 642, xl: 722, xxl: 920 },
+            height: { xl: '100%', lg: 479, xlg: 577 },
+            width: { lg: 575, xlg: 680, xl: 722, xxl: 920 },
             position: 'absolute',
             top: 0,
             left: 0,
@@ -48,7 +48,7 @@ const Home: React.FC = async () => {
             clipPath: 'polygon(0% 0%, 100% 0%, 100% 83.5%, 0% 100%)',
             '& .MuiTypography-root': {
               mx: {
-                lg: '77px',
+                lg: '67px',
                 xlg: '85px',
                 xl: '101px',
                 xxl: '110px',
@@ -59,8 +59,8 @@ const Home: React.FC = async () => {
               color: DESC_TEXT_COLOR,
               fontSize: { lg: 18, xlg: 20, xl: 22, xxl: 30 },
               lineHeight: {
-                lg: '28px',
-                xlg: '32px',
+                lg: '24px',
+                xlg: '28px',
                 xl: '36px',
                 xxl: '48px',
               },
@@ -76,13 +76,13 @@ const Home: React.FC = async () => {
             fontWeight={500}
             textAlign='center'
             lineHeight={{
-              lg: '40px',
-              xlg: '44px',
+              lg: '36px',
+              xlg: '40px',
               xl: '57px',
               xxl: '64px',
             }}
             color={TITLE_COLOR}
-            mt={{ lg: '51px', xlg: '60px', xl: '51px', xxl: '60px' }}
+            mt={{ lg: '40px', xlg: '50px', xl: '51px', xxl: '60px' }}
             mb={{ lg: '10px', xlg: '12px', xl: '10px', xxl: '12px' }}
           >
             慧灯禅修课简介

@@ -25,10 +25,11 @@ const GradientCard: React.FC<GradientCardProps> = ({
       component={'a'}
       href={`/course/${id}`}
       sx={{
-        px: { sm: 0.2, md: 0.3, lg: 0.71, xl: 1, xxl: 1.2 },
+        px: { lg: 0.75, xlg: 0.9, xl: 1, xxl: 1.2 },
         mt: `${(1 - idx) * 10}px`,
         height: {
           lg: `${300 + idx * 15}px`,
+          xlg: `${395 + idx * 20}px`,
           xl: `${420 + idx * 20}px`,
           xxl: `${540 + idx * 25}px`,
         },
@@ -37,7 +38,7 @@ const GradientCard: React.FC<GradientCardProps> = ({
         flexDirection: 'column',
         alignContent: 'flex-start',
         cursor: 'pointer',
-        width: { sm: 150, md: 170, lg: 206, xl: 262, xxl: 360 },
+        width: { lg: 190, xlg: 230, xl: 262, xxl: 360 },
         flexShrink: 0,
         position: 'relative',
         color: INNER_TEXT_COLOR,
@@ -49,7 +50,7 @@ const GradientCard: React.FC<GradientCardProps> = ({
           transform: 'scale(1.02)',
           transition: 'transform 0.5s ease-in-out',
           '& .MuiTypography-root:last-child': {
-            minHeight: idx === 3 ? 484 : 280 + idx * 15,
+            minHeight: idx === 3 ? 500 : 260 + idx * 12,
             WebkitLineClamp: 99,
             color:
               idx <= 3
@@ -64,42 +65,43 @@ const GradientCard: React.FC<GradientCardProps> = ({
     >
       <Typography
         color={STANDARD_TEXT_COLOR}
-        fontSize={{ sm: 14, md: 16, lg: 24, xl: 28, xxl: 38 }}
+        fontSize={{ lg: 24, xlg: 26, xl: 28, xxl: 38 }}
         fontWeight={500}
         textAlign='center'
-        my={{ sm: 2, md: 2, lg: 3, xl: 4, xxl: 4.5 }}
+        my={{ lg: 2.5, xlg: 3, xl: 4, xxl: 4.5 }}
       >
         {title}
       </Typography>
 
       <Typography
         color='rgba(102, 102, 102, 1)'
-        fontSize={{ sm: 10, md: 12, lg: 13, xl: 16, xxl: 22 }}
+        fontSize={{ lg: 14, xlg: 15, xl: 16, xxl: 22 }}
         textAlign='justify'
         sx={{
           m: 0,
-          pt: { sm: 1.5, md: 2, lg: 2, xl: 3, xxl: 3.5 },
-          px: { sm: 1.5, md: 2, lg: 2, xl: 2.5, xxl: 3 },
+          pt: { lg: 2, xlg: 2.75, xl: 3, xxl: 3.5 },
+          px: { lg: 2, xlg: 2.25, xl: 2.5, xxl: 3 },
           pb: 0,
           height: {
-            sm: idx === 3 ? 200 : 180 + idx * 15,
-            md: idx === 3 ? 250 : 220 + idx * 18,
-            lg: idx === 3 ? 218 : 214 + idx * 18,
-            xl: idx === 3 ? 306 : 300 + idx * 25,
-            xxl: idx === 3 ? 380 : 370 + idx * 32,
+            lg: idx === 3 ? 234 : 214 + idx * 18,
+            xlg: idx === 3 ? 315 : 270 + idx * 20,
+            xl: idx === 3 ? 330 : 300 + idx * 25,
+            xxl: idx === 3 ? 418 : 370 + idx * 32,
           },
           background: '#fff',
           borderRadius: '30px 30px 0 0',
           display: '-webkit-box',
           WebkitBoxOrient: 'vertical',
-          WebkitLineClamp: idx === 3 ? { xl: 11, lg: 10 } : { xl: 20, lg: 18 },
+          WebkitLineClamp:
+            idx === 3
+              ? { xlg: 12, xl: 11, lg: 11, xxl: 12 }
+              : { xlg: 22, xl: 20, lg: 18 },
           overflow: 'hidden',
           wordBreak: 'break-word',
           textOverflow: 'ellipsis',
           lineHeight: {
-            sm: '18px',
-            md: '22px',
             lg: '20px',
+            xlg: '24px',
             xl: '28px',
             xxl: '32px',
           },

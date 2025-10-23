@@ -30,8 +30,8 @@ function BaseLayout({
         p: '0 !important',
         backgroundImage: `
           linear-gradient(180deg, rgba(224, 241, 255, 0.7) 0%, rgba(255, 255, 255, 0) 20.05%, rgba(217, 234, 252, 0.7) 33.35%, rgba(241, 247, 254, 0.7) 63.87%, rgba(245, 247, 251, 0.7) 100%),
-          url(/images/course-bg-h.png),
-          url(/images/course-lesson-bg.jpg)
+          url(/images/course-bg-h.webp),
+          url(/images/course-lesson-bg.webp)
         `,
         backgroundSize: 'cover, cover, contain',
         backgroundPosition: 'center, center, 0% -14%',

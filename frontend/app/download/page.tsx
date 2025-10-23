@@ -29,7 +29,7 @@ export default async function DownloadPage() {
     <Box
       sx={{
         width: '100%',
-        backgroundImage: 'url(/images/course-bg-h.png)',
+        backgroundImage: 'url(/images/course-bg-h.webp)',
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',
         backgroundPosition: 'center',
@@ -44,8 +44,9 @@ export default async function DownloadPage() {
       }}
     >
       <Container
-        maxWidth='xl'
+        maxWidth={false}
         sx={{
+          maxWidth: { lg: 1060, xlg: 1080, xl: 1400, xxl: 1600 },
           position: 'relative',
           zIndex: 1,
           width: '100%',

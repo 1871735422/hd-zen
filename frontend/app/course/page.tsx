@@ -30,7 +30,7 @@ async function CoursePage() {
           top: 0,
           width: '100%',
           height: '100%',
-          backgroundImage: 'url(/images/course-bg.jpg)',
+          backgroundImage: 'url(/images/course-bg.webp)',
           backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat',
           backgroundPosition: 'center',

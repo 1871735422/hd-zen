@@ -57,7 +57,7 @@ const BookCard: React.FC<BookCardProps> = ({ title, description, idx }) => {
             fontWeight: '500',
             pt:
               idx === 3
-                ? { sm: 2, md: 3, lg: 1.2, xl: 7, xxl: 8 }
+                ? { lg: 1.5, xlg: 2, xl: 7, xxl: 8 }
                 : { sm: 3, md: 4, lg: 4, xl: 9, xxl: 12 },
           },
           '&::after': {
@@ -72,16 +72,16 @@ const BookCard: React.FC<BookCardProps> = ({ title, description, idx }) => {
             overflow: 'hidden',
             fontSize:
               idx === 3
-                ? { lg: 13, xl: 15.5, xxl: 17.5 }
-                : { sm: 10, md: 11, lg: 14, xl: 16, xxl: 18 },
+                ? { lg: 12, xlg: 12, xl: 15.5, xxl: 17.5 }
+                : { lg: 13, xlg: 13, xl: 16, xxl: 18 },
             fontWeight: '500',
             zIndex: 2,
             pointerEvents: 'none',
             pt:
               idx === 3
-                ? { sm: 4, md: 6, lg: 5.5, xl: 14, xxl: 16 }
-                : { sm: 5, md: 7, lg: 9, xl: 17, xxl: 22 },
-            lineHeight: idx === 3 ? { lg: 1.4, xl: 1.4 } : 1.7,
+                ? { lg: 5.5, xlg: 6, xl: 14, xxl: 16 }
+                : { lg: 9, xlg: 9, xl: 17, xxl: 22 },
+            lineHeight: idx === 3 ? { lg: 1.5, xlg: 1.5, xl: 1.4 } : 1.7,
           },
         },
       }}
@@ -129,8 +129,8 @@ const BookCard: React.FC<BookCardProps> = ({ title, description, idx }) => {
         </Typography>
         <Typography
           sx={{
-            mt: { sm: 1, md: 1.2, lg: 1.5, xl: 1.8, xxl: 2 },
-            px: { sm: 0.5, md: 0.8, lg: 1, xl: 1.2, xxl: 1.5 },
+            mt: { lg: 1.5, xl: 1.8, xxl: 2 },
+            px: { lg: 1, xl: 1.2, xxl: 1.5 },
             color: 'text.secondary',
             textAlign: 'justify',
             display: '-webkit-box',
@@ -138,7 +138,7 @@ const BookCard: React.FC<BookCardProps> = ({ title, description, idx }) => {
             WebkitLineClamp: 2,
             overflow: 'hidden',
             lineHeight: 1.7,
-            fontSize: { sm: 10, md: 11, lg: 14, xl: 16, xxl: 18 },
+            fontSize: { lg: 13, xlg: 13, xl: 16, xxl: 18 },
           }}
         >
           {description}

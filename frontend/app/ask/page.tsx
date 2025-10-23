@@ -1,4 +1,5 @@
 import { Box } from '@mui/material';
+import Link from 'next/link';
 import { pb } from '../api';
 import { Dict } from '../types/models';
 
@@ -7,12 +8,12 @@ export const metadata = {
   description: '慧灯之光禅修网站 — 不懂就问',
 };
 export default async function QuestionCollectPage() {
-  const resultList = await pb.collection('dicts').getList(1, 50, {
-    filter: 'key="qa_qrcode_url"||key="qa_link"',
-  });
   let result: Dict[] = [];
 
   try {
+    const resultList = await pb.collection('dicts').getList(1, 50, {
+      filter: 'key="qa_qrcode_url"||key="qa_link"',
+    });
     result = resultList.items as unknown as Dict[];
   } catch (error) {
     console.error(error);
@@ -47,7 +48,7 @@ export default async function QuestionCollectPage() {
           top: 0,
           width: '100%',
           height: '100%',
-          backgroundImage: 'url(/images/course-bg.jpg)',
+          backgroundImage: 'url(/images/course-bg.webp)',
           backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat',
           backgroundPosition: 'center',
@@ -60,17 +61,15 @@ export default async function QuestionCollectPage() {
           background:
             'linear-gradient(229.09deg, rgba(255, 255, 255, 1) 0.02%, rgba(255, 255, 255, 0.28) 100%)',
           borderRadius: {
-            sm: '18px',
-            md: '22px',
             lg: '26px',
             xl: '30px',
             xxl: '35px',
           },
-          width: { sm: 500, md: 580, lg: 700, xl: 830, xxl: 950 },
-          py: { sm: 2.4, md: 3.2, lg: 3.6, xl: 4, xxl: 5 },
-          px: { sm: 5.4, md: 6.3, lg: 7.6, xl: 9, xxl: 12 },
-          mt: { sm: 7.2, md: 8.4, lg: 10, xl: 12, xxl: 16 },
-          mb: { sm: 9.6, md: 11.2, lg: 13.6, xl: 16, xxl: 20 },
+          width: { lg: 700, xl: 830, xxl: 950 },
+          py: { lg: 3.6, xlg: 4, xl: 4, xxl: 5 },
+          px: { lg: 7.6, xlg: 8, xl: 9, xxl: 12 },
+          mt: { lg: 10, xlg: 0, xl: 12, xxl: 16 },
+          mb: { lg: 13.6, xlg: 16, xl: 16, xxl: 20 },
           textAlign: 'left',
           backdropFilter: 'blur(10px)',
         }}
@@ -105,7 +104,10 @@ export default async function QuestionCollectPage() {
             py: { sm: 1.2, md: 1.4, lg: 1.7, xl: 2, xxl: 2.5 },
           }}
         >
-          <a href={result?.find(item => item.key === 'qa_link')?.value || '#'}>
+          <Link
+            target='_blank'
+            href={result?.find(item => item.key === 'qa_link')?.value || '#'}
+          >
             <Box
               component={'img'}
               alt='参与方式：请扫描下方二维码或点击 问卷链接 填写您的问题。'
@@ -129,10 +131,10 @@ export default async function QuestionCollectPage() {
                 display: 'block',
               }}
             />
-          </a>
+          </Link>
           <Box
             component={'img'}
-            src='https://img.js.design/assets/img/67dadfa407c4c2e4674d942a.png'
+            src='/images/join-qr.png'
             alt='QR Code'
             sx={{
               display: 'flex',
