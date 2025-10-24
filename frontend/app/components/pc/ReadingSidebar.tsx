@@ -84,13 +84,13 @@ export default function ReadingSidebar({
   }, []);
 
   const buttonStyle = {
-    width: { lg: 50, xl: 70, xxl: 80 },
-    height: { lg: 50, xl: 70, xxl: 80 },
+    width: { lg: 50, xlg: 60, xl: 70, xxl: 80 },
+    height: { lg: 50, xlg: 60, xl: 70, xxl: 80 },
     color: 'rgba(42, 130, 228, 1)',
     borderRadius: '50%',
     minWidth: 0,
-    fontSize: { lg: 10, xl: 14, xxl: 16 },
-    lineHeight: { lg: '10px', xl: '14px', xxl: '16px' },
+    fontSize: { lg: 10, xlg: 12, xl: 14, xxl: 16 },
+    lineHeight: { lg: '10px', xlg: '12px', xl: '14px', xxl: '16px' },
     textAlign: 'center',
     display: 'flex',
     alignItems: 'center',
@@ -100,7 +100,7 @@ export default function ReadingSidebar({
     fontFamily: 'Montserrat, "Segoe UI", "Arial Narrow", Arial, sans-serif',
     fontWeight: 500,
     '& svg': {
-      fontSize: { lg: 14, xl: 18, xxl: 22 },
+      fontSize: { lg: 14, xlg: 16, xl: 18, xxl: 22 },
     },
   };
 
@@ -110,7 +110,7 @@ export default function ReadingSidebar({
       alignItems='center'
       sx={{
         position: 'absolute',
-        right: { lg: -50, xl: -80, xxl: -80 },
+        right: { lg: -55, xlg: -65, xl: -80, xxl: -80 },
         top: 0,
         zIndex: 10,
         fontWeight: 500,
@@ -139,7 +139,7 @@ export default function ReadingSidebar({
         sx={{
           ...buttonStyle,
           bgcolor: defaultBg,
-          fontSize: { lg: 17, xl: 24, xxl: 28 },
+          fontSize: { lg: 17, xlg: 20, xl: 24, xxl: 28 },
         }}
       >
         <span>A+</span>
@@ -151,7 +151,7 @@ export default function ReadingSidebar({
         sx={{
           ...buttonStyle,
           bgcolor: defaultBg,
-          fontSize: { lg: 14, xl: 20, xxl: 24 },
+          fontSize: { lg: 14, xlg: 17, xl: 20, xxl: 24 },
           lineHeight: 1,
         }}
       >
