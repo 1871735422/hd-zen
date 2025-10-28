@@ -40,8 +40,8 @@ function BaseLayout({
     >
       <Box
         sx={{
-          minWidth: { lg: 1060, xlg: 1080, xl: 1400, xxl: 1440 },
-          maxWidth: { lg: 1060, xlg: 1080, xl: 1400, xxl: 1600 },
+          minWidth: { lg: 1060, xlg: 1080, xl: 1400, xxl: 1420 },
+          maxWidth: { lg: 1060, xlg: 1080, xl: 1400, xxl: 1420 },
         }}
       >
         <TitleBanner title={title} />

@@ -296,7 +296,7 @@ const SearchPage = () => {
         sx={{
           position: 'relative',
           zIndex: 1,
-          width: { lg: 1136, xl: 1600, xxl: 1920 },
+          width: { lg: 1136, xl: 1420 },
           mr: { xs: 0, sm: 0, md: '10%', lg: '21%', xl: '30%', xxl: '30%' },
           ml: { xs: 0, sm: 0, md: '0%', lg: '8.5%', xl: '12%', xxl: '14%' },
           px: 2,

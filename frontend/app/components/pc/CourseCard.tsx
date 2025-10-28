@@ -27,11 +27,9 @@ export default function CourseCard({
       href={`/${slug}/${courseOrder}/lesson${item.idx}${questionOrder ? `?tab=question${questionOrder}` : ''}`}
       component={'a'}
       sx={{
-        width: isQa ? { lg: 240, xl: 308, xxl: 360 } : { lg: 330, xl: 437 },
-        height: isQa
-          ? { lg: 165, xl: 215, xxl: 240 }
-          : { lg: 180, xl: 214, xxl: 255 },
-        borderRadius: { lg: '20px', xl: '25px', xxl: '33px' },
+        width: isQa ? { lg: 240, xl: 308 } : { lg: 330, xl: 437 },
+        height: isQa ? { lg: 165, xl: 215 } : { lg: 180, xl: 214 },
+        borderRadius: { lg: '20px', xl: '25px' },
         position: 'relative',
         boxShadow: '0 4px 20px rgba(131, 181, 247, 0.3)',
         display: 'flex',
@@ -48,25 +46,23 @@ export default function CourseCard({
           justifyContent: 'space-between',
           minHeight: isQa ? 60 : 100,
           flex: 1,
-          px: isQa ? { lg: 2, xl: 3, xxl: 4 } : { lg: 3.3, xl: 5, xxl: 6 },
-          pt: { lg: 2, xl: 3, xxl: 4 },
+          px: isQa ? { lg: 2, xl: 3 } : { lg: 3.3, xl: 5 },
+          pt: { lg: 2, xl: 3 },
           pb: `5% !important`,
         }}
       >
         <Typography
           sx={{
             flex: isQa ? 3 : 1,
-            pr: isQa ? { lg: 5, xl: 5.5, xxl: 6 } : 7,
+            pr: isQa ? { lg: 5, xl: 5.5 } : 7,
             display: '-webkit-box',
             WebkitBoxOrient: 'vertical',
             WebkitLineClamp: isQa ? 3 : 1,
             overflow: 'hidden',
             lineHeight: 1.5,
             textOverflow: 'ellipsis',
-            fontWeight: { lg: 500, xl: 600, xxl: 600 },
-            fontSize: isQa
-              ? { lg: 15, xl: 18, xxl: 20 }
-              : { lg: 18, xl: 24, xxl: 26 },
+            fontWeight: { lg: 500, xl: 600 },
+            fontSize: isQa ? { lg: 15, xl: 18 } : { lg: 18, xl: 24 },
             minHeight: isQa ? 70 : 30,
           }}
         >
@@ -81,12 +77,12 @@ export default function CourseCard({
             WebkitBoxOrient: 'vertical',
             WebkitLineClamp: isQa ? 1 : 2,
             overflow: 'hidden',
-            fontSize: { lg: 13, xl: 15, xxl: 18 },
-            lineHeight: { lg: 1.7, xl: '23px', xxl: '27px' },
+            fontSize: { lg: 13, xl: 15 },
+            lineHeight: { lg: 1.7, xl: '23px' },
             textOverflow: 'ellipsis',
             wordBreak: 'break-word',
             width: '100%',
-            my: isQa ? 1 : { lg: 2, xl: 2.65, xxl: 3.3 },
+            my: isQa ? 1 : { lg: 2, xl: 2.65 },
           }}
         >
           {item.description.replace(/<[^>]*>/g, '')}
