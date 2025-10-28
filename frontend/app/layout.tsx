@@ -39,9 +39,7 @@ export default async function RootLayout({
             {/* 客户端设备检测 Provider - 支持窗口大小变化时的二次校正 */}
             <DeviceProvider serverDeviceType={serverDeviceType}>
               {/* 响应式布局 - 基于客户端检测动态渲染，解决热更新问题 */}
-              <ResponsiveLayout serverIsMobile={isMobile}>
-                {children}
-              </ResponsiveLayout>
+              <ResponsiveLayout>{children}</ResponsiveLayout>
             </DeviceProvider>
 
             {/* Clarity Analytics - 在客户端初始化 */}
