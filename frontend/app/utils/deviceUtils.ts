@@ -6,6 +6,20 @@ export type DeviceType = 'mobile' | 'tablet' | 'desktop';
 
 /**
  * 检测设备类型
+ *
+ * @deprecated 推荐使用 useDevice() from '@/app/components/DeviceProvider'
+ * 新的 Hook 提供了更好的 SSR 支持和性能优化
+ *
+ * 迁移示例：
+ * ```typescript
+ * // 旧方式
+ * import { useDeviceType } from '@/app/utils/deviceUtils';
+ * const deviceType = useDeviceType();
+ *
+ * // 新方式（推荐）
+ * import { useDevice } from '@/app/components/DeviceProvider';
+ * const { deviceType, isHydrated } = useDevice();
+ * ```
  */
 export function useDeviceType(): DeviceType {
   const [deviceType, setDeviceType] = useState<DeviceType>('desktop');

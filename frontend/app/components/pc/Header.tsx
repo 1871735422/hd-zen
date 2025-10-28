@@ -1,17 +1,29 @@
+'use client';
+
 import { STANDARD_TEXT_COLOR } from '@/app/constants/colors';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Link from 'next/link';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { getCategories } from '../../api';
 import LogoIcon from '../icons/LogoIcon';
+import { Menu } from './MenuItem';
 import NavigationMenu from './NavigationMenu';
 import SearchForm from './SearchForm';
 
-const Header: React.FC = async () => {
-  const menuData = await getCategories();
+const Header: React.FC = () => {
+  const [menuData, setMenuData] = useState<Menu[]>([]);
+
+  useEffect(() => {
+    const fetchMenuData = async () => {
+      const data = await getCategories();
+      setMenuData(data);
+    };
+
+    fetchMenuData();
+  }, []); // 空依赖数组确保只在客户端挂载时运行一次
 
   return (
     <AppBar

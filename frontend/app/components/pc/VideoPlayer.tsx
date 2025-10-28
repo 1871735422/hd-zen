@@ -129,15 +129,20 @@ export default function VideoPlayer({
     <Box
       sx={{
         position: 'relative',
-        '& .plyr--full-ui': { borderRadius: '12px' },
-        '& .plyr--full-ui:before': {
+        '& .plyr--full-ui': {
+          visibility: played ? 'visible' : 'hidden',
+          borderRadius: '12px',
+          minHeight: { lg: 360, xl: 400, xxl: 400 },
+        },
+        '&.MuiBox-root:before': {
           position: 'absolute',
+          display: played ? 'none' : 'block',
           inset: 0,
           content: '""',
-          display: played ? 'none' : 'block',
           zIndex: 10,
           width: '100%',
           height: '100%',
+          borderRadius: '12px',
           backgroundImage: `url(${poster})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
@@ -180,8 +185,8 @@ export default function VideoPlayer({
         style={{
           width: '100%',
           height: '100%',
-          minHeight: '400px',
           objectFit: 'contain',
+          backgroundColor: '#fff',
         }}
         preload='metadata'
       />

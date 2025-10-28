@@ -1,10 +1,7 @@
-import Clarity from '@microsoft/clarity';
-import { Container } from '@mui/material';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
-import DesktopFooter from './components/pc/Footer';
-import DesktopHeader from './components/pc/Header';
-import MobileHeader from './components/mobile/Header';
-import TabNavigation from './components/mobile/TabNavigation';
+import ClarityAnalytics from './components/ClarityAnalytics';
+import DeviceProvider from './components/DeviceProvider';
+import ResponsiveLayout from './components/ResponsiveLayout';
 import './globals.css';
 import { getDeviceTypeFromHeaders } from './utils/serverDeviceUtils';
 import MuiThemeProvider from './theme-provider';
@@ -21,11 +18,9 @@ export default async function RootLayout({
 }>) {
   const projectId = 'tncl8cmm4o';
 
-  // 检测设备类型
-  const deviceType = await getDeviceTypeFromHeaders();
-  const isMobile = deviceType === 'mobile';
-
-  Clarity.init(projectId);
+  // 服务端检测设备类型（首屏渲染）
+  const serverDeviceType = await getDeviceTypeFromHeaders();
+  const isMobile = serverDeviceType === 'mobile';
 
   return (
     <html lang='zh-Hans'>
@@ -41,33 +36,16 @@ export default async function RootLayout({
       >
         <AppRouterCacheProvider options={{ enableCssLayer: false }}>
           <MuiThemeProvider>
-            {/* 根据设备类型渲染不同的 Header */}
-            {isMobile ? (
-              <>
-                <MobileHeader />
-                <TabNavigation />
-              </>
-            ) : (
-              <DesktopHeader />
-            )}
+            {/* 客户端设备检测 Provider - 支持窗口大小变化时的二次校正 */}
+            <DeviceProvider serverDeviceType={serverDeviceType}>
+              {/* 响应式布局 - 基于客户端检测动态渲染，解决热更新问题 */}
+              <ResponsiveLayout serverIsMobile={isMobile}>
+                {children}
+              </ResponsiveLayout>
+            </DeviceProvider>
 
-            <Container
-              maxWidth={isMobile ? false : 'xxl'}
-              component='main'
-              sx={{
-                p: isMobile ? 0 : { xs: 0, sm: 0, md: 0, lg: 0, xl: 0, xxl: 0 },
-                m: isMobile ? 0 : { xs: 0, sm: 0, md: 0, lg: 0, xl: 0, xxl: 0 },
-                flexGrow: 1,
-                display: 'flex',
-                flexDirection: 'column',
-                width: '100%',
-              }}
-            >
-              {children}
-            </Container>
-
-            {/* 根据设备类型渲染不同的 Footer */}
-            {!isMobile && <DesktopFooter />}
+            {/* Clarity Analytics - 在客户端初始化 */}
+            <ClarityAnalytics projectId={projectId} />
           </MuiThemeProvider>
         </AppRouterCacheProvider>
       </body>

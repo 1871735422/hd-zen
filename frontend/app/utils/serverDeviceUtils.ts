@@ -1,6 +1,8 @@
 /**
  * 服务器端设备检测工具
  * 用于在 Server Components 中检测设备类型
+ *
+ * 优先使用 Client Hints (Sec-CH-UA-Mobile)，回退到 User-Agent
  */
 
 /**
@@ -14,7 +16,34 @@ export function isMobileUserAgent(userAgent?: string): boolean {
 }
 
 /**
+ * 从 Client Hints 判断是否为移动设备
+ * Client Hints 提供比 User-Agent 更准确和隐私友好的设备信息
+ */
+export function isMobileFromClientHints(headers: Headers): boolean | null {
+  // 检查 Sec-CH-UA-Mobile header
+  const uaMobile = headers.get('sec-ch-ua-mobile');
+
+  if (uaMobile === '?1') {
+    return true; // 明确是移动设备
+  } else if (uaMobile === '?0') {
+    return false; // 明确不是移动设备
+  }
+
+  return null; // Client Hints 不可用
+}
+
+/**
  * 从 Headers 获取设备类型（用于 Next.js Server Components）
+ *
+ * 检测策略：
+ * 1. 优先使用 Client Hints (Sec-CH-UA-Mobile) - 更准确、隐私友好
+ * 2. 回退到 User-Agent 检测 - 兼容不支持 Client Hints 的浏览器
+ * 3. 默认返回 desktop - 保守策略
+ *
+ * 注意：
+ * - 在开发环境热更新时，headers 可能不可用
+ * - 此时会返回默认值 'desktop'
+ * - 客户端 DeviceProvider 会在水合后进行校正
  */
 export async function getDeviceTypeFromHeaders(): Promise<
   'mobile' | 'desktop'
@@ -22,11 +51,54 @@ export async function getDeviceTypeFromHeaders(): Promise<
   try {
     const { headers } = await import('next/headers');
     const headersList = await headers();
+
+    // 1. 优先尝试 Client Hints
+    const isMobileHint = isMobileFromClientHints(headersList);
+    if (isMobileHint !== null) {
+      return isMobileHint ? 'mobile' : 'desktop';
+    }
+
+    // 2. 回退到 User-Agent 检测
     const userAgent = headersList.get('user-agent') || '';
-    return isMobileUserAgent(userAgent) ? 'mobile' : 'desktop';
+    if (userAgent) {
+      return isMobileUserAgent(userAgent) ? 'mobile' : 'desktop';
+    }
+
+    // 3. 如果 headers 完全不可用（如热更新），返回默认值
+    // 客户端 DeviceProvider 会在水合后校正
+    if (process.env.NODE_ENV === 'development') {
+      console.warn(
+        '[DeviceDetection] Headers not available (possibly HMR), using default "desktop". Client will correct after hydration.'
+      );
+    }
+    return 'desktop';
   } catch (error) {
     // 如果导入失败，默认返回桌面版
-    console.error('Failed to get device type:', error);
+    if (process.env.NODE_ENV === 'development') {
+      console.error('[DeviceDetection] Failed to get device type:', error);
+    }
     return 'desktop';
+  }
+}
+
+/**
+ * 获取视口宽度（从 Client Hints）
+ * 用于更精确的响应式判断
+ */
+export async function getViewportWidth(): Promise<number | null> {
+  try {
+    const { headers } = await import('next/headers');
+    const headersList = await headers();
+    const viewportWidth = headersList.get('sec-ch-viewport-width');
+
+    if (viewportWidth) {
+      const width = parseInt(viewportWidth, 10);
+      return isNaN(width) ? null : width;
+    }
+
+    return null;
+  } catch (error) {
+    console.error('Failed to get viewport width:', error);
+    return null;
   }
 }
