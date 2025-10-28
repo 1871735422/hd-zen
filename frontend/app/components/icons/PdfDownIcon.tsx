@@ -1,12 +1,7 @@
-import { SvgIcon, SxProps } from '@mui/material';
+import { SvgIcon } from '@mui/material';
 
-const PdfDownIcon = ({ sx }: { sx?: SxProps }) => (
-  <SvgIcon
-    sx={{
-      cursor: 'pointer',
-      ...sx,
-    }}
-  >
+const PdfDownIcon = () => (
+  <SvgIcon>
     <svg
       xmlns='http://www.w3.org/2000/svg'
       xmlnsXlink='http://www.w3.org/1999/xlink'

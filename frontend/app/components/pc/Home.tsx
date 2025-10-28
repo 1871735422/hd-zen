@@ -1,6 +1,7 @@
 import { Box, Typography } from '@mui/material';
 import React from 'react';
 import { getCourses } from '../../api';
+import { courseIntro } from '../../utils/content';
 import CourseCarousel, { CardData } from './CourseCarousel';
 
 const TITLE_COLOR = 'rgba(64, 90, 133, 1)';
@@ -14,9 +15,6 @@ const Home: React.FC = async () => {
     id: (idx + 1).toString(),
     title: course.title,
     description: course.description || '',
-    imageUrl: course.cover
-      ? `https://zen.huidengzg.com/api/files/courses/${course.id}/${course.cover}`
-      : '',
   }));
 
   return (
@@ -85,19 +83,11 @@ const Home: React.FC = async () => {
             mt={{ lg: '40px', xlg: '50px', xl: '51px', xxl: '60px' }}
             mb={{ lg: '10px', xlg: '12px', xl: '10px', xxl: '12px' }}
           >
-            慧灯禅修课简介
+            {courseIntro.title}
           </Typography>
-          <Typography>
-            慧灯禅修课是一套专为现代人定制的佛法学修系列课程。先介绍佛法的基本见解、解脱原理等，然后结合理论逐级实修，从基础的四外加行和五内加行开始，再经寂止的训练，最后达到证悟空性的境界。
-          </Typography>
-
-          <Typography>
-            这是一条通往解脱的最便捷且最稳妥之路。古往今来，无数人依此修行而获得了最高成就。导师慈诚罗珠堪布，更是一位当代公认兼具智慧与慈悲的大善知识，擅于以深入浅出的方式，将博大精深的佛法教义传递给大众，力求让每一个普通人都能理解并掌握修行的正确方法，真正获益。
-          </Typography>
-
-          <Typography>
-            愿慧灯禅修系列课程能帮助大家探索、发现心中永恒的光明！
-          </Typography>
+          {courseIntro.paragraphs.map((paragraph, index) => (
+            <Typography key={index}>{paragraph}</Typography>
+          ))}
         </Box>
       </Box>
 

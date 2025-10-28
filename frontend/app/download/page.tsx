@@ -1,3 +1,5 @@
+import { getDeviceTypeFromHeaders } from '../utils/serverDeviceUtils';
+import MobileDownloadPage from '../components/mobile/MobileDownloadPage';
 import { Avatar, Box, Container, Grid, Typography } from '@mui/material';
 import { getDownloadResources } from '../api';
 import AudioDownIcon from '../components/icons/AudioDownIcon';
@@ -23,7 +25,8 @@ export const metadata = {
   description: '慧灯之光禅修网站 — 禅修课资料下载',
 };
 
-export default async function DownloadPage() {
+// PC端下载页面组件
+async function PCDownloadPage() {
   const downloadItems = await getDownloadResources();
   return (
     <Box
@@ -225,4 +228,15 @@ export default async function DownloadPage() {
       </Container>
     </Box>
   );
+}
+
+export default async function DownloadPage() {
+  const deviceType = await getDeviceTypeFromHeaders();
+
+  // 根据设备类型返回对应的组件
+  if (deviceType === 'mobile') {
+    return <MobileDownloadPage />;
+  }
+
+  return <PCDownloadPage />;
 }

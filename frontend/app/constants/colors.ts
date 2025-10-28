@@ -8,6 +8,8 @@ export const HELPER_TEXT_COLOR = 'rgba(153, 153, 153, 1)';
 
 export const MAIN_BLUE_COLOR = 'rgba(130, 178, 232, 1)';
 
+export const DOWNLOAD_RED_COLOR = 'rgba(255, 168, 184, 1)';
+
 // 阅读模式配色方案
 export const READING_THEMES = {
   white: {
