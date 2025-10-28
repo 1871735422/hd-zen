@@ -17,22 +17,18 @@ const CourseCarousel: React.FC<CourseCarouselProps> = ({ cards }) => {
   return (
     <Box
       sx={{
-        py: { lg: 8, xl: 10, xxl: 12 },
-        mb: { lg: 10, xl: 12, xxl: 14 },
+        py: { lg: 8, xl: 10 },
+        mb: { lg: 10, xl: 12 },
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'flex-start',
         justifyContent: 'center',
-        gap: { lg: 1, xl: 1.2, xxl: 1.5 },
+        gap: { lg: 1, xl: 1.2 },
         width: '100%',
         overflow: 'hidden',
       }}
     >
-      <Grid
-        container
-        spacing={{ sm: 1, md: 1.5, lg: 2, xl: 2.5, xxl: 3 }}
-        pb={{ sm: 6, md: 8, lg: 12, xl: 14, xxl: 16 }}
-      >
+      <Grid container spacing={{ lg: 2, xl: 2.5 }} pb={{ lg: 12, xl: 14 }}>
         {cards.map((card, idx) => (
           <GradientCard
             key={card.id}

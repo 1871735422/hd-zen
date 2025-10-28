@@ -3,7 +3,6 @@
 import { useDeviceType } from '@/app/utils/deviceUtils';
 import Footer from './pc/Footer';
 import Header from './pc/Header';
-import MobileFooter from './mobile/Footer';
 import MobileHeader from './mobile/Header';
 
 interface DeviceLayoutProps {
@@ -19,7 +18,6 @@ export default function DeviceLayout({ children }: DeviceLayoutProps) {
       <>
         <MobileHeader />
         <main>{children}</main>
-        <MobileFooter />
       </>
     );
   }

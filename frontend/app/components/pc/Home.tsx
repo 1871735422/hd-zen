@@ -23,7 +23,11 @@ const Home: React.FC = async () => {
       <Box
         sx={{
           minHeight: { lg: 480, xlg: 580, xl: 686, xxl: 900 },
-          backgroundImage: 'url(/images/hero-bg.webp)',
+          backgroundImage: {
+            xxl: 'url(/images/hero-bg-xxl.jpg)',
+            xl: 'url(/images/hero-bg.webp)',
+            lg: 'url(/images/hero-bg.webp)',
+          },
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
           backgroundSize: 'cover', // 宽、高度定了，只能用cover
