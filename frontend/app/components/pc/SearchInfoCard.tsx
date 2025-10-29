@@ -292,7 +292,7 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
             <Tooltip title={type === '文章' ? '查看原文' : '查看音视频'} arrow>
               <MuiLink
                 href={url}
-                target='_blank'
+                // target='_blank'
                 rel='noopener noreferrer'
                 underline='hover'
                 sx={{
