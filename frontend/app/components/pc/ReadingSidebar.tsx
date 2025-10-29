@@ -16,7 +16,7 @@ interface ReadingSidebarProps {
 }
 
 export default function ReadingSidebar({
-  defaultMode = 'paged',
+  defaultMode = 'full',
 }: ReadingSidebarProps) {
   const [mode, setMode] = useState<'paged' | 'full'>(defaultMode);
   const router = useRouter();

@@ -3,7 +3,7 @@ import { Box } from '@mui/material';
 import Button from '@mui/material/Button';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import React from 'react';
+import React, { useState } from 'react';
 import { NAV_COLOR } from '../../constants';
 import { STANDARD_TEXT_COLOR } from '../../constants/colors';
 import DropDownIcon from '../icons/DropDownIcon';
@@ -20,6 +20,7 @@ interface MenuItemProps {
 const MenuItemComponent: React.FC<MenuItemProps> = ({ item }) => {
   const hasChildren = !!item.subMenu;
   const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState(false);
 
   const buttonSx = {
     color:
@@ -38,14 +39,12 @@ const MenuItemComponent: React.FC<MenuItemProps> = ({ item }) => {
       <Box
         sx={{
           position: 'relative',
-          '&:hover > div': {
-            opacity: 1,
-            visibility: 'visible',
-          },
           '& .MuiButtonBase-root': {
             backgroundColor: 'transparent',
           },
         }}
+        onMouseEnter={() => setIsOpen(true)}
+        onMouseLeave={() => setIsOpen(false)}
       >
         <Button sx={buttonSx} endIcon={<DropDownIcon />}>
           <Link href={`/${item.slug}${item?.slug === 'course' ? '' : '/1'}`}>
@@ -58,9 +57,9 @@ const MenuItemComponent: React.FC<MenuItemProps> = ({ item }) => {
             top: { sm: 48, md: 56, lg: 54, xl: 76, xxl: 84 },
             left: { sm: -5, md: -8, lg: -10, xl: -10, xxl: -12 },
             zIndex: 1000,
-            opacity: 0,
+            opacity: isOpen ? 1 : 0,
             p: { sm: 0.5, md: 0.8, lg: 1, xl: 1.2, xxl: 1.5 },
-            visibility: 'hidden',
+            visibility: isOpen ? 'visible' : 'hidden',
             transform: 'translateY(-10px)',
             transition: 'all 0.2s ease-in-out',
             background: 'white',
@@ -69,10 +68,6 @@ const MenuItemComponent: React.FC<MenuItemProps> = ({ item }) => {
             width: 'fit-content',
             borderTop: '2px solid rgba(131, 181, 247, 1)',
             boxShadow: '0px 5px 20px  rgba(131, 181, 247, 0.3)',
-            '&:hover': {
-              opacity: 1,
-              visibility: 'visible',
-            },
             '&:before': {
               width: 2,
               height: { lg: 18, xl: 24, xxl: 30 },
@@ -87,32 +82,35 @@ const MenuItemComponent: React.FC<MenuItemProps> = ({ item }) => {
           {item.subMenu &&
             item.subMenu.map((subItem: Menu) => {
               return (
-                <Button
+                <Link
                   key={subItem.name}
-                  sx={{
-                    fontSize: { sm: 12, md: 14, lg: 14, xl: 16, xxl: 18 },
-                    fontWeight: 400,
-                    color: STANDARD_TEXT_COLOR,
-                    padding: {
-                      lg: '6px 12px',
-                      xl: '8px 16px',
-                      xxl: '10px 20px',
-                    },
-                    width: '100%',
-                    justifyContent: 'flex-start',
-                    borderRadius: 0,
-                    whiteSpace: 'nowrap',
-                    '&:hover': {
-                      color: NAV_COLOR,
-                      background: 'rgba(70, 114, 166, 0.08)',
-                    },
-                  }}
+                  href={`/${item.slug}/${subItem.slug}`}
+                  onClick={() => setIsOpen(false)}
+                  style={{ textDecoration: 'none', width: '100%' }}
                 >
-                  <Link href={`/${item.slug}/${subItem.slug}`}>
-                    {' '}
+                  <Button
+                    sx={{
+                      fontSize: { sm: 12, md: 14, lg: 14, xl: 16, xxl: 18 },
+                      fontWeight: 400,
+                      color: STANDARD_TEXT_COLOR,
+                      padding: {
+                        lg: '6px 12px',
+                        xl: '8px 16px',
+                        xxl: '10px 20px',
+                      },
+                      width: '100%',
+                      justifyContent: 'flex-start',
+                      borderRadius: 0,
+                      whiteSpace: 'nowrap',
+                      '&:hover': {
+                        color: NAV_COLOR,
+                        background: 'rgba(70, 114, 166, 0.08)',
+                      },
+                    }}
+                  >
                     {subItem.name}
-                  </Link>
-                </Button>
+                  </Button>
+                </Link>
               );
             })}
         </Box>

@@ -28,8 +28,9 @@ const Header: React.FC = () => {
   return (
     <AppBar
       id='back-to-top-anchor'
-      position='static'
+      position='sticky'
       sx={{
+        top: 0,
         maxWidth: 'xxl',
         background: 'transparent',
         boxShadow: 'none',

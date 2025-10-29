@@ -171,7 +171,7 @@ export default function ReadingModeContainer({
                 标签:
               </Typography>
               <Box sx={tagBoxSx}>
-                {tags.map((tag, index) => (
+                {tags.slice(0, 5).map((tag, index) => (
                   <Chip
                     component={'a'}
                     href={`/tags?tag=${tag}`}

@@ -98,7 +98,7 @@ export default function LessonMeta({
                   },
                 }}
               >
-                {tags.map((tag, idx) => (
+                {tags.slice(0, 5).map((tag, idx) => (
                   <Fragment key={idx}>
                     <CourseTag label={tag} />
                   </Fragment>

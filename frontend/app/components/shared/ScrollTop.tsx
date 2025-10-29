@@ -3,17 +3,13 @@ import { Fade, useScrollTrigger } from '@mui/material';
 import Box from '@mui/material/Box';
 import ToTopIcon from '../icons/ToTopIcon';
 
-export const handleScrollTop = (
-  event: React.MouseEvent<HTMLDivElement>,
-  readingMode = false
-) => {
+export const handleScrollTop = (event: React.MouseEvent<HTMLDivElement>) => {
   const anchor = (
     (event.target as HTMLDivElement).ownerDocument || document
-  ).querySelector(`${readingMode ? '.' : '#'}back-to-top-anchor`);
-
+  ).querySelector(`.back-to-top-anchor`);
   if (anchor) {
     anchor.scrollIntoView({
-      block: 'center',
+      block: 'start',
     });
   }
 };
@@ -30,7 +26,14 @@ export default function ScrollTop({ bgColor = color, visible = false }) {
   return (
     <Fade in={visible || trigger}>
       <Box
-        onClick={e => handleScrollTop(e, visible)}
+        onClick={
+          visible
+            ? handleScrollTop
+            : () =>
+                window.scrollTo({
+                  top: 0,
+                })
+        }
         aria-label='scroll back to top'
         role='presentation'
         sx={{

@@ -20,7 +20,7 @@ export default function ReadingContent({
   fullText,
 }: ReadingContentProps) {
   const [currentPage, setCurrentPage] = useState(1);
-  const [mode, setMode] = useState<'paged' | 'full'>('paged'); // 默认分页模式
+  const [mode, setMode] = useState<'paged' | 'full'>('full'); // 默认全文模式
   const [isClient, setIsClient] = useState(false);
 
   // 缓存分页内容
