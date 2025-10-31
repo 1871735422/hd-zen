@@ -1,5 +1,4 @@
 import AudioPage from '@/app/components/pc/AudioPage';
-import MediaDownloadButton from '@/app/components/pc/MediaDownloadButton';
 import ReadingPage from '@/app/components/pc/ReadingPage';
 import VideoPlayer from '@/app/components/pc/VideoPlayer';
 import { Box, Typography } from '@mui/material';
@@ -158,38 +157,25 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
       );
     }
 
-    // 默认视频 tab 组件
-    const downloadUrls = topicMedia
-      .map(media => media?.url_downmp4)
-      .filter(url => url !== undefined);
-
     return (
       <>
-        <MediaDownloadButton
-          sx={{
-            alignSelf: 'flex-end',
-            mb: -2.5,
-            mt: -5,
-          }}
-          mediaType='video'
-          downloadUrls={downloadUrls}
-        />
         {topicMedia.map(media => (
           <Fragment key={media.id}>
             {media?.url_hd ? (
               <VideoPlayer
-                poster={media?.url_image || media?.image1_url || ''}
-                title={media?.title || ''}
-                sources={[
+                videoList={[
                   {
-                    src: media?.url_sd || media?.url_hd,
-                    size: 720,
-                    type: 'video/mp4',
-                  },
-                  {
-                    src: media?.url_hd,
-                    size: 1080,
-                    type: 'video/mp4',
+                    id: media?.id || '',
+                    title: media?.title || '',
+                    poster: media?.url_image || '',
+                    sources: [
+                      {
+                        src: media?.url_sd || media?.url_hd,
+                        size: 720,
+                        type: 'video/mp4',
+                      },
+                      { src: media?.url_hd, size: 1080, type: 'video/mp4' },
+                    ],
                   },
                 ]}
               />

@@ -4,16 +4,9 @@ import {
   getCourses,
   getCourseTopicsByCourse,
 } from '@/app/api';
-import LessonMeta from '@/app/components/pc/LessonMeta';
-import MediaDownloadButton from '@/app/components/pc/MediaDownloadButton';
-import QaSidebar from '@/app/components/pc/QaSidebar';
-import VideoPlayer from '@/app/components/pc/VideoPlayer';
+import QaClientWrapper from './QaClientWrapper';
 import { CourseTopic } from '@/app/types/models';
-import { formatDate } from '@/app/utils/courseUtils';
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { Box, Button, Container, Grid, Stack, Typography } from '@mui/material';
-import Link from 'next/link';
+import { Container, Typography } from '@mui/material';
 
 // 15分钟缓存
 export const revalidate = 900;
@@ -117,9 +110,21 @@ const qaPage = async ({ params, searchParams }: qaPageProps) => {
       </Typography>
     );
   }
-  const currentQuestion = questions.find(
+  const currentIndex = questions.findIndex(
     question => question.questionOrder + '' === questionOrder
   );
+
+  // Narrow questions to the client wrapper's expected shape without using any
+  type QLite = {
+    questionOrder: number;
+    questionTitle?: string;
+    questionCreated?: string;
+    title?: string;
+    url_sd?: string;
+    url_hd?: string;
+    url_image?: string;
+    url_downmp4?: string;
+  };
 
   return (
     <Container
@@ -132,133 +137,14 @@ const qaPage = async ({ params, searchParams }: qaPageProps) => {
         px: '0 !important',
       }}
     >
-      <Grid
-        container
-        sx={{
-          backgroundColor: '#fff',
-          borderRadius: '25px',
-          py: 0,
-          mb: 5,
-          height: 'fit-content',
-        }}
-      >
-        <Grid size={3}>
-          <QaSidebar
-            lesson={questions.map(question => ({
-              label: question.questionTitle || '',
-              path: `/qa/${courseOrder}/lesson${lessonOrder}?tab=question${question.questionOrder}`,
-              displayOrder: Number(question.questionOrder),
-            }))}
-            selectedIdx={questions.findIndex(
-              question => question.questionOrder + '' === questionOrder
-            )}
-          />
-        </Grid>
-        <Grid container spacing={4} sx={{ px: 9, py: 4 }} size={9}>
-          <Box
-            sx={{
-              backgroundColor: 'white',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 4,
-              pb: 5,
-              borderRadius: 5,
-              width: '100%',
-            }}
-          >
-            {currentQuestion?.questionTitle && (
-              <LessonMeta
-                title={`${questionOrder}. ${currentQuestion?.questionTitle}`}
-                author='作者：慈诚罗珠堪布'
-                date={formatDate(currentQuestion?.questionCreated || '')}
-                refCourse={`${courseName} > ${lessonName}`}
-                refUrl={`/course/${courseOrder}/lesson${lessonOrder}`}
-              />
-            )}
-            <>
-              {currentQuestion?.url_downmp4 && (
-                <MediaDownloadButton
-                  sx={{
-                    alignSelf: 'flex-end',
-                    mt: { lg: -8, xl: -14 },
-                  }}
-                  mediaType='video'
-                  downloadUrls={[currentQuestion?.url_downmp4 || '']}
-                />
-              )}
-              <>
-                {currentQuestion?.url_hd || currentQuestion?.url_sd ? (
-                  <VideoPlayer
-                    poster={currentQuestion.url_image || ''}
-                    title={currentQuestion.title || ''}
-                    sources={[
-                      {
-                        src: currentQuestion?.url_sd || '',
-                        size: 720,
-                        type: 'video/mp4',
-                      },
-                      {
-                        src: currentQuestion?.url_hd || '',
-                        size: 1080,
-                        type: 'video/mp4',
-                      },
-                    ]}
-                  />
-                ) : (
-                  <Typography>
-                    视频资源不可用：{currentQuestion?.questionTitle || ''}
-                  </Typography>
-                )}
-              </>
-              <Stack
-                direction='row'
-                justifyContent='space-between'
-                sx={{
-                  '& .MuiButton-root>a': {
-                    fontSize: 18,
-                    pr: '2px',
-                  },
-                  '& .MuiButton-root': {
-                    backgroundColor: 'rgba(240, 247, 255, 1)',
-                    py: '2px',
-                    px: '14px',
-                    borderRadius: '20px',
-                    fontWeight: 400,
-                    color: 'rgba(127, 173, 235, 1)',
-                  },
-                  '& .MuiButton-startIcon': {
-                    marginRight: '0 !important',
-                  },
-                  '& .MuiButton-endIcon': {
-                    marginLeft: '0 !important',
-                  },
-                }}
-              >
-                <Button
-                  startIcon={<ArrowBackIosIcon />}
-                  disabled={parseInt(questionOrder) <= 1}
-                >
-                  <Link
-                    href={`/qa/${courseOrder}/lesson${lessonOrder}?tab=question${parseInt(questionOrder) - 1}`}
-                  >
-                    上一个
-                  </Link>
-                </Button>
-                <Button
-                  disabled={parseInt(questionOrder) >= questions.length}
-                  endIcon={<ArrowForwardIosIcon />}
-                >
-                  <Link
-                    href={`/qa/${courseOrder}/lesson${lessonOrder}?tab=question${parseInt(questionOrder) + 1}`}
-                  >
-                    下一个
-                  </Link>
-                </Button>
-              </Stack>
-            </>
-          </Box>
-        </Grid>
-      </Grid>
+      <QaClientWrapper
+        questions={questions as unknown as QLite[]}
+        initialIndex={currentIndex < 0 ? 0 : currentIndex}
+        courseOrder={courseOrder}
+        lessonOrder={lessonOrder}
+        courseName={courseName}
+        lessonName={lessonName}
+      />
     </Container>
   );
 };

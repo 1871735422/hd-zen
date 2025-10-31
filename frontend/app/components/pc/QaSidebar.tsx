@@ -1,3 +1,4 @@
+'use client';
 import { clearCourseTitle } from '@/app/utils/courseUtils';
 import {
   Avatar,
@@ -13,11 +14,13 @@ import { MAIN_BLUE_COLOR, STANDARD_TEXT_COLOR } from '../../constants/colors';
 export interface LessonSidebarProps {
   lesson: { label: string; path: string; displayOrder: number }[];
   selectedIdx: number;
+  onSelect?: (index: number) => void;
 }
 
-export default async function QaSidebar({
+export default function QaSidebar({
   lesson,
   selectedIdx,
+  onSelect,
 }: LessonSidebarProps) {
   return (
     <Box
@@ -68,6 +71,12 @@ export default async function QaSidebar({
                   minHeight: 70,
                   marginLeft: { lg: 2, xl: 3, xxl: 4 },
                   boxSizing: 'border-box',
+                }}
+                onClick={e => {
+                  if (onSelect) {
+                    e.preventDefault();
+                    onSelect(idx);
+                  }
                 }}
               >
                 <ListItemButton
