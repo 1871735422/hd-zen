@@ -70,6 +70,7 @@ const VideoPlayer = forwardRef<
   const lastAutoAdvanceIndexRef = useRef(-1); // 记录最后一次自动切换的索引
   const allowAutoAdvanceRef = useRef(true); // 是否允许自动切换
   const isAutoAdvanceInProgressRef = useRef(false); // 标记是否正在进行自动切换
+  const hasUserPlayedOnceRef = useRef(false); // 记录用户是否已经手动播放过
 
   // 暴露给外部的方法
   useImperativeHandle(
@@ -311,7 +312,7 @@ const VideoPlayer = forwardRef<
       } catch {}
 
       // 使用 Plyr 推荐的方式处理源切换后的自动播放
-      if (autoplay) {
+      if (autoplay && hasUserPlayedOnceRef.current) {
         const attemptToken = ++playAttemptTokenRef.current;
 
         console.debug('[VideoPlayer] Setting up autoplay after source change', {
@@ -471,8 +472,8 @@ const VideoPlayer = forwardRef<
         // 忽略事件注册异常（极少发生）
       }
 
-      // 初始化：按当前索引切源
-      applySource(currentVideoIndex, true);
+      // 初始化：按当前索引切源，首次不自动播放
+      applySource(currentVideoIndex, false);
     })();
 
     return () => {
@@ -542,29 +543,31 @@ const VideoPlayer = forwardRef<
       v.currentTime = 0;
     } catch {}
 
-    // 统一的播放尝试逻辑
-    const attemptToken = ++playAttemptTokenRef.current;
-    const markPlaying = () => {
-      if (playAttemptTokenRef.current !== attemptToken) return;
-      hasStartedCurrentRef.current = true;
-      setPlayed(true);
-      videoStartTimeRef.current = Date.now();
-      v.removeEventListener('playing', markPlaying);
-    };
-    v.addEventListener('playing', markPlaying);
-
-    const tryPlay = () => {
-      attemptAutoPlay(v);
-    };
-
-    if (v.readyState >= 3) {
-      tryPlay();
-    } else {
-      const onCanPlayNew = () => {
-        v.removeEventListener('canplay', onCanPlayNew);
-        tryPlay();
+    // 统一的播放尝试逻辑 - 只有用户播放过才自动播放
+    if (hasUserPlayedOnceRef.current) {
+      const attemptToken = ++playAttemptTokenRef.current;
+      const markPlaying = () => {
+        if (playAttemptTokenRef.current !== attemptToken) return;
+        hasStartedCurrentRef.current = true;
+        setPlayed(true);
+        videoStartTimeRef.current = Date.now();
+        v.removeEventListener('playing', markPlaying);
       };
-      v.addEventListener('canplay', onCanPlayNew, { once: true });
+      v.addEventListener('playing', markPlaying);
+
+      const tryPlay = () => {
+        attemptAutoPlay(v);
+      };
+
+      if (v.readyState >= 3) {
+        tryPlay();
+      } else {
+        const onCanPlayNew = () => {
+          v.removeEventListener('canplay', onCanPlayNew);
+          tryPlay();
+        };
+        v.addEventListener('canplay', onCanPlayNew, { once: true });
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentVideoIndex]);
@@ -635,6 +638,7 @@ const VideoPlayer = forwardRef<
               setPlayed(true);
               hasStartedCurrentRef.current = true;
               videoStartTimeRef.current = Date.now();
+              hasUserPlayedOnceRef.current = true; // 标记用户已手动播放
             }}
             sx={{
               position: 'absolute',

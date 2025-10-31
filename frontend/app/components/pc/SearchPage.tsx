@@ -19,7 +19,9 @@ import SearchInfoCard from './SearchInfoCard';
 
 const searchCates = [
   { name: '全站搜索', value: 'all' },
-  { name: '问答', value: 'qa' },
+  { name: '慧灯禅修课', value: 'course' },
+  { name: '禅修课问答', value: 'qa' },
+  { name: '学修参考资料', value: 'reference' },
 ];
 
 const searchModels = [
@@ -296,7 +298,7 @@ const SearchPage = () => {
         sx={{
           position: 'relative',
           zIndex: 1,
-          width: { md: '90%', lg: 1136, xl: 1420 },
+          width: { lg: 1060, xl: 1420 },
           ml: { md: '5%', lg: '10%', xl: '12%' },
           px: 2,
           '& .MuiTypography-body1': {

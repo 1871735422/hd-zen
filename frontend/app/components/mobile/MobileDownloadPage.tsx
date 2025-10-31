@@ -2,6 +2,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import React from 'react';
 import { getDownloadResources } from '../../api';
+import { DownloadResource } from '../../types/models';
 import { pxToVw } from '../../utils/mobileUtils';
 import MobileDownloadCard from './MobileDownloadCard';
 
@@ -10,7 +11,19 @@ import MobileDownloadCard from './MobileDownloadCard';
  * 根据设计稿实现卡片式布局
  */
 const MobileDownloadPage: React.FC = async () => {
-  const downloadItems = (await getDownloadResources())?.filter(
+  // 在 SSG 构建时获取下载资源数据，添加错误处理确保构建稳定
+  let downloadResources: DownloadResource[];
+  try {
+    downloadResources = await getDownloadResources();
+  } catch (error) {
+    console.warn(
+      'Failed to fetch download resources in mobile component:',
+      error
+    );
+    downloadResources = [];
+  }
+
+  const downloadItems = downloadResources?.filter(
     item => item.url_downpdf || item.url_downepub
   );
 

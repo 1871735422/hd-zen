@@ -27,6 +27,12 @@ export async function GET(request: NextRequest) {
     if (cate === 'qa') {
       // 问答搜索：仅搜索标题
       results = await getSearchQuestions(title || '', page, pageSize, sort);
+    } else if (cate === 'course') {
+      // 慧灯禅修课搜索：搜索标题和内容
+      // results = await getSearchCourses(title || '', page, pageSize, sort);
+    } else if (cate === 'reference') {
+      // 学修参考资料搜索：搜索标题和内容
+      // results = await getSearchReference(title || '', page, pageSize, sort);
     } else {
       // 全站搜索
       results = await getSearchArticles(

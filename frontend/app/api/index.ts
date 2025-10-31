@@ -626,10 +626,21 @@ export const getSearchArticles = async (
 };
 
 export const getDownloadResources = async (
-  isQa = false
+  isQa = false,
+  courseOrder?: string,
+  lessonOrder?: string
 ): Promise<DownloadResource[]> => {
+  // console.log({ isQa, volume, displayOrder });
+  const filters = [
+    `downType="${isQa ? `qa${courseOrder}` : 'downpage'}"`,
+    lessonOrder ? `displayOrder="${lessonOrder}"` : '',
+    'isActive=true',
+  ]
+    .filter(Boolean)
+    .join(' && ');
+
   const records = await pb.collection('download').getFullList({
-    filter: `name${isQa ? '' : '!'}~'问答' && isActive=true`,
+    filter: filters,
     sort: 'displayOrder',
   });
   return records as unknown as DownloadResource[];

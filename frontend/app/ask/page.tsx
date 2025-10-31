@@ -7,6 +7,9 @@ export const metadata = {
   title: '不懂就问 | 慧灯禅修',
   description: '慧灯之光禅修网站 — 不懂就问',
 };
+
+export const revalidate = 3600; // 1 hour
+
 export default async function QuestionCollectPage() {
   let result: Dict[] = [];
 

@@ -5,19 +5,23 @@ import { Button, Typography } from '@mui/material';
 import VideoDownIcon from '../icons/VideoDownIcon';
 
 export default function DownloadQaResource({
-  volumeName,
+  courseOrder,
+  lessonOrder,
 }: {
-  volumeName: string;
+  courseOrder: string;
+  lessonOrder: string;
 }) {
   const handleDownload = async () => {
-    const downloadItems = await getDownloadResources(true);
-    const url = downloadItems.find(item =>
-      item.name.includes(volumeName)
-    )?.url_downvideo;
-    // console.log({ downloadItems, volumeName, url });
+    const downloadItems = await getDownloadResources(
+      true,
+      courseOrder,
+      lessonOrder
+    );
+    const url = downloadItems?.[0]?.url_downvideo;
+    // console.log({ downloadItems, courseOrder, lessonOrder, url });
 
     if (!url) {
-      return alert('下载资源不可用');
+      return alert('本课下载资源不存在');
     }
     window.open(url);
   };

@@ -1,5 +1,3 @@
-import { getDeviceTypeFromHeaders } from '../utils/serverDeviceUtils';
-import MobileDownloadPage from '../components/mobile/MobileDownloadPage';
 import { Avatar, Box, Container, Grid, Typography } from '@mui/material';
 import { getDownloadResources } from '../api';
 import AudioDownIcon from '../components/icons/AudioDownIcon';
@@ -7,10 +5,13 @@ import EpubDownIcon from '../components/icons/EpubDownIcon';
 import HeadphoneIcon from '../components/icons/HeadphoneIcon';
 import PdfDownIcon from '../components/icons/PdfDownIcon';
 import VideoDownIcon from '../components/icons/VideoDownIcon';
+import MobileDownloadPage from '../components/mobile/MobileDownloadPage';
 import FileIconContainer from '../components/shared/FileIconContainer';
 import TitleBanner from '../components/shared/TitleBanner';
 import { NAV_COLOR } from '../constants';
 import { MAIN_BLUE_COLOR, STANDARD_TEXT_COLOR } from '../constants/colors';
+import { DownloadResource } from '../types/models';
+import { getDeviceTypeFromHeaders } from '../utils/serverDeviceUtils';
 
 const fileTypes = [
   { key: 'pdf', name: 'PDF', icon: <PdfDownIcon /> },
@@ -25,9 +26,21 @@ export const metadata = {
   description: '慧灯之光禅修网站 — 禅修课资料下载',
 };
 
+// 启用 SSG 静态生成，数据在构建时预生成
+// 设置 1 小时的 ISR 重新验证时间，平衡性能和数据新鲜度
+export const revalidate = 3600; // 1 hour
+
 // PC端下载页面组件
 async function PCDownloadPage() {
-  const downloadItems = await getDownloadResources();
+  // 在 SSG 构建时获取下载资源数据
+  // 如果获取失败，返回空数组避免构建失败
+  let downloadItems: DownloadResource[];
+  try {
+    downloadItems = await getDownloadResources();
+  } catch (error) {
+    console.warn('Failed to fetch download resources during build:', error);
+    downloadItems = [];
+  }
   return (
     <Box
       sx={{
@@ -49,7 +62,7 @@ async function PCDownloadPage() {
       <Container
         maxWidth={false}
         sx={{
-          maxWidth: { lg: 1060, xlg: 1080, xl: 1400, xxl: 1600 },
+          maxWidth: { lg: 1360, xl: 1400 },
           position: 'relative',
           zIndex: 1,
           width: '100%',
@@ -59,38 +72,36 @@ async function PCDownloadPage() {
         <Box
           sx={{
             bgcolor: 'rgba(255, 255, 255, 0.5)',
-            mx: { sm: 2, md: 4, lg: 12, xl: 12, xxl: 12 },
-            px: { sm: 1.5, md: 2, lg: 2, xl: 2.5, xxl: 3 },
-            pt: { sm: 2, md: 2.5, lg: 3, xl: 3, xxl: 3.5 },
-            pb: { sm: 4, md: 5, lg: 7, xl: 7, xxl: 8 },
+            mx: { lg: 12, xl: 12 },
+            my: { lg: 7, xl: 7 },
+            px: { lg: 2, xl: 2.5 },
+            pt: { lg: 3, xl: 3 },
+            pb: { lg: 3, xl: 3 },
             borderRadius: {
-              sm: '15px',
-              md: '20px',
               lg: '25px',
               xl: '25px',
-              xxl: '30px',
             },
             backdropFilter: 'blur(10px)',
             '& .MuiTypography-root': {
-              fontSize: { sm: 14, md: 16, lg: 18, xl: 20, xxl: 22 },
+              fontSize: { lg: 18, xl: 20 },
             },
             '& .MuiTypography-subtitle2': {
-              fontSize: { sm: 10, md: 12, lg: 13, xl: 16, xxl: 18 },
+              fontSize: { lg: 13, xl: 16 },
             },
           }}
         >
           <Grid
             container
-            spacing={{ sm: 1, md: 1.5, lg: 2, xl: 2, xxl: 2.5 }}
+            spacing={{ lg: 2, xl: 2 }}
             alignItems='center'
-            px={{ sm: 2, md: 3, lg: 4, xl: 4, xxl: 5 }}
-            pb={{ sm: 1, md: 1.5, lg: 2, xl: 2, xxl: 2.5 }}
+            px={{ lg: 4, xl: 4 }}
+            pb={{ lg: 2, xl: 2 }}
           >
             <Grid size={4}>
               <Typography
                 align='left'
                 sx={{
-                  pl: { sm: 2, md: 4, lg: 12, xl: 12, xxl: 14 },
+                  pl: { lg: 12, xl: 12 },
                   color: NAV_COLOR,
                   fontWeight: '700',
                 }}
@@ -99,17 +110,13 @@ async function PCDownloadPage() {
               </Typography>
             </Grid>
             <Grid size={8}>
-              <Grid
-                container
-                spacing={{ sm: 0.5, md: 0.8, lg: 1, xl: 1, xxl: 1.2 }}
-                textAlign='center'
-              >
+              <Grid container spacing={{ lg: 1, xl: 1 }} textAlign='center'>
                 {fileTypes.map(ft => (
                   <Grid key={ft.key} sx={{ flexGrow: 1 }}>
                     <Typography
                       sx={{
                         fontWeight: '600',
-                        width: { sm: 50, md: 60, lg: 70, xl: 70, xxl: 80 },
+                        width: { lg: 70, xl: 70 },
                         color: NAV_COLOR,
                       }}
                     >
@@ -124,7 +131,7 @@ async function PCDownloadPage() {
             sx={{
               display: 'flex',
               flexDirection: 'column',
-              gap: { sm: 1, md: 1.5, lg: 2, xl: 2, xxl: 2.5 },
+              gap: { lg: 2, xl: 2 },
             }}
           >
             {downloadItems.map((item, idx) => (
@@ -132,39 +139,34 @@ async function PCDownloadPage() {
                 key={item.id}
                 container
                 alignItems='center'
-                spacing={{ sm: 1, md: 1.5, lg: 2, xl: 2, xxl: 2.5 }}
+                spacing={{ lg: 2, xl: 2 }}
                 bgcolor={'#fff'}
                 borderRadius={{
-                  sm: '10px',
-                  md: '12px',
                   lg: '16px',
                   xl: '16px',
-                  xxl: '20px',
                 }}
-                pl={{ sm: 2, md: 3, lg: 6, xl: 6, xxl: 7 }}
-                pr={{ sm: 2, md: 3, lg: 4, xl: 4, xxl: 5 }}
-                pt={{ sm: 1, md: 1.2, lg: 1.5, xl: 1.5, xxl: 2 }}
-                pb={{ sm: 1, md: 1, lg: 1.2, xl: 1.2, xxl: 1.5 }}
+                pl={{ lg: 6, xl: 6 }}
+                pr={{ lg: 4, xl: 4 }}
+                pt={{ lg: 1.5, xl: 1.5 }}
+                pb={{ lg: 1.2, xl: 1.2 }}
               >
                 <Grid
                   size={4}
                   sx={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: { sm: 1, md: 1.5, lg: 2, xl: 2, xxl: 2.5 },
+                    gap: { lg: 2, xl: 2 },
                   }}
                 >
                   <Avatar
                     sx={{
                       bgcolor: MAIN_BLUE_COLOR,
-                      width: { sm: 20, md: 24, lg: 26, xl: 32, xxl: 36 },
-                      height: { sm: 20, md: 24, lg: 26, xl: 32, xxl: 36 },
-                      display: { sm: 'flex' },
+                      width: { lg: 26, xl: 32 },
+                      height: { lg: 26, xl: 32 },
+                      display: 'flex',
                     }}
                   >
-                    <Typography
-                      fontSize={{ sm: 12, md: 14, lg: 16, xl: 18, xxl: 20 }}
-                    >
+                    <Typography fontSize={{ lg: 16, xl: 18 }}>
                       {idx + 1}
                     </Typography>
                   </Avatar>
@@ -179,18 +181,14 @@ async function PCDownloadPage() {
                   </Box>
                 </Grid>
                 <Grid size={8}>
-                  <Grid
-                    container
-                    spacing={{ sm: 0.5, md: 0.8, lg: 1, xl: 1, xxl: 1.2 }}
-                    textAlign='center'
-                  >
+                  <Grid container spacing={{ lg: 1, xl: 1 }} textAlign='center'>
                     {fileTypes.map(ft => (
                       <Grid size={'auto'} key={ft.key} sx={{ flexGrow: 1 }}>
                         <FileIconContainer
                           sx={{
-                            width: { sm: 40, md: 50, lg: 60, xl: 60, xxl: 70 },
+                            width: { lg: 60, xl: 60 },
                           }}
-                          fontSize={{ sm: 18, md: 22, lg: 27, xl: 27, xxl: 32 }}
+                          fontSize={{ lg: 27, xl: 27 }}
                           target={
                             item[`url_down${ft.key}` as keyof typeof item]
                               ? '_blank'
@@ -206,11 +204,8 @@ async function PCDownloadPage() {
                           <Typography
                             variant='subtitle2'
                             pt={{
-                              sm: 0.2,
-                              md: 0.3,
                               lg: 0.3,
                               xl: 0.7,
-                              xxl: 0.8,
                             }}
                           >
                             {item[`${ft.key}_size` as keyof typeof item] ||

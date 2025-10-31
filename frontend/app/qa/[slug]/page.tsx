@@ -62,7 +62,10 @@ export default async function QaPage({ params, searchParams }: QaPageProps) {
           position: 'relative',
         }}
       >
-        <DownloadQaResource volumeName={questions[0]?.courseTitle} />
+        <DownloadQaResource
+          courseOrder={displayOrder}
+          lessonOrder={lessonOrder}
+        />
         <Grid size={3}>
           <QaSidebar
             lesson={sidebarData}
