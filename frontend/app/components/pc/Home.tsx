@@ -59,7 +59,7 @@ const Home: React.FC = async () => {
             '& .MuiTypography-body1': {
               textAlign: 'justify',
               color: DESC_TEXT_COLOR,
-              fontSize: { lg: 18, xlg: 20, xl: 22, xxl: 30 },
+              fontSize: { lg: 18, xlg: 20, xl: 22, xxl: 24 },
               lineHeight: {
                 lg: '24px',
                 xlg: '28px',
@@ -74,7 +74,7 @@ const Home: React.FC = async () => {
         >
           <Typography
             variant='h2'
-            fontSize={{ lg: 32, xlg: 36, xl: 39, xxl: 52 }}
+            fontSize={{ lg: 32, xlg: 36, xl: 39, xxl: 48 }}
             fontWeight={500}
             textAlign='center'
             lineHeight={{

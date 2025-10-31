@@ -1,5 +1,5 @@
 'use client';
-import { Box } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import Button from '@mui/material/Button';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -26,7 +26,7 @@ const MenuItemComponent: React.FC<MenuItemProps> = ({ item }) => {
     color:
       pathname.split('/')[1] === item.slug ? NAV_COLOR : STANDARD_TEXT_COLOR,
     fontWeight: 500,
-    fontSize: { sm: 14, md: 16, lg: 16, xl: 20, xxl: 22 },
+    fontSize: { lg: 16, xl: 20, xxl: 22 },
     '&:hover': {
       color: NAV_COLOR,
       backgroundColor: 'transparent',
@@ -51,21 +51,23 @@ const MenuItemComponent: React.FC<MenuItemProps> = ({ item }) => {
             {item.name}
           </Link>
         </Button>
-        <Box
+        <Stack
           sx={{
             position: 'absolute',
-            top: { sm: 48, md: 56, lg: 54, xl: 76, xxl: 84 },
-            left: { sm: -5, md: -8, lg: -10, xl: -10, xxl: -12 },
+            top: { lg: 54, xl: 76, xxl: 84 },
+            left: { lg: -10, xl: -10, xxl: -12 },
             zIndex: 1000,
             opacity: isOpen ? 1 : 0,
-            p: { sm: 0.5, md: 0.8, lg: 1, xl: 1.2, xxl: 1.5 },
+            p: { lg: 1, xl: 1.2, xxl: 1.5 },
+            justifyContent: 'center',
+            alignItems: 'center',
             visibility: isOpen ? 'visible' : 'hidden',
             transform: 'translateY(-10px)',
             transition: 'all 0.2s ease-in-out',
             background: 'white',
             borderRadius: '0 0 20px 20px',
-            minWidth: { sm: 120, md: 150, lg: 142, xl: 200, xxl: 220 },
-            width: 'fit-content',
+            // minWidth: { lg: 142, xl: 200, xxl: 220 },
+            width: 'min-content',
             borderTop: '2px solid rgba(131, 181, 247, 1)',
             boxShadow: '0px 5px 20px  rgba(131, 181, 247, 0.3)',
             '&:before': {
@@ -74,8 +76,8 @@ const MenuItemComponent: React.FC<MenuItemProps> = ({ item }) => {
               content: '""',
               position: 'absolute',
               backgroundColor: 'rgba(130, 178, 232, 1)',
-              left: { sm: 35, md: 44, lg: 38, xl: 53, xxl: 60 },
-              top: { sm: -18, md: -22, lg: -18, xl: -26, xxl: -30 },
+              left: { lg: 38, xl: 53, xxl: 60 },
+              top: { lg: -18, xl: -26, xxl: -30 },
             },
           }}
         >
@@ -86,11 +88,15 @@ const MenuItemComponent: React.FC<MenuItemProps> = ({ item }) => {
                   key={subItem.name}
                   href={`/${item.slug}/${subItem.slug}`}
                   onClick={() => setIsOpen(false)}
-                  style={{ textDecoration: 'none', width: '100%' }}
+                  style={{
+                    textDecoration: 'none',
+                    width: '100%',
+                  }}
                 >
                   <Button
                     sx={{
-                      fontSize: { sm: 12, md: 14, lg: 14, xl: 16, xxl: 18 },
+                      width: '100%',
+                      fontSize: { lg: 14, xl: 16, xxl: 18 },
                       fontWeight: 400,
                       color: STANDARD_TEXT_COLOR,
                       padding: {
@@ -98,7 +104,6 @@ const MenuItemComponent: React.FC<MenuItemProps> = ({ item }) => {
                         xl: '8px 16px',
                         xxl: '10px 20px',
                       },
-                      width: '100%',
                       justifyContent: 'flex-start',
                       borderRadius: 0,
                       whiteSpace: 'nowrap',
@@ -113,7 +118,7 @@ const MenuItemComponent: React.FC<MenuItemProps> = ({ item }) => {
                 </Link>
               );
             })}
-        </Box>
+        </Stack>
       </Box>
     );
   }
