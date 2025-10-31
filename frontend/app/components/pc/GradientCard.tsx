@@ -67,7 +67,7 @@ const GradientCard: React.FC<GradientCardProps> = ({
         fontSize={{ lg: 24, xlg: 26, xl: 28 }}
         fontWeight={500}
         textAlign='center'
-        my={{ lg: 2.5, xlg: 3, xl: 4 }}
+        my={{ xlg: 2.5, lg: 2, xl: 3 }}
       >
         {title}
       </Typography>

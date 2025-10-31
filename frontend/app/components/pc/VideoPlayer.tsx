@@ -249,7 +249,7 @@ const VideoPlayer = forwardRef<
   // 统一的切源方法：更新 Plyr 源并尝试自动播放
   const applySource = (
     index: number,
-    autoplay = true,
+    autoplay = false,
     autoAdvanceToken?: number,
     isManualSwitch = false // 新增：是否为手动切换
   ) => {
@@ -406,7 +406,7 @@ const VideoPlayer = forwardRef<
         ],
         // settings must include 'quality' to show quality in settings menu
         settings: ['quality', 'loop'],
-        autoplay: true, // 启用自动播放
+        autoplay: false, // 启用自动播放
         muted: false, // 不静音，但如果自动播放失败会尝试静音
         quality: {
           default: qualityOptions[0] ?? currentSources[0]?.size ?? 720,

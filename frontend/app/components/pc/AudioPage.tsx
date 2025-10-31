@@ -42,55 +42,51 @@ export default function AudioPage({
     : audioBookUrl;
   // console.log('mp3Urls', mp3Urls);
   return (
-    <Box sx={{ py: 0, gap: 2 }}>
-      <Box
-        sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 2 }}
-      >
-        {mp3Urls.map(item => (
-          <Fragment key={item.title}>
-            {item.title && showTitle && (
-              <Typography
-                variant='body1'
-                fontWeight={500}
-                color='#444'
-                my={2}
-                fontSize={{ lg: 18, xl: 24, xxl: 28 }}
-              >
-                {item.title}
-              </Typography>
-            )}
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                mb: 1,
-                gap: 1,
-              }}
+    <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
+      {mp3Urls.map(item => (
+        <Fragment key={item.title}>
+          {item.title && showTitle && (
+            <Typography
+              variant='body1'
+              fontWeight={500}
+              color='#444'
+              my={2}
+              fontSize={{ lg: 18, xl: 24, xxl: 28 }}
             >
-              {item?.url_mp3 && <AudioPlayer src={item?.url_mp3} />}
-              {bookUrls ? (
-                <Box display={'flex'}>
-                  <MediaDownloadButton
-                    mediaType='pdf'
-                    downloadUrls={bookUrls['pdf']}
-                  />{' '}
-                  &nbsp;
-                  <MediaDownloadButton
-                    mediaType='epub'
-                    downloadUrls={bookUrls['epub']}
-                  />
-                </Box>
-              ) : (
+              {item.title}
+            </Typography>
+          )}
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              mb: 1,
+              gap: 1,
+            }}
+          >
+            {item?.url_mp3 && <AudioPlayer src={item?.url_mp3} />}
+            {bookUrls ? (
+              <Box display={'flex'}>
                 <MediaDownloadButton
-                  mediaType='audio'
-                  downloadUrls={topicMedia.map(item => item?.url_downmp3 || '')}
+                  mediaType='pdf'
+                  downloadUrls={bookUrls['pdf']}
+                />{' '}
+                &nbsp;
+                <MediaDownloadButton
+                  mediaType='epub'
+                  downloadUrls={bookUrls['epub']}
                 />
-              )}
-            </Box>
-          </Fragment>
-        ))}
-      </Box>
+              </Box>
+            ) : (
+              <MediaDownloadButton
+                mediaType='audio'
+                downloadUrls={topicMedia.map(item => item?.url_downmp3 || '')}
+              />
+            )}
+          </Box>
+        </Fragment>
+      ))}
     </Box>
   );
 }

@@ -22,13 +22,14 @@ const Home: React.FC = async () => {
       {/* 主内容区域 */}
       <Box
         sx={{
-          minHeight: { lg: 480, xlg: 580, xl: 686, xxl: 900 },
+          minHeight: { lg: 480, xlg: 580, xl: 686, xxl: 686 },
           backgroundImage: {
             xxl: 'url(/images/hero-bg-xxl.jpg)',
             xl: 'url(/images/hero-bg.webp)',
             lg: 'url(/images/hero-bg.webp)',
           },
-          backgroundPosition: 'center',
+          backgroundPosition: 'top',
+          // backgroundSize: '100%',
           backgroundRepeat: 'no-repeat',
           backgroundSize: 'cover', // 宽、高度定了，只能用cover
           position: 'relative',
@@ -38,7 +39,7 @@ const Home: React.FC = async () => {
         <Box
           sx={{
             height: { xl: '100%', lg: 479, xlg: 577 },
-            width: { lg: 575, xlg: 680, xl: 722, xxl: 920 },
+            width: { lg: 575, xlg: 680, xl: 722, xxl: 722 },
             position: 'absolute',
             top: 0,
             left: 0,
@@ -53,7 +54,7 @@ const Home: React.FC = async () => {
                 lg: '67px',
                 xlg: '85px',
                 xl: '101px',
-                xxl: '110px',
+                xxl: '101px',
               },
             },
             '& .MuiTypography-body1': {
@@ -64,28 +65,28 @@ const Home: React.FC = async () => {
                 lg: '24px',
                 xlg: '28px',
                 xl: '36px',
-                xxl: '48px',
+                xxl: '36px',
               },
             },
             '& .MuiTypography-body1:nth-child(3)': {
-              py: { lg: 3, xlg: 4, xl: 3, xxl: 4 },
+              py: { lg: 3, xlg: 4, xl: 3, xxl: 3 },
             },
           }}
         >
           <Typography
             variant='h2'
-            fontSize={{ lg: 32, xlg: 36, xl: 39, xxl: 48 }}
+            fontSize={{ lg: 32, xlg: 36, xl: 39, xxl: 39 }}
             fontWeight={500}
             textAlign='center'
             lineHeight={{
               lg: '36px',
               xlg: '40px',
               xl: '57px',
-              xxl: '64px',
+              xxl: '57px',
             }}
             color={TITLE_COLOR}
-            mt={{ lg: '40px', xlg: '50px', xl: '51px', xxl: '60px' }}
-            mb={{ lg: '10px', xlg: '12px', xl: '10px', xxl: '12px' }}
+            mt={{ lg: '40px', xlg: '50px', xl: '51px', xxl: '40px' }}
+            mb={{ lg: '10px', xlg: '12px', xl: '10px', xxl: '10px' }}
           >
             {courseIntro.title}
           </Typography>

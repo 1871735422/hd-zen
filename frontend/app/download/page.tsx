@@ -48,7 +48,7 @@ async function PCDownloadPage() {
         backgroundImage: 'url(/images/course-bg-h.webp)',
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',
-        backgroundPosition: 'center',
+        backgroundPosition: 'top',
         opacity: 0.9,
         display: 'flex',
         flexGrow: 1,

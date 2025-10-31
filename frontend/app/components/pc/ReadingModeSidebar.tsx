@@ -106,7 +106,7 @@ export default function ReadingModeSidebar({
       sx={{
         position: 'absolute',
         right: {
-          lg: -50,
+          lg: state.sidebarCollapsed ? -42 : -50,
           xl: state.sidebarCollapsed ? -55 : -66,
           xxl: state.sidebarCollapsed ? -60 : -72,
         },
@@ -118,7 +118,7 @@ export default function ReadingModeSidebar({
       <Box
         sx={{
           width: {
-            lg: 50,
+            lg: state.sidebarCollapsed ? 42 : 50,
             xl: state.sidebarCollapsed ? 55 : 66,
             xxl: state.sidebarCollapsed ? 60 : 72,
           },
@@ -140,14 +140,13 @@ export default function ReadingModeSidebar({
                 xl: '10px 0',
                 xxl: '12px 0',
               },
-          height: state.sidebarCollapsed
-            ? { lg: 30, xlg: 35, xl: 40, xxl: 45 }
-            : 'auto',
+          // height: state.sidebarCollapsed
+          //   ? { lg: 30, xlg: 35, xl: 40, xxl: 45 }
+          //   : 'auto',
           boxShadow: `0px 2px 4px ${sidebarBg.replace('1)', '0.25)')}`,
           display: 'flex',
           alignItems: state.sidebarCollapsed ? 'center' : 'flex-start',
           justifyContent: 'center',
-          transition: 'all 0.3s ease',
           '& svg': {
             fontSize: { lg: 24, xlg: 24, xl: 32, xxl: 36 },
           },
@@ -159,6 +158,7 @@ export default function ReadingModeSidebar({
             onClick={toggleSidebar}
             sx={{
               color: settingText,
+              py: 0.25,
               '&:hover': {
                 opacity: 0.8,
               },
@@ -169,9 +169,10 @@ export default function ReadingModeSidebar({
         ) : (
           /* 展开状态 - 垂直排列所有按钮 */
           <Stack
-            spacing={{ lg: 0.4, xlg: 0.6, xl: 0.8, xxl: 1 }}
+            spacing={{ lg: 0.5, xlg: 0.6, xl: 0.8, xxl: 1 }}
             alignItems='center'
             sx={{
+              py: 0.5,
               '& .MuiButton-text': {
                 color: sidebarText,
                 backgroundColor: buttonBg,
@@ -184,6 +185,7 @@ export default function ReadingModeSidebar({
               sx={{
                 width: { lg: 40, xlg: 44, xl: 40, xxl: 44 },
                 height: { lg: 40, xlg: 44, xl: 40, xxl: 44 },
+                // py: 0.3,
                 color: settingText,
                 '&:hover': {
                   opacity: 0.8,

@@ -95,9 +95,9 @@ export default function AudioPlayer({ src }: AudioPlayerProps) {
   return (
     <Box
       sx={{
+        flexGrow: 1,
         display: 'flex',
         alignItems: 'center',
-        width: '100%',
         backgroundColor: 'rgba(242, 248, 255, 0.75)',
         borderRadius: 999,
         px: { lg: 2, xl: 3, xxl: 4 },
