@@ -10,14 +10,13 @@ export default function CornerBadge({ content }: CornerBadgeProps) {
     <Box
       sx={{
         position: 'absolute',
-        top: { lg: -2, xl: -1, xxl: 0 },
+        top: { lg: -2, xl: -1 },
         right: 0,
         width: {
           lg: content ? 80 : 88,
           xl: content ? 100 : 110,
-          xxl: content ? 120 : 130,
         },
-        height: content ? 60 : { lg: 65, xl: 80, xxl: 95 },
+        height: content ? 60 : { lg: 65, xl: 80 },
         display: 'flex',
         zIndex: 1,
         background: 'url(/images/course-badge.png) no-repeat center center',
@@ -27,7 +26,7 @@ export default function CornerBadge({ content }: CornerBadgeProps) {
           position: 'absolute',
           top: '13%',
           right: '18%',
-          fontSize: { lg: 20, xl: 24, xxl: 28 },
+          fontSize: { lg: 20, xl: 24 },
           color: 'white',
         },
       }}
@@ -38,7 +37,7 @@ export default function CornerBadge({ content }: CornerBadgeProps) {
             position: 'absolute',
             top: 3,
             right: '33%',
-            fontSize: { lg: 20, xl: 24, xxl: 28 },
+            fontSize: { lg: 20, xl: 24 },
             color: 'white',
           }}
         >

@@ -603,10 +603,12 @@ const VideoPlayer = forwardRef<
             {currentTitle}
           </Typography>
         )}
-        <MediaDownloadButton
-          mediaType='video'
-          downloadUrls={['downloadUrls']}
-        />
+        {currentVideo?.url_downmp4 && (
+          <MediaDownloadButton
+            mediaType='video'
+            downloadUrls={[currentVideo?.url_downmp4]}
+          />
+        )}
       </Stack>
       <Box
         sx={{

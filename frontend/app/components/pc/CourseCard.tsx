@@ -44,7 +44,7 @@ export default function CourseCard({
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
-          minHeight: isQa ? 60 : 100,
+          // minHeight: isQa ? 60 : 100,
           flex: 1,
           px: isQa ? { lg: 2, xl: 3 } : { lg: 3.3, xl: 5 },
           pt: { lg: 2, xl: 3 },
@@ -63,7 +63,7 @@ export default function CourseCard({
             textOverflow: 'ellipsis',
             fontWeight: { lg: 500, xl: 600 },
             fontSize: isQa ? { lg: 15, xl: 18 } : { lg: 18, xl: 24 },
-            minHeight: isQa ? 70 : 30,
+            // minHeight: isQa ? 70 : 30,
           }}
         >
           {clearCourseTitle(item.title)}
@@ -78,7 +78,10 @@ export default function CourseCard({
             WebkitLineClamp: isQa ? 1 : 2,
             overflow: 'hidden',
             fontSize: { lg: 13, xl: 15 },
-            lineHeight: { lg: 1.7, xl: '23px' },
+            lineHeight: { lg: 1.6, xl: '23px' },
+            maxHeight: isQa
+              ? { lg: 'calc(13px * 1.6 * 1)', xl: 'calc(23px * 1)' }
+              : { lg: 'calc(13px * 1.6 * 2)', xl: 'calc(23px * 2)' },
             textOverflow: 'ellipsis',
             wordBreak: 'break-word',
             width: '100%',

@@ -70,7 +70,6 @@ export default async function CoursePage({ params }: CoursePageProps) {
                         ? {
                             lg: `calc((100% - 330px * 3) / 2) `,
                             xl: `calc((100% - 437px * 3) / 2) `,
-                            xxl: `calc((100% - 480px * 3) / 2) `,
                           }
                         : 0,
                     mb: 5,

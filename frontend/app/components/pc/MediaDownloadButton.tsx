@@ -53,7 +53,7 @@ const MediaDownloadButton: React.FC<MediaDownloadButtonProps> = ({
   };
   const mediaInfo = getMediaInfo(mediaType);
   const IconComponent = mediaInfo.icon;
-
+  console.log({ mediaInfo, downloadUrls });
   const handleDownload = () => {
     downloadUrls.forEach(url => {
       const link = document.createElement('a');

@@ -1,11 +1,11 @@
 import { getBookChapters, getCategories } from '@/app/api';
-import CourseCard from '@/app/components/pc/CourseCard';
-import MobileReferencePage from '@/app/components/mobile/MobileReferencePage';
 import MobileChapterListPage from '@/app/components/mobile/MobileChapterListPage';
+import MobileReferencePage from '@/app/components/mobile/MobileReferencePage';
+import CourseCard from '@/app/components/pc/CourseCard';
+import { BookChapter } from '@/app/types/models';
 import { getDeviceTypeFromHeaders } from '@/app/utils/serverDeviceUtils';
 import { Box, Container, Typography } from '@mui/material';
 import { notFound } from 'next/navigation';
-import { BookChapter } from '@/app/types/models';
 
 // PC端参考资料页面组件
 async function PCReferencePage({ books }: { books: BookChapter[] }) {
@@ -39,7 +39,6 @@ async function PCReferencePage({ books }: { books: BookChapter[] }) {
                         ? {
                             lg: `calc((100% - 330px * 3) / 2) `,
                             xl: `calc((100% - 437px * 3) / 2) `,
-                            xxl: `calc((100% - 480px * 3) / 2) `,
                           }
                         : 0,
                     mb: 5,

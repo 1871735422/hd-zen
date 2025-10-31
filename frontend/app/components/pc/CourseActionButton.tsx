@@ -12,20 +12,20 @@ export default function CourseActionButton({
       variant='outlined'
       sx={{
         m: '0 auto',
-        borderRadius: { lg: '25px', xl: '30px', xxl: '35px' },
+        borderRadius: { lg: '25px', xl: '30px' },
         cursor: 'pointer',
         fontWeight: 500,
         fontSize: { lg: 14, xl: 18, xxl: 20 },
-        minHeight: { lg: '34px', xl: '46px', xxl: '58px' },
+        minHeight: { lg: '34px', xl: '46px' },
         border: '2px solid rgba(186, 213, 245, 1)',
         boxSizing: 'border-box',
-        py: { lg: 0.5, xl: 0.75, xxl: 1 },
+        py: '6px',
         color: 'rgba(154, 189, 230, 1)',
         '&:hover': {
           background: 'linear-gradient(90deg, #4687cf 0%, #a9cefa 100%)',
           color: 'white',
           border: 'none',
-          py: 1,
+          py: '8px',
         },
         ...sx,
       }}
