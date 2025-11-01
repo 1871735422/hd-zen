@@ -53,7 +53,7 @@ const MediaDownloadButton: React.FC<MediaDownloadButtonProps> = ({
   };
   const mediaInfo = getMediaInfo(mediaType);
   const IconComponent = mediaInfo.icon;
-  console.log({ mediaInfo, downloadUrls });
+  // console.log({ mediaInfo, downloadUrls });
   const handleDownload = () => {
     downloadUrls.forEach(url => {
       const link = document.createElement('a');
@@ -107,7 +107,7 @@ const MediaDownloadButton: React.FC<MediaDownloadButtonProps> = ({
       <Typography
         variant='caption'
         sx={{
-          fontSize: { sm: 8, md: 9, lg: 10, xl: 12, xxl: 14 },
+          fontSize: { sm: 8, md: 8, lg: 8, xl: 12, xxl: 14 },
           fontWeight: 500,
           lineHeight: 1,
           textAlign: 'center',
