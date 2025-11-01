@@ -39,12 +39,12 @@ function BaseLayout({
       if (img.complete) {
         const aspectRatio = img.height / img.width;
         const calculatedHeight = width * aspectRatio;
-        setImageHeight(calculatedHeight);
+        setImageHeight(calculatedHeight - 30);
       } else {
         img.onload = () => {
           const aspectRatio = img.height / img.width;
           const calculatedHeight = width * aspectRatio;
-          setImageHeight(calculatedHeight);
+          setImageHeight(calculatedHeight - 30);
         };
       }
     };
