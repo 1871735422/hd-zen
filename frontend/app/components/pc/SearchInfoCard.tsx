@@ -7,7 +7,7 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import BookExpandIcon from '../icons/BookExpandIcon';
 import BookIcon from '../icons/BookIcon';
 import FoldResultIcon from '../icons/FoldResultIcon';
@@ -110,31 +110,6 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
   style,
 }) => {
   const [expanded, setExpanded] = useState(false);
-  const [contentElement, setContentElement] = useState<HTMLDivElement | null>(
-    null
-  );
-  const [isOverflowing, setIsOverflowing] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
-  const height = 120;
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (!isMounted || !contentElement) return;
-
-    const check = () => {
-      setIsOverflowing(contentElement.scrollHeight > height + 4); // 余量
-    };
-    check();
-
-    if (typeof ResizeObserver !== 'undefined') {
-      const ro = new ResizeObserver(check);
-      ro.observe(contentElement);
-      return () => ro.disconnect();
-    }
-  }, [height, content, expanded, contentElement, isMounted]);
 
   return (
     <Box
@@ -202,15 +177,22 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
       </Stack>
 
       <Box
-        ref={el => setContentElement(el as HTMLDivElement | null)}
         sx={{
           position: 'relative',
           mt: 1.25,
           color: 'text.secondary',
-          fontSize: { lg: 13, xl: 16, xxl: 18 },
-          lineHeight: '27px',
+          fontSize: { lg: 13, xlg: 14, xl: 16, xxl: 16 },
+          lineHeight: 1.7,
           overflow: 'hidden',
-          maxHeight: expanded ? 'none' : `${height}px`,
+          ...(expanded
+            ? {
+                maxHeight: 'none',
+              }
+            : {
+                display: '-webkit-box',
+                WebkitBoxOrient: 'vertical',
+                WebkitLineClamp: 5, // 显示5行完整内容
+              }),
           transition: 'max-height 220ms ease',
           pr: 0.5,
         }}
@@ -236,17 +218,6 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
             })(),
           }}
         />
-
-        {!expanded && isOverflowing && (
-          <Box
-            sx={{
-              position: 'absolute',
-              inset: 'auto 0 0 0',
-              background:
-                'linear-gradient(to bottom, rgba(255,255,255,0), var(--mui-palette-background-paper) 60%)',
-            }}
-          />
-        )}
       </Box>
 
       <Stack
