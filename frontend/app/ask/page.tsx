@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
-import Link from 'next/link';
 import { pb } from '../api';
 import { Dict } from '../types/models';
+import QuestionCollectClient from './QuestionCollectClient';
 
 export const metadata = {
   title: '不懂就问 | 慧灯禅修',
@@ -21,7 +21,6 @@ export default async function QuestionCollectPage() {
   } catch (error) {
     console.error(error);
   }
-  // console.log(result);
   return (
     <Box
       sx={{
@@ -88,65 +87,13 @@ export default async function QuestionCollectPage() {
             display: 'block',
           }}
         />
-        <Box
-          sx={{
-            mx: { sm: 0.9, md: 1.05, lg: 1.275, xl: 1.5, xxl: 2 },
-            my: { sm: 1.8, md: 2.1, lg: 2.55, xl: 3, xxl: 3.5 },
-            background: 'rgba(255, 255, 255, 0.7)',
-            position: 'relative',
-            borderRadius: {
-              sm: '15px',
-              md: '18px',
-              lg: '21px',
-              xl: '25px',
-              xxl: '30px',
-            },
-            px: { sm: 3, md: 3.5, lg: 4.25, xl: 5, xxl: 6 },
-            py: { sm: 1.2, md: 1.4, lg: 1.7, xl: 2, xxl: 2.5 },
-          }}
-        >
-          <Link
-            target='_blank'
-            href={result?.find(item => item.key === 'qa_link')?.value || '#'}
-          >
-            <Box
-              component={'img'}
-              alt='参与方式：请扫描下方二维码或点击 问卷链接 填写您的问题。'
-              src={
-                result?.find(item => item.key === 'qa_qrcode_url')?.value ||
-                '/images/join-way.png'
-              }
-              width={0}
-              height={0}
-              sx={{
-                cursor: 'pointer',
-                width: '100%',
-                height: 'auto',
-                maxWidth: {
-                  sm: 432,
-                  md: 504,
-                  lg: 612,
-                  xl: 720,
-                  xxl: 850,
-                },
-                display: 'block',
-              }}
-            />
-          </Link>
-          <Box
-            component={'img'}
-            src='/images/join-qr.png'
-            alt='QR Code'
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-
-              width: { sm: 162, md: 189, lg: 229, xl: 270, xxl: 300 },
-              margin: '0 auto',
-              marginBottom: { sm: 2.4, md: 2.8, lg: 3.4, xl: 4, xxl: 5 },
-            }}
-          />
-        </Box>
+        <QuestionCollectClient
+          qaLink={result?.find(item => item.key === 'qa_link')?.value || '#'}
+          qrCodeUrl={
+            result?.find(item => item.key === 'qa_qrcode_url')?.value ||
+            '/images/join-way.png'
+          }
+        />
       </Box>
     </Box>
   );
