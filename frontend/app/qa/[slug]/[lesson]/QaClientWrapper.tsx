@@ -1,12 +1,12 @@
 'use client';
-import { useCallback, useMemo, useState } from 'react';
-import { Box, Button, Grid, Stack, Typography } from '@mui/material';
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import LessonMeta from '@/app/components/pc/LessonMeta';
 import QaSidebar from '@/app/components/pc/QaSidebar';
 import VideoPlayer, { VideoItem } from '@/app/components/pc/VideoPlayer';
 import { formatDate } from '@/app/utils/courseUtils';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { Box, Button, Grid, Stack, Typography } from '@mui/material';
+import { useCallback, useMemo, useState } from 'react';
 
 interface QuestionItem {
   questionOrder: number;
@@ -52,6 +52,7 @@ export default function QaClientWrapper({
         id: `q-${q.questionOrder}`,
         title: q.title || '',
         poster: q.url_image || '',
+        url_downmp4: q.url_downmp4,
         sources: [
           q.url_sd
             ? { src: q.url_sd, size: 720, type: 'video/mp4' }

@@ -6,6 +6,7 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { getCategories } from '../../api';
 import LogoIcon from '../icons/LogoIcon';
@@ -15,6 +16,10 @@ import SearchForm from './SearchForm';
 
 const Header: React.FC = () => {
   const [menuData, setMenuData] = useState<Menu[]>([]);
+  const searchParams = useSearchParams();
+
+  // 检查是否为阅读模式
+  const isReadingMode = searchParams.get('readingMode') === 'true';
 
   useEffect(() => {
     const fetchMenuData = async () => {
@@ -24,6 +29,11 @@ const Header: React.FC = () => {
 
     fetchMenuData();
   }, []); // 空依赖数组确保只在客户端挂载时运行一次
+
+  // 如果是阅读模式，不渲染Header
+  if (isReadingMode) {
+    return null;
+  }
 
   return (
     <AppBar

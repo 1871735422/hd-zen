@@ -71,8 +71,6 @@ export default async function QuestionCollectPage() {
           width: { lg: 700, xl: 830, xxl: 950 },
           py: { lg: 3.6, xlg: 4, xl: 4, xxl: 5 },
           px: { lg: 7.6, xlg: 8, xl: 9, xxl: 12 },
-          mt: { lg: 10, xlg: 0, xl: 12, xxl: 16 },
-          mb: { lg: 13.6, xlg: 16, xl: 16, xxl: 20 },
           textAlign: 'left',
           backdropFilter: 'blur(10px)',
         }}

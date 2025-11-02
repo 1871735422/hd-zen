@@ -23,7 +23,6 @@ const CourseCarousel: React.FC<CourseCarouselProps> = ({ cards }) => {
         flexDirection: 'row',
         alignItems: 'flex-start',
         justifyContent: 'center',
-        gap: { lg: 1, xl: 1.2 },
         width: '100%',
         overflow: 'hidden',
       }}

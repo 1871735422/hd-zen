@@ -168,6 +168,7 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
                     id: media?.id || '',
                     title: media?.title || '',
                     poster: media?.url_image || '',
+                    url_downmp4: media?.url_downmp4,
                     sources: [
                       {
                         src: media?.url_sd || media?.url_hd,

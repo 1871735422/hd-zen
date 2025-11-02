@@ -29,7 +29,7 @@ const GradientCard: React.FC<GradientCardProps> = ({
         mt: `${(1 - idx) * 10}px`,
         height: {
           lg: `${300 + idx * 15}px`,
-          xlg: `${395 + idx * 20}px`,
+          xlg: `${365 + idx * 20}px`,
           xl: `${420 + idx * 20}px`,
         },
         borderRadius: '30px 30px 0 0',
@@ -37,7 +37,7 @@ const GradientCard: React.FC<GradientCardProps> = ({
         flexDirection: 'column',
         alignContent: 'flex-start',
         cursor: 'pointer',
-        width: { lg: 190, xlg: 230, xl: 262 },
+        width: { lg: 190, xlg: 210, xl: 262 },
         flexShrink: 0,
         position: 'relative',
         color: INNER_TEXT_COLOR,
@@ -64,7 +64,7 @@ const GradientCard: React.FC<GradientCardProps> = ({
     >
       <Typography
         color={STANDARD_TEXT_COLOR}
-        fontSize={{ lg: 24, xlg: 26, xl: 28 }}
+        fontSize={{ lg: 24, xlg: 25.5, xl: 28 }}
         fontWeight={500}
         textAlign='center'
         my={{ xlg: 2.5, lg: 2, xl: 3 }}
@@ -74,7 +74,7 @@ const GradientCard: React.FC<GradientCardProps> = ({
 
       <Typography
         color='rgba(102, 102, 102, 1)'
-        fontSize={{ lg: 14, xlg: 15, xl: 16 }}
+        fontSize={{ lg: 14, xlg: 14.5, xl: 16 }}
         textAlign='justify'
         sx={{
           m: 0,
@@ -82,8 +82,8 @@ const GradientCard: React.FC<GradientCardProps> = ({
           px: { lg: 2, xlg: 2.25, xl: 2.5 },
           pb: 0,
           height: {
-            lg: idx === 3 ? 234 : 214 + idx * 18,
-            xlg: idx === 3 ? 315 : 270 + idx * 20,
+            lg: idx === 3 ? 234 : 220 + idx * 18,
+            xlg: idx === 3 ? 315 : 272 + idx * 20,
             xl: idx === 3 ? 330 : 300 + idx * 25,
           },
           background: '#fff',
