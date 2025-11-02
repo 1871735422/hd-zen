@@ -1,11 +1,10 @@
-import { Box, SvgIcon, SxProps } from '@mui/material';
+import { Box, SvgIcon } from '@mui/material';
 
 interface FoldResultIconProps {
-  sx?: SxProps;
   expanded?: boolean;
 }
 
-const FoldResultIcon = ({ sx, expanded = false }: FoldResultIconProps) => (
+const FoldResultIcon = ({ expanded = false }: FoldResultIconProps) => (
   <Box
     sx={{
       display: 'flex',
@@ -25,7 +24,6 @@ const FoldResultIcon = ({ sx, expanded = false }: FoldResultIconProps) => (
         whiteSpace: 'nowrap',
         zIndex: 1,
       },
-      ...sx,
     }}
   >
     <SvgIcon

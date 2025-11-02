@@ -235,7 +235,7 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
             display: 'flex',
             flexDirection: 'column',
             color: 'rgba(84, 161, 209, 1)',
-            mt: 2,
+            mt: 0.5,
             mb: type === '文章' ? (expanded ? -1 : -3) : 1,
           }}
         >
