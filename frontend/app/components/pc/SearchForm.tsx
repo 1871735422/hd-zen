@@ -31,7 +31,7 @@ const SearchForm: React.FC = () => {
         size='small'
         placeholder=''
         required
-        name='query'
+        name='keywords'
         sx={{
           width: { sm: 120, md: 140, lg: 128, xl: 180, xxl: 200 },
           '& .MuiOutlinedInput-root': {

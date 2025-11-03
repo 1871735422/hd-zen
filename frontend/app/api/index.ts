@@ -12,6 +12,8 @@ import {
   QuestionResult,
   Questions,
   ReferenceBook,
+  SearchCate,
+  SearchType,
   TagRelation,
   TopicMediaX,
 } from '../types/models';
@@ -33,6 +35,111 @@ export const config = {
 } as const;
 
 // Helper functions for mapping records
+
+// Search utility functions
+export const getKeywords = (text: string): string[] =>
+  text.split(/[,\s]+/).filter(k => k.trim());
+
+export const buildFilter = (keywords: string[], isTitle = false): string => {
+  const keywordFilters = keywords.map(keyword => {
+    if (isTitle) {
+      return `title ~ "${keyword}"`;
+    }
+    return `(fulltext ~ "${keyword}" || introtext ~ "${keyword}" || summary ~ "${keyword}")`;
+  });
+  return keywordFilters.join(' && ');
+};
+
+export const buildMediaFilter = (searchText: string): string => {
+  if (!searchText) return '';
+  return buildFilter(getKeywords(searchText), true);
+};
+
+export const buildArticleFilter = (
+  title?: string,
+  content?: string
+): string => {
+  if (title && content) {
+    return `(title ~ "${title}" || fulltext ~ "${content}" || introtext ~ "${content}" || summary ~ "${content}")`;
+  } else if (title) {
+    return buildFilter(getKeywords(title), true);
+  } else if (content) {
+    return buildFilter(getKeywords(content), false);
+  } else {
+    return '';
+  }
+};
+
+export const searchCollection = async (
+  collection: string,
+  filter: string,
+  page = 1,
+  pageSize = 10,
+  sort = 'asc'
+): Promise<{ items: TopicMediaX[]; totalItems: number }> => {
+  if (!filter) return { items: [], totalItems: 0 };
+
+  const result = await pb.collection(collection).getList(page, pageSize, {
+    filter,
+    sort: sort === 'desc' ? 'created' : '-created',
+  });
+
+  return {
+    items: result.items as unknown as TopicMediaX[],
+    totalItems: result.totalItems,
+  };
+};
+
+interface SearchConfig {
+  collections: Array<{
+    name: string;
+    filterBuilder: (title?: string, content?: string) => string;
+  }>;
+}
+
+const searchConfigs: Record<SearchType, SearchConfig> = {
+  all: {
+    collections: [
+      { name: 'vGetArticles', filterBuilder: buildArticleFilter },
+      { name: 'vGetReference', filterBuilder: buildArticleFilter },
+      {
+        name: 'vGetCourseMedia',
+        filterBuilder: (title, content) =>
+          buildMediaFilter(title || content || ''),
+      },
+      {
+        name: 'vGetQuestionMedia',
+        filterBuilder: (title, content) =>
+          buildMediaFilter(title || content || ''),
+      },
+    ],
+  },
+  article: {
+    collections: [
+      { name: 'vGetArticles', filterBuilder: buildArticleFilter },
+      { name: 'vGetReference', filterBuilder: buildArticleFilter },
+    ],
+  },
+  av: {
+    collections: [
+      {
+        name: 'vGetCourseMedia',
+        filterBuilder: (title, content) =>
+          buildMediaFilter(title || content || ''),
+      },
+      {
+        name: 'vGetQuestionMedia',
+        filterBuilder: (title, content) =>
+          buildMediaFilter(title || content || ''),
+      },
+      {
+        name: 'vGetReferenceMedia',
+        filterBuilder: (title, content) =>
+          buildMediaFilter(title || content || ''),
+      },
+    ],
+  },
+};
 
 const mapRecordToCategory = (record: PocketRecord): Category => ({
   id: record.id,
@@ -443,176 +550,209 @@ export const getTagRelations = async (tag: string): Promise<TagRelation[]> => {
   return resultList.items as unknown as TagRelation[];
 };
 
-export const getSearchQuestions = async (
-  title: string,
-  page = 1,
-  pageSize = 10,
-  sort = 'desc'
-): Promise<{
-  items: QuestionResult[];
-  totalItems: number;
-  totalPages: number;
-  currentPage: number;
-}> => {
-  if (!title)
-    return { items: [], totalItems: 0, totalPages: 0, currentPage: 1 };
-
-  try {
-    let totalItems = 0;
-    let totalPages = 0;
-    let allItems: QuestionResult[] = [];
-
-    const result = await pb
-      .collection('vGetQuestionMedia')
-      .getList(page, pageSize, {
-        filter: `title ~ "${title}"`,
-        sort: sort === 'desc' ? '-created' : 'created',
-      });
-    allItems = [...allItems, ...(result.items as unknown as QuestionResult[])];
-    totalItems += result.totalItems;
-    totalPages = Math.ceil(totalItems / pageSize);
-
-    return {
-      items: allItems,
-      totalItems,
-      totalPages,
-      currentPage: page,
-    };
-  } catch {
-    return { items: [], totalItems: 0, totalPages: 0, currentPage: 1 };
-  }
-};
-
-export const getSearchArticles = async (
+export const getSearchResults = async (
   title?: string,
   content?: string,
   page = 1,
   pageSize = 10,
   sort = 'asc',
-  type = 'all' // all, article, av
+  type: SearchType = 'all',
+  cate: SearchCate = 'all'
 ): Promise<{
-  items: TopicMediaX[];
+  items: TopicMediaX[] | QuestionResult[];
   totalItems: number;
   totalPages: number;
   currentPage: number;
 }> => {
-  if (!title && !content)
+  console.log('Search called:', { title, content, type, cate });
+
+  if (!title && !content) {
     return { items: [], totalItems: 0, totalPages: 0, currentPage: 1 };
-
-  // 构建搜索过滤器
-  const buildFilter = (keywords: string[], isTitle = false) => {
-    const keywordFilters = keywords.map(keyword => {
-      if (isTitle) {
-        return `title ~ "${keyword}"`;
-      }
-      return `(fulltext ~ "${keyword}" || introtext ~ "${keyword}" || summary ~ "${keyword}")`;
-    });
-    return keywordFilters.join(' && ');
-  };
-
-  const getKeywords = (text: string) =>
-    text.split(/[,\s]+/).filter(k => k.trim());
-
-  // 构建媒体搜索过滤器（仅搜索标题）
-  const buildMediaFilter = (searchText: string) => {
-    if (!searchText) return '';
-    return buildFilter(getKeywords(searchText), true);
-  };
-
-  // 构建文章搜索过滤器
-  const buildArticleFilter = (title?: string, content?: string) => {
-    if (title && content) {
-      return `(title ~ "${title}" || fulltext ~ "${content}" || introtext ~ "${content}" || summary ~ "${content}")`;
-    } else if (title) {
-      return buildFilter(getKeywords(title), true);
-    } else if (content) {
-      return buildFilter(getKeywords(content), false);
-    } else {
-      return '';
-    }
-  };
-
-  // 搜索集合的通用函数
-  const searchCollection = async (collection: string, filter: string) => {
-    if (!filter) return { items: [], totalItems: 0 };
-
-    const result = await pb.collection(collection).getList(page, pageSize, {
-      filter,
-      sort: sort === 'desc' ? 'created' : '-created',
-    });
-
-    return {
-      items: result.items as unknown as TopicMediaX[],
-      totalItems: result.totalItems,
-    };
-  };
+  }
 
   try {
-    let allItems: TopicMediaX[] = [];
-    let totalItems = 0;
+    // 问答搜索：仅搜索标题
+    if (cate === 'qa') {
+      const searchTerm = title || content;
+      if (!searchTerm) {
+        return { items: [], totalItems: 0, totalPages: 0, currentPage: 1 };
+      }
 
-    // 根据类型搜索不同的集合
-    if (type === 'all') {
-      // 搜索全部：同时搜索 articles、courseMedia 和 questionMedia
+      const result = await pb
+        .collection('vGetQuestionMedia')
+        .getList(page, pageSize, {
+          filter: `title ~ "${searchTerm}"`,
+          sort: sort === 'desc' ? '-created' : 'created',
+        });
 
-      // 搜索文章
-      const articleFilter = buildArticleFilter(title, content);
-      const articlesResult = await searchCollection(
-        'vGetArticles',
-        articleFilter
-      );
-      allItems = [...allItems, ...articlesResult.items];
-      totalItems += articlesResult.totalItems;
+      const totalPages = Math.ceil(result.totalItems / pageSize);
 
-      // 搜索课程媒体
-      const courseMediaFilter = buildMediaFilter(title || content || '');
-      const courseMediaResult = await searchCollection(
-        'vGetCourseMedia',
-        courseMediaFilter
-      );
-      allItems = [...allItems, ...courseMediaResult.items];
-      totalItems += courseMediaResult.totalItems;
-
-      // 搜索问答媒体
-      const questionMediaFilter = buildMediaFilter(title || content || '');
-      const questionMediaResult = await searchCollection(
-        'vGetQuestionMedia',
-        questionMediaFilter
-      );
-      allItems = [...allItems, ...questionMediaResult.items];
-      totalItems += questionMediaResult.totalItems;
-    } else if (type === 'artile') {
-      // 只搜索文章
-      const articleFilter = buildArticleFilter(title, content);
-      const articlesResult = await searchCollection(
-        'vGetArticles',
-        articleFilter
-      );
-      allItems = [...allItems, ...articlesResult.items];
-      totalItems += articlesResult.totalItems;
-    } else if (type === 'av') {
-      // 搜索课程媒体和问答媒体
-      const mediaFilter = buildMediaFilter(title || content || '');
-      console.log({ mediaFilter });
-
-      // 搜索课程媒体
-      const courseMediaResult = await searchCollection(
-        'vGetCourseMedia',
-        mediaFilter
-      );
-      allItems = [...allItems, ...courseMediaResult.items];
-      totalItems += courseMediaResult.totalItems;
-
-      // 搜索问答媒体
-      const questionMediaResult = await searchCollection(
-        'vGetQuestionMedia',
-        mediaFilter
-      );
-      allItems = [...allItems, ...questionMediaResult.items];
-      totalItems += questionMediaResult.totalItems;
+      return {
+        items: result.items as unknown as QuestionResult[],
+        totalItems: result.totalItems,
+        totalPages,
+        currentPage: page,
+      };
     }
 
+    // 课程搜索：根据 searchType 过滤文章和课程媒体
+    if (cate === 'course') {
+      let courseCollections: Array<{
+        name: string;
+        filterBuilder: (title?: string, content?: string) => string;
+      }> = [];
+
+      // 根据 searchType 确定要搜索的集合
+      if (type === 'article') {
+        // 只搜索课程文章
+        courseCollections = [
+          { name: 'vGetArticles', filterBuilder: buildArticleFilter },
+        ];
+      } else if (type === 'av') {
+        // 只搜索课程媒体
+        courseCollections = [
+          {
+            name: 'vGetCourseMedia',
+            filterBuilder: (title?: string, content?: string) =>
+              buildMediaFilter(title || content || ''),
+          },
+        ];
+      } else {
+        // 默认搜索所有类型（all 或其他）
+        courseCollections = [
+          { name: 'vGetArticles', filterBuilder: buildArticleFilter },
+          {
+            name: 'vGetCourseMedia',
+            filterBuilder: (title?: string, content?: string) =>
+              buildMediaFilter(title || content || ''),
+          },
+        ];
+      }
+
+      const allItems: TopicMediaX[] = [];
+      let totalItems = 0;
+
+      // 并行搜索课程相关的集合
+      const searchPromises = courseCollections.map(
+        async ({ name, filterBuilder }) => {
+          const filter = filterBuilder(title, content);
+          if (!filter) return { items: [], totalItems: 0 };
+          return searchCollection(name, filter, page, pageSize, sort);
+        }
+      );
+
+      const results = await Promise.all(searchPromises);
+
+      // 合并搜索结果
+      results.forEach(result => {
+        allItems.push(...result.items);
+        totalItems += result.totalItems;
+      });
+
+      const totalPages = Math.ceil(totalItems / pageSize);
+
+      return {
+        items: allItems,
+        totalItems,
+        totalPages,
+        currentPage: page,
+      };
+    }
+
+    // 参考资料搜索：根据 searchType 过滤参考资料和参考资料媒体
+    if (cate === 'reference') {
+      let referenceCollections: Array<{
+        name: string;
+        filterBuilder: (title?: string, content?: string) => string;
+      }> = [];
+
+      // 根据 searchType 确定要搜索的集合
+      if (type === 'article') {
+        // 只搜索参考资料文章
+        referenceCollections = [
+          { name: 'vGetReference', filterBuilder: buildArticleFilter },
+        ];
+      } else if (type === 'av') {
+        // 只搜索参考资料媒体
+        referenceCollections = [
+          {
+            name: 'vGetReferenceMedia',
+            filterBuilder: (title?: string, content?: string) =>
+              buildMediaFilter(title || content || ''),
+          },
+        ];
+      } else {
+        // 默认搜索所有类型（all 或其他）
+        referenceCollections = [
+          { name: 'vGetReference', filterBuilder: buildArticleFilter },
+          {
+            name: 'vGetReferenceMedia',
+            filterBuilder: (title?: string, content?: string) =>
+              buildMediaFilter(title || content || ''),
+          },
+        ];
+      }
+
+      const allItems: TopicMediaX[] = [];
+      let totalItems = 0;
+
+      // 并行搜索参考资料相关的集合
+      const searchPromises = referenceCollections.map(
+        async ({ name, filterBuilder }) => {
+          const filter = filterBuilder(title, content);
+          if (!filter) {
+            return { items: [], totalItems: 0 };
+          }
+          return searchCollection(name, filter, page, pageSize, sort);
+        }
+      );
+
+      const results = await Promise.all(searchPromises);
+
+      // 合并搜索结果
+      results.forEach(result => {
+        allItems.push(...result.items);
+        totalItems += result.totalItems;
+      });
+
+      const totalPages = Math.ceil(totalItems / pageSize);
+      // console.log(`Reference search: ${totalItems} items found`);
+
+      return {
+        items: allItems,
+        totalItems,
+        totalPages,
+        currentPage: page,
+      };
+    }
+
+    // 全站搜索 (默认行为)
+    const config = searchConfigs[type];
+    if (!config) {
+      throw new Error(`Invalid search type: ${type}`);
+    }
+
+    const allItems: TopicMediaX[] = [];
+    let totalItems = 0;
+
+    // 并行搜索所有配置的集合
+    const searchPromises = config.collections.map(
+      async ({ name, filterBuilder }) => {
+        const filter = filterBuilder(title, content);
+        return searchCollection(name, filter, page, pageSize, sort);
+      }
+    );
+
+    const results = await Promise.all(searchPromises);
+
+    // 合并搜索结果
+    results.forEach(result => {
+      allItems.push(...result.items);
+      totalItems += result.totalItems;
+    });
+
     const totalPages = Math.ceil(totalItems / pageSize);
+    // console.log(`Global search (${type}): ${totalItems} items found`);
 
     return {
       items: allItems,
@@ -620,7 +760,8 @@ export const getSearchArticles = async (
       totalPages,
       currentPage: page,
     };
-  } catch {
+  } catch (error) {
+    console.error('Search error:', error);
     return { items: [], totalItems: 0, totalPages: 0, currentPage: 1 };
   }
 };
@@ -630,7 +771,6 @@ export const getDownloadResources = async (
   courseOrder?: string,
   lessonOrder?: string
 ): Promise<DownloadResource[]> => {
-  // console.log({ isQa, volume, displayOrder });
   const filters = [
     `downType="${isQa ? `qa${courseOrder}` : 'downpage'}"`,
     lessonOrder ? `displayOrder="${lessonOrder}"` : '',

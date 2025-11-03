@@ -16,7 +16,7 @@ export default function CategorySelector({
 }: CategorySelectorProps) {
   const router = useRouter();
   const pathname = usePathname();
-  const isLessonPage = pathname?.startsWith('/qa/1/lesson');
+  const isLessonPage = /^\/qa\/\d+\/lesson\d+$/.test(pathname);
   const hideQaLayout =
     isLessonPage && categories.length === 6 && categories[0] === '第一册';
 
@@ -43,7 +43,6 @@ export default function CategorySelector({
             if (!value) return;
 
             const categoryIndex = categories.indexOf(value);
-            // console.log({ categoryIndex, isLessonPage, value, categories });
 
             if (isLessonPage) {
               router.push(
@@ -52,13 +51,7 @@ export default function CategorySelector({
                   `lesson${Math.max(1, categoryIndex + 1)}`
                 )
               );
-              // } else if (pathname.includes('lesson')) {
-              //   router.push(pathname.slice(0, pathname.lastIndexOf('/')));
             } else {
-              // console.log(
-              //   '非 问答课程 跳转：',
-              //   `/${pathname.split('/')[1]}/${categoryIndex + 1}`
-              // );
               router.push(`/${pathname.split('/')[1]}/${categoryIndex + 1}`);
             }
           }}

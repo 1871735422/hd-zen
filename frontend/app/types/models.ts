@@ -147,6 +147,7 @@ export interface TopicMedia extends BaseModel {
 
 export interface TopicMediaX extends Article, Omit<Media, 'summary'> {
   author?: string;
+  questionOrder?: string;
 }
 // API Response types
 export interface PaginatedResponse<T> {
@@ -242,3 +243,8 @@ export interface Dict extends BaseModel {
   key: string;
   value: string;
 }
+
+// Search collection configurations
+export type SearchCate = 'all' | 'course' | 'qa' | 'reference';
+
+export type SearchType = 'all' | 'article' | 'av';

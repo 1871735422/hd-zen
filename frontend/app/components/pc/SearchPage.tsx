@@ -35,9 +35,9 @@ const resultSort = [
   // { name: '热门内容', value: 'hot' },
 ];
 
-const resultFilter = [
+const searchTypes = [
   { name: '全部', value: 'all' },
-  { name: '文章', value: 'artile' },
+  { name: '文章', value: 'article' },
   { name: '音视频', value: 'av' },
 ];
 
@@ -51,14 +51,14 @@ const formatCourseTitle = (courseTitle: string): string => {
 const SearchPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const urlQuery = searchParams.get('query');
+  const urlKeywords = searchParams.get('keywords');
 
   const [modelSelected, setModelSelected] = useState(searchModels[1].value);
   const [sort, setSort] = useState(
     searchParams.get('sort') || resultSort[0].value
   );
-  const [filter, setFilter] = useState(
-    searchParams.get('filter') || resultFilter[0].value
+  const [searchType, setSearchType] = useState(
+    searchParams.get('searchType') || searchTypes[0].value
   );
 
   // 从URL参数获取分类，如果没有则使用默认值
@@ -67,41 +67,43 @@ const SearchPage = () => {
   // 搜索结果状态
   const [searchResults, setSearchResults] = useState<TopicMediaX[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [searchQuery, setSearchQuery] = useState(urlQuery || '');
+  const [searchKeywords, setSearchKeywords] = useState(urlKeywords || '');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [totalItems, setTotalItems] = useState(0);
 
   // 从URL参数初始化搜索
   useEffect(() => {
-    if (urlQuery) {
-      handleSearch(urlQuery);
+    if (urlKeywords) {
+      handleSearch(urlKeywords);
     }
-  }, [urlQuery]);
+  }, [urlKeywords]);
 
-  // 监听URL中的filter参数变化
+  // 监听URL中的searchType参数变化
   useEffect(() => {
-    const urlFilter = searchParams.get('filter');
-    if (urlFilter && urlFilter !== filter) {
-      setFilter(urlFilter);
+    const urlSearchType = searchParams.get('searchType');
+    if (urlSearchType && urlSearchType !== searchType) {
+      setSearchType(urlSearchType);
     }
-  }, [searchParams, filter]);
+  }, [searchParams, searchType]);
 
   // 更新URL参数
   const updateUrl = (
-    query: string,
-    filterType?: string,
+    keywords: string,
+    searchTypeParam?: string,
     cateType?: string,
     sortType?: string
   ) => {
     const params = new URLSearchParams(searchParams.toString());
-    if (query) {
-      params.set('query', query);
+    if (keywords) {
+      params.set('keywords', keywords);
+      params.delete('content'); // 移除旧的 content 参数
     } else {
-      params.delete('query');
+      params.delete('keywords');
+      params.delete('content');
     }
-    if (filterType) {
-      params.set('filter', filterType);
+    if (searchTypeParam) {
+      params.set('searchType', searchTypeParam);
     }
     if (cateType) {
       params.set('cate', cateType);
@@ -114,12 +116,11 @@ const SearchPage = () => {
 
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const newCate = (event.target as HTMLSelectElement).value;
-    console.log({ newCate });
     // 更新URL参数
-    updateUrl(searchQuery, filter, newCate, sort);
+    updateUrl(searchKeywords, searchType, newCate, sort);
     // 如果有搜索查询，重新搜索以应用新的分类
-    if (searchQuery) {
-      handleSearchWithFilter(searchQuery, 1, filter, newCate); // 重置到第一页
+    if (searchKeywords) {
+      handleSearchWithFilter(searchKeywords, 1, searchType, newCate); // 重置到第一页
     }
   };
 
@@ -136,30 +137,30 @@ const SearchPage = () => {
     }
   };
 
-  const handleFilterChange = (value: string) => {
-    setFilter(value);
+  const handleSearchTypeChange = (value: string) => {
+    setSearchType(value);
     // 如果有搜索查询，重新搜索以应用新的过滤条件
-    if (searchQuery) {
-      handleSearchWithFilter(searchQuery, 1, value, cate); // 重置到第一页，内部会更新URL
+    if (searchKeywords) {
+      handleSearchWithFilter(searchKeywords, 1, value, cate); // 重置到第一页，内部会更新URL
     }
   };
 
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= totalPages && newPage !== currentPage) {
-      handleSearchWithFilter(searchQuery, newPage, filter, cate);
+      handleSearchWithFilter(searchKeywords, newPage, searchType, cate);
     }
   };
 
   const handleSearchWithFilter = async (
-    query: string,
+    keywords: string,
     page = 1,
-    filterType: string,
+    searchTypeParam: string,
     cateType?: string,
     sortType?: string
   ) => {
-    if (!query.trim()) {
+    if (!keywords.trim()) {
       setSearchResults([]);
-      setSearchQuery('');
+      setSearchKeywords('');
       setCurrentPage(1);
       setTotalPages(0);
       setTotalItems(0);
@@ -168,39 +169,21 @@ const SearchPage = () => {
     }
 
     setIsLoading(true);
-    setSearchQuery(query);
+    setSearchKeywords(keywords);
     setCurrentPage(page);
-    updateUrl(query, filterType, cateType, sortType || sort);
+    updateUrl(keywords, searchTypeParam, cateType, sortType || sort);
 
     try {
-      let response;
-
-      console.log({ cate });
-
       // 根据分类选择不同的搜索API
       const currentCate = cateType || cate;
       const currentSort = sortType || sort;
-      if (currentCate === 'qa') {
-        // 问答搜索：仅搜索标题
-        response = await fetch(
-          `/api/search?title=${encodeURIComponent(query)}&page=${page}&pageSize=10&sort=${currentSort}&cate=qa`
-        );
-      } else {
-        // 全站搜索：根据模型选择搜索方式
-        if (modelSelected === 'title') {
-          response = await fetch(
-            `/api/search?title=${encodeURIComponent(query)}&page=${page}&pageSize=10&sort=${currentSort}&type=${filterType}`
-          );
-        } else if (modelSelected === 'content') {
-          response = await fetch(
-            `/api/search?content=${encodeURIComponent(query)}&page=${page}&pageSize=10&sort=${currentSort}&type=${filterType}`
-          );
-        }
-      }
+      // console.log('currentCate', currentCate);
+      const response = await fetch(
+        `/api/search?${modelSelected === 'title' ? 'title' : 'keywords'}=${encodeURIComponent(keywords)}&page=${page}&pageSize=10&sort=${currentSort}&cate=${currentCate}&searchType=${searchTypeParam}`
+      );
 
       if (response) {
         const data = await response.json();
-        console.log(data);
         setSearchResults(data.items || []);
         setTotalPages(data.totalPages || 0);
         setTotalItems(data.totalItems || 0);
@@ -216,10 +199,10 @@ const SearchPage = () => {
     }
   };
 
-  const handleSearch = async (query: string, page = 1) => {
-    if (!query.trim()) {
+  const handleSearch = async (keywords: string, page = 1) => {
+    if (!keywords.trim()) {
       setSearchResults([]);
-      setSearchQuery('');
+      setSearchKeywords('');
       setCurrentPage(1);
       setTotalPages(0);
       setTotalItems(0);
@@ -228,35 +211,25 @@ const SearchPage = () => {
     }
 
     setIsLoading(true);
-    setSearchQuery(query);
+    setSearchKeywords(keywords);
     setCurrentPage(page);
-    updateUrl(query, filter, cate, sort);
+    updateUrl(keywords, searchType, cate, sort);
 
     try {
-      let response;
-
-      // 根据分类选择不同的搜索API
-      if (cate === 'qa') {
-        // 问答搜索：仅搜索标题
-        response = await fetch(
-          `/api/search?title=${encodeURIComponent(query)}&page=${page}&pageSize=10&sort=${sort}&cate=qa`
-        );
-      } else {
-        // 全站搜索：根据模型选择搜索方式
-        if (modelSelected === 'title') {
-          response = await fetch(
-            `/api/search?title=${encodeURIComponent(query)}&page=${page}&pageSize=10&sort=${sort}&type=${filter}`
-          );
-        } else if (modelSelected === 'content') {
-          response = await fetch(
-            `/api/search?content=${encodeURIComponent(query)}&page=${page}&pageSize=10&sort=${sort}&type=${filter}`
-          );
-        }
-      }
+      // 简化统一搜索API调用逻辑
+      const queryKey = modelSelected === 'title' ? 'title' : 'keywords';
+      const params = [
+        `${queryKey}=${encodeURIComponent(keywords)}`,
+        `page=${page}`,
+        'pageSize=10',
+        `sort=${sort}`,
+        `cate=${cate}`,
+        `searchType=${searchType}`,
+      ].join('&');
+      const response = await fetch(`/api/search?${params}`);
 
       if (response) {
         const data = await response.json();
-        console.log({ data });
         setSearchResults(data.items || []);
         setTotalPages(data.totalPages || 0);
         setTotalItems(data.totalItems || 0);
@@ -310,7 +283,7 @@ const SearchPage = () => {
           <SearchBox
             onSearch={handleSearch}
             placeholder='请输入搜索关键词'
-            initialValue={searchQuery}
+            initialValue={searchKeywords}
           />
           <Box
             sx={{
@@ -452,23 +425,25 @@ const SearchPage = () => {
                 }}
               >
                 {cate !== 'qa' &&
-                  resultFilter.map(item => (
+                  searchTypes.map(item => (
                     <Button
                       key={item.value}
                       size='small'
-                      variant={filter === item.value ? 'contained' : 'text'}
-                      onClick={() => handleFilterChange(item.value)}
+                      variant={searchType === item.value ? 'contained' : 'text'}
+                      onClick={() => handleSearchTypeChange(item.value)}
                       sx={{
                         borderRadius: '30px',
                         fontSize: 14,
                         width: 80,
                         height: 22,
                         bgcolor:
-                          filter === item.value
+                          searchType === item.value
                             ? 'rgba(245, 147, 135, 1)'
                             : 'transparent',
                         color:
-                          filter === item.value ? '#fff' : HELPER_TEXT_COLOR,
+                          searchType === item.value
+                            ? '#fff'
+                            : HELPER_TEXT_COLOR,
                       }}
                     >
                       {item.name}
@@ -549,10 +524,7 @@ const SearchPage = () => {
                       (item as TopicMediaX).courseTitle || '未知课程',
                     courseOrder: (item as TopicMediaX).courseOrder || '',
                     topicOrder: (item as TopicMediaX).topicOrder || '',
-                    mediaType:
-                      item?.mediaType === 'course'
-                        ? ('course' as const)
-                        : ('qa' as const),
+                    mediaType: item?.mediaType,
                   };
 
                   return (
@@ -569,12 +541,14 @@ const SearchPage = () => {
                             : `音视频/${formatCourseTitle(courseInfo.courseTitle) || '未知课程'}`
                         }
                         type={itemType}
-                        url={
+                        url={`/${courseInfo.mediaType}/${courseInfo.courseOrder}/lesson${courseInfo.topicOrder}${
                           isArticle
-                            ? `/course/${courseInfo.courseOrder}/lesson${courseInfo.topicOrder}?tab=article`
-                            : `/${courseInfo.mediaType}/${courseInfo.courseOrder}/lesson${courseInfo.topicOrder}`
-                        }
-                        keywords={searchQuery ? [searchQuery] : []}
+                            ? '?tab=article'
+                            : courseInfo.mediaType === 'qa'
+                              ? '?tab=question' + item?.questionOrder || 1
+                              : ''
+                        }`}
+                        keywords={searchKeywords ? [searchKeywords] : []}
                       />
                       {index < searchResults.length - 1 && (
                         <Divider sx={{ color: '#F0F0F0' }} />
