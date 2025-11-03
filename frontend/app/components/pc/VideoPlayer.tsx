@@ -308,7 +308,9 @@ const VideoPlayer = forwardRef<
       hasStartedCurrentRef.current = false;
 
       try {
-        v.currentTime = 0;
+        if (playerRef.current) {
+          playerRef.current.currentTime = 0;
+        }
       } catch {}
 
       // 使用 Plyr 推荐的方式处理源切换后的自动播放
@@ -393,7 +395,6 @@ const VideoPlayer = forwardRef<
       )
         .sort((a, b) => a - b)
         .map(n => Number(n));
-
       playerRef.current = new PlyrLib(videoRef.current, {
         controls: [
           'play',
@@ -405,7 +406,7 @@ const VideoPlayer = forwardRef<
           'fullscreen',
         ],
         // settings must include 'quality' to show quality in settings menu
-        settings: ['quality', 'loop'],
+        settings: ['quality'],
         autoplay: false, // 启用自动播放
         muted: false, // 不静音，但如果自动播放失败会尝试静音
         quality: {
@@ -429,20 +430,20 @@ const VideoPlayer = forwardRef<
         // 简化：只监听播放开始事件
         playerRef.current.on('timeupdate', () => {
           if (!hasStartedCurrentRef.current) {
-            const v = videoRef.current;
-            if (v && v.currentTime > 0.25) {
+            const player = playerRef.current;
+            if (player && player.currentTime > 0.25) {
               hasStartedCurrentRef.current = true;
             }
           }
         });
         playerRef.current.on('ended', () => {
-          const v = videoRef.current;
-          if (!v || v.readyState < 2) return;
+          const player = playerRef.current;
+          if (!player) return;
 
           // 防抖，视频仅播放1秒内就触发ended（如切源骚乱），不做自动切换
-          if (v.currentTime < 1 || !hasStartedCurrentRef.current) {
+          if (player.currentTime < 1 || !hasStartedCurrentRef.current) {
             console.debug('[VideoPlayer] ended触发太早，忽略自动切换', {
-              currentTime: v.currentTime,
+              currentTime: player.currentTime,
               hasStarted: hasStartedCurrentRef.current,
             });
             return;
@@ -450,7 +451,7 @@ const VideoPlayer = forwardRef<
 
           console.debug('[VideoPlayer] Video ended', {
             index: currentIndexRef.current,
-            duration: v.duration || 0,
+            duration: player.duration || 0,
             totalVideos: videos.length,
             allowAutoAdvance: allowAutoAdvanceRef.current,
           });
@@ -489,6 +490,11 @@ const VideoPlayer = forwardRef<
     const player = playerRef.current;
     const v = videoRef.current;
     if (!player || !v) return;
+
+    if (played) {
+      player.autoplay = true;
+    }
+    // console.log({ player });
 
     // 检查是否为手动切换（非正在进行的自动切换）
     const isManualSwitch = !isAutoAdvanceInProgressRef.current;
@@ -540,7 +546,9 @@ const VideoPlayer = forwardRef<
     };
 
     try {
-      v.currentTime = 0;
+      if (playerRef.current) {
+        playerRef.current.currentTime = 0;
+      }
     } catch {}
 
     // 统一的播放尝试逻辑 - 只有用户播放过才自动播放
@@ -555,16 +563,12 @@ const VideoPlayer = forwardRef<
       };
       v.addEventListener('playing', markPlaying);
 
-      const tryPlay = () => {
-        attemptAutoPlay(v);
-      };
-
       if (v.readyState >= 3) {
-        tryPlay();
+        attemptAutoPlay(v);
       } else {
         const onCanPlayNew = () => {
           v.removeEventListener('canplay', onCanPlayNew);
-          tryPlay();
+          attemptAutoPlay(v);
         };
         v.addEventListener('canplay', onCanPlayNew, { once: true });
       }

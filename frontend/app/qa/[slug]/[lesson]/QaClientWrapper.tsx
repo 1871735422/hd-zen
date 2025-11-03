@@ -6,7 +6,8 @@ import { formatDate } from '@/app/utils/courseUtils';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Box, Button, Grid, Stack, Typography } from '@mui/material';
-import { useCallback, useMemo, useState } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 interface QuestionItem {
   questionOrder: number;
@@ -35,6 +36,19 @@ export default function QaClientWrapper({
   lessonName: string;
 }) {
   const [currentIndex, setCurrentIndex] = useState(Math.max(0, initialIndex));
+
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams?.toString());
+    params.set('tab', `question${currentIndex + 1}`);
+    const search = params.toString();
+    router.replace(search ? `${pathname}?${search}` : pathname, {
+      scroll: false,
+    });
+  }, [currentIndex, pathname, router, searchParams]);
 
   const sidebarItems = useMemo(
     () =>

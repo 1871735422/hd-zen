@@ -23,6 +23,7 @@ export default function AudioPlayer({ src }: AudioPlayerProps) {
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
+  const [volume, setVolume] = useState(100); // 0 - 100
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
 
@@ -30,6 +31,8 @@ export default function AudioPlayer({ src }: AudioPlayerProps) {
     const audioElement = new Audio(src);
     setAudio(audioElement);
     audioElement.preload = 'metadata';
+    audioElement.volume = volume / 100;
+    audioElement.muted = isMuted;
 
     audioElement.addEventListener('loadedmetadata', () => {
       setDuration(audioElement.duration || 0);
@@ -90,6 +93,21 @@ export default function AudioPlayer({ src }: AudioPlayerProps) {
     if (!audio) return;
     audio.muted = !audio.muted;
     setIsMuted(audio.muted);
+  };
+
+  const handleVolumeChange = (_: Event, value: number | number[]) => {
+    const v = Array.isArray(value) ? value[0] : value;
+    const clamped = Math.min(100, Math.max(0, v));
+    setVolume(clamped);
+    if (!audio) return;
+    audio.volume = clamped / 100;
+    if (clamped === 0) {
+      audio.muted = true;
+      setIsMuted(true);
+    } else if (isMuted) {
+      audio.muted = false;
+      setIsMuted(false);
+    }
   };
 
   return (
@@ -161,40 +179,66 @@ export default function AudioPlayer({ src }: AudioPlayerProps) {
         >
           {formatTime(duration)}
         </Typography>
-        <IconButton
-          aria-label='mute'
-          onClick={toggleMute}
-          size='small'
-          sx={
-            isMuted
-              ? {
-                  '& svg': {
-                    fontSize: { lg: 20, xl: 28, xxl: 32 },
-                  },
-                  position: 'relative',
-                  '&::after': {
-                    content: '""',
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    width: { lg: 20, xl: 28, xxl: 32 },
-                    height: 2,
-                    transform: 'translate(-50%, -50%) rotate(45deg)',
-                    background:
-                      'linear-gradient(90deg, rgba(70, 134, 207, 1) 0%, rgba(170, 207, 250, 1) 100%)',
-                    borderRadius: 2,
-                    pointerEvents: 'none',
-                  },
-                }
-              : {
-                  '& svg': {
-                    fontSize: { lg: 20, xl: 28, xxl: 32 },
-                  },
-                }
-          }
-        >
-          <SpeakerIcon />
-        </IconButton>
+        <Stack direction='row' alignItems='center'>
+          <IconButton
+            aria-label='mute'
+            onClick={toggleMute}
+            size='small'
+            sx={
+              isMuted
+                ? {
+                    '& svg': {
+                      fontSize: { lg: 20, xl: 28, xxl: 32 },
+                    },
+                    position: 'relative',
+                    '&::after': {
+                      content: '""',
+                      position: 'absolute',
+                      top: '50%',
+                      left: '50%',
+                      width: { lg: 20, xl: 28, xxl: 32 },
+                      height: 2,
+                      transform: 'translate(-50%, -50%) rotate(45deg)',
+                      background:
+                        'linear-gradient(90deg, rgba(70, 134, 207, 1) 0%, rgba(170, 207, 250, 1) 100%)',
+                      borderRadius: 2,
+                      pointerEvents: 'none',
+                    },
+                  }
+                : {
+                    '& svg': {
+                      fontSize: { lg: 20, xl: 28, xxl: 32 },
+                    },
+                  }
+            }
+          >
+            <SpeakerIcon />
+          </IconButton>
+          <Slider
+            value={isMuted ? 0 : volume}
+            onChange={handleVolumeChange}
+            aria-label='volume'
+            sx={{
+              width: { lg: 80, xl: 110, xxl: 130 },
+              color: 'transparent',
+              '& .MuiSlider-rail': {
+                opacity: 1,
+                backgroundColor: 'rgba(0,0,0,0.1)',
+              },
+              '& .MuiSlider-track': {
+                border: 'none',
+                background:
+                  'linear-gradient(270deg, rgba(78, 144, 237, 1) 0%, rgba(176, 222, 255, 1) 100%)',
+              },
+              '& .MuiSlider-thumb': {
+                width: { lg: 12, xl: 16, xxl: 18 },
+                height: { lg: 12, xl: 16, xxl: 18 },
+                backgroundColor: '#7DB1F8',
+                boxShadow: '3px 0 0 0 rgba(245, 249, 252, 1)',
+              },
+            }}
+          />
+        </Stack>
       </Stack>
     </Box>
   );
