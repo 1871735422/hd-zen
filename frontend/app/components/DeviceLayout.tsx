@@ -1,19 +1,19 @@
 'use client';
 
-import { useDeviceType } from '@/app/utils/deviceUtils';
+import { useDevice } from '@/app/components/DeviceProvider';
+import MobileHeader from './mobile/Header';
 import Footer from './pc/Footer';
 import Header from './pc/Header';
-import MobileHeader from './mobile/Header';
 
 interface DeviceLayoutProps {
   children: React.ReactNode;
 }
 
 export default function DeviceLayout({ children }: DeviceLayoutProps) {
-  const deviceType = useDeviceType();
+  const { deviceType } = useDevice();
 
   // Mobile/Tablet: 使用移动端布局
-  if (deviceType === 'mobile' || deviceType === 'tablet') {
+  if (deviceType === 'mobile') {
     return (
       <>
         <MobileHeader />

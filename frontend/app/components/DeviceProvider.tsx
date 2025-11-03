@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 
 export type DeviceType = 'mobile' | 'desktop';
 
@@ -49,9 +49,15 @@ export default function DeviceProvider({
     const MOBILE_BREAKPOINT = 600; // px
 
     const checkDevice = () => {
-      const isMobile = window.matchMedia(
+      // 1) 宽度判断
+      const isSmallViewport = window.matchMedia(
         `(max-width: ${MOBILE_BREAKPOINT - 1}px)`
       ).matches;
+      // 2) iPad 归为移动端（即使宽度较大）
+      const ua = navigator.userAgent || '';
+      const isIpad = /iPad/i.test(ua);
+
+      const isMobile = isSmallViewport || isIpad;
       setDeviceType(isMobile ? 'mobile' : 'desktop');
     };
 

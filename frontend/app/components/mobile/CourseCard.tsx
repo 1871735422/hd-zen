@@ -1,12 +1,11 @@
 'use client';
 
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import Box from '@mui/material/Box';
-import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { useState } from 'react';
 import { pxToVw } from '../../utils/mobileUtils';
+import ArrowTop from '../icons/ArrowTop';
 
 interface CourseCardProps {
   title: string;
@@ -20,11 +19,9 @@ const CourseCard: React.FC<CourseCardProps> = ({ title, description }) => {
     <Box
       sx={{
         backgroundColor: 'rgba(255, 255, 255, 0.8)',
-        borderRadius: pxToVw(12),
+        borderRadius: pxToVw(13),
         backdropFilter: 'blur(10px)',
         border: '1px solid rgba(255, 255, 255, 0.2)',
-        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)',
-        padding: pxToVw(16),
         marginBottom: pxToVw(16),
         display: 'flex',
         gap: pxToVw(16),
@@ -33,45 +30,56 @@ const CourseCard: React.FC<CourseCardProps> = ({ title, description }) => {
     >
       <Typography
         sx={{
-          fontSize: pxToVw(18),
+          fontSize: pxToVw(20),
           fontWeight: 500,
-          color: '#4A6B8A',
+          color: 'rgba(26, 41, 76, 1)',
           writingMode: 'vertical-rl',
           textOrientation: 'mixed',
-          lineHeight: 1.4,
+          lineHeight: 1.5,
         }}
       >
         {title}
       </Typography>
 
-      <Box sx={{ flex: 1, minWidth: 0 }}>
-        <Box onClick={() => setExpanded(!expanded)} sx={{ cursor: 'pointer' }}>
-          <Collapse in={expanded} collapsedSize={pxToVw(58)} timeout='auto'>
-            <Typography
-              sx={{
-                fontSize: pxToVw(14),
-                color: '#4A6B8A',
-                lineHeight: 1.6,
-              }}
-            >
-              {description}
-            </Typography>
-          </Collapse>
-        </Box>
-
-        <Box sx={{ textAlign: 'right', marginTop: pxToVw(4) }}>
-          <IconButton
-            onClick={() => setExpanded(!expanded)}
-            size='small'
-            sx={{
-              color: '#4A6B8A',
-              transition: 'transform 0.3s',
-              transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
-            }}
-          >
-            <KeyboardArrowDownIcon sx={{ fontSize: pxToVw(20) }} />
-          </IconButton>
-        </Box>
+      <Box
+        sx={{
+          flex: 1,
+          backgroundColor: 'white',
+          padding: pxToVw(16),
+          position: 'relative',
+          borderRadius: `0 ${pxToVw(13)} ${pxToVw(13)} 0 `,
+        }}
+      >
+        <Typography
+          sx={{
+            fontSize: pxToVw(16),
+            color: 'rgba(102, 102, 102, 1)',
+            lineHeight: 1.5,
+            overflow: expanded ? 'visible' : 'hidden',
+            display: expanded ? 'block' : '-webkit-box',
+            WebkitLineClamp: expanded ? 'unset' : 3,
+            WebkitBoxOrient: expanded ? 'unset' : 'vertical',
+            wordBreak: 'break-word',
+          }}
+        >
+          {description}
+        </Typography>
+        <IconButton
+          onClick={() => setExpanded(!expanded)}
+          sx={{
+            position: 'absolute',
+            fontSize: pxToVw(13),
+            backgroundColor: 'rgba(237, 246, 255, 1)',
+            borderRadius: `0 0 ${pxToVw(13)} 0 `,
+            bottom: 0,
+            right: 0,
+            color: 'rgba(70, 114, 166, 1)',
+            transition: 'transform 0.3s',
+            transform: expanded ? 'rotate(0deg)' : 'rotate(180deg)',
+          }}
+        >
+          <ArrowTop />
+        </IconButton>
       </Box>
     </Box>
   );
