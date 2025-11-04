@@ -1,12 +1,14 @@
 import AppBreadcrumbs, {
   BreadcrumbProvider,
-} from '@/app/components/pc/AppBreadcrumbs';
-import { Box, Container } from '@mui/material';
+} from '@/app/components/shared/AppBreadcrumbs';
+import { pxToVw } from '@/app/utils/mobileUtils';
+import { Box, Container, Stack } from '@mui/material';
 import {
   getCategories,
   getCourseByDisplayOrder,
   getCourseTopicsByCourse,
 } from '../../../api';
+import { getDeviceTypeFromHeaders } from '../../../utils/serverDeviceUtils';
 
 const LessonLayout = async ({
   children,
@@ -19,6 +21,10 @@ const LessonLayout = async ({
   const courseOrder = resolvedParams.slug;
   const lessonOrder = resolvedParams.lesson.replace('lesson', '');
   // console.log({courseOrder,lessonOrder});
+
+  // 设备检测
+  const deviceType = await getDeviceTypeFromHeaders();
+  const isMobile = deviceType === 'mobile';
 
   const course = await getCourseByDisplayOrder(courseOrder);
   const courseId = course?.id || '';
@@ -53,16 +59,29 @@ const LessonLayout = async ({
           ml: 0,
         }}
       >
-        <AppBreadcrumbs items={breadcrumbItems} useContext={true} />
+        <Stack
+          sx={{
+            pt: isMobile ? pxToVw(8) : 0,
+            pl: isMobile ? pxToVw(18) : 0,
+            backgroundColor: 'transparent',
+          }}
+        >
+          <AppBreadcrumbs
+            color={isMobile ? 'rgba(86, 137, 204, 1)' : undefined}
+            items={breadcrumbItems}
+            useContext={true}
+          />
+        </Stack>
         <Box
           sx={{
             position: 'relative',
             width: '100%',
             height: '100%',
-            overflow: 'hidden',
-            pb: 5,
-            mb: 5,
-            borderRadius: 5,
+            overflow: isMobile ? 'visible' : 'hidden',
+            pb: isMobile ? 0 : 5,
+            mb: isMobile ? 0 : 5,
+            px: isMobile ? pxToVw(15) : 0,
+            borderRadius: isMobile ? 0 : 5,
           }}
         >
           {children}

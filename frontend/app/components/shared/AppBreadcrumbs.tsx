@@ -11,6 +11,7 @@ export interface BreadcrumbItem {
 interface AppBreadcrumbsProps {
   items: BreadcrumbItem[];
   useContext?: boolean;
+  color?: string;
 }
 
 const BreadcrumbContext = createContext<{
@@ -28,16 +29,14 @@ export function useBreadcrumb() {
 export default function AppBreadcrumbs({
   items,
   useContext = false,
+  color = 'rgba(42, 130, 228, 1)',
 }: AppBreadcrumbsProps) {
   const { extraBreadcrumb } = useBreadcrumb();
   const finalItems =
     useContext && extraBreadcrumb ? [...items, extraBreadcrumb] : items;
 
   return (
-    <Breadcrumbs
-      aria-label='breadcrumb'
-      sx={{ color: 'rgba(42, 130, 228, 1)', mb: 1, mx: 1 }}
-    >
+    <Breadcrumbs aria-label='breadcrumb' sx={{ color, mb: 1, mx: 1 }}>
       {finalItems.map((item, index) => (
         <Link
           variant='subtitle2'

@@ -2,12 +2,13 @@
 
 import Box from '@mui/material/Box';
 import { usePathname, useRouter } from 'next/navigation';
+import { STANDARD_TEXT_COLOR } from '../../constants/colors';
 import { pxToVw } from '../../utils/mobileUtils';
 
 const tabs = [
   { label: '首页', href: '/' },
-  { label: '慧灯禅修课', href: '/course' },
-  { label: '禅修课问答', href: '/qa' },
+  { label: '慧灯禅修课', href: '/course/1' },
+  { label: '禅修课问答', href: '/qa/1' },
   { label: '学修参考', href: '/reference' },
   { label: '下载', href: '/download' },
   { label: '不懂就问', href: '/ask' },
@@ -50,8 +51,9 @@ export default function TabNavigation() {
         sx={{
           display: 'flex',
           minWidth: 'max-content',
-          px: pxToVw(20),
-          gap: pxToVw(32),
+          pt: pxToVw(14),
+          px: pxToVw(15),
+          gap: pxToVw(15),
         }}
       >
         {tabs.map((tab, index) => {
@@ -62,7 +64,6 @@ export default function TabNavigation() {
               onClick={() => router.push(tab.href)}
               sx={{
                 position: 'relative',
-                padding: `${pxToVw(16)} ${pxToVw(4)}`,
                 cursor: 'pointer',
                 userSelect: 'none',
                 whiteSpace: 'nowrap',
@@ -74,9 +75,11 @@ export default function TabNavigation() {
               {/* Tab 文字 */}
               <Box
                 sx={{
-                  fontSize: pxToVw(16),
-                  fontWeight: isActive ? 600 : 400,
-                  color: isActive ? '#333' : '#666',
+                  fontSize: pxToVw(20),
+                  fontWeight: isActive ? 500 : 400,
+                  color: isActive
+                    ? 'rgba(21, 67, 153, 1)'
+                    : STANDARD_TEXT_COLOR,
                   transition: 'color 0.2s',
                 }}
               >
@@ -91,9 +94,8 @@ export default function TabNavigation() {
                     bottom: 0,
                     left: 0,
                     right: 0,
-                    height: pxToVw(3),
-                    backgroundColor: '#1976D2', // 蓝色
-                    borderRadius: `${pxToVw(3)} ${pxToVw(3)} 0 0`,
+                    height: pxToVw(2),
+                    backgroundColor: 'rgba(21, 67, 153, 1)',
                   }}
                 />
               )}

@@ -48,15 +48,12 @@ export default function ButtonNavigation({
             paddingY: pxToVw(8),
             fontSize: pxToVw(14),
             fontWeight: item.active ? 500 : 400,
-            color: item.active ? '#fff' : '#333',
+            color: item.active ? '#fff' : '#000',
             backgroundColor: item.active ? '#1976D2' : '#fff',
             border: item.active ? 'none' : `1px solid #E0E0E0`,
             borderRadius: pxToVw(8),
+            boxShadow: '0px 0px 10px  rgba(215, 228, 252, 1)',
             textTransform: 'none',
-            '&:hover': {
-              backgroundColor: item.active ? '#1565C0' : '#F5F5F5',
-            },
-            transition: 'all 0.2s',
           }}
         >
           {item.label}

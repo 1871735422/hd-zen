@@ -1,7 +1,7 @@
+import CategorySelector from '@/app/components/pc/CategorySelector';
 import AppBreadcrumbs, {
   BreadcrumbProvider,
-} from '@/app/components/pc/AppBreadcrumbs';
-import CategorySelector from '@/app/components/pc/CategorySelector';
+} from '@/app/components/shared/AppBreadcrumbs';
 import { buildLessonsTitle } from '@/app/utils/courseUtils';
 import { Box, Container } from '@mui/material';
 import { getCourseByDisplayOrder, getCourseTopicsByCourse } from '../../../api';

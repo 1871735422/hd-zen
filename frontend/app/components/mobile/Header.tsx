@@ -1,7 +1,7 @@
 'use client';
 
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-import SearchIcon from '@mui/icons-material/Search';
+import { STANDARD_TEXT_COLOR } from '@/app/constants/colors';
+import { Stack } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
@@ -10,8 +10,10 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { usePathname, useRouter } from 'next/navigation';
 import React, { useState } from 'react';
-import LogoIcon from '../icons/LogoIcon';
 import { pxToVw } from '../../utils/mobileUtils';
+import BackIcon from '../icons/BackIcon';
+import LogoIcon from '../icons/LogoIcon';
+import SearchIcon from '../icons/SearchIcon';
 
 /**
  * 移动端 Header
@@ -49,7 +51,8 @@ const Header: React.FC = () => {
           justifyContent: 'space-between',
           minHeight: `${pxToVw(56)} !important`,
           height: pxToVw(56),
-          px: pxToVw(20),
+          px: '0',
+          mr: pxToVw(18),
         }}
       >
         {isHomePage ? (
@@ -59,15 +62,16 @@ const Header: React.FC = () => {
               sx={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: pxToVw(8),
                 flex: 1,
               }}
             >
-              <LogoIcon />
+              <Stack fontSize={pxToVw(33)} mx={pxToVw(17)}>
+                <LogoIcon />
+              </Stack>
               <Typography
                 sx={{
-                  color: '#333',
-                  fontSize: pxToVw(16),
+                  color: STANDARD_TEXT_COLOR,
+                  fontSize: pxToVw(21),
                   fontWeight: 500,
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
@@ -81,12 +85,12 @@ const Header: React.FC = () => {
             <IconButton
               onClick={() => router.push('/search')}
               sx={{
-                color: '#666',
-                padding: pxToVw(8),
+                color: 'rgba(86, 137, 204, 1)',
+                p: 0,
               }}
               aria-label='搜索'
             >
-              <SearchIcon sx={{ fontSize: pxToVw(20) }} />
+              <SearchIcon />
             </IconButton>
           </>
         ) : (
@@ -95,30 +99,25 @@ const Header: React.FC = () => {
             <IconButton
               onClick={handleBack}
               sx={{
-                color: '#666',
-                padding: pxToVw(8),
-                marginRight: pxToVw(12),
+                ml: pxToVw(4),
+                mr: pxToVw(16),
               }}
               aria-label='返回'
             >
-              <ArrowBackIosNewIcon sx={{ fontSize: pxToVw(16) }} />
+              <BackIcon />
             </IconButton>
 
             <Box
-              component='form'
-              onSubmit={e => {
-                e.preventDefault();
-                handleSearch();
-              }}
               sx={{
+                maxWidth: 243,
                 flex: 1,
                 display: 'flex',
                 alignItems: 'center',
-                backgroundColor: '#F5F5F5',
+                backgroundColor: 'rgba(242, 247, 255, 1)',
                 borderRadius: pxToVw(20),
-                paddingX: pxToVw(16),
+                pl: pxToVw(16),
+                pr: pxToVw(11),
                 height: pxToVw(40),
-                mr: pxToVw(8),
               }}
             >
               <TextField
@@ -129,29 +128,26 @@ const Header: React.FC = () => {
                 onChange={e => setSearchValue(e.target.value)}
                 InputProps={{
                   disableUnderline: true,
-                  sx: {
-                    fontSize: pxToVw(14),
-                  },
                 }}
                 sx={{
                   '& .MuiInputBase-input': {
-                    fontSize: pxToVw(14),
-                    color: '#333',
+                    color: 'rgba(192, 197, 207, 1)',
+                    fontWeight: 500,
                   },
                 }}
               />
+              <IconButton
+                onClick={handleSearch}
+                sx={{
+                  color: 'rgba(86, 137, 204, 1)',
+                  fontSize: pxToVw(19),
+                  p: 0,
+                }}
+                aria-label='搜索'
+              >
+                <SearchIcon />
+              </IconButton>
             </Box>
-
-            <IconButton
-              onClick={handleSearch}
-              sx={{
-                color: '#666',
-                padding: pxToVw(8),
-              }}
-              aria-label='搜索'
-            >
-              <SearchIcon sx={{ fontSize: pxToVw(20) }} />
-            </IconButton>
           </>
         )}
       </Toolbar>

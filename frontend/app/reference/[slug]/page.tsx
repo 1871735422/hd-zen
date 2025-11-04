@@ -1,5 +1,5 @@
 import { getBookChapters, getCategories } from '@/app/api';
-import MobileChapterListPage from '@/app/components/mobile/MobileChapterListPage';
+import MobileCoursePage from '@/app/components/mobile/MobileCoursePage';
 import MobileReferencePage from '@/app/components/mobile/MobileReferencePage';
 import CourseCard from '@/app/components/pc/CourseCard';
 import { BookChapter } from '@/app/types/models';
@@ -117,7 +117,7 @@ export default async function ReferencePage({
     }));
 
     return (
-      <MobileChapterListPage
+      <MobileCoursePage
         bookName={bookName}
         chapters={chapters}
         bookOrder={bookOrder}

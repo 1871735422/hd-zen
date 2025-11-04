@@ -1,3 +1,4 @@
+import MobileLessonPage from '@/app/components/mobile/MobileLessonPage';
 import AudioPage from '@/app/components/pc/AudioPage';
 import ReadingPage from '@/app/components/pc/ReadingPage';
 import VideoPlayer from '@/app/components/pc/VideoPlayer';
@@ -13,6 +14,7 @@ import {
 import LessonMeta from '../../../components/pc/LessonMeta';
 import LessonSidebar from '../../../components/pc/LessonSidebar';
 import { CourseTopic } from '../../../types/models';
+import { getDeviceTypeFromHeaders } from '../../../utils/serverDeviceUtils';
 
 // 15分钟缓存
 export const revalidate = 900;
@@ -116,6 +118,10 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
   const courseOrder = resolvedParams.slug;
   const lessonOrder = resolvedParams.lesson?.replace('lesson', '');
 
+  // 设备检测
+  const deviceType = await getDeviceTypeFromHeaders();
+  const isMobile = deviceType === 'mobile';
+
   // 总是需要获取 topicMedia 数据
   const topicMedia = await getTopicMediaByOrder(courseOrder, lessonOrder);
   // console.log('topicMedia', topicMedia);
@@ -189,6 +195,21 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
     );
   };
 
+  // 移动端渲染
+  if (isMobile) {
+    return (
+      <MobileLessonPage
+        title={media?.title || ''}
+        author='慈诚罗珠堪布'
+        date={media?.created || ''}
+        description={media?.article_summary || ''}
+      >
+        <TabRender />
+      </MobileLessonPage>
+    );
+  }
+
+  // PC端渲染
   return (
     <>
       <LessonSidebar

@@ -48,7 +48,11 @@ const SearchForm: React.FC = () => {
       />
       <IconButton
         type='submit'
-        sx={{ color: MAIN_BLUE_COLOR, ml: '2px !important' }}
+        sx={{
+          color: MAIN_BLUE_COLOR,
+          ml: '2px !important',
+          fontSize: { lg: 16, xl: 20, xxl: 24 },
+        }}
       >
         <SearchIcon />
       </IconButton>

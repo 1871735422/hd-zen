@@ -1,14 +1,7 @@
 import { SvgIcon } from '@mui/material';
 
 const LogoIcon = () => (
-  <SvgIcon
-    sx={{
-      width: { sm: 28, md: 30, lg: 32, xl: 38, xxl: 44 },
-      height: { sm: 28, md: 30, lg: 32, xl: 38, xxl: 44 },
-      mx: { sm: 1.2, md: 1.4, lg: 1.7, xl: 2, xxl: 2.3 },
-      cursor: 'pointer',
-    }}
-  >
+  <SvgIcon fontSize='inherit'>
     <svg
       xmlns='http://www.w3.org/2000/svg'
       xmlnsXlink='http://www.w3.org/1999/xlink'

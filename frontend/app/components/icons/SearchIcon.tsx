@@ -1,16 +1,7 @@
 import { SvgIcon } from '@mui/material';
 
 const SearchIcon = () => (
-  <SvgIcon
-    sx={{
-      width: { sm: 12, md: 14, lg: 16, xl: 20, xxl: 24 },
-      height: { sm: 12, md: 14, lg: 16, xl: 20, xxl: 24 },
-      cursor: 'pointer',
-      '&:hover': {
-        opacity: 0.8,
-      },
-    }}
-  >
+  <SvgIcon fontSize='inherit'>
     <svg
       xmlns='http://www.w3.org/2000/svg'
       xmlnsXlink='http://www.w3.org/1999/xlink'

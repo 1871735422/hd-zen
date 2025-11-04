@@ -1,6 +1,6 @@
 import AppBreadcrumbs, {
   BreadcrumbProvider,
-} from '@/app/components/pc/AppBreadcrumbs';
+} from '@/app/components/shared/AppBreadcrumbs';
 import { Box, Container } from '@mui/material';
 import { getBookChapters, getCategories } from '../../../api';
 

@@ -1,6 +1,7 @@
 'use client';
 
 import { STANDARD_TEXT_COLOR } from '@/app/constants/colors';
+import { Stack } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -67,7 +68,12 @@ const Header: React.FC = () => {
             cursor: 'pointer',
           }}
         >
-          <LogoIcon />
+          <Stack
+            fontSize={{ lg: 32, xl: 38, xxl: 44 }}
+            mx={{ lg: 1.7, xl: 2, xxl: 2.3 }}
+          >
+            <LogoIcon />
+          </Stack>
           <Typography
             sx={{ color: STANDARD_TEXT_COLOR }}
             fontWeight={{ xl: 500, lg: 600 }}

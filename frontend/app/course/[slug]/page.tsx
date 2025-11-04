@@ -3,7 +3,9 @@ import {
   getCourseTopicsByCourse,
   getCourses,
 } from '@/app/api';
+import MobileCoursePage from '@/app/components/mobile/MobileCoursePage';
 import CourseCard from '@/app/components/pc/CourseCard';
+import { getDeviceTypeFromHeaders } from '@/app/utils/serverDeviceUtils';
 import { Box, Container, Typography } from '@mui/material';
 import { notFound } from 'next/navigation';
 
@@ -30,6 +32,8 @@ interface CoursePageProps {
 export default async function CoursePage({ params }: CoursePageProps) {
   const resolvedParams = await params;
   const displayOrder = resolvedParams.slug;
+  const deviceType = await getDeviceTypeFromHeaders();
+  const isMobile = deviceType === 'mobile';
 
   try {
     // Fetch course details and topics
@@ -44,6 +48,19 @@ export default async function CoursePage({ params }: CoursePageProps) {
 
     const courseTopics = courseTopicsResult.items;
 
+    // 移动端：使用移动端组件
+    if (isMobile) {
+      return (
+        <MobileCoursePage
+          course={course}
+          courseTopics={courseTopics}
+          courseOrder={displayOrder}
+          type='course'
+        />
+      );
+    }
+
+    // PC端：使用原有布局
     return (
       <Container
         maxWidth='xl'

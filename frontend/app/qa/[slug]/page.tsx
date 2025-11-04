@@ -1,10 +1,13 @@
 import {
   getAnswerMediasByOrder,
+  getCourseByDisplayOrder,
   getCourses,
   getCourseTopicsByDisplayOrder,
 } from '@/app/api';
+import MobileCoursePage from '@/app/components/mobile/MobileCoursePage';
 import CourseCard from '@/app/components/pc/CourseCard';
 import DownloadQaResource from '@/app/components/shared/DownloadQaResource';
+import { getDeviceTypeFromHeaders } from '@/app/utils/serverDeviceUtils';
 import { Grid, Typography } from '@mui/material';
 import QaSidebar from '../../components/pc/QaSidebar';
 
@@ -38,10 +41,15 @@ export default async function QaPage({ params, searchParams }: QaPageProps) {
       ? resolvedSearchParams.tab.replace('lesson', '')
       : '1';
 
+  // 服务端检测设备类型
+  const deviceType = await getDeviceTypeFromHeaders();
+  const isMobile = deviceType === 'mobile';
+
   try {
     // Fetch course details and topics
     const courseTopics =
       (await getCourseTopicsByDisplayOrder(displayOrder))?.items || [];
+    const course = await getCourseByDisplayOrder(displayOrder);
     const questions = await getAnswerMediasByOrder(displayOrder, lessonOrder);
     // console.log({ courseTopics, questions });
     const sidebarData = courseTopics.map(item => ({
@@ -49,61 +57,74 @@ export default async function QaPage({ params, searchParams }: QaPageProps) {
       path: `/qa/${displayOrder}?tab=lesson${item.ordering}`,
       displayOrder: Number(item.ordering),
     }));
-    return (
-      <Grid
-        container
-        sx={{
-          backgroundColor: '#fff',
-          borderRadius: '25px',
-          py: 0,
-          mt: 7,
-          mb: 9,
-          height: 'fit-content',
-          position: 'relative',
-        }}
-      >
-        <DownloadQaResource
+    if (isMobile) {
+      return (
+        <MobileCoursePage
+          course={course}
+          courseTopics={courseTopics}
           courseOrder={displayOrder}
-          lessonOrder={lessonOrder}
+          type='qa'
         />
-        <Grid size={3}>
-          <QaSidebar
-            lesson={sidebarData}
-            selectedIdx={Number(lessonOrder) - 1}
-          />
-        </Grid>
+      );
+    }
+
+    return (
+      <>
         <Grid
           container
-          spacing={3.5}
           sx={{
-            px: 3,
-            pt: 5,
-            pb: 5,
+            backgroundColor: '#fff',
+            borderRadius: '25px',
+            py: 0,
+            mt: 7,
+            mb: 9,
             height: 'fit-content',
+            position: 'relative',
           }}
-          size={9}
         >
-          {questions.map(question => (
-            <Grid key={question.questionOrder} size={{ sm: 6, md: 4 }}>
-              <CourseCard
-                item={{
-                  idx: Number(lessonOrder),
-                  title: question.questionTitle || '',
-                  description: question.description || '',
-                }}
-                courseOrder={Number(displayOrder)}
-                slug='qa'
-                questionOrder={question.questionOrder}
-              />
-            </Grid>
-          ))}
-          {questions.length === 0 && (
-            <Grid size={{ sm: 6, md: 4 }}>
-              <Typography variant='h5'>即将推出</Typography>
-            </Grid>
-          )}
+          <DownloadQaResource
+            courseOrder={displayOrder}
+            lessonOrder={lessonOrder}
+          />
+          <Grid size={3}>
+            <QaSidebar
+              lesson={sidebarData}
+              selectedIdx={Number(lessonOrder) - 1}
+            />
+          </Grid>
+          <Grid
+            container
+            spacing={3.5}
+            sx={{
+              px: 3,
+              pt: 5,
+              pb: 5,
+              height: 'fit-content',
+            }}
+            size={9}
+          >
+            {questions.map(question => (
+              <Grid key={question.questionOrder} size={{ sm: 6, md: 4 }}>
+                <CourseCard
+                  item={{
+                    idx: Number(lessonOrder),
+                    title: question.questionTitle || '',
+                    description: question.description || '',
+                  }}
+                  courseOrder={Number(displayOrder)}
+                  slug='qa'
+                  questionOrder={question.questionOrder}
+                />
+              </Grid>
+            ))}
+            {questions.length === 0 && (
+              <Grid size={{ sm: 6, md: 4 }}>
+                <Typography variant='h5'>即将推出</Typography>
+              </Grid>
+            )}
+          </Grid>
         </Grid>
-      </Grid>
+      </>
     );
   } catch (error) {
     console.error('Error loading course:', error);
