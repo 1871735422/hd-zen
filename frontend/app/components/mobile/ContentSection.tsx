@@ -69,7 +69,6 @@ const ContentSection: React.FC = () => {
               'linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%) 1',
             width: '100%',
             height: isCollapsed ? '93%' : '97%',
-            background: 'transparent',
           },
           '&::after': {
             zIndex: -1,
@@ -82,7 +81,6 @@ const ContentSection: React.FC = () => {
               'linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%) 1',
             width: '90%',
             height: '100%',
-            background: 'transparent',
           },
         }}
       >

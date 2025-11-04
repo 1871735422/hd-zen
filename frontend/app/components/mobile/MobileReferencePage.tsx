@@ -11,15 +11,6 @@ interface MobileReferencePageProps {
   }>;
 }
 
-// 定义不同卡片的渐变色
-const gradientColors = [
-  'linear-gradient(135deg, #FFE5F0 0%, #E8D5FF 100%)', // 粉紫色
-  'linear-gradient(135deg, #D5E8FF 0%, #B8D9FF 100%)', // 浅蓝色
-  'linear-gradient(135deg, #C8F0F0 0%, #A8E6E6 100%)', // 青色
-  'linear-gradient(135deg, #C8E6FF 0%, #A8D8FF 100%)', // 蓝色
-  'linear-gradient(135deg, #FFE8D5 0%, #FFD5B8 100%)', // 橙色
-];
-
 /**
  * 移动端学修参考资料页面
  * 根据设计稿实现卡片网格布局
@@ -40,27 +31,24 @@ const MobileReferencePage: React.FC<MobileReferencePageProps> = ({
       <Box
         sx={{
           marginBottom: pxToVw(24),
-          backgroundColor: 'rgba(208, 230, 248, 0.3)',
-          paddingY: pxToVw(16),
+          paddingY: pxToVw(13),
+          px: pxToVw(32),
           borderRadius: pxToVw(12),
-          marginX: pxToVw(16),
+          color: 'rgba(67, 109, 186, 1)',
         }}
       >
         <Typography
           sx={{
-            fontSize: pxToVw(14),
-            color: '#4A6B8A',
-            lineHeight: 1.6,
-            marginBottom: pxToVw(12),
+            fontSize: pxToVw(16),
+            lineHeight: 1.5,
           }}
         >
           本栏目提供加行修法的必修资料：《大圆满前行引导文》
         </Typography>
         <Typography
           sx={{
-            fontSize: pxToVw(14),
-            color: '#4A6B8A',
-            lineHeight: 1.6,
+            fontSize: pxToVw(16),
+            lineHeight: 1.5,
           }}
         >
           辅助参考资料：《前行备忘录》《菩提道次第广论》《稻秆经》《大圆满心性休息》
@@ -70,21 +58,18 @@ const MobileReferencePage: React.FC<MobileReferencePageProps> = ({
       {/* 卡片网格 */}
       <Box
         sx={{
-          paddingX: pxToVw(20),
+          paddingX: pxToVw(17),
           display: 'grid',
-          gridTemplateColumns: 'repeat(2, 1fr)',
-          gap: pxToVw(16),
-          maxWidth: pxToVw(375),
+          gridTemplateColumns: 'repeat(3, 1fr)',
           margin: '0 auto',
         }}
       >
-        {categories.map((category, index) => (
+        {categories.map(category => (
           <MobileReferenceCard
             key={category.id}
             title={category.name}
             bookOrder={category.displayOrder.toString()}
             chapterOrder={category.displayOrder}
-            gradientColor={gradientColors[index % gradientColors.length]}
           />
         ))}
       </Box>

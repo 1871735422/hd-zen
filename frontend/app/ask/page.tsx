@@ -1,7 +1,9 @@
 import { Box } from '@mui/material';
 import { pb } from '../api';
+import MobileAskPage from '../components/mobile/AskPage';
+import QuestionCollectClient from '../components/shared/QuestionCollectClient';
 import { Dict } from '../types/models';
-import QuestionCollectClient from './QuestionCollectClient';
+import { getDeviceTypeFromHeaders } from '../utils/serverDeviceUtils';
 
 export const metadata = {
   title: '不懂就问 | 慧灯禅修',
@@ -10,7 +12,8 @@ export const metadata = {
 
 export const revalidate = 3600; // 1 hour
 
-export default async function QuestionCollectPage() {
+// PC端Ask页面组件
+async function PCAskPage() {
   let result: Dict[] = [];
 
   try {
@@ -21,6 +24,7 @@ export default async function QuestionCollectPage() {
   } catch (error) {
     console.error(error);
   }
+
   return (
     <Box
       sx={{
@@ -50,7 +54,12 @@ export default async function QuestionCollectPage() {
           top: 0,
           width: '100%',
           height: '100%',
-          backgroundImage: 'url(/images/course-bg.webp)',
+          backgroundImage: {
+            lg: 'url(/images/course-bg.webp)',
+            md: 'url(/images/course-bg.webp)',
+            sm: 'url(/images/course-bg.webp)',
+            xs: 'url(/images/course-bg.webp)',
+          },
           backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat',
           backgroundPosition: 'center',
@@ -97,4 +106,15 @@ export default async function QuestionCollectPage() {
       </Box>
     </Box>
   );
+}
+
+export default async function QuestionCollectPage() {
+  const deviceType = await getDeviceTypeFromHeaders();
+
+  // 根据设备类型返回对应的组件
+  if (deviceType === 'mobile') {
+    return <MobileAskPage />;
+  }
+
+  return <PCAskPage />;
 }

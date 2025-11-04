@@ -1,18 +1,18 @@
 'use client';
 
+import { SvgIconProps } from '@mui/material';
+import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import Avatar from '@mui/material/Avatar';
 import React from 'react';
-import { pxToVw } from '../../utils/mobileUtils';
-import { DownloadResource } from '../../types/models';
-import PdfDownIcon from '../icons/PdfDownIcon';
-import EpubDownIcon from '../icons/EpubDownIcon';
 import {
   DOWNLOAD_RED_COLOR,
   STANDARD_TEXT_COLOR,
 } from '../../constants/colors';
-import { SvgIconProps } from '@mui/material';
+import { DownloadResource } from '../../types/models';
+import { pxToVw } from '../../utils/mobileUtils';
+import EpubDownIcon from '../icons/EpubDownIcon';
+import PdfDownIcon from '../icons/PdfDownIcon';
 
 // 提取子组件：单个下载入口
 interface DownloadOptionProps {
@@ -97,11 +97,11 @@ const MobileDownloadCard: React.FC<MobileDownloadCardProps> = ({
       >
         <Avatar
           sx={{
-            bgcolor: '#7BB3E8',
-            width: pxToVw(32),
-            height: pxToVw(32),
+            bgcolor: 'rgba(164, 202, 245, 1)',
+            width: pxToVw(24),
+            height: pxToVw(24),
             fontSize: pxToVw(16),
-            fontWeight: 600,
+            fontWeight: 700,
           }}
         >
           {index + 1}
@@ -110,7 +110,8 @@ const MobileDownloadCard: React.FC<MobileDownloadCardProps> = ({
           sx={{
             fontSize: pxToVw(18),
             pl: pxToVw(8),
-            fontWeight: 600,
+            fontWeight: 400,
+            lineHeight: 1.5,
             color: STANDARD_TEXT_COLOR,
             flex: 1,
             whiteSpace: 'nowrap',

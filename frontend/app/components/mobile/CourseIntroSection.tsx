@@ -47,6 +47,7 @@ const CourseIntroSection: React.FC = () => {
     >
       {courseBooks.map((book, index) => (
         <CourseCard
+          index={index}
           key={index}
           title={book.title}
           description={book.description}

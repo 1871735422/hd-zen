@@ -4,7 +4,14 @@ import {
   Close as CloseIcon,
   OpenInNew as OpenInNewIcon,
 } from '@mui/icons-material';
-import { Box, IconButton, Modal, Tooltip } from '@mui/material';
+import {
+  Box,
+  IconButton,
+  Modal,
+  Tooltip,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
 import React, { useState } from 'react';
 
 interface QuestionCollectClientProps {
@@ -16,6 +23,8 @@ const QuestionCollectClient: React.FC<QuestionCollectClientProps> = ({
   qaLink,
   qrCodeUrl,
 }) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [modalOpen, setModalOpen] = useState(false);
 
   const handleOpenModal = () => {
@@ -34,19 +43,17 @@ const QuestionCollectClient: React.FC<QuestionCollectClientProps> = ({
     <>
       <Box
         sx={{
-          mx: { sm: 0.9, md: 1.05, lg: 1.275, xl: 1.5, xxl: 2 },
-          my: { sm: 1.8, md: 2.1, lg: 2.55, xl: 3, xxl: 3.5 },
-          background: 'rgba(255, 255, 255, 0.7)',
+          mx: { lg: 1.5, xl: 1.5, xxl: 2 },
+          my: { lg: 2.55, xl: 3, xxl: 3.5 },
+          background: 'rgba(255, 255, 255, 0.9)',
           position: 'relative',
           borderRadius: {
-            sm: '15px',
-            md: '18px',
-            lg: '21px',
+            lg: '25px',
             xl: '25px',
             xxl: '30px',
           },
-          px: { sm: 3, md: 3.5, lg: 4.25, xl: 5, xxl: 6 },
-          py: { sm: 1.2, md: 1.4, lg: 1.7, xl: 2, xxl: 2.5 },
+          px: { lg: '32px', xl: 5, xxl: 6 },
+          py: { lg: '22px', xl: 2, xxl: 2.5 },
         }}
       >
         <Box
@@ -61,8 +68,6 @@ const QuestionCollectClient: React.FC<QuestionCollectClientProps> = ({
             width: '100%',
             height: 'auto',
             maxWidth: {
-              sm: 432,
-              md: 504,
               lg: 612,
               xl: 720,
               xxl: 850,
@@ -77,9 +82,9 @@ const QuestionCollectClient: React.FC<QuestionCollectClientProps> = ({
           sx={{
             display: 'flex',
             justifyContent: 'center',
-            width: { sm: 162, md: 189, lg: 229, xl: 270, xxl: 300 },
+            width: { lg: 229, xl: 270, xxl: 300 },
             margin: '0 auto',
-            marginBottom: { sm: 2.4, md: 2.8, lg: 3.4, xl: 4, xxl: 5 },
+            ...(isMobile && { mt: 2.5 }),
           }}
         />
       </Box>

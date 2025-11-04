@@ -10,6 +10,15 @@ export const MAIN_BLUE_COLOR = 'rgba(130, 178, 232, 1)';
 
 export const DOWNLOAD_RED_COLOR = 'rgba(255, 168, 184, 1)';
 
+export const MOBILE_CARDS_BG_COLOR = [
+  'linear-gradient(180deg, rgba(237, 248, 255, 1) 0%, rgba(232, 244, 255, 1) 100%)',
+  'linear-gradient(180deg, rgba(233, 242, 252, 1) 0%, rgba(225, 243, 252, 1) 100%)',
+  'linear-gradient(180deg, rgba(226, 243, 252, 1) 0%, rgba(217, 233, 255, 1) 100%)',
+  'linear-gradient(180deg, rgba(224, 238, 255, 1) 0%, rgba(222, 227, 255, 1) 100%)',
+  'linear-gradient(180deg, rgba(236, 238, 253, 1) 0.04%, rgba(224, 218, 255, 1) 100%)',
+  'linear-gradient(180deg, rgba(236, 235, 252, 1) 0%, rgba(224, 204, 255, 1) 100%)',
+];
+
 // 阅读模式配色方案
 export const READING_THEMES = {
   white: {
