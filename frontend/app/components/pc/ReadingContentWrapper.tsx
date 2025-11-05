@@ -2,6 +2,7 @@
 import { Box } from '@mui/material';
 import React, { useState } from 'react';
 import { CustomPagination } from '../shared';
+import ReadingSidebar from './ReadingSidebar';
 
 interface ReadingContentProps {
   introText?: string;
@@ -225,50 +226,50 @@ export default function ReadingContent({
     return null;
   }
 
-  // 分页模式：只显示分页内容，不覆盖服务端内容
-  if (mode === 'paged') {
-    const currentContent = getCachedPageContent(currentPage);
-
-    return (
-      <>
-        {/* 只显示分页内容 */}
-        <Box
-          className='reading-content'
-          sx={{
-            color: 'rgba(68, 68, 68, 1)',
-            mb: 5,
-          }}
-          dangerouslySetInnerHTML={{ __html: currentContent }}
-        />
-        <CustomPagination
-          totalPages={totalPages}
-          currentPage={currentPage}
-          onPageChange={handlePageChange}
-        />
-      </>
-    );
-  }
-
   // 全文模式：显示完整内容
   return (
-    <Box>
-      {introText && (
-        <Box
-          className='reading-content'
-          sx={{
-            lineHeight: 1.8,
-            color: 'rgba(68, 68, 68, 1)',
-            mb: 5,
-          }}
-          dangerouslySetInnerHTML={{ __html: introText }}
-        />
-      )}
-      {fullText && (
-        <Box
-          className='reading-content'
-          sx={{ mr: 2 }}
-          dangerouslySetInnerHTML={{ __html: fullText }}
-        />
+    <Box textAlign={'justify'}>
+      {mode === 'paged' ? (
+        <>
+          <ReadingSidebar />
+          {/* 只显示分页内容 */}
+          <Box
+            className='reading-content'
+            sx={{
+              color: 'rgba(68, 68, 68, 1)',
+              mb: 5,
+            }}
+            dangerouslySetInnerHTML={{
+              __html: getCachedPageContent(currentPage),
+            }}
+          />
+          <CustomPagination
+            totalPages={totalPages}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+          />
+        </>
+      ) : (
+        <>
+          {introText && (
+            <Box
+              className='reading-content'
+              sx={{
+                lineHeight: 1.8,
+                color: 'rgba(68, 68, 68, 1)',
+                mb: 5,
+              }}
+              dangerouslySetInnerHTML={{ __html: introText }}
+            />
+          )}
+          {fullText && (
+            <Box
+              className='reading-content'
+              sx={{ mr: 2 }}
+              dangerouslySetInnerHTML={{ __html: fullText }}
+            />
+          )}
+        </>
       )}
     </Box>
   );

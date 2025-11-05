@@ -1,7 +1,10 @@
+import { pxToVw } from '@/app/utils/mobileUtils';
+import { getDeviceTypeFromHeaders } from '@/app/utils/serverDeviceUtils';
 import { Box, Paper, Typography } from '@mui/material';
 import { TopicMediaX } from '../../types/models';
 import ScrollTop from '../shared/ScrollTop';
 import AudioPage from './AudioPage';
+import MobileReadingControls from './MobileReadingControls';
 import ReadingContentWrapper from './ReadingContentWrapper';
 import ReadingModePage from './ReadingModePage';
 import ReadingSidebar from './ReadingSidebar';
@@ -17,6 +20,7 @@ export default async function ReadingPage({
 }: ReadingPageProps) {
   const topicMedia = topicMediaX[0];
   const topicTags = topicMedia?.tags;
+  const isMobile = await getDeviceTypeFromHeaders();
 
   const hasContent =
     topicMedia?.article_fulltext || topicMedia?.article_introtext;
@@ -71,11 +75,11 @@ export default async function ReadingPage({
             fontSize: { lg: 20, xl: 24 },
             fontWeight: 500,
           },
+          px: isMobile ? pxToVw(10) : 0,
         }}
         data-reading-container
       >
-        <ReadingSidebar />
-
+        {isMobile ? <MobileReadingControls /> : <ReadingSidebar />}
         {/* 客户端增强功能 - 包含分页和全文模式 */}
         <ReadingContentWrapper
           introText={topicMedia.article_introtext}
