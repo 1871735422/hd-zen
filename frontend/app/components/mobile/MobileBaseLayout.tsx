@@ -8,7 +8,7 @@ interface MobileBaseLayoutProps {
 // 移动端通用 BaseLayout
 export const MobileBaseLayout = ({
   children,
-  background = 'linear-gradient(180deg, rgba(227, 241, 255, 1) 0,  rgba(255, 255, 255, 1) 20vh)',
+  background = 'linear-gradient(180deg, rgba(227, 241, 255, 1) 0,  rgba(255, 255, 255, 1) 30vw)',
 }: MobileBaseLayoutProps) => {
   return (
     <Box

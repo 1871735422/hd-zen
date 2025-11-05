@@ -99,6 +99,12 @@ const VideoPlayer = forwardRef<
     // 防止重复初始化
     if (hasInitializedFromUrlRef.current) return;
 
+    // 仅在存在多个视频时，才根据 URL 初始化索引
+    if (videos.length <= 1) {
+      hasInitializedFromUrlRef.current = true;
+      return;
+    }
+
     const urlParam = searchParams.get(urlParamName);
     if (urlParam && urlParam.startsWith('question')) {
       const tabNumber = parseInt(urlParam.replace('question', ''), 10);
@@ -131,9 +137,22 @@ const VideoPlayer = forwardRef<
 
   // 更新 URL 查询参数
   const updateUrlParam = (index: number) => {
-    const paramValue = `question${index + 1}`; // videoList[0] -> question1
-    // 直接用window.location读取最新参数，避免hook快照滞后
     const url = new URL(window.location.href);
+
+    // 只有当视频数 > 1 时才写入 question 参数；否则移除该参数
+    if (videos.length <= 1) {
+      if (url.searchParams.has(urlParamName)) {
+        url.searchParams.delete(urlParamName);
+        router.replace(`${url.pathname}${url.search}`, { scroll: false });
+        console.debug('[VideoPlayer] URL param removed (single video)', {
+          paramName: urlParamName,
+          newUrl: `${url.pathname}${url.search}`,
+        });
+      }
+      return;
+    }
+
+    const paramValue = `question${index + 1}`; // videoList[0] -> question1
     if (url.searchParams.get(urlParamName) === paramValue) {
       return;
     }

@@ -30,7 +30,12 @@ const labelItemList = [
     icon: <CharIcon />,
     color: 'rgba(199, 143, 227, 1)',
   },
-  { key: 'qa', label: '问答', icon: <QaIcon /> },
+  {
+    key: 'qa',
+    label: '问答',
+    icon: <QaIcon />,
+    color: 'rgba(227, 152, 212, 1)',
+  },
 ];
 export interface LessonSidebarProps {
   path: string;
@@ -175,14 +180,22 @@ export default async function LessonSidebar({
                       flexDirection: 'column',
                       justifyContent: 'center',
                       alignItems: 'center',
-                      color: isSelected ? item.color : '#fff',
+                      color: isSelected
+                        ? item.color
+                        : item.key === 'qa'
+                          ? item.color
+                          : '#fff',
                     }}
                   >
                     {item.icon}
                     <ListItemText
                       sx={{ m: 0 }}
                       primary={
-                        <Typography fontWeight={700} textAlign='center'>
+                        <Typography
+                          fontWeight={700}
+                          textAlign='center'
+                          color={isSelected ? item.color : '#fff'}
+                        >
                           {item.label}
                         </Typography>
                       }

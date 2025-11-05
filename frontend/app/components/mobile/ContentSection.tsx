@@ -36,7 +36,9 @@ const ContentSection: React.FC = () => {
     >
       {/* 标题和描述 */}
       <Box
+        onClick={handleToggleCollapse}
         sx={{
+          cursor: 'pointer',
           position: 'relative',
           zIndex: 1,
           textAlign: 'center',
@@ -125,7 +127,6 @@ const ContentSection: React.FC = () => {
         )}
 
         <IconButton
-          onClick={handleToggleCollapse}
           sx={{
             width: 'fit-content',
             position: 'absolute',

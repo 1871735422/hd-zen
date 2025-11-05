@@ -1,5 +1,6 @@
 'use client';
 
+import { Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import { usePathname, useRouter } from 'next/navigation';
 import { STANDARD_TEXT_COLOR } from '../../constants/colors';
@@ -35,7 +36,6 @@ export default function TabNavigation() {
     <Box
       sx={{
         width: '100%',
-        borderBottom: `1px solid #E0E0E0`,
         backgroundColor: '#fff',
         overflowX: 'auto',
         overflowY: 'hidden',
@@ -51,7 +51,7 @@ export default function TabNavigation() {
         sx={{
           display: 'flex',
           minWidth: 'max-content',
-          pt: pxToVw(14),
+          pt: pxToVw(11),
           px: pxToVw(15),
           gap: pxToVw(15),
         }}
@@ -73,9 +73,10 @@ export default function TabNavigation() {
               }}
             >
               {/* Tab 文字 */}
-              <Box
+              <Typography
                 sx={{
                   fontSize: pxToVw(20),
+                  pb: pxToVw(6),
                   fontWeight: isActive ? 500 : 400,
                   color: isActive
                     ? 'rgba(21, 67, 153, 1)'
@@ -84,7 +85,7 @@ export default function TabNavigation() {
                 }}
               >
                 {tab.label}
-              </Box>
+              </Typography>
 
               {/* 激活状态的下划线 */}
               {isActive && (

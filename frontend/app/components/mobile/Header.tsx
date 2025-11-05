@@ -14,6 +14,7 @@ import { pxToVw } from '../../utils/mobileUtils';
 import BackIcon from '../icons/BackIcon';
 import LogoIcon from '../icons/LogoIcon';
 import SearchIcon from '../icons/SearchIcon';
+import TabNavigation from './TabNavigation';
 
 /**
  * 移动端 Header
@@ -151,6 +152,7 @@ const Header: React.FC = () => {
           </>
         )}
       </Toolbar>
+      <TabNavigation />
     </AppBar>
   );
 };

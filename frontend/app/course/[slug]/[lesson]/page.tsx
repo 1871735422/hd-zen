@@ -203,6 +203,8 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
         author='慈诚罗珠堪布'
         date={media?.created || ''}
         description={media?.article_summary || ''}
+        courseOrder={courseOrder}
+        lessonOrder={lessonOrder}
       >
         <TabRender />
       </MobileLessonPage>

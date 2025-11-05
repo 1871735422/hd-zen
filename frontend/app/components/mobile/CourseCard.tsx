@@ -4,6 +4,7 @@ import { MOBILE_CARDS_BG_COLOR } from '@/app/constants/colors';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
+import Link from 'next/link';
 import { useState } from 'react';
 import { pxToVw } from '../../utils/mobileUtils';
 import ArrowTop from '../icons/ArrowTop';
@@ -33,30 +34,32 @@ const CourseCard: React.FC<CourseCardProps> = ({
         alignItems: 'flex-start',
       }}
     >
-      <Box
-        sx={{
-          width: pxToVw(44),
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          pt: pxToVw(16),
-        }}
-      >
-        <Typography
+      <Link href={`/course/${index + 1}`}>
+        <Box
           sx={{
-            fontSize: pxToVw(20),
-            fontWeight: 500,
-            color: 'rgba(26, 41, 76, 1)',
-            writingMode: 'vertical-rl',
-            textAlign: 'center',
+            width: pxToVw(44),
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            py: pxToVw(16),
           }}
         >
-          {expanded ? title : title.replace('的', '')}
-        </Typography>
-      </Box>
-
+          <Typography
+            sx={{
+              fontSize: pxToVw(20),
+              fontWeight: 500,
+              color: 'rgba(26, 41, 76, 1)',
+              writingMode: 'vertical-rl',
+              textAlign: 'center',
+            }}
+          >
+            {expanded ? title : title.replace('的', '')}
+          </Typography>
+        </Box>
+      </Link>
       <Box
+        onClick={() => setExpanded(!expanded)}
         sx={{
           flex: 1,
           backgroundColor: 'white',
@@ -81,7 +84,6 @@ const CourseCard: React.FC<CourseCardProps> = ({
           {description}
         </Typography>
         <IconButton
-          onClick={() => setExpanded(!expanded)}
           sx={{
             position: 'absolute',
             fontSize: pxToVw(13),
@@ -91,7 +93,7 @@ const CourseCard: React.FC<CourseCardProps> = ({
                 : index === 4
                   ? 'rgba(237, 242, 255, 1)'
                   : 'rgba(237, 246, 255, 1)',
-            borderRadius: `0 0 ${pxToVw(13)} 0 `,
+            borderRadius: `${pxToVw(13)} 0 ${pxToVw(13)} 0 `,
             bottom: 0,
             right: 0,
             color: 'rgba(70, 114, 166, 1)',

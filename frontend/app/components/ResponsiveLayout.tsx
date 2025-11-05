@@ -2,10 +2,9 @@
 
 import { Container } from '@mui/material';
 import { useDevice } from './DeviceProvider';
+import MobileHeader from './mobile/Header';
 import DesktopFooter from './pc/Footer';
 import DesktopHeader from './pc/Header';
-import MobileHeader from './mobile/Header';
-import TabNavigation from './mobile/TabNavigation';
 
 /**
  * 响应式布局组件
@@ -40,7 +39,6 @@ export default function ResponsiveLayout({
       {isMobile ? (
         <>
           <MobileHeader />
-          <TabNavigation />
         </>
       ) : (
         <DesktopHeader />
