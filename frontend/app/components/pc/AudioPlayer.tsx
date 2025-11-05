@@ -1,4 +1,6 @@
 'use client';
+import { useDeviceType } from '@/app/utils/deviceUtils';
+import { pxToVw } from '@/app/utils/mobileUtils';
 import { Box, IconButton, Slider, Stack, Typography } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
 import AudioPlayIcon from '../icons/AudioPlayIcon';
@@ -18,6 +20,18 @@ function formatTime(totalSeconds: number): string {
   const ss = String(seconds).padStart(2, '0');
   return hours > 0 ? `${hours}:${mm}:${ss}` : `${mm}:${ss}`;
 }
+
+const TimeLineLabel = ({ time }: { time: number }) => {
+  return (
+    <Typography
+      variant='body2'
+      color='text.secondary'
+      sx={{ minWidth: { lg: 36, xl: 50, xxl: 60 }, textAlign: 'center' }}
+    >
+      {formatTime(time)}
+    </Typography>
+  );
+};
 
 export default function AudioPlayer({ src }: AudioPlayerProps) {
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
@@ -109,6 +123,7 @@ export default function AudioPlayer({ src }: AudioPlayerProps) {
       setIsMuted(false);
     }
   };
+  const isMobile = useDeviceType() === 'mobile';
 
   return (
     <Box
@@ -127,93 +142,114 @@ export default function AudioPlayer({ src }: AudioPlayerProps) {
         },
       }}
     >
-      <Stack direction='row' alignItems='center' gap={1}>
-        <IconButton
-          aria-label={isPlaying ? 'pause' : 'play'}
-          onClick={togglePlay}
-          size='small'
-        >
-          {isPlaying ? <PauseIcon /> : <AudioPlayIcon />}
-        </IconButton>
-
-        <Typography
-          variant='body2'
-          color='text.secondary'
-          sx={{ minWidth: { lg: 36, xl: 50, xxl: 60 }, textAlign: 'center' }}
-        >
-          {formatTime(currentTime)}
-        </Typography>
-      </Stack>
-
-      <Slider
-        value={progress}
-        onChange={handleSliderChange}
-        onChangeCommitted={handleSliderCommit}
-        aria-label='progress'
+      <IconButton
+        aria-label={isPlaying ? 'pause' : 'play'}
+        onClick={togglePlay}
+        size='small'
         sx={{
-          flex: 1,
-          color: 'transparent',
-          '& .MuiSlider-rail': {
-            opacity: 1,
-            backgroundColor: 'rgba(0,0,0,0.1)',
-          },
-          '& .MuiSlider-track': {
-            border: 'none',
-            background:
-              'linear-gradient(270deg, rgba(78, 144, 237, 1) 0%, rgba(176, 222, 255, 1) 100%)',
-          },
-          '& .MuiSlider-thumb': {
-            width: { lg: 14, xl: 20, xxl: 24 },
-            height: { lg: 14, xl: 20, xxl: 24 },
-            backgroundColor: '#7DB1F8',
-            boxShadow: '3px 0 0 0 rgba(245, 249, 252, 1)',
-          },
+          minWidth: '30px',
         }}
-      />
-
-      <Stack direction='row' alignItems='center' gap={1.5}>
-        <Typography
-          variant='body2'
-          color='text.secondary'
-          sx={{ minWidth: { lg: 36, xl: 50, xxl: 60 }, textAlign: 'center' }}
+      >
+        {isPlaying ? <PauseIcon /> : <AudioPlayIcon />}
+      </IconButton>
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          flex: 1,
+          gap: isMobile ? 0 : 1,
+          position: 'relative',
+        }}
+      >
+        <Stack
+          sx={
+            isMobile
+              ? {
+                  position: 'absolute',
+                  left: 0,
+                  bottom: pxToVw(-3),
+                }
+              : {}
+          }
         >
-          {formatTime(duration)}
-        </Typography>
-        <Stack direction='row' alignItems='center'>
-          <IconButton
-            aria-label='mute'
-            onClick={toggleMute}
-            size='small'
-            sx={
-              isMuted
-                ? {
-                    '& svg': {
-                      fontSize: { lg: 20, xl: 28, xxl: 32 },
-                    },
-                    position: 'relative',
-                    '&::after': {
-                      content: '""',
-                      position: 'absolute',
-                      top: '50%',
-                      left: '50%',
-                      width: { lg: 20, xl: 28, xxl: 32 },
-                      height: 2,
-                      transform: 'translate(-50%, -50%) rotate(45deg)',
-                      background:
-                        'linear-gradient(90deg, rgba(70, 134, 207, 1) 0%, rgba(170, 207, 250, 1) 100%)',
-                      borderRadius: 2,
-                      pointerEvents: 'none',
-                    },
-                  }
-                : {
-                    '& svg': {
-                      fontSize: { lg: 20, xl: 28, xxl: 32 },
-                    },
-                  }
-            }
-          >
-            <SpeakerIcon />
-          </IconButton>
+          <TimeLineLabel time={currentTime} />
+        </Stack>
+        <Slider
+          value={progress}
+          onChange={handleSliderChange}
+          onChangeCommitted={handleSliderCommit}
+          aria-label='progress'
+          sx={{
+            flex: 1,
+            color: 'transparent',
+            '& .MuiSlider-rail': {
+              opacity: 1,
+              backgroundColor: 'rgba(0,0,0,0.1)',
+            },
+            '& .MuiSlider-track': {
+              border: 'none',
+              background:
+                'linear-gradient(270deg, rgba(78, 144, 237, 1) 0%, rgba(176, 222, 255, 1) 100%)',
+            },
+            '& .MuiSlider-thumb': {
+              width: { lg: 14, xl: 20, xxl: 24 },
+              height: { lg: 14, xl: 20, xxl: 24 },
+              backgroundColor: '#7DB1F8',
+              boxShadow: '3px 0 0 0 rgba(245, 249, 252, 1)',
+            },
+          }}
+        />
+        <Stack
+          sx={
+            isMobile
+              ? {
+                  position: 'absolute',
+                  right: 0,
+                  bottom: pxToVw(-3),
+                }
+              : {}
+          }
+        >
+          <TimeLineLabel time={duration} />
+        </Stack>
+      </Box>
+
+      <Stack direction='row' alignItems='center'>
+        <IconButton
+          aria-label='mute'
+          onClick={toggleMute}
+          size='small'
+          sx={
+            isMuted
+              ? {
+                  '& svg': {
+                    fontSize: { lg: 20, xl: 28, xxl: 32 },
+                  },
+                  position: 'relative',
+                  '&::after': {
+                    content: '""',
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    width: { lg: 20, xl: 28, xxl: 32 },
+                    height: 2,
+                    transform: 'translate(-50%, -50%) rotate(45deg)',
+                    background:
+                      'linear-gradient(90deg, rgba(70, 134, 207, 1) 0%, rgba(170, 207, 250, 1) 100%)',
+                    borderRadius: 2,
+                    pointerEvents: 'none',
+                  },
+                }
+              : {
+                  '& svg': {
+                    fontSize: { lg: 20, xl: 28, xxl: 32 },
+                  },
+                }
+          }
+        >
+          <SpeakerIcon />
+        </IconButton>
+        {!isMobile && (
           <Slider
             value={isMuted ? 0 : volume}
             onChange={handleVolumeChange}
@@ -238,7 +274,7 @@ export default function AudioPlayer({ src }: AudioPlayerProps) {
               },
             }}
           />
-        </Stack>
+        )}
       </Stack>
     </Box>
   );

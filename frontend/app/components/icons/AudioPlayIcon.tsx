@@ -1,18 +1,11 @@
 import { SvgIcon } from '@mui/material';
 
 const AudioPlayIcon = () => (
-  <SvgIcon
-    sx={{
-      fontSize: { lg: 18, xl: 20 },
-      cursor: 'pointer',
-      padding: '2px 1px 2px 3px',
-    }}
-  >
+  <SvgIcon fontSize='inherit'>
     <svg
       xmlns='http://www.w3.org/2000/svg'
       xmlnsXlink='http://www.w3.org/1999/xlink'
       width='13.009765625'
-      height='20'
       viewBox='0 0 13.009765625 20'
       fill='currentColor'
     >

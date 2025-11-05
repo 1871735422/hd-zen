@@ -1,5 +1,7 @@
 'use client';
 import MediaDownloadButton from '@/app/components/pc/MediaDownloadButton';
+import { useDeviceType } from '@/app/utils/deviceUtils';
+import { pxToVw } from '@/app/utils/mobileUtils';
 import { Box, Paper, Typography } from '@mui/material';
 import { Fragment } from 'react';
 import { TopicMediaX } from '../../types/models';
@@ -14,6 +16,8 @@ export default function AudioPage({
   topicMedia,
   showTitle = true,
 }: AudioPageProps) {
+  const isMobile = useDeviceType() === 'mobile';
+
   if (!topicMedia.length) {
     return (
       <Paper sx={{ p: 4, textAlign: 'center' }}>
@@ -41,17 +45,23 @@ export default function AudioPage({
       }))
     : audioBookUrl;
   // console.log('mp3Urls', mp3Urls);
+
   return (
-    <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
+    <Box
+      sx={{
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
       {mp3Urls.map(item => (
         <Fragment key={item.title}>
           {item.title && showTitle && (
             <Typography
-              variant='body1'
               fontWeight={500}
               color='#444'
               my={2}
-              fontSize={{ lg: 18, xl: 24, xxl: 28 }}
+              fontSize={isMobile ? pxToVw(16) : { lg: 18, xl: 24, xxl: 28 }}
             >
               {item.title}
             </Typography>
@@ -61,28 +71,34 @@ export default function AudioPage({
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              mb: 1,
+              mb: isMobile ? pxToVw(25) : 3,
               gap: 1,
             }}
           >
             {item?.url_mp3 && <AudioPlayer src={item?.url_mp3} />}
-            {bookUrls ? (
-              <Box display={'flex'}>
-                <MediaDownloadButton
-                  mediaType='pdf'
-                  downloadUrls={bookUrls['pdf']}
-                />{' '}
-                &nbsp;
-                <MediaDownloadButton
-                  mediaType='epub'
-                  downloadUrls={bookUrls['epub']}
-                />
-              </Box>
-            ) : (
-              <MediaDownloadButton
-                mediaType='audio'
-                downloadUrls={topicMedia.map(item => item?.url_downmp3 || '')}
-              />
+            {!isMobile && (
+              <>
+                {bookUrls ? (
+                  <Box display={'flex'}>
+                    <MediaDownloadButton
+                      mediaType='pdf'
+                      downloadUrls={bookUrls['pdf']}
+                    />{' '}
+                    &nbsp;
+                    <MediaDownloadButton
+                      mediaType='epub'
+                      downloadUrls={bookUrls['epub']}
+                    />
+                  </Box>
+                ) : (
+                  <MediaDownloadButton
+                    mediaType='audio'
+                    downloadUrls={topicMedia.map(
+                      item => item?.url_downmp3 || ''
+                    )}
+                  />
+                )}
+              </>
             )}
           </Box>
         </Fragment>

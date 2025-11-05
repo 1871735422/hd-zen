@@ -78,13 +78,7 @@ const MobileLessonPage: React.FC<MobileLessonPageProps> = ({
       />
 
       {/* 主内容区域 */}
-      <Box
-        sx={{
-          px: pxToVw(20),
-        }}
-      >
-        {children}
-      </Box>
+      {children}
     </Box>
   );
 };

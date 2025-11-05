@@ -1,4 +1,6 @@
 'use client';
+import { useDeviceType } from '@/app/utils/deviceUtils';
+import { pxToVw } from '@/app/utils/mobileUtils';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import { Box, IconButton, Stack, Typography } from '@mui/material';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -10,6 +12,7 @@ import {
   useRef,
   useState,
 } from 'react';
+import PlayCircleIcon from '../icons/PlayCircleIcon';
 import MediaDownloadButton from './MediaDownloadButton';
 
 type Source = { src: string; type?: string; size?: number };
@@ -604,6 +607,7 @@ const VideoPlayer = forwardRef<
 
   const currentPoster = currentVideo?.poster;
   const currentTitle = currentVideo?.title;
+  const isMobile = useDeviceType() === 'mobile';
 
   return (
     <>
@@ -618,15 +622,16 @@ const VideoPlayer = forwardRef<
           <Typography
             sx={{
               fontWeight: 500,
-              my: 2,
-              fontSize: { lg: 18, xl: 24, xxl: 28 },
+              my: isMobile ? pxToVw(6) : 2,
+              pl: isMobile ? pxToVw(4) : 0,
+              fontSize: isMobile ? pxToVw(16) : { lg: 18, xl: 24, xxl: 28 },
               color: 'rgba(102, 102, 102, 1)',
             }}
           >
             {currentTitle}
           </Typography>
         )}
-        {currentVideo?.url_downmp4 && (
+        {currentVideo?.url_downmp4 && !isMobile && (
           <MediaDownloadButton
             mediaType='video'
             downloadUrls={[currentVideo?.url_downmp4]}
@@ -635,11 +640,12 @@ const VideoPlayer = forwardRef<
       </Stack>
       <Box
         sx={{
+          mb: isMobile ? pxToVw(20) : 0,
           position: 'relative',
           '& .plyr--full-ui': {
             visibility: played ? 'visible' : 'hidden',
             borderRadius: '12px',
-            minHeight: { lg: 360, xl: 400, xxl: 400 },
+            minHeight: isMobile ? pxToVw(200) : { lg: 360, xl: 400, xxl: 400 },
           },
           '&.MuiBox-root:before': {
             position: 'absolute',
@@ -674,7 +680,11 @@ const VideoPlayer = forwardRef<
               zIndex: 11,
             }}
           >
-            <PlayCircleOutlineIcon sx={{ fontSize: 80 }} />
+            {isMobile ? (
+              <PlayCircleIcon />
+            ) : (
+              <PlayCircleOutlineIcon sx={{ fontSize: 80 }} />
+            )}
           </IconButton>
         )}
         <video

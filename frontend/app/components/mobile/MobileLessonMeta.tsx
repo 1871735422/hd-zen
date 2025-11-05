@@ -58,7 +58,7 @@ export function MobileLessonMeta({
             mb: pxToVw(20),
             px: pxToVw(20),
             py: pxToVw(10),
-            borderRadius: pxToVw(12),
+            borderRadius: pxToVw(20),
             backgroundColor: 'rgba(240, 247, 255, 1)',
             color: 'rgba(102, 102, 102, 1)',
             fontSize: pxToVw(14),
