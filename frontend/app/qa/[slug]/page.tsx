@@ -1,10 +1,9 @@
 import {
   getAnswerMediasByOrder,
-  getCourseByDisplayOrder,
   getCourses,
   getCourseTopicsByDisplayOrder,
 } from '@/app/api';
-import MobileCoursePage from '@/app/components/mobile/MobileCoursePage';
+import MobileQaPage from '@/app/components/mobile/MobileQaPage';
 import CourseCard from '@/app/components/pc/CourseCard';
 import DownloadQaResource from '@/app/components/shared/DownloadQaResource';
 import { getDeviceTypeFromHeaders } from '@/app/utils/serverDeviceUtils';
@@ -49,7 +48,6 @@ export default async function QaPage({ params, searchParams }: QaPageProps) {
     // Fetch course details and topics
     const courseTopics =
       (await getCourseTopicsByDisplayOrder(displayOrder))?.items || [];
-    const course = await getCourseByDisplayOrder(displayOrder);
     const questions = await getAnswerMediasByOrder(displayOrder, lessonOrder);
     // console.log({ courseTopics, questions });
     const sidebarData = courseTopics.map(item => ({
@@ -59,11 +57,11 @@ export default async function QaPage({ params, searchParams }: QaPageProps) {
     }));
     if (isMobile) {
       return (
-        <MobileCoursePage
-          course={course}
-          courseTopics={courseTopics}
+        <MobileQaPage
           courseOrder={displayOrder}
-          type='qa'
+          courseTopics={courseTopics}
+          questions={questions}
+          selectedLessonOrder={lessonOrder}
         />
       );
     }

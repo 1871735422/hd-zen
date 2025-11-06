@@ -4,9 +4,11 @@ import {
   getCourses,
   getCourseTopicsByCourse,
 } from '@/app/api';
-import QaClientWrapper from './QaClientWrapper';
+import MobileQaLessonPage from '@/app/components/mobile/MobileQaLessonPage';
 import { CourseTopic } from '@/app/types/models';
+import { getDeviceTypeFromHeaders } from '@/app/utils/serverDeviceUtils';
 import { Container, Typography } from '@mui/material';
+import QaClientWrapper from './QaClientWrapper';
 
 // 15分钟缓存
 export const revalidate = 900;
@@ -85,6 +87,10 @@ const qaPage = async ({ params, searchParams }: qaPageProps) => {
   const courseOrder = resolvedParams.slug;
   const lessonOrder = resolvedParams.lesson?.replace('lesson', '');
 
+  // 服务端检测设备类型
+  const deviceType = await getDeviceTypeFromHeaders();
+  const isMobile = deviceType === 'mobile';
+
   // 获取课程和课时信息
   const course = await getCourseByDisplayOrder(courseOrder);
   const courseId = course?.id || '';
@@ -126,6 +132,24 @@ const qaPage = async ({ params, searchParams }: qaPageProps) => {
     url_downmp4?: string;
   };
 
+  const questionsData = questions as unknown as QLite[];
+  const initialIdx = currentIndex < 0 ? 0 : currentIndex;
+
+  // 移动端渲染
+  if (isMobile) {
+    return (
+      <MobileQaLessonPage
+        questions={questionsData}
+        initialIndex={initialIdx}
+        courseOrder={courseOrder}
+        lessonOrder={lessonOrder}
+        courseName={courseName}
+        lessonName={lessonName}
+      />
+    );
+  }
+
+  // PC 端渲染
   return (
     <Container
       maxWidth='xl'
@@ -138,8 +162,8 @@ const qaPage = async ({ params, searchParams }: qaPageProps) => {
       }}
     >
       <QaClientWrapper
-        questions={questions as unknown as QLite[]}
-        initialIndex={currentIndex < 0 ? 0 : currentIndex}
+        questions={questionsData}
+        initialIndex={initialIdx}
         courseOrder={courseOrder}
         lessonOrder={lessonOrder}
         courseName={courseName}

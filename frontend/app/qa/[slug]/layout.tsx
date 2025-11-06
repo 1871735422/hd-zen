@@ -1,9 +1,11 @@
+import { MobileBaseLayout } from '@/app/components/mobile/MobileBaseLayout';
 import BaseLayout from '@/app/components/pc/BaseLayout';
+import { getDeviceTypeFromHeaders } from '@/app/utils/serverDeviceUtils';
 import { notFound } from 'next/navigation';
 import { getCourseByDisplayOrder, getCourses } from '../../api';
 
 // 15分钟缓存
-export const revalidate = 9000;
+export const revalidate = 900;
 
 export const metadata = {
   title: '禅修课问答 | 慧灯禅修',
@@ -30,6 +32,12 @@ export default async function CourseLayout({
 
   const categories = coursesResult.items.map(item => item.title);
   const selectedCategory = course.title;
+  const deviceType = await getDeviceTypeFromHeaders();
+  const isMobile = deviceType === 'mobile';
+
+  if (isMobile) {
+    return <MobileBaseLayout>{children}</MobileBaseLayout>;
+  }
 
   return (
     <BaseLayout

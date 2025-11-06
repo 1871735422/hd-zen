@@ -1,18 +1,20 @@
 'use client';
 
 import { STANDARD_TEXT_COLOR } from '@/app/constants/colors';
-import { Box, Typography } from '@mui/material';
-import { clearCourseTitle, formatDate } from '../../utils/courseUtils';
+import { Box, Link, Typography } from '@mui/material';
+import { clearCourseTitle } from '../../utils/courseUtils';
 import { pxToVw } from '../../utils/mobileUtils';
 import MobileEBookDownload from './MobileEBookDownload';
 
 interface MobileLessonMetaProps {
   title: string;
   author: string;
-  date: string;
+  date?: string;
   description?: string;
   pdfUrl?: string;
   epubUrl?: string;
+  refCourse?: string;
+  refUrl?: string;
 }
 
 export function MobileLessonMeta({
@@ -22,10 +24,12 @@ export function MobileLessonMeta({
   description,
   pdfUrl,
   epubUrl,
+  refCourse,
+  refUrl,
 }: MobileLessonMetaProps) {
   return (
     <>
-      <Box sx={{}}>
+      <Box>
         {/* 标题 */}
         <Typography
           sx={{
@@ -36,7 +40,7 @@ export function MobileLessonMeta({
             textAlign: 'center',
             color: STANDARD_TEXT_COLOR,
             lineHeight: 1.4,
-            mb: pxToVw(12),
+            mb: refCourse ? 0 : pxToVw(12),
           }}
         >
           {clearCourseTitle(title)}
@@ -46,15 +50,29 @@ export function MobileLessonMeta({
         {/* 作者和日期 */}
         <Typography
           sx={{
-            pl: pxToVw(10),
-            pb: pxToVw(6),
+            pl: refCourse ? 0 : pxToVw(10),
+            pb: refCourse ? 0 : pxToVw(6),
             fontSize: pxToVw(12),
             color: 'rgba(153, 153, 153, 1)',
             lineHeight: 2.3,
           }}
         >
-          {author?.replace('作者：', '')} / {formatDate(date)}
+          {author} {date ? ` / ${date}` : ''}
         </Typography>
+        {refCourse && (
+          <Typography
+            sx={{
+              fontSize: pxToVw(12),
+              color: 'rgba(153, 153, 153, 1)',
+              lineHeight: 1.5,
+            }}
+          >
+            本问答属于：
+            <Link href={refUrl} color='rgba(86, 137, 204, 1) !important'>
+              {refCourse}
+            </Link>
+          </Typography>
+        )}
       </Box>
 
       {/* 概述框 */}
