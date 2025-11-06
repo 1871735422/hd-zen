@@ -2,7 +2,6 @@
 
 import { pxToVw } from '@/app/utils/mobileUtils';
 import {
-  Box,
   Button,
   Drawer,
   IconButton,
@@ -30,7 +29,19 @@ const MobileReadingControls = () => {
     (event: Event, newValue: number | number[]) => {
       const size = typeof newValue === 'number' ? newValue : newValue[0];
       setFontSize(size);
-      // 这里可以后续添加实际的字体调节逻辑
+
+      // 应用字体大小到阅读内容
+      const elements = document.querySelectorAll('.reading-content');
+      elements.forEach(element => {
+        (element as HTMLElement).style.fontSize = `${size}px`;
+
+        // 同时调整 h4 标题的字体大小（保持相对比例）
+        const h4s = element.querySelectorAll('h4');
+        h4s.forEach(h4 => {
+          const h4Size = Math.min(size + 4, 36); // h4 比正文大 4px，最大 36px
+          (h4 as HTMLElement).style.fontSize = `${h4Size}px`;
+        });
+      });
     },
     []
   );
@@ -98,75 +109,70 @@ const MobileReadingControls = () => {
           },
         }}
       >
-        <Box sx={{ pt: pxToVw(30), pb: pxToVw(20) }}>
-          {/* 字体大小调节 */}
-          <Stack direction='row' alignItems='center' spacing={pxToVw(15)}>
-            {/* 左侧小 A */}
-            <Typography
-              sx={{
-                fontSize: pxToVw(12),
+        {/* 滑动条容器 */}
+        <Slider
+          value={fontSize}
+          onChange={handleFontSizeChange}
+          min={10}
+          max={28}
+          step={1}
+          sx={{
+            height: pxToVw(34),
+            px: 10,
+            pb: `0 !important`,
+            '& .MuiSlider-rail': {
+              height: pxToVw(34),
+              borderRadius: pxToVw(20),
+              background:
+                'linear-gradient(95.14deg, rgba(227, 241, 255, 1) 0%, rgba(247, 247, 247, 1) 100%)',
+              opacity: 1,
+            },
+            '& .MuiSlider-track': {
+              display: 'none',
+            },
+            '& .MuiSlider-thumb': {
+              width: pxToVw(34),
+              height: pxToVw(34),
+              borderRadius: '50%',
+              backgroundColor: '#fff',
+
+              '&:before': {
+                content: `"${fontSize}"`,
+                fontSize: pxToVw(16),
                 fontWeight: 400,
                 color: '#000',
-                transform: 'scaleX(1.2)',
-              }}
-            >
-              A
-            </Typography>
-
-            {/* 滑动条容器 */}
-            <Box sx={{ flex: 1, position: 'relative' }}>
-              <Slider
-                value={fontSize}
-                onChange={handleFontSizeChange}
-                min={10}
-                max={28}
-                step={1}
-                sx={{
-                  height: pxToVw(34),
-                  px: 10,
-                  '& .MuiSlider-rail': {
-                    height: pxToVw(34),
-                    borderRadius: pxToVw(20),
-                    background:
-                      'linear-gradient(95.14deg, rgba(227, 241, 255, 1) 0%, rgba(247, 247, 247, 1) 100%)',
-                    opacity: 1,
-                  },
-                  '& .MuiSlider-track': {
-                    display: 'none',
-                  },
-                  '& .MuiSlider-thumb': {
-                    width: pxToVw(34),
-                    height: pxToVw(34),
-                    borderRadius: '50%',
-                    backgroundColor: '#fff',
-
-                    '&:before': {
-                      content: `"${fontSize}"`,
-                      fontSize: pxToVw(16),
-                      fontWeight: 400,
-                      color: '#000',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    },
-                  },
-                }}
-              />
-            </Box>
-
-            {/* 右侧大 A */}
-            <Typography
-              sx={{
-                fontSize: pxToVw(18),
-                fontWeight: 400,
-                color: '#000',
-                transform: 'scaleX(1.1)',
-              }}
-            >
-              A
-            </Typography>
-          </Stack>
-        </Box>
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              },
+            },
+          }}
+        />
+        {/* 字体大小调节 */}
+        <Stack direction={'row'} justifyContent={'space-between'}>
+          {/* 左侧小 A */}
+          <Typography
+            sx={{
+              fontSize: pxToVw(12),
+              fontWeight: 400,
+              color: '#000',
+              transform: 'scaleX(1.2)',
+            }}
+          >
+            A
+          </Typography>
+          {/* 右侧大 A */}
+          <Typography
+            sx={{
+              fontSize: pxToVw(18),
+              fontWeight: 400,
+              color: '#000',
+              transform: 'scaleX(1.1)',
+            }}
+          >
+            A
+          </Typography>
+        </Stack>
       </Drawer>
     </Stack>
   );

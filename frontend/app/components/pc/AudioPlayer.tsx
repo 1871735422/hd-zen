@@ -25,7 +25,8 @@ const TimeLineLabel = ({ time }: { time: number }) => {
   return (
     <Typography
       variant='body2'
-      color='text.secondary'
+      fontSize='inherit'
+      color='rgba(102, 102, 102, 1)'
       sx={{ minWidth: { lg: 36, xl: 50, xxl: 60 }, textAlign: 'center' }}
     >
       {formatTime(time)}
@@ -40,6 +41,7 @@ export default function AudioPlayer({ src }: AudioPlayerProps) {
   const [volume, setVolume] = useState(100); // 0 - 100
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [showVolumeSlider, setShowVolumeSlider] = useState(false);
 
   useEffect(() => {
     const audioElement = new Audio(src);
@@ -103,10 +105,8 @@ export default function AudioPlayer({ src }: AudioPlayerProps) {
     audio.currentTime = nextTime;
   };
 
-  const toggleMute = () => {
-    if (!audio) return;
-    audio.muted = !audio.muted;
-    setIsMuted(audio.muted);
+  const toggleVolumeSlider = () => {
+    setShowVolumeSlider(!showVolumeSlider);
   };
 
   const handleVolumeChange = (_: Event, value: number | number[]) => {
@@ -168,6 +168,7 @@ export default function AudioPlayer({ src }: AudioPlayerProps) {
                   position: 'absolute',
                   left: 0,
                   bottom: pxToVw(-3),
+                  fontSize: pxToVw(12),
                 }
               : {}
           }
@@ -216,15 +217,15 @@ export default function AudioPlayer({ src }: AudioPlayerProps) {
 
       <Stack direction='row' alignItems='center'>
         <IconButton
-          aria-label='mute'
-          onClick={toggleMute}
+          aria-label='volume'
+          onClick={toggleVolumeSlider}
           size='small'
-          sx={
-            isMuted
+          sx={{
+            '& svg': {
+              fontSize: { lg: 20, xl: 28, xxl: 32 },
+            },
+            ...(isMuted
               ? {
-                  '& svg': {
-                    fontSize: { lg: 20, xl: 28, xxl: 32 },
-                  },
                   position: 'relative',
                   '&::after': {
                     content: '""',
@@ -240,22 +241,35 @@ export default function AudioPlayer({ src }: AudioPlayerProps) {
                     pointerEvents: 'none',
                   },
                 }
-              : {
-                  '& svg': {
-                    fontSize: { lg: 20, xl: 28, xxl: 32 },
-                  },
-                }
-          }
+              : {}),
+          }}
         >
           <SpeakerIcon />
         </IconButton>
-        {!isMobile && (
+        <Box
+          sx={{
+            width: showVolumeSlider ? { lg: 60, xl: 80, xxl: 100 } : 0,
+            opacity: showVolumeSlider ? 1 : 0,
+            ml: showVolumeSlider ? 1 : 0,
+            transform: showVolumeSlider ? 'translateX(0)' : 'translateX(8px)',
+            transition: theme =>
+              theme.transitions.create(
+                ['width', 'opacity', 'margin-left', 'transform'],
+                {
+                  duration: showVolumeSlider ? 260 : 200,
+                  easing: showVolumeSlider
+                    ? theme.transitions.easing.easeOut
+                    : theme.transitions.easing.easeInOut,
+                }
+              ),
+          }}
+        >
           <Slider
-            value={isMuted ? 0 : volume}
+            value={volume}
             onChange={handleVolumeChange}
             aria-label='volume'
             sx={{
-              width: { lg: 80, xl: 110, xxl: 130 },
+              width: '100%',
               color: 'transparent',
               '& .MuiSlider-rail': {
                 opacity: 1,
@@ -274,7 +288,7 @@ export default function AudioPlayer({ src }: AudioPlayerProps) {
               },
             }}
           />
-        )}
+        </Box>
       </Stack>
     </Box>
   );

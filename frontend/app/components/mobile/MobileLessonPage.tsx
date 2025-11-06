@@ -15,6 +15,8 @@ interface MobileLessonPageProps {
   children?: React.ReactNode;
   courseOrder: string;
   lessonOrder: string;
+  pdfUrl?: string;
+  epubUrl?: string;
 }
 
 const MobileLessonPage: React.FC<MobileLessonPageProps> = ({
@@ -25,6 +27,8 @@ const MobileLessonPage: React.FC<MobileLessonPageProps> = ({
   children,
   courseOrder,
   lessonOrder,
+  pdfUrl,
+  epubUrl,
 }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -69,6 +73,8 @@ const MobileLessonPage: React.FC<MobileLessonPageProps> = ({
         author={author}
         date={date}
         description={description}
+        pdfUrl={pdfUrl}
+        epubUrl={epubUrl}
       />
 
       {/* 相关资料侧边栏（可展开/收起）*/}

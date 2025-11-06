@@ -205,6 +205,8 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
         description={media?.article_summary || ''}
         courseOrder={courseOrder}
         lessonOrder={lessonOrder}
+        pdfUrl={media?.url_downpdf}
+        epubUrl={media?.url_downepub}
       >
         <TabRender />
       </MobileLessonPage>

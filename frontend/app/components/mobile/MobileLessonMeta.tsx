@@ -4,12 +4,15 @@ import { STANDARD_TEXT_COLOR } from '@/app/constants/colors';
 import { Box, Typography } from '@mui/material';
 import { clearCourseTitle, formatDate } from '../../utils/courseUtils';
 import { pxToVw } from '../../utils/mobileUtils';
+import MobileEBookDownload from './MobileEBookDownload';
 
 interface MobileLessonMetaProps {
   title: string;
   author: string;
   date: string;
   description?: string;
+  pdfUrl?: string;
+  epubUrl?: string;
 }
 
 export function MobileLessonMeta({
@@ -17,6 +20,8 @@ export function MobileLessonMeta({
   author,
   date,
   description,
+  pdfUrl,
+  epubUrl,
 }: MobileLessonMetaProps) {
   return (
     <>
@@ -37,6 +42,7 @@ export function MobileLessonMeta({
           {clearCourseTitle(title)}
         </Typography>
 
+        <MobileEBookDownload pdfUrl={pdfUrl} epubUrl={epubUrl} />
         {/* 作者和日期 */}
         <Typography
           sx={{
