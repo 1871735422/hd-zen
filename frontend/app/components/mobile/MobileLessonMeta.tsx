@@ -1,6 +1,7 @@
 'use client';
 
 import { STANDARD_TEXT_COLOR } from '@/app/constants/colors';
+import { formatDate } from '@/app/utils/courseUtils';
 import { Box, Link, Typography } from '@mui/material';
 import { clearCourseTitle } from '../../utils/courseUtils';
 import { pxToVw } from '../../utils/mobileUtils';
@@ -57,7 +58,7 @@ export function MobileLessonMeta({
             lineHeight: 2.3,
           }}
         >
-          {author} {date ? ` / ${date}` : ''}
+          {author} {date ? ` / ${formatDate(date)}` : ''}
         </Typography>
         {refCourse && (
           <Typography

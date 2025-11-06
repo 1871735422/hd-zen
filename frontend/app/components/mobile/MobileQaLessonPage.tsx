@@ -1,6 +1,5 @@
 'use client';
 
-import { formatDate } from '@/app/utils/courseUtils';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Box, Button, Stack, Typography } from '@mui/material';
@@ -188,7 +187,7 @@ export default function MobileQaLessonPage({
             <MobileLessonMeta
               title={`${currentIndex + 1}. ${currentQuestion.questionTitle}`}
               author='作者：慈诚罗珠堪布'
-              date={formatDate(currentQuestion.questionCreated || '')}
+              date={currentQuestion.questionCreated}
               refCourse={`${courseName} > ${lessonName}`}
               refUrl={`/course/${courseOrder}/lesson${lessonOrder}`}
             />
