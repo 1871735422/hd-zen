@@ -20,8 +20,8 @@ export default async function ReadingPage({
 }: ReadingPageProps) {
   const topicMedia = topicMediaX[0];
   const topicTags = topicMedia?.tags;
-  const isMobile = await getDeviceTypeFromHeaders();
-
+  const deviceType = await getDeviceTypeFromHeaders();
+  const isMobile = deviceType === 'mobile';
   const hasContent =
     topicMedia?.article_fulltext || topicMedia?.article_introtext;
 
