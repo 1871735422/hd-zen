@@ -2,7 +2,7 @@
 
 import { STANDARD_TEXT_COLOR } from '@/app/constants/colors';
 import { formatDate } from '@/app/utils/courseUtils';
-import { Box, Link, Typography } from '@mui/material';
+import { Box, Link, Stack, Typography } from '@mui/material';
 import { clearCourseTitle } from '../../utils/courseUtils';
 import { pxToVw } from '../../utils/mobileUtils';
 import MobileEBookDownload from './MobileEBookDownload';
@@ -36,9 +36,10 @@ export function MobileLessonMeta({
           sx={{
             pt: pxToVw(15),
             pb: pxToVw(25),
+            pl: refCourse ? pxToVw(15) : 0,
             fontSize: pxToVw(20),
             fontWeight: 500,
-            textAlign: 'center',
+            textAlign: refCourse ? 'left' : 'center',
             color: STANDARD_TEXT_COLOR,
             lineHeight: 1.4,
             mb: refCourse ? 0 : pxToVw(12),
@@ -48,32 +49,34 @@ export function MobileLessonMeta({
         </Typography>
 
         <MobileEBookDownload pdfUrl={pdfUrl} epubUrl={epubUrl} />
-        {/* 作者和日期 */}
-        <Typography
-          sx={{
-            pl: refCourse ? 0 : pxToVw(10),
-            pb: refCourse ? 0 : pxToVw(6),
-            fontSize: pxToVw(12),
-            color: 'rgba(153, 153, 153, 1)',
-            lineHeight: 2.3,
-          }}
-        >
-          {author} {date ? ` / ${formatDate(date)}` : ''}
-        </Typography>
-        {refCourse && (
+        <Stack ml={refCourse ? pxToVw(15) : 0}>
+          {/* 作者和日期 */}
           <Typography
             sx={{
+              pl: refCourse ? 0 : pxToVw(10),
+              pb: refCourse ? 0 : pxToVw(6),
               fontSize: pxToVw(12),
               color: 'rgba(153, 153, 153, 1)',
-              lineHeight: 1.5,
+              lineHeight: 2.3,
             }}
           >
-            本问答属于：
-            <Link href={refUrl} color='rgba(86, 137, 204, 1) !important'>
-              {refCourse}
-            </Link>
+            {author} {date ? ` / ${formatDate(date)}` : ''}
           </Typography>
-        )}
+          {refCourse && (
+            <Typography
+              sx={{
+                fontSize: pxToVw(12),
+                color: 'rgba(153, 153, 153, 1)',
+                lineHeight: 1.5,
+              }}
+            >
+              本问答属于：
+              <Link href={refUrl} color='rgba(86, 137, 204, 1) !important'>
+                {refCourse}
+              </Link>
+            </Typography>
+          )}
+        </Stack>
       </Box>
 
       {/* 概述框 */}

@@ -107,6 +107,7 @@ const MobileQaPage: React.FC<MobileQaPageProps> = ({
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
                     flex: 1,
+                    zIndex: 2,
                   }}
                 >
                   {clearCourseTitle(

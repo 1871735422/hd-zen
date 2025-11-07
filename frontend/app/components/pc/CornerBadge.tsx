@@ -12,10 +12,10 @@ export default function CornerBadge({ content, isMobile }: CornerBadgeProps) {
     <Box
       sx={{
         position: 'absolute',
-        top: { lg: -2, xl: -1 },
+        top: isMobile ? pxToVw(-1) : { lg: -2, xl: -1 },
         right: 0,
         width: isMobile
-          ? 46
+          ? 48
           : {
               lg: content ? 80 : 88,
               xl: content ? 100 : 110,
@@ -24,14 +24,14 @@ export default function CornerBadge({ content, isMobile }: CornerBadgeProps) {
         display: 'flex',
         zIndex: 1,
         background: `url(/images/${
-          isMobile ? 'course-badge' : 'course-badge'
+          isMobile ? 'mobile/course-badge' : 'course-badge'
         }.png) no-repeat center center`,
         backgroundSize: content ? 'contain' : '70% 70%',
         backgroundPosition: '100% 5%',
         '& svg': {
           position: 'absolute',
-          top: isMobile ? pxToVw(3) : '13%',
-          right: isMobile ? pxToVw(6) : '18%',
+          top: isMobile ? pxToVw(1) : '13%',
+          right: isMobile ? pxToVw(5) : '18%',
           fontSize: isMobile ? 16 : { lg: 20, xl: 24 },
           color: 'white',
         },

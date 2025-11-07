@@ -111,7 +111,6 @@ export default function MobileQaLessonPage({
       }
     };
   }, [isSidebarExpanded]);
-  console.log({ currentQuestion });
   return (
     <Box
       sx={{

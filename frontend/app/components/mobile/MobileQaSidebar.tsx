@@ -26,13 +26,13 @@ const MobileQaSidebar: React.FC<MobileQaSidebarProps> = ({
   return (
     <Box
       sx={{
-        width: expanded ? pxToVw(128) : pxToVw(0),
+        width: pxToVw(expanded ? 128 : 0),
         flexShrink: 0,
         background:
           'linear-gradient(175.97deg, rgba(232, 247, 255, 1) 0%, rgba(224, 226, 255, 1) 99.94%)',
         borderRadius: `0 ${pxToVw(20)} 0 0`,
         overflow: 'hidden',
-        pt: pxToVw(40),
+        pt: pxToVw(onClose ? 58 : 40),
         transition: 'width 0.3s ease-in-out',
         '&:before': expanded
           ? {
@@ -53,7 +53,7 @@ const MobileQaSidebar: React.FC<MobileQaSidebarProps> = ({
         <IconButton
           sx={{
             position: 'absolute',
-            top: pxToVw(14),
+            top: pxToVw(3),
             left: `calc(50% - ${pxToVw(27)} / 2)`,
             zIndex: 100,
             color: STANDARD_TEXT_COLOR,
@@ -71,9 +71,11 @@ const MobileQaSidebar: React.FC<MobileQaSidebarProps> = ({
         const content = (
           <Box
             sx={{
-              minHeight: pxToVw(50),
+              height: 'auto',
+              minHeight: isSelected ? pxToVw(45) : 'auto',
+              py: pxToVw(5),
               marginLeft: pxToVw(5),
-              mb: pxToVw(10),
+              mb: pxToVw(5),
               background: isSelected ? 'white !important' : 'transparent',
               borderRadius: isSelected
                 ? `${pxToVw(30)} 0 0 ${pxToVw(30)}`
@@ -82,12 +84,15 @@ const MobileQaSidebar: React.FC<MobileQaSidebarProps> = ({
               position: 'relative',
               display: 'flex',
               flexDirection: 'row',
-              alignItems: 'center',
+              alignItems:
+                onClose && clearCourseTitle(item.label)?.length > 6
+                  ? 'top'
+                  : 'center',
               justifyContent: 'flex-start',
               pl: pxToVw(12),
               pr: pxToVw(8),
               cursor: 'pointer',
-              textAlign: 'justify',
+              textAlign: 'left',
               '&:before': isSelected
                 ? {
                     position: 'absolute',
@@ -118,29 +123,44 @@ const MobileQaSidebar: React.FC<MobileQaSidebarProps> = ({
                 : {},
             }}
           >
-            <Avatar
-              sx={{
-                color: !isSelected ? MAIN_BLUE_COLOR : '#fff',
-                bgcolor: isSelected ? MAIN_BLUE_COLOR : '#fff',
-                width: pxToVw(18),
-                height: pxToVw(18),
-                mr: pxToVw(6),
-              }}
-            >
-              <Typography fontSize={pxToVw(12)} fontWeight={700}>
-                {item.displayOrder}
-              </Typography>
-            </Avatar>
+            {onClose ? (
+              <Box
+                component={'span'}
+                sx={{
+                  bgcolor: 'rgba(102, 102, 102, 1)',
+                  minWidth: pxToVw(5),
+                  height: pxToVw(5),
+                  borderRadius: '50%',
+                  mr: pxToVw(8),
+                  mt: pxToVw(5),
+                }}
+              />
+            ) : (
+              <Avatar
+                sx={{
+                  color: !isSelected ? MAIN_BLUE_COLOR : '#fff',
+                  bgcolor: isSelected ? MAIN_BLUE_COLOR : '#fff',
+                  width: pxToVw(18),
+                  height: pxToVw(18),
+                  mr: pxToVw(6),
+                }}
+              >
+                <Typography fontSize={pxToVw(12)} fontWeight={700}>
+                  {item.displayOrder}
+                </Typography>
+              </Avatar>
+            )}
             <Typography
+              component={'span'}
               fontWeight={isSelected ? 700 : 'inherit'}
               fontSize={pxToVw(12)}
               sx={{
                 display: '-webkit-box',
-                WebkitLineClamp: 2,
+                WebkitLineClamp: 3,
                 WebkitBoxOrient: 'vertical',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
-                lineHeight: 1.3,
+                lineHeight: 1.4,
                 color: isSelected
                   ? 'rgba(86, 137, 204, 1)'
                   : STANDARD_TEXT_COLOR,
@@ -154,13 +174,14 @@ const MobileQaSidebar: React.FC<MobileQaSidebarProps> = ({
         // 如果有 onSelect 回调，使用回调模式
         if (onSelect) {
           return (
-            <Box
+            <Typography
+              component={'span'}
               key={idx}
               onClick={() => onSelect(idx)}
               sx={{ cursor: 'pointer' }}
             >
               {content}
-            </Box>
+            </Typography>
           );
         }
 
@@ -171,7 +192,9 @@ const MobileQaSidebar: React.FC<MobileQaSidebarProps> = ({
             href={item.path || '#'}
             style={{ textDecoration: 'none' }}
           >
-            {content}
+            <Typography component={'span'} key={idx}>
+              {content}
+            </Typography>
           </Link>
         );
       })}
