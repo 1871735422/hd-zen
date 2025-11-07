@@ -1,5 +1,11 @@
 'use client';
 import { useDeviceType } from '@/app/utils/deviceUtils';
+import {
+  pauseOtherMediaPlayers,
+  registerMediaPlayer,
+  unregisterMediaPlayer,
+  type MediaPlayer,
+} from '@/app/utils/mediaRegistry';
 import { pxToVw } from '@/app/utils/mobileUtils';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import { Box, IconButton, Stack, Typography } from '@mui/material';
@@ -60,6 +66,7 @@ const VideoPlayer = forwardRef<
   const searchParams = useSearchParams();
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const playerRef = useRef<Plyr | null>(null);
+  const mediaPlayerRef = useRef<MediaPlayer | null>(null); // 保存媒体播放器包装对象
   const [played, setPlayed] = useState(false);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(currentIndex);
   const currentIndexRef = useRef(currentVideoIndex);
@@ -80,9 +87,6 @@ const VideoPlayer = forwardRef<
     ref,
     () => ({
       switchToVideo: (index: number) => {
-        console.debug('[VideoPlayer] External manual switch request', {
-          index,
-        });
         switchToVideo(index);
       },
     }),
@@ -113,12 +117,6 @@ const VideoPlayer = forwardRef<
       const tabNumber = parseInt(urlParam.replace('question', ''), 10);
       const indexFromUrl = tabNumber - 1; // question1 -> videoList[0]
       if (!isNaN(tabNumber) && tabNumber >= 1 && indexFromUrl < videos.length) {
-        console.debug('[VideoPlayer] Setting initial index from URL', {
-          urlParam,
-          tabNumber,
-          indexFromUrl,
-          currentIndex: currentVideoIndex,
-        });
         setCurrentVideoIndex(indexFromUrl);
       }
     }
@@ -147,10 +145,6 @@ const VideoPlayer = forwardRef<
       if (url.searchParams.has(urlParamName)) {
         url.searchParams.delete(urlParamName);
         router.replace(`${url.pathname}${url.search}`, { scroll: false });
-        console.debug('[VideoPlayer] URL param removed (single video)', {
-          paramName: urlParamName,
-          newUrl: `${url.pathname}${url.search}`,
-        });
       }
       return;
     }
@@ -161,12 +155,6 @@ const VideoPlayer = forwardRef<
     }
     url.searchParams.set(urlParamName, paramValue);
     router.replace(`${url.pathname}${url.search}`, { scroll: false });
-    console.debug('[VideoPlayer] URL updated', {
-      index,
-      paramName: urlParamName,
-      paramValue,
-      newUrl: `${url.pathname}${url.search}`,
-    });
   };
 
   // 简化的自动播放逻辑
@@ -174,30 +162,17 @@ const VideoPlayer = forwardRef<
     return videoElement
       .play()
       .then(() => {
-        console.debug('[VideoPlayer] Video play successful');
         setPlayed(true);
       })
-      .catch(err => {
-        console.warn('[VideoPlayer] Video play failed:', err.message);
+      .catch(() => {
         setPlayed(false);
       });
   };
 
   // 检查视频是否应该自动切换到下一个
   const shouldAdvanceToNext = (): boolean => {
-    console.debug('[VideoPlayer] Checking shouldAdvanceToNext', {
-      hasStarted: hasStartedCurrentRef.current,
-      isAdvancing: isAdvancingRef.current,
-      currentIndex: currentIndexRef.current,
-      totalVideos: videos.length,
-      videoStartTime: videoStartTimeRef.current,
-      lastAdvanceTime: lastAdvanceTimeRef.current,
-      allowAutoAdvance: allowAutoAdvanceRef.current,
-    });
-
     // 检查是否允许自动切换（防止手动切换后的误触发）
     if (!allowAutoAdvanceRef.current) {
-      console.debug('[VideoPlayer] Auto advance disabled after manual switch');
       return false;
     }
 
@@ -207,7 +182,6 @@ const VideoPlayer = forwardRef<
       isAdvancingRef.current ||
       currentIndexRef.current >= videos.length - 1
     ) {
-      console.debug('[VideoPlayer] Basic conditions not met');
       return false;
     }
 
@@ -220,31 +194,18 @@ const VideoPlayer = forwardRef<
     const minPlayTime = lastAdvanceTimeRef.current === 0 ? 2000 : 800; // 手动切换后需要至少2秒
 
     if (lastAdvanceTimeRef.current > 0 && timeSinceLastAdvance < 2000) {
-      console.debug('[VideoPlayer] Too frequent advance');
       return false; // 至少2秒间隔
     }
 
     if (videoStartTimeRef.current > 0 && timeSinceVideoStart < minPlayTime) {
-      console.debug('[VideoPlayer] Video played too short', {
-        timeSinceVideoStart,
-        minPlayTime,
-        wasManualSwitch: lastAdvanceTimeRef.current === 0,
-      });
       return false;
     }
 
-    console.debug('[VideoPlayer] All checks passed, allowing advance');
     return true;
   };
 
   // 手动切换到指定视频
   const switchToVideo = (index: number) => {
-    console.debug('[VideoPlayer] Manual switch to video', {
-      index,
-      currentIndex: currentIndexRef.current,
-      allowAutoAdvance: allowAutoAdvanceRef.current,
-    });
-
     // 禁用自动切换直到当前视频自然播放结束
     allowAutoAdvanceRef.current = false;
     isAdvancingRef.current = false;
@@ -264,7 +225,6 @@ const VideoPlayer = forwardRef<
     const nextIndex = currentIndexRef.current + 1;
     lastAutoAdvanceIndexRef.current = nextIndex; // 记录自动切换的索引
 
-    console.debug('[VideoPlayer] Auto advancing to next video', { nextIndex });
     applySource(nextIndex, true, autoAdvanceTokenRef.current, false); // 明确标记为非手动切换
   };
 
@@ -282,13 +242,6 @@ const VideoPlayer = forwardRef<
     // 边界保护
     const safeIndex = Math.max(0, Math.min(index, videos.length - 1));
 
-    console.debug('[VideoPlayer] Applying source', {
-      index: safeIndex,
-      autoplay,
-      isAdvancing: isAdvancingRef.current,
-      isManualSwitch,
-    });
-
     // 切源前先暂停，避免状态混乱
     try {
       v.pause();
@@ -299,9 +252,6 @@ const VideoPlayer = forwardRef<
       isAdvancingRef.current = false;
       allowAutoAdvanceRef.current = false; // 禁用自动切换直到当前视频播放完成
       // 不重置 autoAdvanceTokenRef，保留后续自动切换的能力
-      console.debug(
-        '[VideoPlayer] Manual switch detected, temporarily disabling auto-advance'
-      );
     }
 
     // 更新索引和同步状态
@@ -317,8 +267,6 @@ const VideoPlayer = forwardRef<
     // 延迟设置新源，确保前一个视频完全停止
     setTimeout(() => {
       if (currentIndexRef.current !== safeIndex) return; // 防止竞态条件
-
-      console.debug('[VideoPlayer] Setting new source', { index: safeIndex });
 
       player.source = {
         type: 'video',
@@ -339,30 +287,18 @@ const VideoPlayer = forwardRef<
       if (autoplay && hasUserPlayedOnceRef.current) {
         const attemptToken = ++playAttemptTokenRef.current;
 
-        console.debug('[VideoPlayer] Setting up autoplay after source change', {
-          index: safeIndex,
-          autoAdvanceToken,
-          attemptToken,
-        });
-
         // 监听 Plyr 的 loadeddata 事件（数据加载完成）
         const onLoadedData = () => {
           if (
             playAttemptTokenRef.current !== attemptToken ||
             currentIndexRef.current !== safeIndex
           ) {
-            console.debug(
-              '[VideoPlayer] Autoplay cancelled - token/index mismatch'
-            );
             return;
           }
-
-          console.debug('[VideoPlayer] Video data loaded, attempting autoplay');
 
           // 设置 playing 事件监听
           const markPlaying = () => {
             if (playAttemptTokenRef.current !== attemptToken) return;
-            console.debug('[VideoPlayer] Video started playing successfully');
             hasStartedCurrentRef.current = true;
             setPlayed(true);
             isAdvancingRef.current = false;
@@ -376,25 +312,12 @@ const VideoPlayer = forwardRef<
           try {
             const playPromise = player.play();
             if (playPromise && typeof playPromise.then === 'function') {
-              playPromise
-                .then(() => {
-                  console.debug('[VideoPlayer] Plyr autoplay successful');
-                })
-                .catch((err: Error) => {
-                  console.warn(
-                    '[VideoPlayer] Plyr autoplay failed, trying fallback',
-                    err.message
-                  );
-                });
-            } else {
-              console.debug(
-                '[VideoPlayer] Plyr play() returned void, assuming success'
-              );
+              playPromise.catch(() => {
+                // 自动播放失败，静默处理
+              });
             }
-          } catch (err: unknown) {
-            const errorMessage =
-              err instanceof Error ? err.message : String(err);
-            console.warn('[VideoPlayer] Plyr play() threw error', errorMessage);
+          } catch {
+            // 播放异常，静默处理
           }
         };
 
@@ -438,15 +361,26 @@ const VideoPlayer = forwardRef<
         },
       });
 
+      // 创建 MediaPlayer 包装对象并注册到全局媒体列表
+      const mediaPlayer: MediaPlayer = {
+        pause: () => playerRef.current?.pause(),
+        get paused() {
+          return playerRef.current?.paused ?? true;
+        },
+        type: 'video',
+      };
+      mediaPlayerRef.current = mediaPlayer;
+      registerMediaPlayer(mediaPlayer);
+
       // 注册事件：播放标记、进度记录、结束后推进
       try {
         playerRef.current.on('play', () => {
           hasStartedCurrentRef.current = true;
           videoStartTimeRef.current = Date.now();
           isAdvancingRef.current = false;
-          console.debug('[VideoPlayer] Video started playing', {
-            index: currentIndexRef.current,
-          });
+
+          // 暂停所有其他媒体播放器（包括其他视频和音频）
+          pauseOtherMediaPlayers(mediaPlayer);
         });
 
         // 简化：只监听播放开始事件
@@ -464,25 +398,11 @@ const VideoPlayer = forwardRef<
 
           // 防抖，视频仅播放1秒内就触发ended（如切源骚乱），不做自动切换
           if (player.currentTime < 1 || !hasStartedCurrentRef.current) {
-            console.debug('[VideoPlayer] ended触发太早，忽略自动切换', {
-              currentTime: player.currentTime,
-              hasStarted: hasStartedCurrentRef.current,
-            });
             return;
           }
 
-          console.debug('[VideoPlayer] Video ended', {
-            index: currentIndexRef.current,
-            duration: player.duration || 0,
-            totalVideos: videos.length,
-            allowAutoAdvance: allowAutoAdvanceRef.current,
-          });
-
           // 视频真正播放完成后，重新启用自动切换
           if (!allowAutoAdvanceRef.current) {
-            console.debug(
-              '[VideoPlayer] Re-enabling auto advance after video completion'
-            );
             allowAutoAdvanceRef.current = true;
           }
 
@@ -501,6 +421,11 @@ const VideoPlayer = forwardRef<
 
     return () => {
       mounted = false;
+      // 从全局列表移除媒体播放器
+      if (mediaPlayerRef.current) {
+        unregisterMediaPlayer(mediaPlayerRef.current);
+        mediaPlayerRef.current = null;
+      }
       playerRef.current?.destroy?.();
       playerRef.current = null;
     };
@@ -516,23 +441,15 @@ const VideoPlayer = forwardRef<
     if (played) {
       player.autoplay = true;
     }
-    // console.log({ player });
 
     // 检查是否为手动切换（非正在进行的自动切换）
     const isManualSwitch = !isAutoAdvanceInProgressRef.current;
 
     if (isManualSwitch) {
-      console.debug('[VideoPlayer] Manual switch detected in useEffect', {
-        currentVideoIndex,
-        wasAutoAdvancing: isAutoAdvanceInProgressRef.current,
-      });
-
       // 手动切换时，禁用自动切换直到当前视频真正播放完成
       isAdvancingRef.current = false;
       allowAutoAdvanceRef.current = false; // 禁用自动切换
       lastAutoAdvanceIndexRef.current = -1;
-
-      console.debug('[VideoPlayer] Auto advance disabled due to manual switch');
     }
 
     // 重置自动切换进行状态

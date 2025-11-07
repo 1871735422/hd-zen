@@ -1,8 +1,14 @@
 'use client';
 import { useDeviceType } from '@/app/utils/deviceUtils';
+import {
+  pauseOtherMediaPlayers,
+  registerMediaPlayer,
+  unregisterMediaPlayer,
+  type MediaPlayer,
+} from '@/app/utils/mediaRegistry';
 import { pxToVw } from '@/app/utils/mobileUtils';
 import { Box, IconButton, Slider, Stack, Typography } from '@mui/material';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import AudioPlayIcon from '../icons/AudioPlayIcon';
 import PauseIcon from '../icons/PauseIcon';
 import SpeakerIcon from '../icons/SpeakerIcon';
@@ -42,6 +48,7 @@ export default function AudioPlayer({ src }: AudioPlayerProps) {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [showVolumeSlider, setShowVolumeSlider] = useState(false);
+  const isDraggingRef = useRef(false);
 
   useEffect(() => {
     const audioElement = new Audio(src);
@@ -50,17 +57,43 @@ export default function AudioPlayer({ src }: AudioPlayerProps) {
     audioElement.volume = volume / 100;
     audioElement.muted = isMuted;
 
+    // 创建 MediaPlayer 包装对象
+    const mediaPlayer: MediaPlayer = {
+      pause: () => audioElement.pause(),
+      get paused() {
+        return audioElement.paused;
+      },
+      type: 'audio',
+    };
+
+    // 注册到全局媒体列表
+    registerMediaPlayer(mediaPlayer);
+
     audioElement.addEventListener('loadedmetadata', () => {
       setDuration(audioElement.duration || 0);
     });
     audioElement.addEventListener('timeupdate', () => {
-      setCurrentTime(audioElement.currentTime || 0);
+      // 使用 ref 判断是否在拖动，避免因为 state 变化触发 useEffect 重新渲染
+      if (!isDraggingRef.current) {
+        setCurrentTime(audioElement.currentTime || 0);
+      }
     });
     audioElement.addEventListener('ended', () => {
       setIsPlaying(false);
     });
+    // 监听播放事件，暂停其他媒体播放器
+    audioElement.addEventListener('play', () => {
+      pauseOtherMediaPlayers(mediaPlayer);
+      setIsPlaying(true);
+    });
+    // 监听暂停事件，同步 UI 状态
+    audioElement.addEventListener('pause', () => {
+      setIsPlaying(false);
+    });
 
     return () => {
+      // 从全局列表移除媒体播放器
+      unregisterMediaPlayer(mediaPlayer);
       audioElement.pause();
       audioElement.src = '';
       setAudio(null);
@@ -79,13 +112,15 @@ export default function AudioPlayer({ src }: AudioPlayerProps) {
     if (!audio) return;
     if (isPlaying) {
       audio.pause();
-      setIsPlaying(false);
     } else {
-      audio
-        .play()
-        .then(() => setIsPlaying(true))
-        .catch(() => setIsPlaying(false));
+      audio.play().catch(() => {
+        setIsPlaying(false);
+      });
     }
+  };
+
+  const handleSliderChangeStart = () => {
+    isDraggingRef.current = true;
   };
 
   const handleSliderChange = (_: Event, value: number | number[]) => {
@@ -103,6 +138,7 @@ export default function AudioPlayer({ src }: AudioPlayerProps) {
     if (!audio || !Number.isFinite(duration) || duration <= 0) return;
     const nextTime = (v / 100) * duration;
     audio.currentTime = nextTime;
+    isDraggingRef.current = false;
   };
 
   const toggleVolumeSlider = () => {
@@ -177,8 +213,9 @@ export default function AudioPlayer({ src }: AudioPlayerProps) {
         </Stack>
         <Slider
           value={progress}
-          onChange={handleSliderChange}
           onChangeCommitted={handleSliderCommit}
+          onChange={handleSliderChange}
+          onMouseDown={handleSliderChangeStart}
           aria-label='progress'
           sx={{
             flex: 1,

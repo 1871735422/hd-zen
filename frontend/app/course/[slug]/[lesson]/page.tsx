@@ -124,7 +124,7 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
 
   // 总是需要获取 topicMedia 数据
   const topicMedia = await getTopicMediaByOrder(courseOrder, lessonOrder);
-  console.log('topicMedia', topicMedia);
+  // console.log('topicMedia', topicMedia);
 
   if (!topicMedia) {
     notFound();
