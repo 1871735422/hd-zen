@@ -12,7 +12,8 @@ import { useEffect } from 'react';
 export default function ClarityAnalytics({ projectId }: { projectId: string }) {
   useEffect(() => {
     // 仅在浏览器环境中初始化
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined' || process.env.NODE_ENV === 'development')
+      return;
 
     // 动态导入 Clarity 以避免服务端执行
     import('@microsoft/clarity').then(Clarity => {

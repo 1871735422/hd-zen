@@ -19,7 +19,8 @@
     "type-check": "tsc --noEmit",
     "clean": "rimraf .next node_modules",
     "prepare": "husky",
-    "font:subset": "node scripts/subset-fonts.cjs"
+    "font:subset": "node scripts/subset-fonts.cjs",
+    "browserslist": "exec browserslist"
   },
   "dependencies": {
     "@emotion/cache": "^11.14.0",
@@ -45,6 +46,7 @@
     "@types/react-dom": "^18",
     "@typescript-eslint/eslint-plugin": "^8.0.0",
     "@typescript-eslint/parser": "^8.0.0",
+    "browserslist": "^4.27.0",
     "eslint": "^9",
     "eslint-config-next": "15.3.3",
     "eslint-config-prettier": "^10.1.5",
