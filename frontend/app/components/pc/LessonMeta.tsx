@@ -29,6 +29,7 @@ export default function LessonMeta({
   return (
     <Stack
       display={'flex'}
+      mb={refCourse ? 0 : 2}
       flexDirection={'column'}
       alignItems={isQuestion ? 'flex-start' : 'center'}
     >

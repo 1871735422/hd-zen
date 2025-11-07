@@ -113,7 +113,6 @@ export default function QaClientWrapper({
             backgroundColor: 'white',
             display: 'flex',
             flexDirection: 'column',
-            gap: 4,
             pb: 5,
             borderRadius: 5,
             width: '100%',

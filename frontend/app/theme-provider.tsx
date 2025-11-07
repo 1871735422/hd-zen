@@ -94,6 +94,11 @@ const createAppTheme = () =>
       },
     },
     components: {
+      MuiSvgIcon: {
+        defaultProps: {
+          fontSize: 'inherit',
+        },
+      },
       MuiButton: {
         styleOverrides: {
           root: {

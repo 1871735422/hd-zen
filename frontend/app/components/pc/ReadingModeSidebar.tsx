@@ -269,18 +269,6 @@ export default function ReadingModeSidebar({
               alignItems='center'
             >
               <CircleButton
-                onClick={increaseLineSpacing}
-                title='增加行间距'
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    fontSize: '1em',
-                  },
-                }}
-              >
-                <LineSpaceIncreaseIcon />
-              </CircleButton>
-
-              <CircleButton
                 onClick={decreaseLineSpacing}
                 title='减少行间距'
                 sx={{
@@ -290,6 +278,17 @@ export default function ReadingModeSidebar({
                 }}
               >
                 <LineSpaceDecreaseIcon />
+              </CircleButton>
+              <CircleButton
+                onClick={increaseLineSpacing}
+                title='增加行间距'
+                sx={{
+                  '& .MuiSvgIcon-root': {
+                    fontSize: '1em',
+                  },
+                }}
+              >
+                <LineSpaceIncreaseIcon />
               </CircleButton>
             </Stack>
           </Stack>

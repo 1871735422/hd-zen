@@ -23,7 +23,7 @@ export default function CategorySelector({
   const getBtnPx = (zoom = 1) => {
     if (categories.length > 10) return 'auto';
     else if (categories.length > 6 || pathname.startsWith('/reference'))
-      return 1.5 * zoom;
+      return 3 * zoom;
     else return 4 * zoom;
   };
 

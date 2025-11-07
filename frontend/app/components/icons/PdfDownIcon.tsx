@@ -5,8 +5,8 @@ const PdfDownIcon = () => (
     <svg
       xmlns='http://www.w3.org/2000/svg'
       xmlnsXlink='http://www.w3.org/1999/xlink'
-      width='24.20263671875'
-      height='22'
+      width='1em'
+      height='1em'
       viewBox='0 0 24.20263671875 22'
       fill='currentColor'
     >

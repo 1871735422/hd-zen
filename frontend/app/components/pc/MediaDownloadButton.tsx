@@ -59,7 +59,6 @@ const MediaDownloadButton: React.FC<MediaDownloadButtonProps> = ({
       const link = document.createElement('a');
       link.href = url;
       link.download = '';
-      link.target = '_blank';
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -71,9 +70,9 @@ const MediaDownloadButton: React.FC<MediaDownloadButtonProps> = ({
       disabled={disabled}
       onClick={handleDownload}
       sx={{
-        width: { sm: 40, md: 50, lg: 60, xl: 76, xxl: 84 },
-        height: { sm: 40, md: 50, lg: 60, xl: 76, xxl: 84 },
-        fontSize: { sm: 8, md: 9, lg: 10, xl: 12, xxl: 14 },
+        width: { lg: 50, xlg: 61, xl: 76, xxl: 101.33 },
+        height: { lg: 50, xlg: 61, xl: 76, xxl: 101.33 },
+        pt: 0.3,
         borderRadius: '50%',
         background: 'rgba(255, 168, 184, 1)',
         color: 'white',
@@ -81,8 +80,14 @@ const MediaDownloadButton: React.FC<MediaDownloadButtonProps> = ({
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: { sm: 0.2, md: 0.3, lg: 0.5, xl: 0.5, xxl: 0.6 },
         minWidth: 'unset',
+        '& .MuiSvgIcon-root': {
+          fontSize: { lg: 14, xlg: 18, xl: 22.5, xxl: 30 },
+        },
+        '& .MuiTypography-root': {
+          fontSize: { lg: 8, xlg: 9.6, xl: 12, xxl: 16 },
+          fontWeight: 500,
+        },
         '&:hover': {
           background: 'rgba(255, 168, 184, 0.8)',
         },
@@ -94,28 +99,8 @@ const MediaDownloadButton: React.FC<MediaDownloadButtonProps> = ({
         ...sx,
       }}
     >
-      <IconComponent
-        sx={{
-          position: 'relative',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize: { sm: 14, md: 16, lg: 20, xl: 22, xxl: 24 },
-          zIndex: 1,
-        }}
-      />
-      <Typography
-        variant='caption'
-        sx={{
-          fontSize: { sm: 8, md: 8, lg: 8, xl: 12, xxl: 14 },
-          fontWeight: 500,
-          lineHeight: 1,
-          textAlign: 'center',
-          marginTop: '-2px',
-        }}
-      >
-        {mediaInfo.label}下载
-      </Typography>
+      <IconComponent />
+      <Typography>{mediaInfo.label}下载</Typography>
     </Button>
   );
 };

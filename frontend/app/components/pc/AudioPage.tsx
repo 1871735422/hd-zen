@@ -72,7 +72,7 @@ export default function AudioPage({
               alignItems: 'center',
               justifyContent: 'space-between',
               mb: isMobile ? pxToVw(25) : 3,
-              gap: 1,
+              gap: { lg: '8px', xlg: '8px', xl: '10px', xxl: '15px' },
             }}
           >
             {item?.url_mp3 && <AudioPlayer src={item?.url_mp3} />}

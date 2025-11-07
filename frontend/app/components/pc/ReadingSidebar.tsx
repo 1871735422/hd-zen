@@ -110,7 +110,7 @@ export default function ReadingSidebar({
       alignItems='center'
       sx={{
         position: 'absolute',
-        right: { lg: -55, xlg: -65, xl: -80, xxl: -80 },
+        right: { lg: -60, xlg: -70, xl: -81, xxl: -95 },
         top: 0,
         zIndex: 10,
         fontWeight: 500,

@@ -608,21 +608,25 @@ const VideoPlayer = forwardRef<
   const currentPoster = currentVideo?.poster;
   const currentTitle = currentVideo?.title;
   const isMobile = useDeviceType() === 'mobile';
-
+  const isShowTitle = currentTitle && urlParamName === 'showTitle';
   return (
     <>
       <Stack
+        minHeight={currentVideo?.url_downmp4 ? '70px' : 'auto'}
+        width='100%'
         direction='row'
-        justifyContent={currentTitle ? 'space-between' : 'flex-end'}
-        mt={currentTitle ? 0 : -5}
-        mb={currentTitle ? 0 : -2}
+        justifyContent={isShowTitle ? 'space-between' : 'flex-end'}
+        mt={isShowTitle ? 4.5 : 5}
         alignItems='center'
+        position='relative'
       >
-        {currentTitle && (
+        {isShowTitle && (
           <Typography
             sx={{
               fontWeight: 500,
-              my: isMobile ? pxToVw(6) : 2,
+              mb: isMobile
+                ? pxToVw(6)
+                : { lg: '20px', xlg: '22px', xl: '25px', xxl: '30px' },
               pl: isMobile ? pxToVw(4) : 0,
               fontSize: isMobile ? pxToVw(16) : { lg: 18, xl: 24, xxl: 28 },
               color: 'rgba(102, 102, 102, 1)',
@@ -635,12 +639,17 @@ const VideoPlayer = forwardRef<
           <MediaDownloadButton
             mediaType='video'
             downloadUrls={[currentVideo?.url_downmp4]}
+            sx={{
+              position: 'absolute',
+              top: '-80%',
+              right: 0,
+            }}
           />
         )}
       </Stack>
       <Box
         sx={{
-          mb: isMobile ? pxToVw(20) : 0,
+          mb: isMobile ? pxToVw(20) : 10,
           position: 'relative',
           '& .plyr--full-ui': {
             visibility: played ? 'visible' : 'hidden',

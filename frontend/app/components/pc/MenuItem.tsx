@@ -54,7 +54,7 @@ const MenuItemComponent: React.FC<MenuItemProps> = ({ item }) => {
         <Stack
           sx={{
             position: 'absolute',
-            top: { lg: 54, xl: 76, xxl: 84 },
+            top: { lg: 54, xl: 69, xxl: 78 },
             left: { lg: -10, xl: -10, xxl: -12 },
             zIndex: 1000,
             opacity: isOpen ? 1 : 0,
@@ -69,8 +69,11 @@ const MenuItemComponent: React.FC<MenuItemProps> = ({ item }) => {
             borderRadius: '0 0 20px 20px',
             // minWidth: { lg: 142, xl: 200, xxl: 220 },
             width: 'min-content',
+            // 横线
             borderTop: '2px solid rgba(131, 181, 247, 1)',
             boxShadow: '0px 5px 20px  rgba(131, 181, 247, 0.3)',
+
+            // 竖线
             '&:before': {
               width: 2,
               height: { lg: 18, xl: 24, xxl: 30 },
@@ -78,7 +81,7 @@ const MenuItemComponent: React.FC<MenuItemProps> = ({ item }) => {
               position: 'absolute',
               backgroundColor: 'rgba(130, 178, 232, 1)',
               left: { lg: 38, xl: 53, xxl: 60 },
-              top: { lg: -18, xl: -26, xxl: -30 },
+              top: { lg: -18, xl: -26, xxl: -32 },
             },
           }}
         >
