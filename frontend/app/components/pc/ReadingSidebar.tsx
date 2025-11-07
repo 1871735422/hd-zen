@@ -1,13 +1,12 @@
 'use client';
 import { Button, Stack } from '@mui/material';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import BookExpandIcon from '../icons/BookExpandIcon';
 
 declare global {
   interface Window {
     handleModeChange?: (mode: 'paged' | 'full') => void;
-    onModeChange?: (mode: 'paged' | 'full') => void;
   }
 }
 
@@ -71,17 +70,6 @@ export default function ReadingSidebar({
     currentParams.set('readingMode', 'true');
     router.push(`?${currentParams.toString()}`);
   };
-
-  useEffect(() => {
-    const handleGlobalModeChange = (newMode: 'paged' | 'full') => {
-      setMode(newMode);
-    };
-
-    window.onModeChange = handleGlobalModeChange;
-    return () => {
-      delete window.onModeChange;
-    };
-  }, []);
 
   const buttonStyle = {
     width: { lg: 50, xlg: 60, xl: 70, xxl: 80 },

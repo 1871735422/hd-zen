@@ -19,7 +19,6 @@ function TitleBanner({ title }: TitleBannerProps) {
         mb: { sm: 3, md: 4, lg: 5, xl: 7, xxl: 8 },
         flexDirection: 'row',
         alignItems: 'flex-end',
-        cursor: 'pointer',
       }}
     >
       <Image

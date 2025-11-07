@@ -148,6 +148,7 @@ export interface TopicMedia extends BaseModel {
 export interface TopicMediaX extends Article, Omit<Media, 'summary'> {
   author?: string;
   questionOrder?: string;
+  media_summary?: string;
 }
 // API Response types
 export interface PaginatedResponse<T> {

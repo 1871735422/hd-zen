@@ -211,7 +211,7 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
         title={media?.title || ''}
         author='慈诚罗珠堪布'
         date={media?.created || ''}
-        description={media?.article_summary || ''}
+        description={media?.article_summary || media?.media_summary || ''}
         courseOrder={courseOrder}
         lessonOrder={lessonOrder}
         pdfUrl={media?.url_downpdf}
@@ -247,7 +247,9 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
           tags={
             topicTags?.length ? topicTags.map((tag: string) => tag.trim()) : []
           }
-          description={topicMedia[0]?.article_summary ?? ''}
+          description={
+            topicMedia[0]?.article_summary || topicMedia[0]?.media_summary || ''
+          }
           author='作者：慈诚罗珠堪布'
           date={topicMedia[0]?.created}
         />

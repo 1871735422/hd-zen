@@ -359,6 +359,13 @@ const VideoPlayer = forwardRef<
           options: qualityOptions.length ? qualityOptions : [720],
           forced: true, // ensure plyr will force quality changes by replacing src
         },
+        // 启用键盘快捷键
+        keyboard: {
+          focused: true, // 播放器获得焦点时启用快捷键
+          global: true, // 全局启用快捷键（即使播放器未获得焦点）
+        },
+        // 自定义快进/快退时间（秒）
+        seekTime: 10, // 默认为 10 秒，可以根据需要调整为 5、15、30 等
       });
 
       // 创建 MediaPlayer 包装对象并注册到全局媒体列表

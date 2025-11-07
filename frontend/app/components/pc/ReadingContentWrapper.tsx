@@ -1,8 +1,7 @@
 'use client';
 import { Box } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { CustomPagination } from '../shared';
-import ReadingSidebar from './ReadingSidebar';
 
 interface ReadingContentProps {
   introText?: string;
@@ -11,7 +10,7 @@ interface ReadingContentProps {
 
 // 定义 window 对象的扩展接口
 interface WindowWithReadingControls extends Window {
-  onModeChange?: (mode: 'paged' | 'full') => void;
+  handleModeChange?: (mode: 'paged' | 'full') => void;
   handleIncreaseFont?: () => void;
   handleDecreaseFont?: () => void;
 }
@@ -180,46 +179,46 @@ export default function ReadingContent({
     }
   };
 
-  const handleModeChange = (newMode: 'paged' | 'full') => {
+  const handleModeChange = useCallback((newMode: 'paged' | 'full') => {
     setMode(newMode);
     setCurrentPage(1); // 切换模式时重置到第一页
-
-    // 通知 ReadingSidebar 状态变化
-    if (
-      typeof window !== 'undefined' &&
-      (window as WindowWithReadingControls).onModeChange
-    ) {
-      (window as WindowWithReadingControls).onModeChange!(newMode);
-    }
-  };
+  }, []);
 
   // 模拟 ReadingSidebar 的字体控制功能
-  const handleIncreaseFont = () => {
+  const handleIncreaseFont = useCallback(() => {
     const elements = document.querySelectorAll('.reading-content');
     elements.forEach(element => {
       const currentSize = parseInt(getComputedStyle(element).fontSize);
       const newSize = Math.min(currentSize + 2, 36);
       (element as HTMLElement).style.fontSize = `${newSize}px`;
     });
-  };
+  }, []);
 
-  const handleDecreaseFont = () => {
+  const handleDecreaseFont = useCallback(() => {
     const elements = document.querySelectorAll('.reading-content');
     elements.forEach(element => {
       const currentSize = parseInt(getComputedStyle(element).fontSize);
       const newSize = Math.max(currentSize - 2, 12);
       (element as HTMLElement).style.fontSize = `${newSize}px`;
     });
-  };
+  }, []);
 
   // 将字体控制函数暴露到全局，供 ReadingSidebar 调用
-  if (typeof window !== 'undefined') {
+  // 注意：这个 effect 必须在组件挂载时立即执行，不能在 isClient 判断之后
+  React.useEffect(() => {
     (window as WindowWithReadingControls).handleIncreaseFont =
       handleIncreaseFont;
     (window as WindowWithReadingControls).handleDecreaseFont =
       handleDecreaseFont;
     (window as WindowWithReadingControls).handleModeChange = handleModeChange;
-  }
+
+    // 清理函数
+    return () => {
+      delete (window as WindowWithReadingControls).handleIncreaseFont;
+      delete (window as WindowWithReadingControls).handleDecreaseFont;
+      delete (window as WindowWithReadingControls).handleModeChange;
+    };
+  }, [handleIncreaseFont, handleDecreaseFont, handleModeChange]);
 
   // 如果不在客户端，不渲染任何内容（让服务端内容显示）
   if (!isClient) {
@@ -231,7 +230,6 @@ export default function ReadingContent({
     <Box textAlign={'justify'}>
       {mode === 'paged' ? (
         <>
-          <ReadingSidebar />
           {/* 只显示分页内容 */}
           <Box
             className='reading-content'
