@@ -1,7 +1,7 @@
 'use client';
 import { Button, Stack } from '@mui/material';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import BookExpandIcon from '../icons/BookExpandIcon';
 
 declare global {
@@ -64,6 +64,26 @@ export default function ReadingSidebar({
       window.handleModeChange(next);
     }
   };
+
+  // 监听来自其他组件（如分页栏）的模式变化事件
+  useEffect(() => {
+    const handleModeChangeEvent = (event: CustomEvent) => {
+      const newMode = event.detail.mode;
+      setMode(newMode);
+    };
+
+    window.addEventListener(
+      'readingModeChange',
+      handleModeChangeEvent as EventListener
+    );
+
+    return () => {
+      window.removeEventListener(
+        'readingModeChange',
+        handleModeChangeEvent as EventListener
+      );
+    };
+  }, []);
 
   const handleEnterReadingMode = () => {
     const currentParams = new URLSearchParams(searchParams.toString());

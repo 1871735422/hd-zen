@@ -151,6 +151,7 @@ export default function AudioPlayer({ src }: AudioPlayerProps) {
     setVolume(clamped);
     if (!audio) return;
     audio.volume = clamped / 100;
+
     if (clamped === 0) {
       audio.muted = true;
       setIsMuted(true);
@@ -303,7 +304,7 @@ export default function AudioPlayer({ src }: AudioPlayerProps) {
         >
           <Slider
             value={volume}
-            onChange={handleVolumeChange}
+            onChange={showVolumeSlider ? handleVolumeChange : undefined}
             aria-label='volume'
             sx={{
               width: '100%',

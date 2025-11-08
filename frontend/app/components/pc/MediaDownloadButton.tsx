@@ -89,12 +89,9 @@ const MediaDownloadButton: React.FC<MediaDownloadButtonProps> = ({
           fontWeight: 500,
         },
         '&:hover': {
-          background: 'rgba(255, 168, 184, 0.8)',
+          background: 'rgba(255, 94, 124, 0.7)',
         },
-        '&:disabled': {
-          background: 'rgba(255, 168, 184, 0.5)',
-          color: 'rgba(255, 255, 255, 0.5)',
-        },
+
         transition: 'all 0.2s ease-in-out',
         ...sx,
       }}

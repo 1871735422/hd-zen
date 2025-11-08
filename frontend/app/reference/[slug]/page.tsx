@@ -52,7 +52,8 @@ async function PCReferencePage({ books }: { books: BookChapter[] }) {
                       item={{
                         idx: item.ordering,
                         title: item.article_title,
-                        description: item.article_summary || '',
+                        description:
+                          item.article_summary || item.article_introtext || '',
                       }}
                     />
                   ))}

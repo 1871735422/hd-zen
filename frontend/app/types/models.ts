@@ -201,6 +201,13 @@ export interface QuestionResult extends BaseModel, Media {
   questionOrder: number;
   questionCreated: string;
   description?: string;
+  isActive?: boolean;
+}
+
+// QuestionResultGrouped - 按 topicTitle 分组的问答媒体
+export interface QuestionResultGrouped {
+  topicTitle: string;
+  questions: QuestionResult[];
 }
 
 export interface DownloadResource {

@@ -45,16 +45,44 @@ export default async function QaPage({ params, searchParams }: QaPageProps) {
   const isMobile = deviceType === 'mobile';
 
   try {
-    // Fetch course details and topics
+    // 获取所有问答数据（未过滤 topic），已按 topicTitle 分组
+    const questionsGrouped = await getAnswerMediasByOrder(displayOrder);
+
+    // 获取课程主题信息，用于匹配 lessonOrder 和 topicTitle
     const courseTopics =
       (await getCourseTopicsByDisplayOrder(displayOrder))?.items || [];
-    const questions = await getAnswerMediasByOrder(displayOrder, lessonOrder);
-    // console.log({ courseTopics, questions });
-    const sidebarData = courseTopics.map(item => ({
-      label: item.article_title,
-      path: `/qa/${displayOrder}?tab=lesson${item.ordering}`,
-      displayOrder: Number(item.ordering),
-    }));
+
+    // 构建侧边栏数据：所有有问题数据的 topic 都显示
+    const sidebarData = courseTopics
+      .filter(topic => {
+        const group = questionsGrouped.find(
+          g => g.topicTitle === topic.article_title
+        );
+        return group && group.questions.length > 0;
+      })
+      .map(topic => ({
+        label: topic.article_title,
+        path: `/qa/${displayOrder}?tab=lesson${topic.ordering}`,
+        displayOrder: topic.ordering,
+      }))
+      .sort((a, b) => a.displayOrder - b.displayOrder);
+
+    // 根据当前选中的 lessonOrder 过滤问题
+    const currentTopic = courseTopics.find(
+      topic => topic.ordering.toString() === lessonOrder
+    );
+    const currentGroup = questionsGrouped.find(
+      group => group.topicTitle === currentTopic?.article_title
+    );
+
+    // 过滤问题：只显示 isActive: true 的问题
+    const allQuestions = currentGroup?.questions || [];
+    const activeQuestions = allQuestions.filter(q => q.isActive === true);
+    const hasInactiveQuestions = allQuestions.some(q => q.isActive === false);
+
+    // 如果有 isActive: true 的问题，正常显示；如果都是 false，显示"即将推出"
+    const questions = activeQuestions;
+    const showComingSoon = hasInactiveQuestions && activeQuestions.length === 0;
     if (isMobile) {
       return (
         <MobileQaPage
@@ -85,10 +113,16 @@ export default async function QaPage({ params, searchParams }: QaPageProps) {
             lessonOrder={lessonOrder}
           />
           <Grid size={3}>
-            <QaSidebar
-              lesson={sidebarData}
-              selectedIdx={Number(lessonOrder) - 1}
-            />
+            {sidebarData.length > 0 ? (
+              <QaSidebar
+                lesson={sidebarData}
+                selectedIdx={Number(lessonOrder) - 1}
+              />
+            ) : (
+              <Typography variant='h5' sx={{ textAlign: 'center', py: 5 }}>
+                本册暂无问答
+              </Typography>
+            )}
           </Grid>
           <Grid
             container
@@ -115,7 +149,7 @@ export default async function QaPage({ params, searchParams }: QaPageProps) {
                 />
               </Grid>
             ))}
-            {questions.length === 0 && (
+            {showComingSoon && (
               <Grid size={{ sm: 6, md: 4 }}>
                 <Typography variant='h5'>即将推出</Typography>
               </Grid>

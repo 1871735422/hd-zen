@@ -167,7 +167,36 @@ export default function ReadingContent({
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    // 滚动到文章内容开头
+
+    if (mode === 'full') {
+      // 全文模式：计算并滚动到对应内容位置
+      const articleContainer = document.querySelector(
+        '[data-reading-container]'
+      );
+      if (articleContainer) {
+        const readingContent =
+          articleContainer.querySelector('.reading-content');
+        if (readingContent) {
+          // 计算内容总高度和每页应该滚动的位置
+          const contentHeight = readingContent.scrollHeight;
+          const pageHeight = contentHeight / totalPages;
+          const targetScroll = pageHeight * (page - 1);
+
+          // 获取容器相对于页面的位置
+          const containerRect = articleContainer.getBoundingClientRect();
+          const absoluteTop = window.pageYOffset + containerRect.top;
+
+          // 滚动到目标位置
+          window.scrollTo({
+            top: absoluteTop + targetScroll,
+            behavior: 'smooth',
+          });
+          return;
+        }
+      }
+    }
+
+    // 分页模式或备用方案：滚动到文章内容开头
     const articleContainer = document.querySelector('[data-reading-container]');
     if (articleContainer) {
       const rect = articleContainer.getBoundingClientRect();
@@ -182,6 +211,12 @@ export default function ReadingContent({
   const handleModeChange = useCallback((newMode: 'paged' | 'full') => {
     setMode(newMode);
     setCurrentPage(1); // 切换模式时重置到第一页
+
+    // 触发自定义事件，通知其他组件模式已改变
+    const event = new CustomEvent('readingModeChange', {
+      detail: { mode: newMode },
+    });
+    window.dispatchEvent(event);
   }, []);
 
   // 模拟 ReadingSidebar 的字体控制功能
@@ -225,7 +260,7 @@ export default function ReadingContent({
     return null;
   }
 
-  // 全文模式：显示完整内容
+  // 全文模式和分页模式
   return (
     <Box textAlign={'justify'}>
       {mode === 'paged' ? (
@@ -245,10 +280,13 @@ export default function ReadingContent({
             totalPages={totalPages}
             currentPage={currentPage}
             onPageChange={handlePageChange}
+            mode={mode}
+            onModeChange={handleModeChange}
           />
         </>
       ) : (
         <>
+          {/* 全文模式：显示完整内容 */}
           {introText && (
             <Box
               className='reading-content'
@@ -263,8 +301,18 @@ export default function ReadingContent({
           {fullText && (
             <Box
               className='reading-content'
-              sx={{ mr: 2 }}
+              sx={{ mr: 2, mb: 5 }}
               dangerouslySetInnerHTML={{ __html: fullText }}
+            />
+          )}
+          {/* 全文模式下也显示分页 */}
+          {totalPages > 1 && (
+            <CustomPagination
+              totalPages={totalPages}
+              currentPage={currentPage}
+              onPageChange={handlePageChange}
+              mode={mode}
+              onModeChange={handleModeChange}
             />
           )}
         </>

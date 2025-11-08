@@ -99,7 +99,7 @@ export default async function CoursePage({ params }: CoursePageProps) {
                         idx: topic.ordering,
                         title: topic.article_title || topic.title || '',
                         description:
-                          topic.article_introtext || topic.description || '',
+                          topic.description || topic.article_introtext || '',
                       }}
                       courseOrder={course.displayOrder}
                       slug='course'

@@ -118,7 +118,7 @@ export default function LessonMeta({
                 lineHeight: 1.7,
                 display: '-webkit-box',
                 WebkitBoxOrient: 'vertical',
-                WebkitLineClamp: 2,
+                // WebkitLineClamp: 2,
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
                 fontSize: { lg: 16, xl: 18 },

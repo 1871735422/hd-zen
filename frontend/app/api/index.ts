@@ -10,6 +10,7 @@ import {
   PaginatedResponse,
   PocketRecord,
   QuestionResult,
+  QuestionResultGrouped,
   Questions,
   ReferenceBook,
   SearchCate,
@@ -321,7 +322,7 @@ export const getAnswerMediasByOrder = async (
   topicOrder?: string,
   questionOrder?: string,
   fetchMedia?: boolean
-): Promise<QuestionResult[]> => {
+): Promise<QuestionResultGrouped[]> => {
   const filters = ['courseOrder = ' + courseOrder];
   if (topicOrder) {
     filters.push('topicOrder = ' + topicOrder);
@@ -331,7 +332,7 @@ export const getAnswerMediasByOrder = async (
   }
 
   let fileds =
-    'courseTitle,topicTitle,questionTitle,questionOrder,questionCreated,description';
+    'courseTitle,topicTitle,questionTitle,questionOrder,questionCreated,description,isActive';
   if (fetchMedia) {
     fileds +=
       ',url_image,url_hd,url_sd,mp4_duration,url_downmp4,mp4_size,url_mp3,mp3_duration,url_downmp3,mp3_size,summary';
@@ -345,7 +346,28 @@ export const getAnswerMediasByOrder = async (
   // console.log('result', result);
 
   if (!result) return [];
-  return result?.items as unknown as QuestionResult[];
+
+  const items = result?.items as unknown as QuestionResult[];
+
+  // 按 topicTitle 分组
+  const groupedMap = new Map<string, QuestionResult[]>();
+  for (const item of items) {
+    const topicTitle = item.topicTitle || '';
+    if (!groupedMap.has(topicTitle)) {
+      groupedMap.set(topicTitle, []);
+    }
+    groupedMap.get(topicTitle)!.push(item);
+  }
+
+  // 转换为数组格式
+  const grouped: QuestionResultGrouped[] = Array.from(groupedMap.entries()).map(
+    ([topicTitle, questions]) => ({
+      topicTitle,
+      questions,
+    })
+  );
+
+  return grouped;
 };
 
 export const getCourseByDisplayOrder = async (

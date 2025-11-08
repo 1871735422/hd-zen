@@ -5,9 +5,10 @@ import {
   getCourseTopicsByCourse,
 } from '@/app/api';
 import MobileQaLessonPage from '@/app/components/mobile/MobileQaLessonPage';
+import NotFound from '@/app/not-found';
 import { CourseTopic } from '@/app/types/models';
 import { getDeviceTypeFromHeaders } from '@/app/utils/serverDeviceUtils';
-import { Container, Typography } from '@mui/material';
+import { Container } from '@mui/material';
 import QaClientWrapper from './QaClientWrapper';
 
 // 15分钟缓存
@@ -100,21 +101,19 @@ const qaPage = async ({ params, searchParams }: qaPageProps) => {
     courseTopics.find(topic => topic.ordering + '' === lessonOrder)?.title ??
     '';
 
-  // 获取问题和答案
-  const questions = await getAnswerMediasByOrder(
+  // 获取问题和答案（已按 topicTitle 分组）
+  const questionsGrouped = await getAnswerMediasByOrder(
     courseOrder,
     lessonOrder,
     undefined,
     true
   );
+  // 展平分组数据以便查找和遍历
+  const questions = questionsGrouped.flatMap(group => group.questions);
   // console.log('questions', questions);
 
   if (!questions.length) {
-    return (
-      <Typography variant='h5' textAlign='center'>
-        即将推出
-      </Typography>
-    );
+    return <NotFound />;
   }
   const currentIndex = questions.findIndex(
     question => question.questionOrder + '' === questionOrder
@@ -133,6 +132,7 @@ const qaPage = async ({ params, searchParams }: qaPageProps) => {
   };
 
   const questionsData = questions as unknown as QLite[];
+  console.log('questionsData', questionsData);
   const initialIdx = currentIndex < 0 ? 0 : currentIndex;
 
   // 移动端渲染
