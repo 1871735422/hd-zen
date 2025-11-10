@@ -32,10 +32,9 @@ async function CoursePage() {
     return (
       <MobileBaseLayout>
         <MobileCoursePage
-          course={defaultCourse}
           courseTopics={defaultCourseTopics}
           courseOrder='1'
-          type='course'
+          courseType='course'
         />
       </MobileBaseLayout>
     );

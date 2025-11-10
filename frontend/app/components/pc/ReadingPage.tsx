@@ -1,6 +1,6 @@
 import { pxToVw } from '@/app/utils/mobileUtils';
 import { getDeviceTypeFromHeaders } from '@/app/utils/serverDeviceUtils';
-import { Box, Paper, Typography } from '@mui/material';
+import { Box, Paper, Stack, Typography } from '@mui/material';
 import { TopicMediaX } from '../../types/models';
 import ScrollTop from '../shared/ScrollTop';
 import AudioPage from './AudioPage';
@@ -59,10 +59,6 @@ export default async function ReadingPage({
   // 默认的普通阅读模式
   return (
     <>
-      {topicMedia?.url_mp3 && (
-        <AudioPage topicMedia={topicMediaX} showTitle={false} />
-      )}
-
       {/* 阅读内容区域 */}
       <Box
         sx={{
@@ -75,16 +71,21 @@ export default async function ReadingPage({
             fontSize: { lg: 20, xl: 24 },
             fontWeight: 500,
           },
-          px: isMobile ? pxToVw(10) : 0,
+          px: isMobile ? pxToVw(18) : 0,
         }}
         data-reading-container
       >
+        {topicMedia?.url_mp3 && (
+          <AudioPage topicMedia={topicMediaX} showTitle={false} />
+        )}
         {isMobile ? <MobileReadingControls /> : <ReadingSidebar />}
         {/* 客户端增强功能 - 包含分页和全文模式 */}
-        <ReadingContentWrapper
-          introText={topicMedia.article_introtext}
-          fullText={topicMedia.article_fulltext}
-        />
+        <Stack px={isMobile ? pxToVw(8) : 0}>
+          <ReadingContentWrapper
+            introText={topicMedia.article_introtext}
+            fullText={topicMedia.article_fulltext}
+          />
+        </Stack>
       </Box>
 
       <ScrollTop />

@@ -182,7 +182,7 @@ export default function MobileQaLessonPage({
       <Stack sx={{ flex: 1, mt: pxToVw(-20) }}>
         {/* 视频播放器区域 */}
         {currentQuestion?.questionTitle && (
-          <Box sx={{ p: pxToVw(16), minHeight: pxToVw(220) }}>
+          <Box sx={{ p: pxToVw(16) }}>
             <MobileLessonMeta
               title={`${currentIndex + 1}. ${currentQuestion.questionTitle}`}
               author='作者：慈诚罗珠堪布'

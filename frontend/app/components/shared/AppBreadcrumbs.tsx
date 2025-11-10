@@ -36,7 +36,11 @@ export default function AppBreadcrumbs({
     useContext && extraBreadcrumb ? [...items, extraBreadcrumb] : items;
 
   return (
-    <Breadcrumbs aria-label='breadcrumb' sx={{ color, mb: 1, mx: 1 }}>
+    <Breadcrumbs
+      className='breadcrum'
+      aria-label='breadcrumb'
+      sx={{ color, mb: 1, mx: 1 }}
+    >
       {finalItems.map((item, index) => (
         <Link
           variant='subtitle2'

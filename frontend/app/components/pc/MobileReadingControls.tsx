@@ -1,5 +1,6 @@
 'use client';
 
+import { MAIN_BLUE_COLOR } from '@/app/constants/colors';
 import { pxToVw } from '@/app/utils/mobileUtils';
 import {
   Button,
@@ -7,17 +8,34 @@ import {
   IconButton,
   Slider,
   Stack,
+  styled,
   Typography,
 } from '@mui/material';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useMemo, useState } from 'react';
 import BookExpandIcon from '../icons/BookExpandIcon';
 
+const SwitchBtn = styled(Button)(({ className }) => ({
+  width: pxToVw(69),
+  height: pxToVw(69),
+  borderRadius: '50%',
+  color: className === 'active' ? '#fff' : 'rgba(91, 150, 217, 1)',
+  backgroundColor:
+    className === 'active' ? MAIN_BLUE_COLOR : 'rgba(237, 246, 252, 1)',
+  '& .MuiTypography-root': {
+    fontSize: pxToVw(14),
+    fontWeight: 500,
+    lineHeight: 1.1,
+    padding: pxToVw(20),
+  },
+}));
+
 const MobileReadingControls = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [fontSize, setFontSize] = useState(17);
+  const [mode, setMode] = useState<'paged' | 'full'>('full');
 
   const handleEnterReadingMode = useCallback(() => {
     const params = new URLSearchParams(searchParams.toString());
@@ -104,52 +122,19 @@ const MobileReadingControls = () => {
           '& .MuiDrawer-paper': {
             borderTopLeftRadius: pxToVw(20),
             borderTopRightRadius: pxToVw(20),
-            pb: pxToVw(20),
-            px: pxToVw(20),
+            py: pxToVw(28),
+            px: pxToVw(25),
           },
         }}
       >
         {/* 滑动条容器 */}
-        <Slider
-          value={fontSize}
-          onChange={handleFontSizeChange}
-          min={10}
-          max={28}
-          step={1}
-          sx={{
-            height: pxToVw(34),
-            px: 10,
-            pb: `0 !important`,
-            '& .MuiSlider-rail': {
-              height: pxToVw(34),
-              borderRadius: pxToVw(20),
-              background:
-                'linear-gradient(95.14deg, rgba(227, 241, 255, 1) 0%, rgba(247, 247, 247, 1) 100%)',
-              opacity: 1,
-            },
-            '& .MuiSlider-track': {
-              display: 'none',
-            },
-            '& .MuiSlider-thumb': {
-              width: pxToVw(34),
-              height: pxToVw(34),
-              borderRadius: '50%',
-              backgroundColor: '#fff',
-
-              '&:before': {
-                content: `"${fontSize}"`,
-                fontSize: pxToVw(16),
-                fontWeight: 400,
-                color: '#000',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              },
-            },
-          }}
-        />
         {/* 字体大小调节 */}
-        <Stack direction={'row'} justifyContent={'space-between'}>
+        <Stack
+          direction={'row'}
+          justifyContent={'space-between'}
+          alignItems={'center'}
+          mb={1.5}
+        >
           {/* 左侧小 A */}
           <Typography
             sx={{
@@ -161,6 +146,44 @@ const MobileReadingControls = () => {
           >
             A
           </Typography>
+          <Slider
+            value={fontSize}
+            onChange={handleFontSizeChange}
+            min={10}
+            max={28}
+            step={1}
+            sx={{
+              height: pxToVw(34),
+              mx: pxToVw(20),
+              pb: `0 !important`,
+              '& .MuiSlider-rail': {
+                height: pxToVw(34),
+                borderRadius: pxToVw(20),
+                background:
+                  'linear-gradient(95.14deg, rgba(227, 241, 255, 1) 0%, rgba(247, 247, 247, 1) 100%)',
+                opacity: 1,
+              },
+              '& .MuiSlider-track': {
+                display: 'none',
+              },
+              '& .MuiSlider-thumb': {
+                width: pxToVw(34),
+                height: pxToVw(34),
+                borderRadius: '50%',
+                backgroundColor: '#fff',
+
+                '&:before': {
+                  content: `"${fontSize}"`,
+                  fontSize: pxToVw(16),
+                  fontWeight: 400,
+                  color: '#000',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                },
+              },
+            }}
+          />
           {/* 右侧大 A */}
           <Typography
             sx={{
@@ -172,6 +195,26 @@ const MobileReadingControls = () => {
           >
             A
           </Typography>
+        </Stack>
+        {/* 字体大小调节 */}
+        <Stack
+          direction={'row'}
+          // justifyContent={'space-between'}
+          alignItems={'center'}
+          gap={2}
+        >
+          <SwitchBtn
+            className={mode === 'full' ? 'active' : ''}
+            onClick={() => setMode('full')}
+          >
+            <Typography>分页阅读</Typography>
+          </SwitchBtn>
+          <SwitchBtn
+            className={mode === 'paged' ? 'active' : ''}
+            onClick={() => setMode('paged')}
+          >
+            <Typography>全文阅读</Typography>
+          </SwitchBtn>
         </Stack>
       </Drawer>
     </Stack>

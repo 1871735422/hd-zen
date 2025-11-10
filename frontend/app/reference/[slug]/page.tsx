@@ -1,6 +1,5 @@
-import { getBookChapters, getCategories } from '@/app/api';
+import { getBookChapters } from '@/app/api';
 import MobileCoursePage from '@/app/components/mobile/MobileCoursePage';
-import MobileReferencePage from '@/app/components/mobile/MobileReferencePage';
 import CourseCard from '@/app/components/pc/CourseCard';
 import { BookChapter } from '@/app/types/models';
 import { getDeviceTypeFromHeaders } from '@/app/utils/serverDeviceUtils';
@@ -86,42 +85,19 @@ export default async function ReferencePage({
 
   // 获取书籍章节数据
   const books = await getBookChapters(bookOrder);
+  console.log({ books });
+
   if (!books) {
     notFound();
   }
 
   // 根据设备类型返回对应的组件
   if (deviceType === 'mobile') {
-    if (books.length === 0) {
-      // 如果没有章节数据，返回参考资料首页
-      const menuData = await getCategories('学修参考资料');
-      const subMenu = menuData[0]?.subMenu || [];
-      const categories = subMenu.map(item => ({
-        id: parseInt(item.slug, 10),
-        name: item.name,
-        displayOrder: parseInt(item.slug, 10),
-      }));
-      return <MobileReferencePage categories={categories} />;
-    }
-
-    // 获取书籍名称
-    const menuData = await getCategories('学修参考资料');
-    const subMenu = menuData[0]?.subMenu || [];
-    const currentBook = subMenu.find(item => item.slug === bookOrder);
-    const bookName = currentBook?.name || '参考资料';
-
-    // 转换章节数据格式，使用唯一的key
-    const chapters = books.map((book, index) => ({
-      id: parseInt(book.id, 10),
-      title: book.article_title,
-      displayOrder: book.ordering || index + 1, // 如果ordering为空，使用index+1
-    }));
-
     return (
       <MobileCoursePage
-        bookName={bookName}
-        chapters={chapters}
-        bookOrder={bookOrder}
+        courseTopics={books}
+        courseOrder={bookOrder}
+        courseType='reference'
       />
     );
   }

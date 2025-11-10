@@ -53,7 +53,7 @@ export function MobileLessonMeta({
           {/* 作者和日期 */}
           <Typography
             sx={{
-              pl: refCourse ? 0 : pxToVw(10),
+              pl: refCourse ? 0 : pxToVw(22),
               pb: refCourse ? 0 : pxToVw(6),
               fontSize: pxToVw(12),
               color: 'rgba(153, 153, 153, 1)',
@@ -83,6 +83,7 @@ export function MobileLessonMeta({
       {description && (
         <Box
           sx={{
+            mx: pxToVw(16),
             mb: pxToVw(20),
             px: pxToVw(20),
             py: pxToVw(10),
@@ -94,9 +95,9 @@ export function MobileLessonMeta({
             textAlign: 'justify',
           }}
         >
-          <Typography sx={{}}>
+          <Typography>
             <strong>概述：</strong>
-            {description}
+            {description?.replace(/<[^>]*>/g, '')}
           </Typography>
         </Box>
       )}

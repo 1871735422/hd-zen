@@ -1,7 +1,9 @@
 import AppBreadcrumbs, {
   BreadcrumbProvider,
 } from '@/app/components/shared/AppBreadcrumbs';
-import { Box, Container } from '@mui/material';
+import { pxToVw } from '@/app/utils/mobileUtils';
+import { getDeviceTypeFromHeaders } from '@/app/utils/serverDeviceUtils';
+import { Box, Container, Stack } from '@mui/material';
 import { getBookChapters, getCategories } from '../../../api';
 
 const LessonLayout = async ({
@@ -20,6 +22,9 @@ const LessonLayout = async ({
   const menuData = await getCategories('学修参考资料');
   const courseName =
     menuData[0]?.subMenu?.find(item => item.slug === courseOrder)?.name ?? '';
+
+  const deviceType = await getDeviceTypeFromHeaders();
+  const isMobile = deviceType === 'mobile';
 
   const breadcrumbItems = [
     { label: '首页', href: '/' },
@@ -42,7 +47,15 @@ const LessonLayout = async ({
           ml: 0,
         }}
       >
-        <AppBreadcrumbs items={breadcrumbItems} useContext={true} />
+        <Stack
+          sx={{
+            pt: isMobile ? pxToVw(8) : 0,
+            pl: isMobile ? pxToVw(10) : 0,
+            backgroundColor: 'transparent',
+          }}
+        >
+          <AppBreadcrumbs items={breadcrumbItems} useContext={true} />
+        </Stack>
         <Box
           sx={{
             position: 'relative',

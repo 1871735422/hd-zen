@@ -58,7 +58,7 @@ const MobileQaPage: React.FC<MobileQaPageProps> = ({
           gap: pxToVw(7),
           paddingBottom: pxToVw(20),
           pr: pxToVw(16),
-          minHeight: `calc(100vh - ${pxToVw(80)})`,
+          // minHeight: `calc(100vh - ${pxToVw(80)})`,
         }}
       >
         {/* 左侧：课程主题侧边栏 */}

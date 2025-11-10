@@ -1,7 +1,9 @@
+import { MobileBaseLayout } from '@/app/components/mobile/MobileBaseLayout';
 import BaseLayout from '@/app/components/pc/BaseLayout';
+import { BreadcrumbProvider } from '@/app/components/shared/AppBreadcrumbs';
+import { getDeviceTypeFromHeaders } from '@/app/utils/serverDeviceUtils';
 import { notFound } from 'next/navigation';
 import { getCategories, getCourseByDisplayOrder } from '../../api';
-import { getDeviceTypeFromHeaders } from '@/app/utils/serverDeviceUtils';
 
 // 15分钟缓存
 export const revalidate = 900;
@@ -20,17 +22,9 @@ export default async function CourseLayout({
   params: Promise<{ slug: string }>;
 }>) {
   const { slug } = await params;
-
   // 检测设备类型
   const deviceType = await getDeviceTypeFromHeaders();
 
-  // 移动端直接返回 children，不使用 BaseLayout
-  if (deviceType === 'mobile') {
-    return <>{children}</>;
-  }
-
-  // PC端使用原有布局
-  // Get the current course and all courses
   const [course, menuData] = await Promise.all([
     getCourseByDisplayOrder(slug),
     getCategories('学修参考资料'),
@@ -46,13 +40,19 @@ export default async function CourseLayout({
   const selectedCategory = (menus && menus[Number(slug) - 1]?.name) || '';
 
   return (
-    <BaseLayout
-      title='学修参考资料'
-      categories={categories}
-      selectedCategory={selectedCategory}
-      description={metadata.description}
-    >
-      {children}
-    </BaseLayout>
+    <BreadcrumbProvider>
+      {deviceType === 'mobile' ? (
+        <MobileBaseLayout>{children}</MobileBaseLayout>
+      ) : (
+        <BaseLayout
+          title='学修参考资料'
+          categories={categories}
+          selectedCategory={selectedCategory}
+          description={metadata.description}
+        >
+          {children}
+        </BaseLayout>
+      )}
+    </BreadcrumbProvider>
   );
 }

@@ -1,5 +1,8 @@
+import { MobileLessonMeta } from '@/app/components/mobile/MobileLessonMeta';
 import AudioPage from '@/app/components/pc/AudioPage';
 import ReadingPage from '@/app/components/pc/ReadingPage';
+import { pxToVw } from '@/app/utils/mobileUtils';
+import { getDeviceTypeFromHeaders } from '@/app/utils/serverDeviceUtils';
 import { Box } from '@mui/material';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next/types';
@@ -104,7 +107,9 @@ const refPage = async ({ params, searchParams }: refPageProps) => {
   const bookOrder = resolvedParams.slug;
   const chapterOrder = resolvedParams.lesson?.replace('lesson', '');
   const bookMedia = await getBookMediaByOrder(bookOrder, chapterOrder);
-
+  // 设备检测
+  const deviceType = await getDeviceTypeFromHeaders();
+  const isMobile = deviceType === 'mobile';
   // console.log('bookMedia', bookMedia);
 
   if (!bookMedia) {
@@ -133,6 +138,29 @@ const refPage = async ({ params, searchParams }: refPageProps) => {
 
     return <AudioPage topicMedia={bookMedia} />;
   };
+
+  // 移动端渲染
+  if (isMobile) {
+    return (
+      <Box
+        sx={{
+          width: '100%',
+          minHeight: '100vh',
+          pb: pxToVw(80),
+        }}
+      >
+        <MobileLessonMeta
+          title={media?.article_title || media?.title}
+          author={media?.author ?? ''}
+          date={media?.created}
+          description={media?.article_summary || media?.article_introtext}
+          pdfUrl={media?.url_downpdf}
+          epubUrl={media?.url_downepub}
+        />
+        <TabRender />
+      </Box>
+    );
+  }
 
   return (
     <>

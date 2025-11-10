@@ -10,6 +10,7 @@ import { pxToVw } from '@/app/utils/mobileUtils';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import { Box, IconButton, Stack, Typography } from '@mui/material';
 import { useRouter, useSearchParams } from 'next/navigation';
+// @ts-ignore
 import 'plyr/dist/plyr.css';
 import {
   forwardRef,
@@ -536,11 +537,11 @@ const VideoPlayer = forwardRef<
   return (
     <>
       <Stack
-        minHeight={currentVideo?.url_downmp4 ? '70px' : 'auto'}
+        minHeight={currentVideo?.url_downmp4 && !isMobile ? '70px' : 'auto'}
         width='100%'
         direction='row'
         justifyContent={isShowTitle ? 'space-between' : 'flex-end'}
-        mt={isShowTitle ? 4.5 : 5}
+        mt={isMobile ? 1 : isShowTitle ? 4.5 : 5}
         alignItems='center'
         position='relative'
       >

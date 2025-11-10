@@ -80,7 +80,6 @@ const LessonLayout = async ({
             overflow: isMobile ? 'visible' : 'hidden',
             pb: isMobile ? 0 : 5,
             mb: isMobile ? 0 : 5,
-            px: isMobile ? pxToVw(15) : 0,
             borderRadius: isMobile ? 0 : 5,
           }}
         >

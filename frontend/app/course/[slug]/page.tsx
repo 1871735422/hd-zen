@@ -4,7 +4,9 @@ import {
   getCourses,
 } from '@/app/api';
 import MobileCoursePage from '@/app/components/mobile/MobileCoursePage';
+import MobileVolumeNavigation from '@/app/components/mobile/MobileVolumeNavigation';
 import CourseCard from '@/app/components/pc/CourseCard';
+import { pxToVw } from '@/app/utils/mobileUtils';
 import { getDeviceTypeFromHeaders } from '@/app/utils/serverDeviceUtils';
 import { Box, Container, Typography } from '@mui/material';
 import { notFound } from 'next/navigation';
@@ -51,12 +53,33 @@ export default async function CoursePage({ params }: CoursePageProps) {
     // 移动端：使用移动端组件
     if (isMobile) {
       return (
-        <MobileCoursePage
-          course={course}
-          courseTopics={courseTopics}
-          courseOrder={displayOrder}
-          type='course'
-        />
+        <>
+          {/* 导航按钮 */}
+          <MobileVolumeNavigation type='course' />
+          <Box px={pxToVw(16)}>
+            {/* 描述文字块 */}
+            <Typography
+              sx={{
+                fontSize: pxToVw(16),
+                color: 'rgba(67, 109, 186, 1)',
+                lineHeight: 1.5,
+                px: pxToVw(15),
+                py: pxToVw(15),
+                marginBottom: pxToVw(18),
+                background:
+                  'linear-gradient(175.97deg, rgba(232, 247, 255, 1) 0%, rgba(224, 226, 255, 1) 99.94%) ',
+                borderRadius: pxToVw(12),
+              }}
+            >
+              {course?.description}
+            </Typography>
+            <MobileCoursePage
+              courseTopics={courseTopics}
+              courseOrder={displayOrder}
+              courseType={'course'}
+            />
+          </Box>
+        </>
       );
     }
 
