@@ -1,6 +1,7 @@
 'use client';
-import { Box } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import React, { useCallback, useState } from 'react';
+import LogoEndIcon from '../icons/LogoEndIcon';
 import { CustomPagination } from '../shared';
 
 interface ReadingContentProps {
@@ -276,13 +277,6 @@ export default function ReadingContent({
               __html: getCachedPageContent(currentPage),
             }}
           />
-          <CustomPagination
-            totalPages={totalPages}
-            currentPage={currentPage}
-            onPageChange={handlePageChange}
-            mode={mode}
-            onModeChange={handleModeChange}
-          />
         </>
       ) : (
         <>
@@ -305,17 +299,30 @@ export default function ReadingContent({
               dangerouslySetInnerHTML={{ __html: fullText }}
             />
           )}
-          {/* 全文模式下也显示分页 */}
-          {totalPages > 1 && (
-            <CustomPagination
-              totalPages={totalPages}
-              currentPage={currentPage}
-              onPageChange={handlePageChange}
-              mode={mode}
-              onModeChange={handleModeChange}
-            />
-          )}
         </>
+      )}
+      {((mode === 'paged' && currentPage === totalPages) ||
+        mode === 'full') && (
+        <Stack
+          direction='row'
+          spacing={1.5}
+          mt={-1.5}
+          mb={5}
+          fontSize={{ lg: 32, xl: 38, xxl: 44 }}
+          justifyContent='center'
+        >
+          <LogoEndIcon />
+        </Stack>
+      )}
+      {/* 全文模式下也显示分页 */}
+      {totalPages > 1 && (
+        <CustomPagination
+          totalPages={totalPages}
+          currentPage={currentPage}
+          onPageChange={handlePageChange}
+          mode={mode}
+          onModeChange={handleModeChange}
+        />
       )}
     </Box>
   );
