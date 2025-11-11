@@ -4,6 +4,7 @@ import { Box } from '@mui/material';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useCallback } from 'react';
 import { pxToVw } from '../../utils/mobileUtils';
+import { labelItemList, SiderbarKey } from '../pc/LessonSidebar';
 import { MobileLessonMeta } from './MobileLessonMeta';
 import MobileRelatedResources from './MobileRelatedResources';
 
@@ -17,6 +18,7 @@ interface MobileLessonPageProps {
   lessonOrder: string;
   pdfUrl?: string;
   epubUrl?: string;
+  excludeLabels: (typeof labelItemList)[number]['label'][];
 }
 
 const MobileLessonPage: React.FC<MobileLessonPageProps> = ({
@@ -29,18 +31,17 @@ const MobileLessonPage: React.FC<MobileLessonPageProps> = ({
   lessonOrder,
   pdfUrl,
   epubUrl,
+  excludeLabels,
 }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
   // 从 URL 参数获取当前选中的资源类型
-  const selectedResource =
-    (searchParams.get('tab') as 'video' | 'audio' | 'article' | 'qa') ||
-    'video';
+  const selectedResource = (searchParams.get('tab') as SiderbarKey) || 'video';
 
   // 处理资源点击，更新 URL 参数
   const handleResourceClick = useCallback(
-    (type: 'video' | 'audio' | 'article' | 'qa') => {
+    (type: SiderbarKey) => {
       const params = new URLSearchParams(searchParams?.toString());
 
       if (type === 'video') {
@@ -79,6 +80,7 @@ const MobileLessonPage: React.FC<MobileLessonPageProps> = ({
 
       {/* 相关资料侧边栏（可展开/收起）*/}
       <MobileRelatedResources
+        excludeLabels={excludeLabels}
         onResourceClick={handleResourceClick}
         selectedResource={selectedResource ?? 'video'}
       />

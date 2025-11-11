@@ -157,7 +157,13 @@ const refPage = async ({ params, searchParams }: refPageProps) => {
           pdfUrl={media?.url_downpdf}
           epubUrl={media?.url_downepub}
         />
-        <TabRender />
+        <Box
+          sx={{
+            px: pxToVw(15),
+          }}
+        >
+          <TabRender />
+        </Box>
       </Box>
     );
   }
@@ -191,6 +197,7 @@ const refPage = async ({ params, searchParams }: refPageProps) => {
           author={media.author ?? '作者：慈诚罗珠堪布'}
           date={bookMedia[0]?.created}
         />
+
         <TabRender />
       </Box>
     </>

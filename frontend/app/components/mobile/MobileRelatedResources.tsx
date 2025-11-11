@@ -5,10 +5,7 @@ import { Box, IconButton, Stack, SxProps, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { pxToVw } from '../../utils/mobileUtils';
 import ArrowTop from '../icons/ArrowTop';
-import CharIcon from '../icons/CharIcon';
-import QaIcon from '../icons/QaIcon';
-import VideoCamIcon from '../icons/VideoCamIcon';
-import WaveIcon from '../icons/WaveIcon';
+import { labelItemList, SiderbarKey } from '../pc/LessonSidebar';
 
 interface RelateResourceBtnProps {
   expanded: boolean;
@@ -16,8 +13,9 @@ interface RelateResourceBtnProps {
 }
 
 interface MobileRelatedResourcesProps {
-  onResourceClick?: (type: 'video' | 'audio' | 'article' | 'qa') => void;
+  onResourceClick?: (type: SiderbarKey) => void;
   selectedResource?: 'video' | 'audio' | 'article' | 'qa' | null;
+  excludeLabels: (typeof labelItemList)[number]['label'][];
 }
 
 interface ResourceButtonProps {
@@ -28,6 +26,12 @@ interface ResourceButtonProps {
   sx?: SxProps;
 }
 
+const btnPositions = [
+  { left: pxToVw(8), top: pxToVw(0) },
+  { left: pxToVw(52), top: pxToVw(42) },
+  { left: pxToVw(52), bottom: pxToVw(42) },
+  { left: pxToVw(8), bottom: pxToVw(0) },
+];
 // 相关资料按钮组件
 const RelateResourceBtn: React.FC<RelateResourceBtnProps> = ({
   expanded,
@@ -90,6 +94,7 @@ const ResourceButton: React.FC<ResourceButtonProps> = ({
     <IconButton
       onClick={onClick}
       sx={{
+        position: 'absolute',
         width: pxToVw(55),
         height: pxToVw(55),
         borderRadius: '50%',
@@ -129,10 +134,19 @@ const ResourceButton: React.FC<ResourceButtonProps> = ({
 const MobileRelatedResources: React.FC<MobileRelatedResourcesProps> = ({
   onResourceClick,
   selectedResource,
+  excludeLabels,
 }) => {
   const [expanded, setExpanded] = useState(false);
+  const labelItems = labelItemList.filter(
+    item => !excludeLabels.includes(item.label)
+  );
 
-  const handleResourceClick = (type: 'video' | 'audio' | 'article' | 'qa') => {
+  const defaultSelected = (
+    labelItems.find(item => item.key === selectedResource) || labelItems[0]
+  )?.key;
+  console.log({ labelItems });
+
+  const handleResourceClick = (type: SiderbarKey) => {
     onResourceClick?.(type);
   };
 
@@ -143,7 +157,7 @@ const MobileRelatedResources: React.FC<MobileRelatedResourcesProps> = ({
         left: 0, // 改为左侧
         width: pxToVw(80),
         height: pxToVw(200),
-        top: expanded ? pxToVw(200) : pxToVw(170),
+        top: expanded ? pxToVw(210) : pxToVw(170),
         transform: 'translateY(-50%)',
         zIndex: 1000,
         transition: 'all 0.3s ease',
@@ -161,57 +175,19 @@ const MobileRelatedResources: React.FC<MobileRelatedResourcesProps> = ({
       {expanded && (
         <>
           {/* 四个按钮围绕半圆排列 */}
-          {/* 视频按钮 - 右上角 */}
-          <ResourceButton
-            icon={<VideoCamIcon />}
-            label='视频'
-            isSelected={selectedResource === 'video'}
-            onClick={() => handleResourceClick('video')}
-            sx={{
-              position: 'absolute',
-              left: pxToVw(8),
-              top: pxToVw(0),
-            }}
-          />
-
-          {/* 音频按钮 - 右侧中间 */}
-          <ResourceButton
-            icon={<WaveIcon />}
-            label='音频'
-            isSelected={selectedResource === 'audio'}
-            onClick={() => handleResourceClick('audio')}
-            sx={{
-              position: 'absolute',
-              left: pxToVw(52),
-              top: pxToVw(42),
-            }}
-          />
-
-          {/* 文字按钮 - 右下角 */}
-          <ResourceButton
-            icon={<CharIcon />}
-            label='文字'
-            isSelected={selectedResource === 'article'}
-            onClick={() => handleResourceClick('article')}
-            sx={{
-              position: 'absolute',
-              left: pxToVw(52),
-              bottom: pxToVw(42),
-            }}
-          />
-
-          {/* 问答按钮 - 下方中间 */}
-          <ResourceButton
-            icon={<QaIcon />}
-            label='问答'
-            isSelected={selectedResource === 'qa'}
-            onClick={() => handleResourceClick('qa')}
-            sx={{
-              position: 'absolute',
-              left: pxToVw(8),
-              bottom: pxToVw(0),
-            }}
-          />
+          {labelItems.map((item, idx) => {
+            const isSelected = defaultSelected === item.key;
+            return (
+              <ResourceButton
+                key={idx}
+                icon={item.icon}
+                label={item.label}
+                isSelected={isSelected}
+                onClick={() => handleResourceClick(item.key as SiderbarKey)}
+                sx={btnPositions[idx]}
+              />
+            );
+          })}
         </>
       )}
     </Box>

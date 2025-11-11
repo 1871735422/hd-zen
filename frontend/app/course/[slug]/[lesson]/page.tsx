@@ -3,6 +3,7 @@ import AudioPage from '@/app/components/pc/AudioPage';
 import MifaWarning from '@/app/components/pc/MifaWarning';
 import ReadingPage from '@/app/components/pc/ReadingPage';
 import VideoPlayer from '@/app/components/pc/VideoPlayer';
+import { pxToVw } from '@/app/utils/mobileUtils';
 import { Box, Typography } from '@mui/material';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next/types';
@@ -220,8 +221,15 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
         lessonOrder={lessonOrder}
         pdfUrl={media?.url_downpdf}
         epubUrl={media?.url_downepub}
+        excludeLabels={excludeLabels}
       >
-        <TabRender />
+        <Box
+          sx={{
+            px: pxToVw(15),
+          }}
+        >
+          <TabRender />
+        </Box>
       </MobileLessonPage>
     );
   }

@@ -11,7 +11,9 @@ import QaIcon from '../icons/QaIcon';
 import VideoCamIcon from '../icons/VideoCamIcon';
 import WaveIcon from '../icons/WaveIcon';
 
-const labelItemList = [
+export type SiderbarKey = 'video' | 'audio' | 'article' | 'qa' | '';
+
+export const labelItemList = [
   {
     key: '',
     label: '视频',

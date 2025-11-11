@@ -71,7 +71,6 @@ export default async function ReadingPage({
             fontSize: { lg: 20, xl: 24 },
             fontWeight: 500,
           },
-          px: isMobile ? pxToVw(18) : 0,
         }}
         data-reading-container
       >
@@ -80,7 +79,7 @@ export default async function ReadingPage({
         )}
         {isMobile ? <MobileReadingControls /> : <ReadingSidebar />}
         {/* 客户端增强功能 - 包含分页和全文模式 */}
-        <Stack px={isMobile ? pxToVw(8) : 0}>
+        <Stack px={isMobile ? pxToVw(10) : 0}>
           <ReadingContentWrapper
             introText={topicMedia.article_introtext}
             fullText={topicMedia.article_fulltext}

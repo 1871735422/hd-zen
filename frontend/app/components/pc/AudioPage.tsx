@@ -54,8 +54,8 @@ export default function AudioPage({
         flexDirection: 'column',
       }}
     >
-      {mp3Urls.map(item => (
-        <Fragment key={item.title}>
+      {mp3Urls.map((item, idx) => (
+        <Fragment key={idx}>
           {item.title && showTitle && (
             <Typography
               fontWeight={500}

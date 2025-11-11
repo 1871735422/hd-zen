@@ -1,4 +1,5 @@
 'use client';
+import { pxToVw } from '@/app/utils/mobileUtils';
 import { Breadcrumbs, Link } from '@mui/material';
 import NextLink from 'next/link';
 import React, { createContext, useContext, useState } from 'react';
@@ -39,7 +40,14 @@ export default function AppBreadcrumbs({
     <Breadcrumbs
       className='breadcrum'
       aria-label='breadcrumb'
-      sx={{ color, mb: 1, mx: 1 }}
+      sx={{
+        color,
+        mb: 1,
+        mx: 1,
+        '& .MuiBreadcrumbs-li:last-child': {
+          marginLeft: pxToVw(20),
+        },
+      }}
     >
       {finalItems.map((item, index) => (
         <Link
