@@ -1,5 +1,6 @@
 'use client';
 
+import { pxToVw } from '@/app/utils/mobileUtils';
 import {
   Close as CloseIcon,
   OpenInNew as OpenInNewIcon,
@@ -9,6 +10,7 @@ import {
   IconButton,
   Modal,
   Tooltip,
+  Typography,
   useMediaQuery,
   useTheme,
 } from '@mui/material';
@@ -16,12 +18,10 @@ import React, { useState } from 'react';
 
 interface QuestionCollectClientProps {
   qaLink: string;
-  qrCodeUrl: string;
 }
 
 const QuestionCollectClient: React.FC<QuestionCollectClientProps> = ({
   qaLink,
-  qrCodeUrl,
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
@@ -43,38 +43,56 @@ const QuestionCollectClient: React.FC<QuestionCollectClientProps> = ({
     <>
       <Box
         sx={{
-          mx: { lg: 1.5, xl: 1.5, xxl: 2 },
-          my: { lg: 2.55, xl: 3, xxl: 3.5 },
+          ml: { lg: 1.33, xlg: 1.6, xl: 2, xxl: 2.67 },
+          mr: { lg: 2.67, xlg: 3.2, xl: 4, xxl: 5.33 },
+          my: { lg: 2.67, xlg: 3.2, xl: 4, xxl: 5.33 },
           background: 'rgba(255, 255, 255, 0.9)',
           position: 'relative',
           borderRadius: {
-            lg: '25px',
+            lg: '16.67px',
+            xlg: '20px',
             xl: '25px',
-            xxl: '30px',
+            xxl: '33.33px',
           },
-          px: { lg: '32px', xl: 5, xxl: 6 },
-          py: { lg: '22px', xl: 2, xxl: 2.5 },
+          px: { lg: 3.33, xlg: 4, xl: 5, xxl: 6.67 },
+          py: { lg: 1.33, xlg: 1.6, xl: 2, xxl: 2.67 },
         }}
       >
-        <Box
-          component={'img'}
-          alt='参与方式：请扫描下方二维码或点击 问卷链接 填写您的问题。'
-          src={qrCodeUrl}
-          width={0}
-          height={0}
-          onClick={handleOpenModal}
+        <Typography
+          className='fz-qiti'
           sx={{
-            cursor: 'pointer',
-            width: '100%',
-            height: 'auto',
-            maxWidth: {
-              lg: 612,
-              xl: 720,
-              xxl: 850,
-            },
-            display: 'block',
+            color: 'rgba(255, 94, 124, 1)',
+            fontSize: isMobile ? pxToVw(30) : '30px',
+            lineHeight: 1.25,
           }}
-        />
+        >
+          参与方式：
+        </Typography>
+        <Typography
+          className='fz-qiti'
+          sx={{
+            color: 'rgba(70, 114, 166, 1)',
+            fontSize: isMobile
+              ? pxToVw(22)
+              : { lg: 16, xlg: 19.2, xl: 24, xxl: 32 },
+            lineHeight: 1.7,
+          }}
+        >
+          请扫描下方二维码或点击
+          <span
+            className='fz-qiti'
+            style={{
+              color: 'rgba(42, 130, 228, 1)',
+              textDecoration: 'underline',
+              textUnderlineOffset: 6,
+              textDecorationThickness: 1.5,
+            }}
+            onClick={handleOpenModal}
+          >
+            问卷链接
+          </span>
+          填写您的问题。
+        </Typography>
         <Box
           component={'img'}
           src='/images/join-qr.png'
@@ -82,9 +100,9 @@ const QuestionCollectClient: React.FC<QuestionCollectClientProps> = ({
           sx={{
             display: 'flex',
             justifyContent: 'center',
-            width: { lg: 229, xl: 270, xxl: 300 },
+            width: { lg: 180, xlg: 216, xl: 270, xxl: 360 },
             margin: '0 auto',
-            ...(isMobile && { mt: 2.5 }),
+            mt: 2.5,
           }}
         />
       </Box>

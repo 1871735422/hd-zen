@@ -1,7 +1,8 @@
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { pb } from '../api';
 import MobileAskPage from '../components/mobile/AskPage';
 import QuestionCollectClient from '../components/shared/QuestionCollectClient';
+import { ASK_DEAD_FRIENDS1, ASK_DEAD_FRIENDS2 } from '../constants';
 import { Dict } from '../types/models';
 import { getDeviceTypeFromHeaders } from '../utils/serverDeviceUtils';
 
@@ -54,12 +55,7 @@ async function PCAskPage() {
           top: 0,
           width: '100%',
           height: '100%',
-          backgroundImage: {
-            lg: 'url(/images/course-bg.webp)',
-            md: 'url(/images/course-bg.webp)',
-            sm: 'url(/images/course-bg.webp)',
-            xs: 'url(/images/course-bg.webp)',
-          },
+          backgroundImage: 'url(/images/course-bg.webp)',
           backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat',
           backgroundPosition: 'center',
@@ -76,32 +72,36 @@ async function PCAskPage() {
             xl: '30px',
             xxl: '35px',
           },
-          width: { lg: 700, xl: 830, xxl: 950 },
+          width: { lg: 700, xlg: 780, xl: 1000, xxl: 950 },
           py: { lg: 3.6, xlg: 4, xl: 4, xxl: 5 },
-          px: { lg: 7.6, xlg: 8, xl: 9, xxl: 12 },
+          pl: { lg: 7.6, xlg: 8, xl: 8, xxl: 12 },
+          pr: { lg: 7.6, xlg: 8, xl: 6, xxl: 12 },
           textAlign: 'left',
           backdropFilter: 'blur(10px)',
         }}
       >
-        <Box
-          component={'img'}
-          alt='亲爱的朋友们：在学修佛法的过程中，如果您有疑惑，欢迎提出问题，一起探讨！'
-          src='/images/dear-friend.png'
-          width={0}
-          height={0}
+        <Typography
+          className='fz-qiti'
           sx={{
-            width: '100%',
-            height: 'auto',
-            maxWidth: { sm: 500, md: 580, lg: 700, xl: 830, xxl: 950 },
-            display: 'block',
+            color: 'rgba(42, 130, 228, 1)',
+            fontSize: 30,
+            lineHeight: 2,
           }}
-        />
+        >
+          {ASK_DEAD_FRIENDS1}
+        </Typography>
+        <Typography
+          className='fz-qiti'
+          sx={{
+            color: 'rgba(42, 130, 228, 1)',
+            fontSize: 30,
+            lineHeight: 1.2,
+          }}
+        >
+          {ASK_DEAD_FRIENDS2}
+        </Typography>
         <QuestionCollectClient
           qaLink={result?.find(item => item.key === 'qa_link')?.value || '#'}
-          qrCodeUrl={
-            result?.find(item => item.key === 'qa_qrcode_url')?.value ||
-            '/images/join-way.png'
-          }
         />
       </Box>
     </Box>

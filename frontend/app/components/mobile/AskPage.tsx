@@ -1,7 +1,8 @@
 import { pb } from '@/app/api';
+import { ASK_DEAD_FRIENDS1, ASK_DEAD_FRIENDS2 } from '@/app/constants';
 import { Dict } from '@/app/types/models';
 import { pxToVw } from '@/app/utils/mobileUtils';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import QuestionCollectClient from '../shared/QuestionCollectClient';
 
 /**
@@ -54,33 +55,37 @@ export default async function MobileAskPage() {
           borderRadius: pxToVw(30),
           border: '2px solid rgba(255, 255, 255, 0.1)',
           width: '100%',
-          pt: pxToVw(24),
+          pt: pxToVw(20),
           textAlign: 'left',
           backdropFilter: 'blur(10px)',
           zIndex: 1,
         }}
       >
-        <Box
-          component={'img'}
-          alt='亲爱的朋友们：在学修佛法的过程中，如果您有疑惑，欢迎提出问题，一起探讨！'
-          src='/images/mobile/dear-friend.webp'
-          width={0}
-          height={0}
+        <Typography
+          className='fz-qiti'
           sx={{
-            width: '100%',
-            height: 'auto',
-            display: 'block',
-            marginBottom: pxToVw(20),
-            marginTop: pxToVw(-5),
-            paddingX: pxToVw(24),
+            color: 'rgba(42, 130, 228, 1)',
+            fontSize: pxToVw(24),
+            lineHeight: 2,
+            px: pxToVw(20),
           }}
-        />
+        >
+          {ASK_DEAD_FRIENDS1}
+        </Typography>
+        <Typography
+          className='fz-qiti'
+          sx={{
+            color: 'rgba(42, 130, 228, 1)',
+            fontSize: pxToVw(22),
+            lineHeight: 1.2,
+            px: pxToVw(20),
+          }}
+        >
+          {ASK_DEAD_FRIENDS2}
+        </Typography>
+
         <QuestionCollectClient
           qaLink={result?.find(item => item.key === 'qa_link')?.value || '#'}
-          qrCodeUrl={
-            result?.find(item => item.key === 'qa_qrcode_url')?.value ||
-            '/images/mobile/join-way.webp'
-          }
         />
       </Box>
     </Box>

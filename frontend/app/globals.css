@@ -1,16 +1,10 @@
-/* Load FZ Quanfu font for titles */
-/* @font-face {
-  font-family: 'FZQuanfu';
-  src: url('https://d2e6j3zdpz3g2k.cloudfront.net/fhfy/cdn/fonts/方正全福体.woff2')
-    format('woff2');
+@font-face {
+  font-family: 'FangZhengQiTi';
+  src: url('/fonts/subsets/方正启体简体.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
 }
-
-.fz-quanfu {
-  font-family: 'FZQuanfu', Arial, Helvetica, sans-serif;
-} */
 
 /* 北方行书 for subtitles - Optimized subset only 5.72KB */
 /* Characters used: 第一二三四五六七八九十册空性寂止的修法 */
@@ -33,6 +27,11 @@
     'Hiragino Sans GB',
     'Microsoft Yahei',
     sans-serif !important;
+}
+
+.fz-qiti,
+.fz-qiti.fz-qiti {
+  font-family: 'FangZhengQiTi', 'PingFang SC', 'Microsoft Yahei';
 }
 
 @font-face {

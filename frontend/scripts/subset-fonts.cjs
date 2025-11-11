@@ -13,39 +13,27 @@ const path = require('path');
 const fs = require('fs');
 
 // Characters used in the application
-const CHARS = '第一二三四五六七八九十册空性寂止的修法';
+const CHARS =
+  '亲爱的朋友们:在学修佛法的过程中，如果您有疑惑，欢迎提出问题，一起探讨！参与方式:请扫描下方二维码或点击问卷链接填写您的问题。';
 
 async function subsetFont() {
-  const fontSourceUrl =
-    'https://d2e6j3zdpz3g2k.cloudfront.net/fhfy/cdn/fonts/北方行书.woff2';
   const outputDir = path.join(__dirname, '../public/fonts/subsets');
-  const fontName = 'BeiFangXingShu';
+  const fontName = 'FangZhengQiTi';
 
   // Create output directory if it doesn't exist
   if (!fs.existsSync(outputDir)) {
     fs.mkdirSync(outputDir, { recursive: true });
   }
 
-  console.log('🔤 Font Subsetting Process');
-  console.log(`📥 Source: ${fontSourceUrl}`);
   console.log(`📝 Characters: ${CHARS}`);
   console.log(`💾 Output: ${outputDir}`);
-  console.log('---');
 
   try {
-    // Download the font first
-    const tempDir = path.join(__dirname, '../.temp-fonts');
-    if (!fs.existsSync(tempDir)) {
-      fs.mkdirSync(tempDir, { recursive: true });
-    }
-
-    const fontPath = path.join(tempDir, '北方行书.ttf');
+    const fontPath = path.join('.', '方正启体简体.TTF');
 
     // If font doesn't exist locally, you need to download it manually
     if (!fs.existsSync(fontPath)) {
       console.log('⚠️  TTF font file not found locally');
-      console.log('Please place the TTF font file at:');
-      console.log(fontPath);
       return;
     }
 
@@ -68,7 +56,6 @@ async function subsetFont() {
       }
 
       console.log('✅ Font subsetting completed!');
-      console.log(`📦 Generated files:`);
       files.forEach(file => {
         const stats = fs.statSync(file.path);
         const sizeKB = (stats.size / 1024).toFixed(2);
@@ -78,8 +65,8 @@ async function subsetFont() {
       console.log('\n📌 Update globals.css with:');
       console.log(`
 @font-face {
-  font-family: 'BeiFangXingShu';
-  src: url('/fonts/subsets/北方行书.woff2') format('woff2');
+  font-family: '${fontName}';
+  src: url('/fonts/subsets/${fontName}.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
