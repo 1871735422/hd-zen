@@ -143,7 +143,7 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
   if (!media?.url_mp3) {
     excludeLabels.push('音频');
   }
-  if (!media?.article_introtext && media?.article_fulltext) {
+  if (!media?.article_introtext && !media?.article_fulltext) {
     excludeLabels.push('文字');
   }
 
