@@ -5,7 +5,7 @@ import VideoPlayer, { VideoItem } from '@/app/components/pc/VideoPlayer';
 import { formatDate } from '@/app/utils/courseUtils';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { Box, Button, Grid, Stack, Typography } from '@mui/material';
+import { Box, Button, Grid, Stack } from '@mui/material';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
@@ -36,7 +36,6 @@ export default function QaClientWrapper({
   lessonName: string;
 }) {
   const [currentIndex, setCurrentIndex] = useState(Math.max(0, initialIndex));
-
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -52,10 +51,10 @@ export default function QaClientWrapper({
 
   const sidebarItems = useMemo(
     () =>
-      questions.map(q => ({
+      questions.map((q, idx) => ({
         label: q.questionTitle || '',
         path: `/qa/${courseOrder}/lesson${lessonOrder}?tab=question${q.questionOrder}`,
-        displayOrder: Number(q.questionOrder),
+        displayOrder: idx + 1,
       })),
     [questions, courseOrder, lessonOrder]
   );
@@ -89,6 +88,7 @@ export default function QaClientWrapper({
     setCurrentIndex(i => Math.min(questions.length - 1, i + 1));
   }, [questions.length]);
 
+  const hasVideo = currentQuestion?.url_hd || currentQuestion?.url_sd;
   return (
     <Grid
       container
@@ -128,58 +128,55 @@ export default function QaClientWrapper({
             />
           )}
           <>
-            <>
-              {currentQuestion?.url_hd || currentQuestion?.url_sd ? (
+            {hasVideo && (
+              <>
                 <VideoPlayer
                   videoList={videoList}
                   currentIndex={currentIndex}
                   onVideoChange={setCurrentIndex}
                 />
-              ) : (
-                <Typography>
-                  视频资源不可用：{currentQuestion?.questionTitle || ''}
-                </Typography>
-              )}
-            </>
-            <Stack
-              direction='row'
-              justifyContent='space-between'
-              sx={{
-                '& .MuiButton-root>a': {
-                  fontSize: 18,
-                  pr: '2px',
-                },
-                '& .MuiButton-root': {
-                  backgroundColor: 'rgba(240, 247, 255, 1)',
-                  py: '2px',
-                  px: '14px',
-                  borderRadius: '20px',
-                  fontWeight: 400,
-                  color: 'rgba(127, 173, 235, 1)',
-                },
-                '& .MuiButton-startIcon': {
-                  marginRight: '0 !important',
-                },
-                '& .MuiButton-endIcon': {
-                  marginLeft: '0 !important',
-                },
-              }}
-            >
-              <Button
-                startIcon={<ArrowBackIosIcon />}
-                disabled={currentIndex <= 0}
-                onClick={handlePrev}
-              >
-                上一个
-              </Button>
-              <Button
-                disabled={currentIndex >= questions.length - 1}
-                endIcon={<ArrowForwardIosIcon />}
-                onClick={handleNext}
-              >
-                下一个
-              </Button>
-            </Stack>
+
+                <Stack
+                  direction='row'
+                  justifyContent='space-between'
+                  sx={{
+                    '& .MuiButton-root>a': {
+                      fontSize: 18,
+                      pr: '2px',
+                    },
+                    '& .MuiButton-root': {
+                      backgroundColor: 'rgba(240, 247, 255, 1)',
+                      py: '2px',
+                      px: '14px',
+                      borderRadius: '20px',
+                      fontWeight: 400,
+                      color: 'rgba(127, 173, 235, 1)',
+                    },
+                    '& .MuiButton-startIcon': {
+                      marginRight: '0 !important',
+                    },
+                    '& .MuiButton-endIcon': {
+                      marginLeft: '0 !important',
+                    },
+                  }}
+                >
+                  <Button
+                    startIcon={<ArrowBackIosIcon />}
+                    disabled={currentIndex <= 0}
+                    onClick={handlePrev}
+                  >
+                    上一个
+                  </Button>
+                  <Button
+                    disabled={currentIndex >= questions.length - 1}
+                    endIcon={<ArrowForwardIosIcon />}
+                    onClick={handleNext}
+                  >
+                    下一个
+                  </Button>
+                </Stack>
+              </>
+            )}
           </>
         </Box>
       </Grid>

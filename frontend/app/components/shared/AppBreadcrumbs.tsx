@@ -1,6 +1,6 @@
 'use client';
 import { pxToVw } from '@/app/utils/mobileUtils';
-import { Breadcrumbs, Link } from '@mui/material';
+import { Breadcrumbs, Link, useTheme } from '@mui/material';
 import NextLink from 'next/link';
 import React, { createContext, useContext, useState } from 'react';
 
@@ -33,6 +33,7 @@ export default function AppBreadcrumbs({
   color = 'rgba(42, 130, 228, 1)',
 }: AppBreadcrumbsProps) {
   const { extraBreadcrumb } = useBreadcrumb();
+  const theme = useTheme();
   const finalItems =
     useContext && extraBreadcrumb ? [...items, extraBreadcrumb] : items;
 
@@ -44,8 +45,10 @@ export default function AppBreadcrumbs({
         color,
         mb: 1,
         mx: 1,
-        '& .MuiBreadcrumbs-li:last-child': {
-          marginLeft: pxToVw(20),
+        [theme.breakpoints.down('sm')]: {
+          '& .MuiBreadcrumbs-li:last-child': {
+            marginLeft: pxToVw(20),
+          },
         },
       }}
     >

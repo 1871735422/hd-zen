@@ -81,10 +81,11 @@ interface qaPageProps {
 const qaPage = async ({ params, searchParams }: qaPageProps) => {
   const resolvedParams = await params;
   const resolvedSearchParams = await searchParams;
-  const questionOrder =
+  const questionOrder = Number(
     typeof resolvedSearchParams.tab === 'string' && resolvedSearchParams.tab
       ? resolvedSearchParams.tab.replace('question', '')
-      : '1';
+      : '1'
+  );
   const courseOrder = resolvedParams.slug;
   const lessonOrder = resolvedParams.lesson?.replace('lesson', '');
 
@@ -115,9 +116,6 @@ const qaPage = async ({ params, searchParams }: qaPageProps) => {
   if (!questions.length) {
     return <NotFound />;
   }
-  const currentIndex = questions.findIndex(
-    question => question.questionOrder + '' === questionOrder
-  );
 
   // Narrow questions to the client wrapper's expected shape without using any
   type QLite = {
@@ -133,7 +131,7 @@ const qaPage = async ({ params, searchParams }: qaPageProps) => {
 
   const questionsData = questions as unknown as QLite[];
   // console.log('questionsData', questionsData);
-  const initialIdx = currentIndex < 0 ? 0 : currentIndex;
+  const initialIdx = questionOrder - 1;
 
   // 移动端渲染
   if (isMobile) {

@@ -541,7 +541,7 @@ const VideoPlayer = forwardRef<
         width='100%'
         direction='row'
         justifyContent={isShowTitle ? 'space-between' : 'flex-end'}
-        mt={isMobile ? 1 : isShowTitle ? 4.5 : 5}
+        mt={isMobile ? 1 : videoList.length > 1 ? -3 : isShowTitle ? 4.5 : 5}
         alignItems='center'
         position='relative'
       >
