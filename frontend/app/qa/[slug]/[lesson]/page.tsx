@@ -132,7 +132,7 @@ const qaPage = async ({ params, searchParams }: qaPageProps) => {
   };
 
   const questionsData = questions as unknown as QLite[];
-  console.log('questionsData', questionsData);
+  // console.log('questionsData', questionsData);
   const initialIdx = currentIndex < 0 ? 0 : currentIndex;
 
   // 移动端渲染

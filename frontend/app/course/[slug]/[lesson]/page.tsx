@@ -1,5 +1,6 @@
 import MobileLessonPage from '@/app/components/mobile/MobileLessonPage';
 import AudioPage from '@/app/components/pc/AudioPage';
+import MifaWarning from '@/app/components/pc/MifaWarning';
 import ReadingPage from '@/app/components/pc/ReadingPage';
 import VideoPlayer from '@/app/components/pc/VideoPlayer';
 import { Box, Typography } from '@mui/material';
@@ -132,6 +133,9 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
   const media = topicMedia[0];
   const topicTags = media?.tags;
   const excludeLabels = [''];
+  if (!media?.hasQa) {
+    excludeLabels.push('问答');
+  }
   if (!media?.url_hd && !media?.url_sd) {
     excludeLabels.push('视频');
   }
@@ -221,6 +225,22 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
       </MobileLessonPage>
     );
   }
+  const PageContent = () => (
+    <>
+      <LessonMeta
+        title={topicMedia[0]?.article_title}
+        tags={
+          topicTags?.length ? topicTags.map((tag: string) => tag.trim()) : []
+        }
+        description={
+          topicMedia[0]?.article_summary || topicMedia[0]?.media_summary || ''
+        }
+        author='作者：慈诚罗珠堪布'
+        date={topicMedia[0]?.created}
+      />
+      <TabRender />
+    </>
+  );
 
   // PC端渲染
   return (
@@ -230,6 +250,7 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
         selectedKey={selectedKey?.toString()}
         path={`/course/${courseOrder}/lesson${lessonOrder}`}
       />
+
       <Box
         sx={{
           backgroundColor: 'white',
@@ -242,18 +263,16 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
           borderRadius: '25px',
         }}
       >
-        <LessonMeta
-          title={topicMedia[0]?.article_title}
-          tags={
-            topicTags?.length ? topicTags.map((tag: string) => tag.trim()) : []
-          }
-          description={
-            topicMedia[0]?.article_summary || topicMedia[0]?.media_summary || ''
-          }
-          author='作者：慈诚罗珠堪布'
-          date={topicMedia[0]?.created}
-        />
-        <TabRender />
+        {media?.secret_level ? (
+          <MifaWarning
+            article_title={media.article_title}
+            secret_level={media.secret_level}
+          >
+            <PageContent />
+          </MifaWarning>
+        ) : (
+          <PageContent />
+        )}
       </Box>
     </>
   );

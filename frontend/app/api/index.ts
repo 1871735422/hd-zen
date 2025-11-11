@@ -341,7 +341,6 @@ export const getAnswerMediasByOrder = async (
   const result = await pb.collection('vGetAnswerMedias').getList(1, 50, {
     filter: filters.join(' && '),
     fields: fileds,
-    sort: 'questionOrder',
   });
   // console.log('result', result);
 

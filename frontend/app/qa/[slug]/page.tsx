@@ -135,8 +135,8 @@ export default async function QaPage({ params, searchParams }: QaPageProps) {
             }}
             size={9}
           >
-            {questions.map(question => (
-              <Grid key={question.questionOrder} size={{ sm: 6, md: 4 }}>
+            {questions.map((question, idx) => (
+              <Grid key={idx} size={4}>
                 <CourseCard
                   item={{
                     idx: Number(lessonOrder),
@@ -145,7 +145,7 @@ export default async function QaPage({ params, searchParams }: QaPageProps) {
                   }}
                   courseOrder={Number(displayOrder)}
                   slug='qa'
-                  questionOrder={question.questionOrder}
+                  questionOrder={idx + 1}
                 />
               </Grid>
             ))}

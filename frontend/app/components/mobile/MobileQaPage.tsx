@@ -73,10 +73,10 @@ const MobileQaPage: React.FC<MobileQaPageProps> = ({
             gap: pxToVw(8),
           }}
         >
-          {questions.map(question => (
+          {questions.map((question, idx) => (
             <Link
-              key={question.questionOrder}
-              href={`/qa/${courseOrder}/lesson${selectedLessonOrder}?tab=question${question.questionOrder}`}
+              key={idx}
+              href={`/qa/${courseOrder}/lesson${selectedLessonOrder}?tab=question${idx + 1}`}
               style={{ textDecoration: 'none' }}
             >
               <Box
