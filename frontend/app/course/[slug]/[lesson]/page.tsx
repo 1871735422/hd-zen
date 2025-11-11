@@ -140,10 +140,13 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
   if (!topicMedia.some(x => x?.url_hd) && !topicMedia.some(x => x?.url_sd)) {
     excludeLabels.push('视频');
   }
-  if (!media?.url_mp3) {
+  if (!topicMedia.some(x => x?.url_mp3)) {
     excludeLabels.push('音频');
   }
-  if (!media?.article_introtext && !media?.article_fulltext) {
+  if (
+    !topicMedia.some(x => x?.article_fulltext) &&
+    !topicMedia.some(x => x?.article_introtext)
+  ) {
     excludeLabels.push('文字');
   }
 
@@ -170,41 +173,47 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
 
     return (
       <>
-        {topicMedia.map(media => (
-          <Fragment key={media.id}>
-            {media?.url_hd || media?.url_sd ? (
-              <VideoPlayer
-                urlParamName={topicMedia.length > 1 ? 'showTitle' : ''}
-                videoList={[
-                  {
-                    id: media?.id || '',
-                    title: media?.title || '',
-                    poster: media?.url_image || '',
-                    url_downmp4: media?.url_downmp4,
-                    sources: [
-                      media?.url_sd
-                        ? {
-                            src: media?.url_sd,
-                            size: 720,
-                            type: 'video/mp4',
-                          }
-                        : undefined,
-                      media?.url_hd
-                        ? { src: media?.url_hd, size: 1080, type: 'video/mp4' }
-                        : undefined,
-                    ].filter(Boolean) as {
-                      src: string;
-                      size?: number;
-                      type?: string;
-                    }[],
-                  },
-                ]}
-              />
-            ) : (
-              <Typography>视频资源不可用：{media?.title} </Typography>
-            )}
-          </Fragment>
-        ))}
+        {topicMedia
+          .filter(x => x.url_sd || x.url_hd)
+          .map(media => (
+            <Fragment key={media.id}>
+              {media?.url_hd || media?.url_sd ? (
+                <VideoPlayer
+                  urlParamName={topicMedia.length > 1 ? 'showTitle' : ''}
+                  videoList={[
+                    {
+                      id: media?.id || '',
+                      title: media?.title || '',
+                      poster: media?.url_image || '',
+                      url_downmp4: media?.url_downmp4,
+                      sources: [
+                        media?.url_sd
+                          ? {
+                              src: media?.url_sd,
+                              size: 720,
+                              type: 'video/mp4',
+                            }
+                          : undefined,
+                        media?.url_hd
+                          ? {
+                              src: media?.url_hd,
+                              size: 1080,
+                              type: 'video/mp4',
+                            }
+                          : undefined,
+                      ].filter(Boolean) as {
+                        src: string;
+                        size?: number;
+                        type?: string;
+                      }[],
+                    },
+                  ]}
+                />
+              ) : (
+                <Typography>视频资源不可用：{media?.title} </Typography>
+              )}
+            </Fragment>
+          ))}
       </>
     );
   };
