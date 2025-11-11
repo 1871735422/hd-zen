@@ -137,7 +137,7 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
   if (!media?.hasQa) {
     excludeLabels.push('问答');
   }
-  if (!media?.url_hd && !media?.url_sd) {
+  if (!topicMedia.some(x => x?.url_hd) && !topicMedia.some(x => x?.url_sd)) {
     excludeLabels.push('视频');
   }
   if (!media?.url_mp3) {
