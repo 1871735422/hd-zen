@@ -42,8 +42,14 @@ const searchTypes = [
 ];
 
 // 格式化课程标题
-const formatCourseTitle = (courseTitle: string): string => {
-  return /第\S册/.test(courseTitle) ? '禅修课 ' + courseTitle : courseTitle;
+const formatCourseTitle = (courseTitle: string, mediaType?: string): string => {
+  if (mediaType === 'qa') {
+    return '禅修课问答/' + courseTitle;
+  }
+
+  return /(第\S册|(寂止|空性)的修法)/.test(courseTitle)
+    ? '慧灯禅修课/禅修课 ' + courseTitle
+    : '学修参考资料/' + courseTitle;
 };
 
 const SearchPage = () => {
@@ -535,8 +541,8 @@ const SearchPage = () => {
                         }
                         from={
                           isArticle
-                            ? `慧灯禅修课/${formatCourseTitle(courseInfo.courseTitle)}`
-                            : `音视频/${formatCourseTitle(courseInfo.courseTitle) || '未知课程'}`
+                            ? formatCourseTitle(courseInfo.courseTitle)
+                            : `音视频/${formatCourseTitle(courseInfo.courseTitle, courseInfo.mediaType)}`
                         }
                         type={itemType}
                         url={`/${courseInfo.mediaType}/${courseInfo.courseOrder}/lesson${courseInfo.topicOrder}${
