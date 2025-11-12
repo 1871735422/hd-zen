@@ -86,6 +86,7 @@ const QuestionCollectClient: React.FC<QuestionCollectClientProps> = ({
               textDecoration: 'underline',
               textUnderlineOffset: 6,
               textDecorationThickness: 1.5,
+              cursor: 'pointer',
             }}
             onClick={handleOpenModal}
           >

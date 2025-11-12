@@ -108,10 +108,12 @@ export default async function QaPage({ params, searchParams }: QaPageProps) {
             position: 'relative',
           }}
         >
-          <DownloadQaResource
-            courseOrder={displayOrder}
-            lessonOrder={lessonOrder}
-          />
+          {sidebarData.length > 0 && (
+            <DownloadQaResource
+              courseOrder={displayOrder}
+              lessonOrder={lessonOrder}
+            />
+          )}
           <Grid size={3}>
             {sidebarData.length > 0 ? (
               <QaSidebar

@@ -108,3 +108,9 @@ export function buildLessonsTitle(size: number) {
 
 export const clearCourseTitle = (title: string) =>
   title?.replace(/(慧灯禅修课\d+ )|(｜慧灯禅修课问答)/, '');
+
+export const getSubTitle = (courseOrder: string) => {
+  if (courseOrder === '5') return '寂止的修法';
+  if (courseOrder === '6') return '空性的修法';
+  return `第${ONE_TO_TEN_CHAR[Number(courseOrder) - 1]}册`;
+};

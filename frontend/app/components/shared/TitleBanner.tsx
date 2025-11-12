@@ -1,5 +1,5 @@
 'use client';
-import { ONE_TO_TEN_CHAR } from '@/app/constants';
+import { getSubTitle } from '@/app/utils/courseUtils';
 import { Stack, Typography } from '@mui/material';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
@@ -10,7 +10,7 @@ interface TitleBannerProps {
 function TitleBanner({ title }: TitleBannerProps) {
   const pathname = usePathname();
   const courseOrder = pathname.split('/')[2]?.replace('lesson', '');
-  const subTitle = `第${ONE_TO_TEN_CHAR[Number(courseOrder) - 1]}册`;
+  const subTitle = getSubTitle(courseOrder);
   return (
     <Stack
       sx={{
