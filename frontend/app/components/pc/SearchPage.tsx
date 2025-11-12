@@ -43,9 +43,7 @@ const searchTypes = [
 
 // 格式化课程标题
 const formatCourseTitle = (courseTitle: string): string => {
-  return /第\S册/.test(courseTitle)
-    ? '慧灯之光禅修 ' + courseTitle
-    : courseTitle;
+  return /第\S册/.test(courseTitle) ? '禅修课 ' + courseTitle : courseTitle;
 };
 
 const SearchPage = () => {
@@ -537,7 +535,7 @@ const SearchPage = () => {
                         }
                         from={
                           isArticle
-                            ? `纸质图书/${formatCourseTitle(courseInfo.courseTitle)}`
+                            ? `慧灯禅修课/${formatCourseTitle(courseInfo.courseTitle)}`
                             : `音视频/${formatCourseTitle(courseInfo.courseTitle) || '未知课程'}`
                         }
                         type={itemType}

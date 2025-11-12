@@ -99,6 +99,22 @@ const processContent = (
   }
 };
 
+const highlightKeywords = (
+  content: string,
+  keywords: string[],
+  expanded: boolean
+) => {
+  const processedContent = processContent(content, keywords || [], expanded);
+  if (keywords && keywords.length > 0) {
+    return processedContent.replace(
+      buildKeywordRegex(keywords) ?? /$^/,
+      m =>
+        `<mark style="color: rgba(255, 94, 124, 1);background: transparent">${m}</mark>`
+    );
+  }
+  return processedContent;
+};
+
 export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
   index,
   title,
@@ -156,9 +172,10 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
             ml: '8px !important',
             flex: 1,
           }}
-        >
-          {title}
-        </Typography>
+          dangerouslySetInnerHTML={{
+            __html: highlightKeywords(title, keywords || [], expanded),
+          }}
+        />
 
         <Stack
           direction='row'
@@ -201,21 +218,7 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
           component='div'
           sx={{ '& mark': { px: 0.25, borderRadius: 0.5 } }}
           dangerouslySetInnerHTML={{
-            __html: (() => {
-              const processedContent = processContent(
-                content,
-                keywords || [],
-                expanded
-              );
-              if (keywords && keywords.length > 0) {
-                return processedContent.replace(
-                  buildKeywordRegex(keywords) ?? /$^/,
-                  m =>
-                    `<mark style="color: rgba(255, 94, 124, 1);background: transparent">${m}</mark>`
-                );
-              }
-              return processedContent;
-            })(),
+            __html: highlightKeywords(content, keywords || [], expanded),
           }}
         />
       </Box>
