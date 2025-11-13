@@ -58,7 +58,6 @@ export default function CategorySelector({
           aria-label='reference categories'
           sx={{
             display: 'flex',
-            justifyContent: 'space-between',
             px: {
               sm: categories.length > 6 ? 1 : 2,
               md: categories.length > 6 ? 2 : 4,

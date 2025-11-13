@@ -1,4 +1,6 @@
 'use client';
+import { useDeviceType } from '@/app/utils/deviceUtils';
+import { pxToVw } from '@/app/utils/mobileUtils';
 import { Box, Chip, Divider, Paper, Stack, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { formatDate } from '../../utils/courseUtils';
@@ -27,13 +29,15 @@ export default function ReadingModeContainer({
 }: ReadingModeContainerProps) {
   const { state } = useReadingMode();
   const [visible, setVisible] = useState(false);
-
+  const deviceType = useDeviceType();
+  const isMobile = deviceType === 'mobile';
   // Minimal shared values to reduce repetition (keep rest unchanged)
   const theme = READING_THEMES[state.backgroundTheme];
   const rowStackSx = {
     marginBottom: 2,
     flexDirection: 'row',
     justifyContent: 'flex-start',
+    fontSize: isMobile ? pxToVw(12) : 18,
   };
   const tagBoxSx = {
     display: 'flex',
@@ -73,70 +77,81 @@ export default function ReadingModeContainer({
         width: '100vw',
         height: '100vh',
         backgroundColor: theme.background,
-        py: 7,
+        py: isMobile ? 0 : 7,
         transition: 'background-color 0.3s ease',
         overflow: 'auto',
       }}
     >
       {/* 文章内容和侧边栏容器 */}
       <Box
-        sx={{
-          position: 'relative',
-          maxWidth: { lg: 900, xl: 1240 },
-          margin: '40px auto 60px',
-          zIndex: 2,
-          ':before': {
-            content: '""',
-            position: 'absolute',
-            top: { lg: -28, xl: -36 },
-            left: '2.2%',
-            width: '95.6%',
-            height: 50,
-            borderRadius: { lg: '20px 20px 0 0', xl: '30px 30px 0 0' },
-            backgroundColor: theme.main?.replace('1)', '0.3)'),
-          },
-          ':after': {
-            content: '""',
-            position: 'absolute',
-            top: { lg: -40, xl: -52 },
-            left: '3.6%',
-            width: '92.8%',
-            height: 60,
-            borderRadius: { lg: '20px 20px 0 0', xl: '30px 30px 0 0' },
-            backgroundColor: theme.main?.replace('1)', '0.15)'),
-          },
-        }}
+        sx={
+          isMobile
+            ? {}
+            : {
+                position: 'relative',
+                maxWidth: { lg: 900, xl: 1240 },
+                margin: '40px auto 60px',
+                zIndex: 2,
+                ':before': {
+                  content: '""',
+                  position: 'absolute',
+                  top: { lg: -28, xl: -36 },
+                  left: '2.2%',
+                  width: '95.6%',
+                  height: 50,
+                  borderRadius: { lg: '20px 20px 0 0', xl: '30px 30px 0 0' },
+                  backgroundColor: theme.main?.replace('1)', '0.3)'),
+                },
+                ':after': {
+                  content: '""',
+                  position: 'absolute',
+                  top: { lg: -40, xl: -52 },
+                  left: '3.6%',
+                  width: '92.8%',
+                  height: 60,
+                  borderRadius: { lg: '20px 20px 0 0', xl: '30px 30px 0 0' },
+                  backgroundColor: theme.main?.replace('1)', '0.15)'),
+                },
+              }
+        }
       >
         <Paper
           elevation={0}
-          sx={{
-            backgroundColor: theme.main,
-            borderRadius: {
-              lg: '20px 20px 0 0',
-              xl: '30px 30px 0 0',
-              xxl: '35px 35px 0 0',
-            },
-            p: { lg: 12, xl: 18, xxl: 22 },
-            minHeight: 'calc(100vh - 160px)',
-            ':before': {
-              content: '""',
-              position: 'absolute',
-              top: { lg: -14, xl: -18, xxl: -22 },
-              left: '1%',
-              width: '98%',
-              height: 32,
-              borderRadius: {
-                lg: '20px 20px 0 0',
-                xl: '30px 30px 0 0',
-                xxl: '35px 35px 0 0',
-              },
-              backgroundColor: theme.main?.replace('1)', '0.5)'),
-              '& .MuiTypography-root': {
-                fontSize: state.fontSize,
-                lineHeight: '40px',
-              },
-            },
-          }}
+          sx={
+            isMobile
+              ? {
+                  px: pxToVw(17),
+                  py: pxToVw(39),
+                }
+              : {
+                  backgroundColor: theme.main,
+                  borderRadius: {
+                    lg: '20px 20px 0 0',
+                    xl: '30px 30px 0 0',
+                    xxl: '35px 35px 0 0',
+                  },
+                  p: { lg: 12, xl: 18, xxl: 22 },
+                  minHeight: 'calc(100vh - 160px)',
+                  ':before': {
+                    content: '""',
+                    position: 'absolute',
+                    top: { lg: -14, xl: -18, xxl: -22 },
+                    left: '1%',
+                    width: '98%',
+                    height: 32,
+                    borderRadius: {
+                      lg: '20px 20px 0 0',
+                      xl: '30px 30px 0 0',
+                      xxl: '35px 35px 0 0',
+                    },
+                    backgroundColor: theme.main?.replace('1)', '0.5)'),
+                    '& .MuiTypography-root': {
+                      fontSize: state.fontSize,
+                      lineHeight: 2.2,
+                    },
+                  },
+                }
+          }
         >
           {/* 标题 */}
           <Typography
@@ -147,17 +162,17 @@ export default function ReadingModeContainer({
               textAlign: 'center',
               fontWeight: 'bold',
               color: theme.text,
-              mt: -2,
-              mb: { lg: 7, xl: 10, xxl: 12 },
-              fontSize: { lg: 26, xl: 36, xxl: 40 },
-              lineHeight: { lg: '37px', xl: '52px', xxl: '58px' },
+              mt: isMobile ? 0 : -2,
+              mb: isMobile ? pxToVw(34) : { lg: 7, xl: 10, xxl: 12 },
+              fontSize: isMobile ? pxToVw(20) : { lg: 26, xl: 36, xxl: 40 },
+              lineHeight: 1.45,
             }}
           >
             {title}
           </Typography>
 
           {/* 标签 */}
-          {tags.length > 0 && (
+          {tags.length > 0 && !isMobile && (
             <Stack sx={rowStackSx}>
               <Typography
                 component={'span'}
@@ -182,7 +197,7 @@ export default function ReadingModeContainer({
                       borderRadius: { lg: '20px', xl: '30px' },
                       backgroundColor: theme.tagBg,
                       color: `${theme.tagText} !important`,
-                      fontSize: 18,
+                      fontSize: isMobile ? pxToVw(12) : 18,
                     }}
                     label={tag}
                   />

@@ -6,7 +6,7 @@ import { buildLessonsTitle } from '@/app/utils/courseUtils';
 import { pxToVw } from '@/app/utils/mobileUtils';
 import { getDeviceTypeFromHeaders } from '@/app/utils/serverDeviceUtils';
 import { Box, Container, Stack } from '@mui/material';
-import { getCourseByDisplayOrder, getCourseTopicsByCourse } from '../../../api';
+import { getAnswerMediasByOrder } from '../../../api';
 
 const LessonLayout = async ({
   children,
@@ -16,19 +16,17 @@ const LessonLayout = async ({
   params: Promise<{ slug: string; lesson: string }>;
 }) => {
   const { slug: courseOrder, lesson } = await params;
-  const lessonOrder = lesson.replace('lesson', '');
+  const lessonOrder = Number(lesson.replace('lesson', ''));
 
   // 检测设备类型
   const deviceType = await getDeviceTypeFromHeaders();
   const isMobile = deviceType === 'mobile';
 
-  const course = await getCourseByDisplayOrder(courseOrder);
-  const courseId = course?.id || '';
-  const { items: courseTopics } = await getCourseTopicsByCourse(courseId);
-  const courseName = course?.title ?? '';
+  const questionsGrouped = await getAnswerMediasByOrder(courseOrder);
+  const courseName = questionsGrouped[lessonOrder - 1]?.topicTitle ?? '';
   const lessonName =
-    courseTopics.find(topic => topic.ordering + '' === lessonOrder)?.title ??
-    '';
+    questionsGrouped[lessonOrder - 1]?.questions[0]?.questionTitle ?? '';
+
   const breadcrumbItems = [
     { label: '首页', href: '/' },
     { label: '禅修课问答', href: '/qa' },
@@ -45,9 +43,11 @@ const LessonLayout = async ({
       {!isMobile && (
         <Box mb={3}>
           <CategorySelector
-            categories={buildLessonsTitle(courseTopics.length)}
+            categories={buildLessonsTitle(questionsGrouped.length)}
             selectedCategory={
-              buildLessonsTitle(courseTopics.length)[Number(lessonOrder) - 1]
+              buildLessonsTitle(questionsGrouped.length)[
+                Number(lessonOrder) - 1
+              ]
             }
           />
         </Box>

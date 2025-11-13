@@ -277,7 +277,7 @@ export const getCourses = async (): Promise<PaginatedResponse<Course>> => {
 export const getCourseTopicsByDisplayOrder = async (
   displayOrder: string
 ): Promise<PaginatedResponse<CourseTopic>> => {
-  const result = await pb.collection('courseTopics').getList(1, 50, {
+  const result = await pb.collection('courseTopics').getFullList({
     filter: `courseId.displayOrder = "${displayOrder}"`,
     expand: 'courseId',
     sort: 'ordering',
@@ -285,10 +285,11 @@ export const getCourseTopicsByDisplayOrder = async (
   });
 
   return {
-    ...result,
-    items: result.items.map(record =>
-      mapRecordToCourseTopic(record as PocketRecord)
-    ),
+    items: result.map(record => mapRecordToCourseTopic(record as PocketRecord)),
+    totalItems: result.length,
+    totalPages: 1,
+    page: 1,
+    perPage: result.length,
   };
 };
 
@@ -302,7 +303,7 @@ export const getQuestionsByOrder = async (
   volume: string,
   lesson: string
 ): Promise<PaginatedResponse<Questions>> => {
-  const result = await pb.collection('questions').getList(1, 30, {
+  const result = await pb.collection('questions').getFullList({
     filter: [
       'topicId.courseId.displayOrder = ' + volume,
       'topicId.ordering = ' + lesson,
@@ -312,8 +313,11 @@ export const getQuestionsByOrder = async (
   });
 
   return {
-    ...result,
-    items: result.items.map(record => record as unknown as Questions),
+    items: result.map(record => record as unknown as Questions),
+    totalItems: result.length,
+    totalPages: 1,
+    page: 1,
+    perPage: result.length,
   };
 };
 
@@ -338,7 +342,7 @@ export const getAnswerMediasByOrder = async (
       ',url_image,url_hd,url_sd,mp4_duration,url_downmp4,mp4_size,url_mp3,mp3_duration,url_downmp3,mp3_size,summary';
   }
 
-  const result = await pb.collection('vGetAnswerMedias').getList(1, 50, {
+  const result = await pb.collection('vGetAnswerMedias').getFullList({
     filter: filters.join(' && '),
     fields: fileds,
   });
@@ -346,7 +350,7 @@ export const getAnswerMediasByOrder = async (
 
   if (!result) return [];
 
-  const items = result?.items as unknown as QuestionResult[];
+  const items = result as unknown as QuestionResult[];
 
   // 按 topicTitle 分组
   const groupedMap = new Map<string, QuestionResult[]>();
@@ -426,7 +430,7 @@ export const getCourseTopicsByCourse = async (
   courseId: string
 ): Promise<PaginatedResponse<CourseTopic>> => {
   try {
-    const result = await pb.collection('courseTopics').getList(1, 50, {
+    const result = await pb.collection('courseTopics').getFullList({
       filter: `courseId = "${courseId}"`,
       sort: 'ordering',
       expand: 'courseId',
@@ -434,10 +438,13 @@ export const getCourseTopicsByCourse = async (
     });
 
     return {
-      ...result,
-      items: result.items.map(record =>
+      items: result.map(record =>
         mapRecordToCourseTopic(record as PocketRecord)
       ),
+      totalItems: result.length,
+      totalPages: 1,
+      page: 1,
+      perPage: result.length,
     };
   } catch (error) {
     console.error(
@@ -532,12 +539,12 @@ export const getTopicMediaByOrder = async (
       filters.push('topicOrder = ' + topicOrder);
     }
 
-    const result = await pb.collection('vGetTopicMedia').getList(1, 50, {
+    const result = await pb.collection('vGetTopicMedia').getFullList({
       filter: filters.join(' && '),
     });
     // console.log({ courseOrder, topicOrder });
 
-    return result?.items as unknown as TopicMediaX[];
+    return result as unknown as TopicMediaX[];
   } catch (error) {
     console.error(
       `Error fetching topicMedia for course ${courseOrder}, lesson ${topicOrder}:`,
@@ -564,11 +571,11 @@ export const getMediaImageUrl = (media: Media): string => {
 
 export const getTagRelations = async (tag: string): Promise<TagRelation[]> => {
   if (!tag) return [];
-  const resultList = await pb.collection('vGetTagRelation').getList(1, 50, {
+  const resultList = await pb.collection('vGetTagRelation').getFullList({
     filter: `tags ~ "${tag}"`,
   });
   // console.log('resultList', resultList);
-  return resultList.items as unknown as TagRelation[];
+  return resultList as unknown as TagRelation[];
 };
 
 export const getSearchResults = async (
@@ -829,13 +836,13 @@ export const getBookChapters = async (
   if (chapterOrder) {
     filters += `&& ordering = ${chapterOrder}`;
   }
-  const records = await pb.collection('bookChapters').getList(1, 50, {
+  const records = await pb.collection('bookChapters').getFullList({
     filter: filters,
     sort: 'ordering',
     expand: 'bookId',
   });
 
-  return records?.items as unknown as BookChapter[];
+  return records as unknown as BookChapter[];
 };
 
 export const getBookMediaByOrder = async (
@@ -849,12 +856,12 @@ export const getBookMediaByOrder = async (
       filters.push('topicOrder = ' + chapterOrder);
     }
 
-    const result = await pb.collection('vGetBookMedia').getList(1, 50, {
+    const result = await pb.collection('vGetBookMedia').getFullList({
       filter: filters.join(' && '),
     });
     // console.log({ courseOrder, topicOrder });
     // console.log({ result });
-    return result?.items as unknown as TopicMediaX[];
+    return result as unknown as TopicMediaX[];
   } catch (error) {
     console.error(
       `Error fetching topicMedia for book ${bookOrder}, lesson ${chapterOrder}:`,

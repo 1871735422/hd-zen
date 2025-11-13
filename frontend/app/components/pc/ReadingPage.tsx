@@ -64,7 +64,7 @@ export default async function ReadingPage({
           position: 'relative',
           '& .reading-content': {
             fontSize: { lg: 16, xl: 18, xxl: 24 },
-            lineHeight: { lg: '36px', xl: '40px', xxl: '48px' },
+            lineHeight: 2.2,
           },
           '& .reading-content>h4': {
             fontSize: { lg: 20, xl: 24 },

@@ -59,7 +59,6 @@ export default function ReadingSidebar({
       const currentSize = parseInt(getComputedStyle(element).fontSize);
       const newSize = Math.min(currentSize + 2, 36);
       (element as HTMLElement).style.fontSize = `${newSize}px`;
-      // Also increase any h4 inside the reading content by 2px (cap at 36px)
       const h4s = element.querySelectorAll('h4');
       h4s.forEach(h4 => {
         const h4Size = parseInt(getComputedStyle(h4).fontSize) || 0;
@@ -127,15 +126,16 @@ export default function ReadingSidebar({
     borderRadius: '50%',
     minWidth: 0,
     fontSize: { lg: 10, xlg: 12, xl: 14, xxl: 16 },
-    lineHeight: { lg: '10px', xlg: '12px', xl: '14px', xxl: '16px' },
+    lineHeight: 1,
     textAlign: 'center',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'column',
-    gap: 0.1,
     fontFamily: 'Montserrat, "Segoe UI", "Arial Narrow", Arial, sans-serif',
     fontWeight: 500,
+    overflow: 'hidden', // 确保内部ripple不溢出
+    margin: 0,
     '& svg': {
       fontSize: { lg: 14, xlg: 16, xl: 18, xxl: 22 },
     },

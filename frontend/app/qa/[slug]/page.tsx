@@ -52,6 +52,7 @@ export default async function QaPage({ params, searchParams }: QaPageProps) {
     const courseTopics =
       (await getCourseTopicsByDisplayOrder(displayOrder))?.items || [];
 
+    // console.log({ courseTopics, questionsGrouped });
     // 构建侧边栏数据：所有有问题数据的 topic 都显示
     const sidebarData = courseTopics
       .filter(topic => {
@@ -60,16 +61,16 @@ export default async function QaPage({ params, searchParams }: QaPageProps) {
         );
         return group && group.questions.length > 0;
       })
-      .map(topic => ({
+      .map((topic, idx) => ({
         label: topic.article_title,
-        path: `/qa/${displayOrder}?tab=lesson${topic.ordering}`,
-        displayOrder: topic.ordering,
+        path: `/qa/${displayOrder}?tab=lesson${idx + 1}`,
+        displayOrder: idx + 1,
       }))
       .sort((a, b) => a.displayOrder - b.displayOrder);
 
     // 根据当前选中的 lessonOrder 过滤问题
     const currentTopic = courseTopics.find(
-      topic => topic.ordering.toString() === lessonOrder
+      (topic, idx) => idx + 1 === Number(lessonOrder)
     );
     const currentGroup = questionsGrouped.find(
       group => group.topicTitle === currentTopic?.article_title
