@@ -4,7 +4,6 @@ import { Box, Paper, Stack, Typography } from '@mui/material';
 import { TopicMediaX } from '../../types/models';
 import ScrollTop from '../shared/ScrollTop';
 import AudioPage from './AudioPage';
-import MobileReadingControls from './MobileReadingControls';
 import ReadingContentWrapper from './ReadingContentWrapper';
 import ReadingModePage from './ReadingModePage';
 import ReadingSidebar from './ReadingSidebar';
@@ -77,7 +76,7 @@ export default async function ReadingPage({
         {topicMedia?.url_mp3 && (
           <AudioPage topicMedia={topicMediaX} showTitle={false} />
         )}
-        {isMobile ? <MobileReadingControls /> : <ReadingSidebar />}
+        <ReadingSidebar />
         {/* 客户端增强功能 - 包含分页和全文模式 */}
         <Stack px={isMobile ? pxToVw(10) : 0}>
           <ReadingContentWrapper

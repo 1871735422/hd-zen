@@ -144,7 +144,7 @@ const MobileRelatedResources: React.FC<MobileRelatedResourcesProps> = ({
   const defaultSelected = (
     labelItems.find(item => item.key === selectedResource) || labelItems[0]
   )?.key;
-  console.log({ labelItems });
+  // console.log({ labelItems });
 
   const handleResourceClick = (type: SiderbarKey) => {
     onResourceClick?.(type);

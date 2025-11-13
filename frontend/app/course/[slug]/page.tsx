@@ -42,7 +42,7 @@ export default async function CoursePage({ params }: CoursePageProps) {
     const course = await getCourseByDisplayOrder(displayOrder);
     const courseId = course?.id || '';
     const courseTopicsResult = await getCourseTopicsByCourse(courseId);
-
+    // console.log({ courseTopicsResult });
     // If course is not found, show not found
     if (!course) {
       notFound();
@@ -122,7 +122,10 @@ export default async function CoursePage({ params }: CoursePageProps) {
                         idx: topic.ordering,
                         title: topic.article_title || topic.title || '',
                         description:
-                          topic.description || topic.article_introtext || '',
+                          topic.article_summary ||
+                          topic.description ||
+                          topic.article_introtext ||
+                          '',
                       }}
                       courseOrder={course.displayOrder}
                       slug='course'
