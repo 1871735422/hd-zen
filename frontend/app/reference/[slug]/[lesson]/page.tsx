@@ -1,6 +1,7 @@
 import { MobileLessonMeta } from '@/app/components/mobile/MobileLessonMeta';
 import AudioPage from '@/app/components/pc/AudioPage';
 import ReadingPage from '@/app/components/pc/ReadingPage';
+import VideoPage from '@/app/components/pc/VideoPage';
 import { pxToVw } from '@/app/utils/mobileUtils';
 import { getDeviceTypeFromHeaders } from '@/app/utils/serverDeviceUtils';
 import { Box } from '@mui/material';
@@ -68,6 +69,7 @@ export async function generateMetadata({
   );
 
   const bookMedia = await getBookMediaByOrder(bookOrder, chapterOrder);
+  // console.log('bookMedia', bookMedia);
   const media = bookMedia?.[0];
 
   if (!chapter || !media) return;
@@ -103,7 +105,7 @@ interface refPageProps {
 const refPage = async ({ params, searchParams }: refPageProps) => {
   const resolvedParams = await params;
   const resolvedSearchParams = await searchParams;
-  const { tab: selectedKey } = resolvedSearchParams;
+  let { tab: selectedKey } = resolvedSearchParams;
   const bookOrder = resolvedParams.slug;
   const chapterOrder = resolvedParams.lesson?.replace('lesson', '');
   const bookMedia = await getBookMediaByOrder(bookOrder, chapterOrder);
@@ -117,7 +119,7 @@ const refPage = async ({ params, searchParams }: refPageProps) => {
   }
   const media = bookMedia[0];
   const bookTags = media?.tags;
-  const excludeLabels = ['视频', '问答'];
+  const excludeLabels = ['问答'];
   // console.log(media);
 
   if (!media?.url_mp3) {
@@ -128,15 +130,30 @@ const refPage = async ({ params, searchParams }: refPageProps) => {
     excludeLabels.push('文字');
   }
 
+  if (!media?.url_sd && !media?.url_hd) {
+    excludeLabels.push('视频');
+  }
+
   const TabRender = () => {
-    if (selectedKey === 'article' || !media?.url_mp3) {
-      const isReadingMode = resolvedSearchParams.readingMode === 'true';
+    if (
+      selectedKey === 'audio' ||
+      (!selectedKey && excludeLabels?.includes('视频') && media?.url_mp3)
+    )
+      return <AudioPage topicMedia={bookMedia} />;
+    if (
+      selectedKey === 'article' ||
+      (excludeLabels?.includes('视频') && !media?.mp3_duration)
+    ) {
+      selectedKey = 'article';
+      const resolvedSearchParamsTyped = resolvedSearchParams as {
+        [key: string]: string | string[] | undefined;
+      };
+      const isReadingMode = resolvedSearchParamsTyped.readingMode === 'true';
       return (
         <ReadingPage topicMediaX={bookMedia} isReadingMode={isReadingMode} />
       );
     }
-
-    return <AudioPage topicMedia={bookMedia} />;
+    return <VideoPage topicMedia={bookMedia} />;
   };
 
   // 移动端渲染
@@ -183,7 +200,6 @@ const refPage = async ({ params, searchParams }: refPageProps) => {
           pr: 18,
           display: 'flex',
           flexDirection: 'column',
-          gap: 2,
           pb: 5,
           borderRadius: 5,
         }}
@@ -197,7 +213,6 @@ const refPage = async ({ params, searchParams }: refPageProps) => {
           author={media.author ?? '作者：慈诚罗珠堪布'}
           date={bookMedia[0]?.created}
         />
-
         <TabRender />
       </Box>
     </>

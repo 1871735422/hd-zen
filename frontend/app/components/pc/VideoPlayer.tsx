@@ -537,7 +537,11 @@ const VideoPlayer = forwardRef<
   return (
     <>
       <Stack
-        minHeight={currentVideo?.url_downmp4 && !isMobile ? '70px' : 'auto'}
+        minHeight={
+          currentVideo?.url_downmp4 && !isMobile
+            ? { lg: '45px', xlg: '55px', xl: '70px', xxl: '90px' }
+            : 'auto'
+        }
         width='100%'
         direction='row'
         justifyContent={isShowTitle ? 'space-between' : 'flex-end'}

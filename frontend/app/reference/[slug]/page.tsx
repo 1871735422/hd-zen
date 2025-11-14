@@ -85,7 +85,7 @@ export default async function ReferencePage({
 
   // 获取书籍章节数据
   const books = await getBookChapters(bookOrder);
-  console.log({ books });
+  // console.log({ books });
 
   if (!books) {
     notFound();

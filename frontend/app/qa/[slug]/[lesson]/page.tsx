@@ -1,6 +1,5 @@
 import {
   getAnswerMediasByOrder,
-  getCourseByDisplayOrder,
   getCourses,
   getCourseTopicsByCourse,
 } from '@/app/api';
@@ -93,15 +92,6 @@ const qaPage = async ({ params, searchParams }: qaPageProps) => {
   const deviceType = await getDeviceTypeFromHeaders();
   const isMobile = deviceType === 'mobile';
 
-  // 获取课程和课时信息
-  const course = await getCourseByDisplayOrder(courseOrder);
-  const courseId = course?.id || '';
-  const { items: courseTopics } = await getCourseTopicsByCourse(courseId);
-  const courseName = course?.title ?? '';
-  const lessonName =
-    courseTopics.find(topic => topic.ordering + '' === lessonOrder)?.title ??
-    '';
-
   // 获取问题和答案（已按 topicTitle 分组）
   const questionsGrouped = await getAnswerMediasByOrder(
     courseOrder,
@@ -111,7 +101,8 @@ const qaPage = async ({ params, searchParams }: qaPageProps) => {
   );
   // 展平分组数据以便查找和遍历
   const questions = questionsGrouped.flatMap(group => group.questions);
-  // console.log('questions', questions);
+  const courseName = questions[0]?.courseTitle ?? '';
+  const lessonName = questions[0]?.topicTitle ?? '';
 
   if (!questions.length) {
     return <NotFound />;

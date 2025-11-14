@@ -12,6 +12,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 interface QuestionItem {
   questionOrder: number;
   questionTitle?: string;
+  questionContent?: string;
   questionCreated?: string;
   title?: string;
   url_sd?: string;
@@ -89,6 +90,7 @@ export default function QaClientWrapper({
   }, [questions.length]);
 
   const hasVideo = currentQuestion?.url_hd || currentQuestion?.url_sd;
+  console.log('currentQuestion', currentQuestion);
   return (
     <Grid
       container
@@ -127,57 +129,63 @@ export default function QaClientWrapper({
               refUrl={`/course/${courseOrder}/lesson${lessonOrder}`}
             />
           )}
-          <>
-            {hasVideo && (
-              <>
-                <VideoPlayer
-                  videoList={videoList}
-                  currentIndex={currentIndex}
-                  onVideoChange={setCurrentIndex}
-                />
+          {currentQuestion?.questionContent && (
+            <Box
+              sx={{ p: 2, '& p': { fontSize: '1.2em', lineHeight: 2 } }}
+              dangerouslySetInnerHTML={{
+                __html: currentQuestion?.questionContent,
+              }}
+            />
+          )}
+          {hasVideo && (
+            <>
+              <VideoPlayer
+                videoList={videoList}
+                currentIndex={currentIndex}
+                onVideoChange={setCurrentIndex}
+              />
 
-                <Stack
-                  direction='row'
-                  justifyContent='space-between'
-                  sx={{
-                    '& .MuiButton-root>a': {
-                      fontSize: 18,
-                      pr: '2px',
-                    },
-                    '& .MuiButton-root': {
-                      backgroundColor: 'rgba(240, 247, 255, 1)',
-                      py: '2px',
-                      px: '14px',
-                      borderRadius: '20px',
-                      fontWeight: 400,
-                      color: 'rgba(127, 173, 235, 1)',
-                    },
-                    '& .MuiButton-startIcon': {
-                      marginRight: '0 !important',
-                    },
-                    '& .MuiButton-endIcon': {
-                      marginLeft: '0 !important',
-                    },
-                  }}
+              <Stack
+                direction='row'
+                justifyContent='space-between'
+                sx={{
+                  '& .MuiButton-root>a': {
+                    fontSize: 18,
+                    pr: '2px',
+                  },
+                  '& .MuiButton-root': {
+                    backgroundColor: 'rgba(240, 247, 255, 1)',
+                    py: '2px',
+                    px: '14px',
+                    borderRadius: '20px',
+                    fontWeight: 400,
+                    color: 'rgba(127, 173, 235, 1)',
+                  },
+                  '& .MuiButton-startIcon': {
+                    marginRight: '0 !important',
+                  },
+                  '& .MuiButton-endIcon': {
+                    marginLeft: '0 !important',
+                  },
+                }}
+              >
+                <Button
+                  startIcon={<ArrowBackIosIcon />}
+                  disabled={currentIndex <= 0}
+                  onClick={handlePrev}
                 >
-                  <Button
-                    startIcon={<ArrowBackIosIcon />}
-                    disabled={currentIndex <= 0}
-                    onClick={handlePrev}
-                  >
-                    上一个
-                  </Button>
-                  <Button
-                    disabled={currentIndex >= questions.length - 1}
-                    endIcon={<ArrowForwardIosIcon />}
-                    onClick={handleNext}
-                  >
-                    下一个
-                  </Button>
-                </Stack>
-              </>
-            )}
-          </>
+                  上一个
+                </Button>
+                <Button
+                  disabled={currentIndex >= questions.length - 1}
+                  endIcon={<ArrowForwardIosIcon />}
+                  onClick={handleNext}
+                >
+                  下一个
+                </Button>
+              </Stack>
+            </>
+          )}
         </Box>
       </Grid>
     </Grid>
