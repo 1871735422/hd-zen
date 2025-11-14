@@ -6,14 +6,15 @@ import {
   Button,
   Drawer,
   IconButton,
-  Slider,
   Stack,
   styled,
   Typography,
 } from '@mui/material';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import BookExpandIcon from '../icons/BookExpandIcon';
+import FontSizeSlider from '../mobile/FontSizeSlider';
+import { useReadingMode } from './ReadingModeProvider';
 
 declare global {
   interface Window {
@@ -42,49 +43,21 @@ interface ReadingSidebarProps {
 export default function ReadingSidebar({
   defaultMode = 'full',
 }: ReadingSidebarProps) {
+  const {
+    state,
+    setFontSize,
+    increaseFontSize,
+    decreaseFontSize,
+    toggleSidebar,
+  } = useReadingMode();
   const [mode, setMode] = useState<'paged' | 'full'>(defaultMode);
   const router = useRouter();
   const searchParams = useSearchParams();
   const deviceType = useDeviceType();
   const isMobile = deviceType === 'mobile';
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [fontSize, setFontSize] = useState(17);
 
   const defaultBg = 'rgba(237, 246, 252, 1)';
   const activeBg = 'rgba(130, 178, 232, 1)';
-
-  const handleIncreaseFont = () => {
-    const elements = document.querySelectorAll('.reading-content');
-    elements.forEach(element => {
-      const currentSize = parseInt(getComputedStyle(element).fontSize);
-      const newSize = Math.min(currentSize + 2, 36);
-      (element as HTMLElement).style.fontSize = `${newSize}px`;
-      const h4s = element.querySelectorAll('h4');
-      h4s.forEach(h4 => {
-        const h4Size = parseInt(getComputedStyle(h4).fontSize) || 0;
-        const newH4Size = Math.min(h4Size + 2, 36);
-        (h4 as HTMLElement).style.fontSize = `${newH4Size}px`;
-      });
-    });
-  };
-
-  const handleDecreaseFont = () => {
-    const elements = document.querySelectorAll('.reading-content');
-
-    elements.forEach(element => {
-      const currentSize = parseInt(getComputedStyle(element).fontSize);
-
-      const newSize = Math.max(currentSize - 2, 10);
-      (element as HTMLElement).style.fontSize = `${newSize}px`;
-      // Also decrease any h4 inside the reading content by 2px (min 10px)
-      const h4s = element.querySelectorAll('h4');
-      h4s.forEach(h4 => {
-        const h4Size = parseInt(getComputedStyle(h4).fontSize) || 0;
-        const newH4Size = Math.max(h4Size - 2, 10);
-        (h4 as HTMLElement).style.fontSize = `${newH4Size}px`;
-      });
-    });
-  };
 
   const handleToggleMode = (next: 'paged' | 'full') => {
     setMode(next);
@@ -160,27 +133,6 @@ export default function ReadingSidebar({
     []
   );
 
-  const handleFontSizeChange = useCallback(
-    (event: Event, newValue: number | number[]) => {
-      const size = typeof newValue === 'number' ? newValue : newValue[0];
-      setFontSize(size);
-
-      // 应用字体大小到阅读内容
-      const elements = document.querySelectorAll('.reading-content');
-      elements.forEach(element => {
-        (element as HTMLElement).style.fontSize = `${size}px`;
-
-        // 同时调整 h4 标题的字体大小（保持相对比例）
-        const h4s = element.querySelectorAll('h4');
-        h4s.forEach(h4 => {
-          const h4Size = Math.min(size + 4, 36); // h4 比正文大 4px，最大 36px
-          (h4 as HTMLElement).style.fontSize = `${h4Size}px`;
-        });
-      });
-    },
-    []
-  );
-
   if (isMobile) {
     return (
       <Stack
@@ -207,7 +159,7 @@ export default function ReadingSidebar({
             fontWeight: 400,
             transform: 'scaleX(1.1)',
           }}
-          onClick={() => setIsDrawerOpen(true)}
+          onClick={toggleSidebar}
         >
           A
         </IconButton>
@@ -215,8 +167,8 @@ export default function ReadingSidebar({
         {/* 底部字体调节抽屉 */}
         <Drawer
           anchor='bottom'
-          open={isDrawerOpen}
-          onClose={() => setIsDrawerOpen(false)}
+          open={state.sidebarCollapsed}
+          onClose={toggleSidebar}
           sx={{
             '& .MuiDrawer-paper': {
               borderTopLeftRadius: pxToVw(20),
@@ -226,76 +178,14 @@ export default function ReadingSidebar({
             },
           }}
         >
-          {/* 滑动条容器 */}
-          {/* 字体大小调节 */}
-          <Stack
-            direction={'row'}
-            justifyContent={'space-between'}
-            alignItems={'center'}
-            mb={1.5}
-          >
-            {/* 左侧小 A */}
-            <Typography
-              sx={{
-                fontSize: pxToVw(12),
-                fontWeight: 400,
-                color: '#000',
-                transform: 'scaleX(1.2)',
-              }}
-            >
-              A
-            </Typography>
-            <Slider
-              value={fontSize}
-              onChange={handleFontSizeChange}
-              min={10}
-              max={28}
-              step={1}
-              sx={{
-                height: pxToVw(34),
-                mx: pxToVw(20),
-                pb: `0 !important`,
-                '& .MuiSlider-rail': {
-                  height: pxToVw(34),
-                  borderRadius: pxToVw(20),
-                  background:
-                    'linear-gradient(95.14deg, rgba(227, 241, 255, 1) 0%, rgba(247, 247, 247, 1) 100%)',
-                  opacity: 1,
-                },
-                '& .MuiSlider-track': {
-                  display: 'none',
-                },
-                '& .MuiSlider-thumb': {
-                  width: pxToVw(34),
-                  height: pxToVw(34),
-                  borderRadius: '50%',
-                  backgroundColor: '#fff',
-
-                  '&:before': {
-                    content: `"${fontSize}"`,
-                    fontSize: pxToVw(16),
-                    fontWeight: 400,
-                    color: '#000',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  },
-                },
-              }}
-            />
-            {/* 右侧大 A */}
-            <Typography
-              sx={{
-                fontSize: pxToVw(18),
-                fontWeight: 400,
-                color: '#000',
-                transform: 'scaleX(1.1)',
-              }}
-            >
-              A
-            </Typography>
-          </Stack>
-          {/* 字体大小调节 */}
+          {/* 滑动条容器  字体大小调节 */}
+          <FontSizeSlider
+            fontSize={state.fontSize}
+            setFontSize={setFontSize}
+            bgColor={
+              'linear-gradient(95.14deg, rgba(227, 241, 255, 1) 0%, rgba(247, 247, 247, 1) 100%)'
+            }
+          />
           <Stack direction={'row'} alignItems={'center'} gap={2}>
             <SwitchBtn
               className={mode === 'paged' ? 'active' : ''}
@@ -314,6 +204,8 @@ export default function ReadingSidebar({
       </Stack>
     );
   }
+
+  /* PC端 */
   return (
     <Stack
       spacing={0.7}
@@ -344,7 +236,7 @@ export default function ReadingSidebar({
       </Button>
 
       <Button
-        onClick={handleIncreaseFont}
+        onClick={increaseFontSize}
         disableElevation
         sx={{
           ...buttonStyle,
@@ -356,7 +248,7 @@ export default function ReadingSidebar({
       </Button>
 
       <Button
-        onClick={handleDecreaseFont}
+        onClick={decreaseFontSize}
         disableElevation
         sx={{
           ...buttonStyle,

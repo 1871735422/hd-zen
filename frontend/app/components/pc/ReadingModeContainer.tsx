@@ -66,6 +66,136 @@ export default function ReadingModeContainer({
     return () => io.disconnect();
   }, []);
 
+  const PcArticleMeta = () => {
+    return (
+      <Box>
+        {/* 标签 */}
+        {tags.length > 0 && (
+          <Stack sx={rowStackSx}>
+            <Typography
+              component={'span'}
+              sx={{
+                color: theme.text,
+                fontWeight: '500',
+                minWidth: 40,
+                mx: { lg: 1.5, xl: 3 },
+              }}
+            >
+              标签:
+            </Typography>
+            <Box sx={tagBoxSx}>
+              {tags.slice(0, 5).map((tag, index) => (
+                <Chip
+                  component={'a'}
+                  href={`/tags?tag=${tag}`}
+                  target='_blank'
+                  key={index}
+                  sx={{
+                    cursor: 'pointer',
+                    borderRadius: { lg: '20px', xl: '30px' },
+                    backgroundColor: theme.tagBg,
+                    color: `${theme.tagText} !important`,
+                    fontSize: isMobile ? pxToVw(12) : 18,
+                  }}
+                  label={tag}
+                />
+              ))}
+            </Box>
+          </Stack>
+        )}
+
+        {/* 概述 */}
+        {summary && (
+          <Stack sx={{ ...rowStackSx, mb: 3 }}>
+            <Typography
+              component={'span'}
+              sx={{
+                color: theme.text,
+                fontWeight: '500',
+                minWidth: 40,
+                mx: { lg: 1.5, xl: 3 },
+              }}
+            >
+              概述:
+            </Typography>
+            <Typography
+              sx={{
+                color: theme.text,
+                lineHeight: 1.7,
+                opacity: 0.8,
+              }}
+            >
+              {summary}
+            </Typography>
+          </Stack>
+        )}
+
+        {/* 作者和日期 */}
+        {(author || date) && (
+          <Box sx={{ marginBottom: 1.5 }}>
+            <Typography
+              sx={{
+                color: theme.text,
+                fontSize: state.fontSize - 2,
+                opacity: 0.7,
+              }}
+            >
+              {author && `作者: ${author}`}
+              <span style={{ paddingLeft: '15px' }}>
+                {date && formatDate(date)}
+              </span>
+            </Typography>
+          </Box>
+        )}
+
+        {/* 分隔线 */}
+        <Divider sx={{ backgroundColor: theme.divider }} />
+      </Box>
+    );
+  };
+
+  const MobileArticleMeta = () => {
+    return (
+      <Box>
+        {/* 作者和日期 */}
+        {(author || date) && (
+          <Typography
+            sx={{
+              color: theme.text,
+              fontSize: pxToVw(12),
+              lineHeight: 2.3,
+              textAlign: 'center',
+            }}
+          >
+            {author && `作者: ${author}`}
+            <span style={{ paddingLeft: '15px' }}>
+              {date && formatDate(date)}
+            </span>
+          </Typography>
+        )}
+
+        {/* 概述 */}
+        {summary && (
+          <Typography
+            sx={{
+              backgroundColor: 'rgba(240, 247, 255, 1)',
+              borderRadius: pxToVw(20),
+              px: pxToVw(15),
+              py: pxToVw(9),
+              mt: pxToVw(10),
+              color: theme.text,
+              lineHeight: 1.42,
+              fontSize: pxToVw(14),
+            }}
+          >
+            <strong>概述：</strong>
+            {summary}
+          </Typography>
+        )}
+      </Box>
+    );
+  };
+
   return (
     <Box
       sx={{
@@ -86,7 +216,16 @@ export default function ReadingModeContainer({
       <Box
         sx={
           isMobile
-            ? {}
+            ? {
+                ':before': {
+                  content: '""',
+                  position: 'absolute',
+                  width: '100%',
+                  height: pxToVw(68),
+                  background:
+                    'linear-gradient(180deg, rgba(250, 241, 235, 1) 0%, rgba(252, 235, 210, 0) 100%)',
+                },
+              }
             : {
                 position: 'relative',
                 maxWidth: { lg: 900, xl: 1240 },
@@ -171,88 +310,7 @@ export default function ReadingModeContainer({
             {title}
           </Typography>
 
-          {/* 标签 */}
-          {tags.length > 0 && !isMobile && (
-            <Stack sx={rowStackSx}>
-              <Typography
-                component={'span'}
-                sx={{
-                  color: theme.text,
-                  fontWeight: '500',
-                  minWidth: 40,
-                  mx: { lg: 1.5, xl: 3 },
-                }}
-              >
-                标签:
-              </Typography>
-              <Box sx={tagBoxSx}>
-                {tags.slice(0, 5).map((tag, index) => (
-                  <Chip
-                    component={'a'}
-                    href={`/tags?tag=${tag}`}
-                    target='_blank'
-                    key={index}
-                    sx={{
-                      cursor: 'pointer',
-                      borderRadius: { lg: '20px', xl: '30px' },
-                      backgroundColor: theme.tagBg,
-                      color: `${theme.tagText} !important`,
-                      fontSize: isMobile ? pxToVw(12) : 18,
-                    }}
-                    label={tag}
-                  />
-                ))}
-              </Box>
-            </Stack>
-          )}
-
-          {/* 概述 */}
-          {summary && (
-            <Stack sx={{ ...rowStackSx, mb: 3 }}>
-              <Typography
-                component={'span'}
-                sx={{
-                  color: theme.text,
-                  fontWeight: '500',
-                  minWidth: 40,
-                  mx: { lg: 1.5, xl: 3 },
-                }}
-              >
-                概述:
-              </Typography>
-              <Typography
-                sx={{
-                  color: theme.text,
-                  lineHeight: 1.7,
-                  opacity: 0.8,
-                }}
-              >
-                {summary}
-              </Typography>
-            </Stack>
-          )}
-
-          {/* 作者和日期 */}
-          {(author || date) && (
-            <Box sx={{ marginBottom: 1.5 }}>
-              <Typography
-                sx={{
-                  color: theme.text,
-                  fontSize: state.fontSize - 2,
-                  opacity: 0.7,
-                }}
-              >
-                {author && `作者: ${author}`}
-                <span style={{ paddingLeft: '15px' }}>
-                  {date && formatDate(date)}
-                </span>
-              </Typography>
-            </Box>
-          )}
-
-          {/* 分隔线 */}
-          <Divider sx={{ backgroundColor: theme.divider }} />
-
+          {isMobile ? <MobileArticleMeta /> : <PcArticleMeta />}
           {/* 文章内容 */}
           <Box
             sx={{

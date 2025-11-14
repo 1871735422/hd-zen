@@ -1,8 +1,10 @@
 'use client';
+import { useDeviceType } from '@/app/utils/deviceUtils';
 import { Box, Stack } from '@mui/material';
 import React, { useCallback, useState } from 'react';
 import LogoEndIcon from '../icons/LogoEndIcon';
 import { CustomPagination } from '../shared';
+import { useReadingMode } from './ReadingModeProvider';
 
 interface ReadingContentProps {
   introText?: string;
@@ -20,6 +22,8 @@ export default function ReadingContent({
   introText,
   fullText,
 }: ReadingContentProps) {
+  const { state } = useReadingMode();
+  const isMobile = useDeviceType() === 'mobile';
   const [currentPage, setCurrentPage] = useState(1);
   const [mode, setMode] = useState<'paged' | 'full'>('full'); // 默认全文模式
   const [isClient, setIsClient] = useState(false);
@@ -263,7 +267,23 @@ export default function ReadingContent({
 
   // 全文模式和分页模式
   return (
-    <Box textAlign={'justify'}>
+    <Box
+      textAlign={'justify'}
+      sx={{
+        '& .reading-content': {
+          fontSize: {
+            lg: state.fontSize,
+            xl: state.fontSize + 2,
+            xxl: state.fontSize + 8,
+          },
+          lineHeight: isMobile ? 1.88 : 2.2,
+        },
+        '& .reading-content>h4': {
+          fontSize: { lg: state.fontSize + 4, xl: state.fontSize + 8 },
+          fontWeight: 500,
+        },
+      }}
+    >
       {mode === 'paged' ? (
         <>
           {/* 只显示分页内容 */}

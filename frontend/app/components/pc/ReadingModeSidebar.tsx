@@ -1,9 +1,12 @@
 'use client';
-import { Box, Button, IconButton, Stack } from '@mui/material';
+import { useDeviceType } from '@/app/utils/deviceUtils';
+import { pxToVw } from '@/app/utils/mobileUtils';
+import { Box, Button, Drawer, IconButton, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import LineSpaceDecreaseIcon from '../icons/LineSpaceDecreaseIcon';
 import LineSpaceIncreaseIcon from '../icons/LineSpaceIncreaseIcon';
 import SettingIcon from '../icons/SettingIcon';
+import FontSizeSlider from '../mobile/FontSizeSlider';
 import {
   BackgroundTheme,
   READING_THEMES,
@@ -34,6 +37,7 @@ const CircleButton = styled(Button)(({ theme }) => ({
   },
   fontWeight: 300,
   minWidth: 0,
+  overflow: 'hidden', // 确保内部ripple不溢出
   borderRadius: '50%',
   '&:hover': {
     opacity: 0.8,
@@ -74,6 +78,7 @@ export default function ReadingModeSidebar({
 }: ReadingModeSidebarProps) {
   const {
     state,
+    setFontSize,
     setBackgroundTheme,
     increaseFontSize,
     decreaseFontSize,
@@ -100,6 +105,89 @@ export default function ReadingModeSidebar({
     { theme: 'green', color: READING_THEMES.green.main, label: '绿' },
     { theme: 'dark', color: READING_THEMES.dark.main, label: '黑' },
   ];
+
+  const isMobile = useDeviceType() === 'mobile';
+
+  if (isMobile) {
+    return (
+      <>
+        <Stack
+          sx={{
+            position: 'absolute',
+            right: 0,
+            top: pxToVw(17),
+            zIndex: 1000,
+          }}
+        >
+          {/* 设置按钮 */}
+          {!state.sidebarCollapsed && (
+            <Button
+              onClick={toggleSidebar}
+              sx={{
+                width: pxToVw(42),
+                height: pxToVw(53),
+                minWidth: 0,
+                borderTopLeftRadius: pxToVw(20),
+                borderBottomLeftRadius: pxToVw(20),
+                backgroundColor: sidebarBackBg,
+                color: sidebarBackText,
+                fontSize: pxToVw(32),
+                boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
+                zIndex: 2,
+              }}
+            >
+              <SettingIcon />
+            </Button>
+          )}
+
+          <Button
+            onClick={onExitReadingMode}
+            sx={{
+              width: pxToVw(42),
+              height: pxToVw(85),
+              minWidth: 0,
+              mt: pxToVw(-20),
+              pt: pxToVw(20),
+              borderTopLeftRadius: pxToVw(20),
+              borderBottomLeftRadius: pxToVw(20),
+              backgroundColor: sidebarBackBg,
+              color: sidebarBackText,
+              fontSize: pxToVw(20),
+              writingMode: 'vertical-rl',
+              textOrientation: 'mixed',
+              zIndex: 1,
+            }}
+            title='退出阅读模式'
+          >
+            返回
+          </Button>
+        </Stack>
+        <Drawer
+          anchor='bottom'
+          open={state.sidebarCollapsed}
+          onClose={toggleSidebar}
+          sx={{
+            zIndex: 9999,
+            '& .MuiDrawer-paper': {
+              borderTopLeftRadius: pxToVw(20),
+              borderTopRightRadius: pxToVw(20),
+              py: pxToVw(28),
+              px: pxToVw(25),
+            },
+          }}
+        >
+          {/* 滑动条容器  字体大小调节 */}
+          <FontSizeSlider
+            fontSize={state.fontSize}
+            setFontSize={setFontSize}
+            bgColor={
+              'linear-gradient(95.14deg, rgba(227, 241, 255, 1) 0%, rgba(247, 247, 247, 1) 100%)'
+            }
+          />
+        </Drawer>
+      </>
+    );
+  }
 
   return (
     <Box
@@ -140,9 +228,6 @@ export default function ReadingModeSidebar({
                 xl: '10px 0',
                 xxl: '12px 0',
               },
-          // height: state.sidebarCollapsed
-          //   ? { lg: 30, xlg: 35, xl: 40, xxl: 45 }
-          //   : 'auto',
           boxShadow: `0px 2px 4px ${sidebarBg.replace('1)', '0.25)')}`,
           display: 'flex',
           alignItems: state.sidebarCollapsed ? 'center' : 'flex-start',
@@ -157,6 +242,7 @@ export default function ReadingModeSidebar({
           <IconButton
             onClick={toggleSidebar}
             sx={{
+              p: 0,
               color: settingText,
               py: 0.25,
               '&:hover': {
@@ -185,7 +271,6 @@ export default function ReadingModeSidebar({
               sx={{
                 width: { lg: 40, xlg: 44, xl: 40, xxl: 44 },
                 height: { lg: 40, xlg: 44, xl: 40, xxl: 44 },
-                // py: 0.3,
                 color: settingText,
                 '&:hover': {
                   opacity: 0.8,

@@ -6,6 +6,7 @@ import ScrollTop from '../shared/ScrollTop';
 import AudioPage from './AudioPage';
 import ReadingContentWrapper from './ReadingContentWrapper';
 import ReadingModePage from './ReadingModePage';
+import { ReadingModeProvider } from './ReadingModeProvider';
 import ReadingSidebar from './ReadingSidebar';
 
 interface ReadingPageProps {
@@ -23,7 +24,6 @@ export default async function ReadingPage({
   const isMobile = deviceType === 'mobile';
   const hasContent =
     topicMedia?.article_fulltext || topicMedia?.article_introtext;
-
   if (!hasContent) {
     return (
       <Paper sx={{ p: 4, textAlign: 'center' }}>
@@ -57,19 +57,11 @@ export default async function ReadingPage({
 
   // 默认的普通阅读模式
   return (
-    <>
+    <ReadingModeProvider>
       {/* 阅读内容区域 */}
       <Box
         sx={{
           position: 'relative',
-          '& .reading-content': {
-            fontSize: { lg: 16, xl: 18, xxl: 24 },
-            lineHeight: 2.2,
-          },
-          '& .reading-content>h4': {
-            fontSize: { lg: 20, xl: 24 },
-            fontWeight: 500,
-          },
         }}
         data-reading-container
       >
@@ -85,8 +77,7 @@ export default async function ReadingPage({
           />
         </Stack>
       </Box>
-
       <ScrollTop />
-    </>
+    </ReadingModeProvider>
   );
 }
