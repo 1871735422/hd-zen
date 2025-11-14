@@ -239,7 +239,7 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
             flexDirection: 'column',
             color: 'rgba(84, 161, 209, 1)',
             mt: 0.5,
-            mb: type === '文章' ? (expanded ? -1 : -3) : 1,
+            mb: type === '文章' ? (expanded ? 0 : -3) : 1,
           }}
         >
           {type === '文章' && <FoldResultIcon expanded={expanded} />}

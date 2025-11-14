@@ -1,4 +1,5 @@
 'use client';
+import { pxToVw } from '@/app/utils/mobileUtils';
 import {
   Box,
   Button,
@@ -10,7 +11,7 @@ import {
 } from '@mui/material';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Fragment, useEffect, useState } from 'react';
-import { HELPER_TEXT_COLOR } from '../../constants/colors';
+import { HELPER_TEXT_COLOR, MAIN_BLUE_COLOR } from '../../constants/colors';
 import type { TopicMediaX } from '../../types/models';
 import CheckedIcon from '../icons/CheckedIcon';
 import UncheckIcon from '../icons/UncheckIcon';
@@ -52,7 +53,7 @@ const formatCourseTitle = (courseTitle: string, mediaType?: string): string => {
     : '学修参考资料/' + courseTitle;
 };
 
-const SearchPage = () => {
+const SearchPage = ({ isMobile }: { isMobile: boolean }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const urlKeywords = searchParams.get('keywords');
@@ -249,6 +250,336 @@ const SearchPage = () => {
     }
   };
 
+  const SearchFilter = () => {
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          my: 3,
+          px: isMobile ? pxToVw(35) : 0,
+          '& .MuiTypography-body1': {
+            fontSize: isMobile ? pxToVw(14) : 14,
+            color: isMobile ? 'rgba(119, 119, 119, 1)' : 'rgba(68, 68, 68, 1)',
+          },
+        }}
+      >
+        <Stack
+          sx={{
+            flexDirection: isMobile ? 'column' : 'row',
+            flex: 2,
+            justifyContent: 'space-evenly',
+            gap: 2,
+          }}
+        >
+          {cate !== 'qa' &&
+            searchModels.map(item => (
+              <Box
+                key={item.value}
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  cursor: 'pointer',
+                }}
+                onClick={() => setModelSelected(item.value)}
+              >
+                {modelSelected === item.value ? (
+                  <CheckedIcon sx={{ mr: 1 }} />
+                ) : (
+                  <UncheckIcon sx={{ mr: 1 }} />
+                )}
+                <Typography variant='body1'>{item.name}</Typography>
+              </Box>
+            ))}
+        </Stack>
+        <Stack
+          sx={{
+            flexDirection: 'row',
+            flex: 3,
+            justifyContent: 'center',
+            gap: isMobile ? pxToVw(1) : 3,
+          }}
+        >
+          <Typography variant='body1'>分类选项：</Typography>
+          <select
+            id='cate-select'
+            defaultValue={cate}
+            onChange={handleSelectChange}
+            style={{
+              width: isMobile ? pxToVw(105) : 'auto',
+              height: isMobile ? pxToVw(29) : 'auto',
+              borderRadius: isMobile ? pxToVw(23) : 'none',
+              color: 'rgba(78, 136, 219, 1)',
+              border: '1px solid rgba(212, 212, 212, 1)',
+              padding: '3px 20px 3px 4px',
+              backgroundColor: '#fff',
+            }}
+          >
+            {searchCates.map(item => (
+              <option key={item.value} value={item.value}>
+                {item.name}
+              </option>
+            ))}
+          </select>
+        </Stack>
+      </Box>
+    );
+  };
+
+  const ResultSort = () => {
+    return (
+      <>
+        <Box
+          sx={{
+            width: 260,
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <Typography
+            sx={{
+              fontWeight: 500,
+              color: 'rgba(119, 119, 119, 1)',
+              fontSize: isMobile ? pxToVw(13) : '',
+            }}
+          >
+            排序:
+          </Typography>
+          {resultSort.map(item => (
+            <Button
+              key={item.value}
+              size='small'
+              onClick={() => handleSortChange(item.value)}
+              sx={
+                isMobile
+                  ? {
+                      borderRadius: pxToVw(30),
+                      px: pxToVw(10),
+                      py: pxToVw(1),
+                      background:
+                        sort === item.value
+                          ? 'linear-gradient(90deg, rgba(165, 209, 240, 1) 0%, rgba(173, 178, 247, 1) 100%)'
+                          : 'rgba(242, 247, 255, 1)',
+                      color: sort === item.value ? '#fff' : MAIN_BLUE_COLOR,
+                    }
+                  : {
+                      color:
+                        sort === item.value
+                          ? 'rgba(237, 93, 74, 1)'
+                          : HELPER_TEXT_COLOR,
+                    }
+              }
+            >
+              {item.name}
+            </Button>
+          ))}
+        </Box>
+        {/* 结果排序结束 */}
+        {/* 结果过滤开始 */}
+        <Box
+          sx={{
+            bgcolor: isMobile
+              ? 'rgba(250, 250, 250, 1)'
+              : 'rgba(247, 249, 250, 1)',
+            borderRadius: isMobile ? pxToVw(18) : '10px',
+            p: 1,
+            mt: isMobile ? pxToVw(18) : 1,
+          }}
+        >
+          <Box
+            sx={{
+              width: '70%',
+              display: 'flex',
+              justifyContent: 'space-around',
+              mb: isMobile ? pxToVw(6) : 2,
+              mx: isMobile ? 'auto' : 0,
+              fontSize: isMobile ? pxToVw(13) : 14,
+            }}
+          >
+            {cate !== 'qa' &&
+              searchTypes.map(item => (
+                <Button
+                  key={item.value}
+                  size='small'
+                  variant={searchType === item.value ? 'contained' : 'text'}
+                  onClick={() => handleSearchTypeChange(item.value)}
+                  sx={{
+                    borderRadius: isMobile ? pxToVw(30) : '30px',
+                    width: isMobile ? pxToVw(64) : 80,
+                    height: isMobile ? pxToVw(24) : 22,
+                    bgcolor:
+                      searchType === item.value
+                        ? 'rgba(245, 147, 135, 1)'
+                        : isMobile
+                          ? 'rgba(240, 237, 233, 1)'
+                          : 'transparent',
+                    color:
+                      searchType === item.value
+                        ? '#fff'
+                        : isMobile
+                          ? 'rgba(168, 159, 143, 1)'
+                          : HELPER_TEXT_COLOR,
+                  }}
+                >
+                  {item.name}
+                </Button>
+              ))}
+          </Box>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              color: HELPER_TEXT_COLOR,
+              fontSize: 12,
+              px: 1,
+            }}
+          >
+            <Typography variant='body2' fontSize={'inherit'}>
+              共找到{' '}
+              <span style={{ color: 'rgba(237, 93, 74, 1)' }}>
+                {isLoading ? '...' : totalItems}
+              </span>{' '}
+              条
+            </Typography>
+            {totalPages > 0 && (
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Button
+                  size='small'
+                  color='inherit'
+                  disabled={currentPage <= 1}
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  sx={{ minWidth: 'auto', px: 0.5 }}
+                >
+                  &lt;
+                </Button>
+                <Typography fontSize={'inherit'}>
+                  <span style={{ color: 'rgba(237, 93, 74, 1)' }}>
+                    {currentPage}
+                  </span>
+                  /{totalPages}
+                </Typography>
+                <Button
+                  color='inherit'
+                  size='small'
+                  disabled={currentPage >= totalPages}
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  sx={{ minWidth: 'auto', px: 0.5 }}
+                >
+                  &gt;
+                </Button>
+              </Box>
+            )}
+          </Box>
+        </Box>
+      </>
+    );
+  };
+
+  const SearchResutList = () => {
+    return (
+      <Box>
+        {isLoading ? (
+          <Stack
+            sx={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              py: 4,
+            }}
+          >
+            <CircularProgress size={40} />
+          </Stack>
+        ) : searchResults.length > 0 ? (
+          <Stack spacing={2}>
+            {searchResults.map((item: TopicMediaX, index) => {
+              // 判断是文章还是音视频数据
+              const isArticle =
+                'fulltext' in item || 'introtext' in item || 'summary' in item;
+              const itemType = isArticle ? '文章' : '音视频';
+              // 获取课程信息
+              const courseInfo = {
+                courseTitle: (item as TopicMediaX).courseTitle || '未知课程',
+                courseOrder: (item as TopicMediaX).courseOrder || '',
+                topicOrder: (item as TopicMediaX).topicOrder || '',
+                mediaType: item?.mediaType,
+              };
+
+              return (
+                <Fragment key={index}>
+                  <SearchInfoCard
+                    index={index + 1}
+                    title={item.title}
+                    content={
+                      isArticle ? item.fulltext || item.introtext || '' : ''
+                    }
+                    from={
+                      isArticle
+                        ? formatCourseTitle(courseInfo.courseTitle)
+                        : `音视频/${formatCourseTitle(courseInfo.courseTitle, courseInfo.mediaType)}`
+                    }
+                    type={itemType}
+                    url={`/${courseInfo.mediaType}/${courseInfo.courseOrder}/lesson${courseInfo.topicOrder}${
+                      isArticle
+                        ? '?tab=article'
+                        : courseInfo.mediaType === 'qa'
+                          ? '?tab=question' + item?.questionOrder || 1
+                          : ''
+                    }`}
+                    keywords={searchKeywords ? [searchKeywords] : []}
+                  />
+                  {index < searchResults.length - 1 && (
+                    <Divider sx={{ color: '#F0F0F0' }} />
+                  )}
+                </Fragment>
+              );
+            })}
+          </Stack>
+        ) : (
+          <Box
+            sx={{
+              textAlign: 'center',
+              py: 4,
+              color: HELPER_TEXT_COLOR,
+            }}
+          >
+            <Typography>未找到相关结果</Typography>
+          </Box>
+        )}
+      </Box>
+    );
+  };
+  // 移动端渲染
+  if (isMobile) {
+    return (
+      <Stack
+        sx={{
+          flex: 1,
+          background:
+            'linear-gradient(0deg, rgba(250, 252, 255, 1) 0%, rgba(227, 241, 255, 1) 100%)',
+          boxShadow: '0px 0px 10px  rgba(215, 228, 252, 1)',
+        }}
+      >
+        <SearchFilter />
+        <Box
+          sx={{
+            p: pxToVw(18),
+            borderRadius: `${pxToVw(30)} ${pxToVw(30)} 0 0`,
+            background: '#fff',
+            boxShadow: '0px 0px 10px  rgba(215, 228, 252, 1)',
+            flex: 1,
+          }}
+        >
+          <ResultSort />
+          <SearchResutList />
+        </Box>
+      </Stack>
+    );
+  }
+
+  // PC端渲染
   return (
     <Box
       sx={{
@@ -289,82 +620,7 @@ const SearchPage = () => {
             placeholder='请输入搜索关键词'
             initialValue={searchKeywords}
           />
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              my: 3,
-              color: 'rgba(68, 68, 68, 1)',
-            }}
-          >
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'row',
-                flex: 1,
-                justifyContent: 'space-evenly',
-              }}
-            >
-              {cate !== 'qa' &&
-                searchModels.map(item => (
-                  <Box
-                    key={item.value}
-                    sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      cursor: 'pointer',
-                      fontSize: 14,
-                    }}
-                    onClick={() => setModelSelected(item.value)}
-                  >
-                    {modelSelected === item.value ? (
-                      <CheckedIcon sx={{ mr: 1 }} />
-                    ) : (
-                      <UncheckIcon sx={{ mr: 1 }} />
-                    )}
-                    <Typography fontSize='inherit'>{item.name}</Typography>
-                  </Box>
-                ))}
-            </Box>
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'row',
-                flex: 1,
-                justifyContent: 'center',
-                gap: 3,
-              }}
-            >
-              <Box
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                }}
-              >
-                <Typography fontSize={'inherit'} mr={2}>
-                  分类选项：
-                </Typography>
-                <select
-                  id='cate-select'
-                  defaultValue={cate}
-                  onChange={handleSelectChange}
-                  style={{
-                    color: 'rgba(78, 136, 219, 1)',
-                    border: '1px solid rgba(212, 212, 212, 1)',
-                    padding: '3px 20px 3px 4px',
-                    backgroundColor: '#fff',
-                  }}
-                >
-                  {searchCates.map(item => (
-                    <option key={item.value} value={item.value}>
-                      {item.name}
-                    </option>
-                  ))}
-                </select>
-              </Box>
-            </Box>
-          </Box>
+          <SearchFilter />
           {/* 搜索过滤结束 */}
           {/* 搜索内容展示 开始 */}
           <Paper
@@ -376,202 +632,8 @@ const SearchPage = () => {
               borderRadius: '30px',
             }}
           >
-            <Box
-              sx={{
-                width: 260,
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}
-            >
-              <Typography
-                sx={{
-                  fontWeight: 500,
-                  color: 'rgba(119, 119, 119, 1)',
-                }}
-              >
-                排序:
-              </Typography>
-              {resultSort.map(item => (
-                <Button
-                  key={item.value}
-                  size='small'
-                  onClick={() => handleSortChange(item.value)}
-                  sx={{
-                    fontSize: 14,
-                    color:
-                      sort === item.value
-                        ? 'rgba(237, 93, 74, 1)'
-                        : HELPER_TEXT_COLOR,
-                  }}
-                >
-                  {item.name}
-                </Button>
-              ))}
-            </Box>
-            {/* 结果排序结束 */}
-            {/* 结果过滤开始 */}
-            <Box
-              sx={{
-                bgcolor: 'rgba(247, 249, 250, 1)',
-                borderRadius: '10px',
-                p: 1,
-                mt: 1,
-              }}
-            >
-              <Box
-                sx={{
-                  width: '70%',
-                  display: 'flex',
-                  justifyContent: 'space-around',
-                  mb: 2,
-                }}
-              >
-                {cate !== 'qa' &&
-                  searchTypes.map(item => (
-                    <Button
-                      key={item.value}
-                      size='small'
-                      variant={searchType === item.value ? 'contained' : 'text'}
-                      onClick={() => handleSearchTypeChange(item.value)}
-                      sx={{
-                        borderRadius: '30px',
-                        fontSize: 14,
-                        width: 80,
-                        height: 22,
-                        bgcolor:
-                          searchType === item.value
-                            ? 'rgba(245, 147, 135, 1)'
-                            : 'transparent',
-                        color:
-                          searchType === item.value
-                            ? '#fff'
-                            : HELPER_TEXT_COLOR,
-                      }}
-                    >
-                      {item.name}
-                    </Button>
-                  ))}
-              </Box>
-              <Box
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  color: HELPER_TEXT_COLOR,
-                  fontSize: 12,
-                  px: 1,
-                }}
-              >
-                <Typography variant='body2' fontSize={'inherit'}>
-                  共找到{' '}
-                  <span style={{ color: 'rgba(237, 93, 74, 1)' }}>
-                    {isLoading ? '...' : totalItems}
-                  </span>{' '}
-                  条
-                </Typography>
-                {totalPages > 0 && (
-                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <Button
-                      size='small'
-                      color='inherit'
-                      disabled={currentPage <= 1}
-                      onClick={() => handlePageChange(currentPage - 1)}
-                      sx={{ minWidth: 'auto', px: 0.5 }}
-                    >
-                      &lt;
-                    </Button>
-                    <Typography fontSize={'inherit'}>
-                      <span style={{ color: 'rgba(237, 93, 74, 1)' }}>
-                        {currentPage}
-                      </span>
-                      /{totalPages}
-                    </Typography>
-                    <Button
-                      color='inherit'
-                      size='small'
-                      disabled={currentPage >= totalPages}
-                      onClick={() => handlePageChange(currentPage + 1)}
-                      sx={{ minWidth: 'auto', px: 0.5 }}
-                    >
-                      &gt;
-                    </Button>
-                  </Box>
-                )}
-              </Box>
-            </Box>
-            {isLoading ? (
-              <Box
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  py: 4,
-                }}
-              >
-                <CircularProgress size={40} />
-              </Box>
-            ) : searchResults.length > 0 ? (
-              <Stack spacing={2}>
-                {searchResults.map((item: TopicMediaX, index) => {
-                  // 判断是文章还是音视频数据
-                  const isArticle =
-                    'fulltext' in item ||
-                    'introtext' in item ||
-                    'summary' in item;
-                  const itemType = isArticle ? '文章' : '音视频';
-                  // 获取课程信息
-                  const courseInfo = {
-                    courseTitle:
-                      (item as TopicMediaX).courseTitle || '未知课程',
-                    courseOrder: (item as TopicMediaX).courseOrder || '',
-                    topicOrder: (item as TopicMediaX).topicOrder || '',
-                    mediaType: item?.mediaType,
-                  };
-
-                  return (
-                    <Fragment key={index}>
-                      <SearchInfoCard
-                        index={index + 1}
-                        title={item.title}
-                        content={
-                          isArticle ? item.fulltext || item.introtext || '' : ''
-                        }
-                        from={
-                          isArticle
-                            ? formatCourseTitle(courseInfo.courseTitle)
-                            : `音视频/${formatCourseTitle(courseInfo.courseTitle, courseInfo.mediaType)}`
-                        }
-                        type={itemType}
-                        url={`/${courseInfo.mediaType}/${courseInfo.courseOrder}/lesson${courseInfo.topicOrder}${
-                          isArticle
-                            ? '?tab=article'
-                            : courseInfo.mediaType === 'qa'
-                              ? '?tab=question' + item?.questionOrder || 1
-                              : ''
-                        }`}
-                        keywords={searchKeywords ? [searchKeywords] : []}
-                      />
-                      {index < searchResults.length - 1 && (
-                        <Divider sx={{ color: '#F0F0F0' }} />
-                      )}
-                    </Fragment>
-                  );
-                })}
-              </Stack>
-            ) : (
-              <Box
-                sx={{
-                  textAlign: 'center',
-                  py: 4,
-                  color: HELPER_TEXT_COLOR,
-                }}
-              >
-                <Typography>未找到相关结果</Typography>
-              </Box>
-            )}
+            <ResultSort />
+            <SearchResutList />
           </Paper>
         </Box>
       </Box>

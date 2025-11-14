@@ -8,7 +8,7 @@ import IconButton from '@mui/material/IconButton';
 import TextField from '@mui/material/TextField';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import React, { useState } from 'react';
 import { pxToVw } from '../../utils/mobileUtils';
 import BackIcon from '../icons/BackIcon';
@@ -26,7 +26,9 @@ const Header: React.FC = () => {
   const pathname = usePathname();
   const router = useRouter();
   const isHomePage = pathname === '/';
-  const [searchValue, setSearchValue] = useState('');
+  const searchParams = useSearchParams();
+  const urlKeywords = searchParams.get('keywords');
+  const [searchValue, setSearchValue] = useState(urlKeywords || '');
 
   const handleBack = () => {
     router.back();
@@ -34,7 +36,7 @@ const Header: React.FC = () => {
 
   const handleSearch = () => {
     if (searchValue.trim()) {
-      router.push(`/search?q=${encodeURIComponent(searchValue)}`);
+      router.push(`/search?keywords=${encodeURIComponent(searchValue)}`);
     }
   };
 
@@ -152,7 +154,7 @@ const Header: React.FC = () => {
           </>
         )}
       </Toolbar>
-      <TabNavigation />
+      {!searchValue && <TabNavigation />}
     </AppBar>
   );
 };

@@ -55,7 +55,6 @@ export default function ReadingSidebar({
   const searchParams = useSearchParams();
   const deviceType = useDeviceType();
   const isMobile = deviceType === 'mobile';
-
   const defaultBg = 'rgba(237, 246, 252, 1)';
   const activeBg = 'rgba(130, 178, 232, 1)';
 

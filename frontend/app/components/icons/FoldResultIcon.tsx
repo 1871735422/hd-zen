@@ -13,7 +13,7 @@ const FoldResultIcon = ({ expanded = false }: FoldResultIconProps) => (
       cursor: 'pointer',
       position: 'relative',
       '&::before': {
-        content: `"${expanded ? '折叠' : '展开'}"`,
+        content: `"${expanded ? '收起' : '展开'}"`,
         position: 'absolute',
         top: expanded ? '70%' : 0,
         left: '50%',
