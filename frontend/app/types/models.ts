@@ -116,6 +116,7 @@ export interface CourseTopic extends BaseModel {
   article_summary?: string;
   tags?: string;
   url?: string;
+  url_cover?: string;
   url_mp3?: string;
   url_duration?: string;
   url_downmp3?: string;
@@ -240,6 +241,7 @@ export interface BookChapter extends DownloadResource {
   article_introtext?: string;
   article_fulltext?: string;
   article_summary?: string;
+  url_cover?: string;
   tags?: string[];
   article_title: string;
   expand?: { bookId: { displayOrder: number } };

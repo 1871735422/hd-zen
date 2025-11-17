@@ -54,7 +54,7 @@ const MobileCoursePage: React.FC<MobileCoursePageProps> = ({
       }}
     >
       {isReference && (
-        <Stack pt={pxToVw(8)} pl={pxToVw(10)}>
+        <Stack py={pxToVw(8)} px={pxToVw(10)}>
           <AppBreadcrumbs items={breadcrumbItems} useContext={true} />
         </Stack>
       )}
@@ -97,8 +97,7 @@ const MobileCoursePage: React.FC<MobileCoursePageProps> = ({
                       content: '""',
                       position: 'absolute',
                       inset: 0,
-                      backgroundImage:
-                        'url(https://img.js.design/assets/img/6899d986c3a1ea026434a985.png#6f0d27434bd79fb88cc95fc805e98472);',
+                      backgroundImage: `url(${topic?.url_cover || 'https://img.js.design/assets/img/6899d986c3a1ea026434a985.png'})`,
                       backgroundSize: '100%',
                     },
                   }}

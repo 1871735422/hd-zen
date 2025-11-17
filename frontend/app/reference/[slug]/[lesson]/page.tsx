@@ -1,4 +1,4 @@
-import { MobileLessonMeta } from '@/app/components/mobile/MobileLessonMeta';
+import MobileLessonPage from '@/app/components/mobile/MobileLessonPage';
 import AudioPage from '@/app/components/pc/AudioPage';
 import ReadingPage from '@/app/components/pc/ReadingPage';
 import VideoPage from '@/app/components/pc/VideoPage';
@@ -159,21 +159,17 @@ const refPage = async ({ params, searchParams }: refPageProps) => {
   // 移动端渲染
   if (isMobile) {
     return (
-      <Box
-        sx={{
-          width: '100%',
-          minHeight: '100vh',
-          pb: pxToVw(80),
-        }}
+      <MobileLessonPage
+        title={media?.title || ''}
+        author='慈诚罗珠堪布'
+        date={media?.created || ''}
+        description={media?.article_summary || media?.media_summary || ''}
+        courseOrder={bookOrder}
+        lessonOrder={chapterOrder}
+        pdfUrl={media?.url_downpdf}
+        epubUrl={media?.url_downepub}
+        excludeLabels={excludeLabels}
       >
-        <MobileLessonMeta
-          title={media?.article_title || media?.title}
-          author={media?.author ?? ''}
-          date={media?.created}
-          description={media?.article_summary || media?.article_introtext}
-          pdfUrl={media?.url_downpdf}
-          epubUrl={media?.url_downepub}
-        />
         <Box
           sx={{
             px: pxToVw(15),
@@ -181,7 +177,7 @@ const refPage = async ({ params, searchParams }: refPageProps) => {
         >
           <TabRender />
         </Box>
-      </Box>
+      </MobileLessonPage>
     );
   }
 

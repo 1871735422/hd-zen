@@ -144,11 +144,16 @@ const MobileRelatedResources: React.FC<MobileRelatedResourcesProps> = ({
   const defaultSelected = (
     labelItems.find(item => item.key === selectedResource) || labelItems[0]
   )?.key;
+
   // console.log({ labelItems });
 
   const handleResourceClick = (type: SiderbarKey) => {
     onResourceClick?.(type);
   };
+
+  if (labelItems.length <= 1) {
+    return null; // 如果没有按钮可显示，直接返回null
+  }
 
   return (
     <Box

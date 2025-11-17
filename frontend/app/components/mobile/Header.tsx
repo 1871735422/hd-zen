@@ -134,7 +134,7 @@ const Header: React.FC = () => {
                 fullWidth
                 variant='standard'
                 placeholder={searchValue}
-                autoFocus
+                // autoFocus // 自动聚焦会导致输入法弹出，影响体验，改为点击时聚焦
                 value={searchValue}
                 onChange={e => setSearchValue(e.target.value)}
                 onKeyUp={e => {

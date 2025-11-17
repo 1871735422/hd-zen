@@ -2,6 +2,7 @@ import { getBookChapters } from '@/app/api';
 import MobileCoursePage from '@/app/components/mobile/MobileCoursePage';
 import CourseCard from '@/app/components/pc/CourseCard';
 import { BookChapter } from '@/app/types/models';
+import { pxToVw } from '@/app/utils/mobileUtils';
 import { getDeviceTypeFromHeaders } from '@/app/utils/serverDeviceUtils';
 import { Box, Container, Typography } from '@mui/material';
 import { notFound } from 'next/navigation';
@@ -94,11 +95,13 @@ export default async function ReferencePage({
   // 根据设备类型返回对应的组件
   if (deviceType === 'mobile') {
     return (
-      <MobileCoursePage
-        courseTopics={books}
-        courseOrder={bookOrder}
-        courseType='reference'
-      />
+      <Box px={pxToVw(16)}>
+        <MobileCoursePage
+          courseTopics={books}
+          courseOrder={bookOrder}
+          courseType='reference'
+        />
+      </Box>
     );
   }
 

@@ -36,6 +36,7 @@ export default function AppBreadcrumbs({
   const theme = useTheme();
   const finalItems =
     useContext && extraBreadcrumb ? [...items, extraBreadcrumb] : items;
+  // console.log({ items }, items[3]?.label.length);
 
   return (
     <Breadcrumbs
@@ -45,11 +46,15 @@ export default function AppBreadcrumbs({
         color,
         mb: 1,
         mx: 1,
-        [theme.breakpoints.down('sm')]: {
-          '& .MuiBreadcrumbs-li:last-child': {
-            marginLeft: pxToVw(20),
-          },
-        },
+        // Adjust margin for long labels on small screens
+        [theme.breakpoints.down('sm')]:
+          items?.length > 3 && items[3]?.label.length >= 8
+            ? {
+                '& .MuiBreadcrumbs-li:last-child': {
+                  marginLeft: pxToVw(23),
+                },
+              }
+            : {},
       }}
     >
       {finalItems.map((item, index) => (
