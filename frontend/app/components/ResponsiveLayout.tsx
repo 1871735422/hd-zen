@@ -3,6 +3,11 @@
 import { Container } from '@mui/material';
 import { useDevice } from './DeviceProvider';
 import MobileHeader from './mobile/Header';
+import {
+  SearchFocusProvider,
+  useSearchFocus,
+} from './mobile/SearchFocusContext';
+import SeatchHistory from './mobile/SeatchHistory';
 import DesktopFooter from './pc/Footer';
 import DesktopHeader from './pc/Header';
 
@@ -33,16 +38,19 @@ export default function ResponsiveLayout({
 
   const isMobile = deviceType === 'mobile';
 
+  function MainContainerContent() {
+    // read focus state to decide what to show in main area on mobile
+    const { isSearchFocused } = useSearchFocus();
+    if (isMobile && isSearchFocused) {
+      return <SeatchHistory />;
+    }
+    return <>{children}</>;
+  }
+
   return (
-    <>
+    <SearchFocusProvider>
       {/* 根据设备类型渲染不同的 Header */}
-      {isMobile ? (
-        <>
-          <MobileHeader />
-        </>
-      ) : (
-        <DesktopHeader />
-      )}
+      {isMobile ? <MobileHeader /> : <DesktopHeader />}
 
       <Container
         maxWidth={isMobile ? false : 'xxl'}
@@ -56,11 +64,11 @@ export default function ResponsiveLayout({
           width: '100%',
         }}
       >
-        {children}
+        <MainContainerContent />
       </Container>
 
       {/* 根据设备类型渲染不同的 Footer */}
       {!isMobile && <DesktopFooter />}
-    </>
+    </SearchFocusProvider>
   );
 }

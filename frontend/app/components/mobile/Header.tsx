@@ -10,10 +10,12 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import React, { useState } from 'react';
+import { useSearchHistory } from '../../hooks/useSearchHistory';
 import { pxToVw } from '../../utils/mobileUtils';
 import BackIcon from '../icons/BackIcon';
 import LogoIcon from '../icons/LogoIcon';
 import SearchIcon from '../icons/SearchIcon';
+import { useSearchFocus } from './SearchFocusContext';
 import TabNavigation from './TabNavigation';
 
 /**
@@ -28,7 +30,11 @@ const Header: React.FC = () => {
   const isHomePage = pathname === '/';
   const searchParams = useSearchParams();
   const urlKeywords = searchParams.get('keywords');
-  const [searchValue, setSearchValue] = useState(urlKeywords || '');
+
+  const [searchValue, setSearchValue] = useState(urlKeywords ?? '三殊胜');
+  // console.log({ urlKeywords, searchValue });
+  const { setIsSearchFocused } = useSearchFocus();
+  const { addToHistory } = useSearchHistory();
 
   const handleBack = () => {
     router.back();
@@ -36,6 +42,7 @@ const Header: React.FC = () => {
 
   const handleSearch = () => {
     if (searchValue.trim()) {
+      addToHistory(searchValue);
       router.push(`/search?keywords=${encodeURIComponent(searchValue)}`);
     }
   };
@@ -126,9 +133,19 @@ const Header: React.FC = () => {
               <TextField
                 fullWidth
                 variant='standard'
-                placeholder='三殊胜'
+                placeholder={searchValue}
+                autoFocus
                 value={searchValue}
                 onChange={e => setSearchValue(e.target.value)}
+                onKeyUp={e => {
+                  if (e.key === 'Enter') handleSearch();
+                }}
+                onFocus={() => setIsSearchFocused(true)}
+                onBlur={() => {
+                  setTimeout(() => {
+                    setIsSearchFocused(false);
+                  }, 100);
+                }}
                 InputProps={{
                   disableUnderline: true,
                 }}
@@ -154,7 +171,7 @@ const Header: React.FC = () => {
           </>
         )}
       </Toolbar>
-      {!searchValue && <TabNavigation />}
+      <TabNavigation />
     </AppBar>
   );
 };
