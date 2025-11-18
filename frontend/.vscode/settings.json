@@ -69,5 +69,8 @@
 
   // 禁用可能冲突的格式化器
   "typescript.format.enable": false,
-  "javascript.format.enable": false
+  "javascript.format.enable": false,
+
+  // 文件换行符
+  "files.eol": "\n"
 }

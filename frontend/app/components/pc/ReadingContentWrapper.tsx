@@ -1,5 +1,6 @@
 'use client';
 import { useDeviceType } from '@/app/utils/deviceUtils';
+import { highlightAllKeywords } from '@/app/utils/highlight';
 import { Box, Stack } from '@mui/material';
 import React, { useCallback, useState } from 'react';
 import LogoEndIcon from '../icons/LogoEndIcon';
@@ -32,6 +33,8 @@ export default function ReadingContent({
   const [pageCache, setPageCache] = useState<Map<number, string>>(new Map());
   const [totalPages, setTotalPages] = useState(0);
   const [combinedHtml, setCombinedHtml] = useState('');
+  const [displayIntro, setDisplayIntro] = useState(introText || '');
+  const [displayFull, setDisplayFull] = useState(fullText || '');
 
   // 确保只在客户端运行
   React.useEffect(() => {
@@ -41,7 +44,39 @@ export default function ReadingContent({
   // 初始化分页缓存
   React.useEffect(() => {
     if (isClient && (introText || fullText)) {
-      const html = `${introText || ''}${fullText || ''}`;
+      const htmlRaw = `${introText || ''}${fullText || ''}`;
+
+      // 检查 URL hash 中的 heighlight 参数（注意 SearchPage 中使用的是 `#heighlight=...`）
+      let html = htmlRaw;
+      try {
+        if (
+          typeof window !== 'undefined' &&
+          window.location &&
+          window.location.hash
+        ) {
+          const m = window.location.hash.match(/heighlight=([^&]+)/);
+          if (m && m[1]) {
+            const decoded = decodeURIComponent(m[1]);
+            const kw = decoded ? [decoded] : [];
+            if (kw.length) {
+              html = highlightAllKeywords(htmlRaw, kw);
+              setDisplayIntro(highlightAllKeywords(introText || '', kw));
+              setDisplayFull(highlightAllKeywords(fullText || '', kw));
+            } else {
+              setDisplayIntro(introText || '');
+              setDisplayFull(fullText || '');
+            }
+          } else {
+            setDisplayIntro(introText || '');
+            setDisplayFull(fullText || '');
+          }
+        }
+      } catch (e) {
+        console.error(e);
+        setDisplayIntro(introText || '');
+        setDisplayFull(fullText || '');
+      }
+
       setCombinedHtml(html);
 
       const pages = getTotalPages(html);
@@ -54,6 +89,75 @@ export default function ReadingContent({
       }
       setPageCache(newCache);
     }
+  }, [isClient, introText, fullText]);
+
+  // 如果 hash 中包含 heighlight，滚动到第一个高亮位置（只在全文模式下）
+  React.useEffect(() => {
+    if (!isClient) return;
+    // 仅在全文模式下滚动定位
+    if (mode !== 'full') return;
+
+    try {
+      const m = window.location.hash.match(/heighlight=([^&]+)/);
+      if (!(m && m[1])) return;
+
+      // 在下一帧保证 DOM 已更新
+      requestAnimationFrame(() => {
+        const firstMark = document.querySelector('.reading-content mark');
+        if (!firstMark) return;
+
+        // 优先滚动到包含该 mark 的段落（p 或 h 标签），否则滚动到 mark 本身
+        const target = (firstMark as Element).closest(
+          'p, h1, h2, h3, h4, h5, h6, section, div'
+        ) as HTMLElement | null;
+
+        const el = target || (firstMark as HTMLElement);
+        if (!el) return;
+
+        const rect = el.getBoundingClientRect();
+        const headerOffset = 100; // 适当偏移，避免被固定头部遮挡，可调整
+        const top = window.pageYOffset + rect.top - headerOffset;
+        window.scrollTo({ top: Math.max(0, top), behavior: 'instant' });
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  }, [isClient, displayIntro, displayFull, mode]);
+
+  // 监听 hashchange，动态响应 highlight 参数变更
+  React.useEffect(() => {
+    const handler = () => {
+      if (!isClient) return;
+      try {
+        const htmlRaw = `${introText || ''}${fullText || ''}`;
+        const m = window.location.hash.match(/heighlight=([^&]+)/);
+        if (m && m[1]) {
+          const decoded = decodeURIComponent(m[1]);
+          const kw = decoded ? [decoded] : [];
+          const html = kw.length ? highlightAllKeywords(htmlRaw, kw) : htmlRaw;
+          setCombinedHtml(html);
+          setDisplayIntro(
+            kw.length
+              ? highlightAllKeywords(introText || '', kw)
+              : introText || ''
+          );
+          setDisplayFull(
+            kw.length
+              ? highlightAllKeywords(fullText || '', kw)
+              : fullText || ''
+          );
+        } else {
+          setCombinedHtml(htmlRaw);
+          setDisplayIntro(introText || '');
+          setDisplayFull(fullText || '');
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    };
+
+    window.addEventListener('hashchange', handler);
+    return () => window.removeEventListener('hashchange', handler);
   }, [isClient, introText, fullText]);
 
   // 分页逻辑
@@ -309,14 +413,14 @@ export default function ReadingContent({
                 color: 'rgba(68, 68, 68, 1)',
                 mb: 5,
               }}
-              dangerouslySetInnerHTML={{ __html: introText }}
+              dangerouslySetInnerHTML={{ __html: displayIntro }}
             />
           )}
           {fullText && (
             <Box
               className='reading-content'
               sx={{ mr: 2, mb: 5 }}
-              dangerouslySetInnerHTML={{ __html: fullText }}
+              dangerouslySetInnerHTML={{ __html: displayFull }}
             />
           )}
         </>

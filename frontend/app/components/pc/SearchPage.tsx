@@ -523,7 +523,7 @@ const SearchPage = ({ isMobile }: { isMobile: boolean }) => {
                     type={itemType}
                     url={`/${courseInfo.mediaType}/${courseInfo.courseOrder}/lesson${courseInfo.topicOrder}${
                       isArticle
-                        ? '?tab=article'
+                        ? `?tab=article#heighlight=${encodeURIComponent(searchKeywords)}`
                         : courseInfo.mediaType === 'qa'
                           ? '?tab=question' + item?.questionOrder || 1
                           : ''

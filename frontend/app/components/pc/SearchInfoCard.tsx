@@ -1,5 +1,6 @@
 'use client';
 // SearchInfoCard.tsx
+import { highlightKeywords } from '@/app/utils/highlight';
 import {
   Box,
   Link as MuiLink,
@@ -26,94 +27,6 @@ export interface SearchInfoCardProps {
   keywords?: string[]; // 需要高亮的词（可选）
   style?: React.CSSProperties;
 }
-
-// 将 keywords 转为安全的 RegExp
-const buildKeywordRegex = (keywords: string[]) => {
-  const escaped = keywords
-    .filter(Boolean)
-    .map(k => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
-  if (escaped.length === 0) return null;
-  return new RegExp(`(${escaped.join('|')})`, 'gi');
-};
-
-// 处理内容显示逻辑
-const processContent = (
-  content: string,
-  keywords: string[],
-  expanded: boolean
-) => {
-  if (!keywords || keywords.length === 0) {
-    return content;
-  }
-
-  // 按HTML标签分割内容（p标签或h标签），保留完整标签
-  const paragraphRegex = /<(p|h[1-6])(?:\s[^>]*)?>(.*?)<\/\1>/gi;
-  const paragraphs: string[] = [];
-  let match;
-
-  while ((match = paragraphRegex.exec(content)) !== null) {
-    const fullTag = match[0]; // 完整的标签包括开始和结束标签
-    const tagContent = match[2].trim();
-    if (tagContent) {
-      paragraphs.push(fullTag);
-    }
-  }
-
-  // 如果没有找到HTML标签，尝试按空行分割
-  if (paragraphs.length === 0) {
-    const fallbackParagraphs = content.split(/\n\s*\n/).filter(p => p.trim());
-    if (fallbackParagraphs.length > 0) {
-      paragraphs.push(...fallbackParagraphs);
-    }
-  }
-
-  if (paragraphs.length === 0) {
-    return content;
-  }
-
-  // 找到包含关键词的段落
-  const keywordRegex = buildKeywordRegex(keywords);
-  const keywordParagraphIndices: number[] = [];
-
-  paragraphs.forEach((paragraph, index) => {
-    if (keywordRegex && keywordRegex.test(paragraph)) {
-      keywordParagraphIndices.push(index);
-    }
-  });
-
-  if (keywordParagraphIndices.length === 0) {
-    // 如果没有找到包含关键词的段落，返回原内容
-    return content;
-  }
-
-  if (expanded) {
-    // 展开状态：显示包含关键词的段落 + 下一段 + 后面3段
-    const startIndex = Math.min(...keywordParagraphIndices);
-    const endIndex = Math.min(startIndex + 5, paragraphs.length); // 关键词段落 + 下一段 + 后面3段
-    return paragraphs.slice(startIndex, endIndex).join('');
-  } else {
-    // 折叠状态：只显示包含关键词的段落和下一段
-    const startIndex = Math.min(...keywordParagraphIndices);
-    const endIndex = Math.min(startIndex + 2, paragraphs.length); // 关键词段落 + 下一段
-    return paragraphs.slice(startIndex, endIndex).join('');
-  }
-};
-
-const highlightKeywords = (
-  content: string,
-  keywords: string[],
-  expanded: boolean
-) => {
-  const processedContent = processContent(content, keywords || [], expanded);
-  if (keywords && keywords.length > 0) {
-    return processedContent.replace(
-      buildKeywordRegex(keywords) ?? /$^/,
-      m =>
-        `<mark style="color: rgba(255, 94, 124, 1);background: transparent">${m}</mark>`
-    );
-  }
-  return processedContent;
-};
 
 export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
   index,
