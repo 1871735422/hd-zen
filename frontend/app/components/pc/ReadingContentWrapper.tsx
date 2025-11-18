@@ -46,7 +46,7 @@ export default function ReadingContent({
     if (isClient && (introText || fullText)) {
       const htmlRaw = `${introText || ''}${fullText || ''}`;
 
-      // 检查 URL hash 中的 heighlight 参数（注意 SearchPage 中使用的是 `#heighlight=...`）
+      // 检查 URL hash 中的 highlight 参数（注意 SearchPage 中使用的是 `#highlight=...`）
       let html = htmlRaw;
       try {
         if (
@@ -54,7 +54,7 @@ export default function ReadingContent({
           window.location &&
           window.location.hash
         ) {
-          const m = window.location.hash.match(/heighlight=([^&]+)/);
+          const m = window.location.hash.match(/highlight=([^&]+)/);
           if (m && m[1]) {
             const decoded = decodeURIComponent(m[1]);
             const kw = decoded ? [decoded] : [];
@@ -91,14 +91,14 @@ export default function ReadingContent({
     }
   }, [isClient, introText, fullText]);
 
-  // 如果 hash 中包含 heighlight，滚动到第一个高亮位置（只在全文模式下）
+  // 如果 hash 中包含 highlight，滚动到第一个高亮位置（只在全文模式下）
   React.useEffect(() => {
     if (!isClient) return;
     // 仅在全文模式下滚动定位
     if (mode !== 'full') return;
 
     try {
-      const m = window.location.hash.match(/heighlight=([^&]+)/);
+      const m = window.location.hash.match(/highlight=([^&]+)/);
       if (!(m && m[1])) return;
 
       // 在下一帧保证 DOM 已更新
@@ -130,7 +130,7 @@ export default function ReadingContent({
       if (!isClient) return;
       try {
         const htmlRaw = `${introText || ''}${fullText || ''}`;
-        const m = window.location.hash.match(/heighlight=([^&]+)/);
+        const m = window.location.hash.match(/highlight=([^&]+)/);
         if (m && m[1]) {
           const decoded = decodeURIComponent(m[1]);
           const kw = decoded ? [decoded] : [];

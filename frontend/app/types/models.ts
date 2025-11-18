@@ -149,6 +149,7 @@ export interface TopicMedia extends BaseModel {
 export interface TopicMediaX extends Article, Omit<Media, 'summary'> {
   author?: string;
   questionOrder?: string;
+  summary?: string;
   media_summary?: string;
   secret_level?: string;
   hasQa?: boolean;

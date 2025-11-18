@@ -496,8 +496,10 @@ const SearchPage = ({ isMobile }: { isMobile: boolean }) => {
           <Stack spacing={2}>
             {searchResults.map((item: TopicMediaX, index) => {
               // 判断是文章还是音视频数据
-              const isArticle =
-                'fulltext' in item || 'introtext' in item || 'summary' in item;
+              const isArticle = item?.fulltext !== '' || item?.introtext !== '';
+              // console.log(index + 1, item);
+
+              // 搜到 summary当作视频
               const itemType = isArticle ? '文章' : '音视频';
               // 获取课程信息
               const courseInfo = {
@@ -513,7 +515,9 @@ const SearchPage = ({ isMobile }: { isMobile: boolean }) => {
                     index={index + 1}
                     title={item.title}
                     content={
-                      isArticle ? item.fulltext || item.introtext || '' : ''
+                      isArticle
+                        ? item.fulltext || item.introtext || ''
+                        : `<p><b>概述：</b>${item?.summary}</p>`
                     }
                     from={
                       isArticle
@@ -523,10 +527,10 @@ const SearchPage = ({ isMobile }: { isMobile: boolean }) => {
                     type={itemType}
                     url={`/${courseInfo.mediaType}/${courseInfo.courseOrder}/lesson${courseInfo.topicOrder}${
                       isArticle
-                        ? `?tab=article#heighlight=${encodeURIComponent(searchKeywords)}`
+                        ? `?tab=article#highlight=${encodeURIComponent(searchKeywords)}`
                         : courseInfo.mediaType === 'qa'
-                          ? '?tab=question' + item?.questionOrder || 1
-                          : ''
+                          ? `?tab=question${item?.questionOrder || 1}#highlight=${encodeURIComponent(searchKeywords)}`
+                          : `#highlight=${encodeURIComponent(searchKeywords)}`
                     }`}
                     keywords={searchKeywords ? [searchKeywords] : []}
                   />

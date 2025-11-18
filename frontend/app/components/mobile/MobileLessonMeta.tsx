@@ -1,6 +1,7 @@
 'use client';
 
 import { STANDARD_TEXT_COLOR } from '@/app/constants/colors';
+import { useHighlightDescription } from '@/app/hooks/useHighlightDescription';
 import { formatDate } from '@/app/utils/courseUtils';
 import { Box, Link, Stack, Typography } from '@mui/material';
 import { clearCourseTitle } from '../../utils/courseUtils';
@@ -28,6 +29,7 @@ export function MobileLessonMeta({
   refCourse,
   refUrl,
 }: MobileLessonMetaProps) {
+  const highlightedDescription = useHighlightDescription(description);
   return (
     <>
       <Box>
@@ -97,7 +99,9 @@ export function MobileLessonMeta({
         >
           <Typography>
             <strong>概述：</strong>
-            {description?.replace(/<[^>]*>/g, '')}
+            <span
+              dangerouslySetInnerHTML={{ __html: highlightedDescription }}
+            />
           </Typography>
         </Box>
       )}
