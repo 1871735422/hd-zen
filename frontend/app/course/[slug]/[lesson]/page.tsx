@@ -14,7 +14,7 @@ import {
 } from '../../../api';
 import LessonMeta from '../../../components/pc/LessonMeta';
 import LessonSidebar from '../../../components/pc/LessonSidebar';
-import { CourseTopic } from '../../../types/models';
+import { CourseTopic, SecretText } from '../../../types/models';
 import { getDeviceTypeFromHeaders } from '../../../utils/serverDeviceUtils';
 
 // 15分钟缓存
@@ -113,8 +113,7 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
   const resolvedSearchParams =
     (await (searchParams ?? Promise.resolve({}))) ?? {};
   let { tab: selectedKey } = resolvedSearchParams as {
-    tab?: string;
-    readingMode?: string;
+    tab?: keyof SecretText;
   };
   const courseOrder = resolvedParams.slug;
   const lessonOrder = resolvedParams.lesson?.replace('lesson', '');
@@ -149,13 +148,16 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
     excludeLabels.push('文字');
   }
 
+  const hasSecretWarn = media?.secret_level !== null;
   // console.log(!selectedKey, excludeLabels?.includes('视频'), media?.url_mp3);
   const TabRender = () => {
     if (
       selectedKey === 'audio' ||
       (!selectedKey && excludeLabels?.includes('视频') && media?.url_mp3)
-    )
+    ) {
       return <AudioPage topicMedia={topicMedia} />;
+    }
+
     if (
       selectedKey === 'article' ||
       (excludeLabels?.includes('视频') && !media?.mp3_duration)
@@ -180,7 +182,13 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
         title={media?.title || ''}
         author='慈诚罗珠堪布'
         date={media?.created || ''}
-        description={media?.article_summary || media?.media_summary || ''}
+        description={
+          selectedKey === 'article'
+            ? topicMedia[0]?.article_summary ||
+              topicMedia[0]?.media_summary ||
+              ''
+            : topicMedia[0]?.media_summary
+        }
         courseOrder={courseOrder}
         lessonOrder={lessonOrder}
         pdfUrl={media?.url_downpdf}
@@ -192,7 +200,16 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
             px: pxToVw(15),
           }}
         >
-          <TabRender />
+          {hasSecretWarn && media.secret_level ? (
+            <MifaWarning
+              article_title={media.article_title}
+              secret_level={media.secret_level[selectedKey ?? 'video']}
+            >
+              <TabRender />
+            </MifaWarning>
+          ) : (
+            <TabRender />
+          )}
         </Box>
       </MobileLessonPage>
     );
@@ -205,7 +222,11 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
           topicTags?.length ? topicTags.map((tag: string) => tag.trim()) : []
         }
         description={
-          topicMedia[0]?.article_summary || topicMedia[0]?.media_summary || ''
+          selectedKey === 'article'
+            ? topicMedia[0]?.article_summary ||
+              topicMedia[0]?.media_summary ||
+              ''
+            : topicMedia[0]?.media_summary
         }
         author='作者：慈诚罗珠堪布'
         date={topicMedia[0]?.created}
@@ -235,10 +256,10 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
           borderRadius: '25px',
         }}
       >
-        {media?.secret_level ? (
+        {hasSecretWarn && media.secret_level ? (
           <MifaWarning
             article_title={media.article_title}
-            secret_level={media.secret_level}
+            secret_level={media.secret_level[selectedKey ?? 'video']}
           >
             <PageContent />
           </MifaWarning>

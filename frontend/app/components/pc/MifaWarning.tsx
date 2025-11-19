@@ -2,17 +2,22 @@
 
 import { STANDARD_TEXT_COLOR } from '@/app/constants/colors';
 import { clearCourseTitle } from '@/app/utils/courseUtils';
+import { pxToVw } from '@/app/utils/mobileUtils';
 import { Box, Button, Stack, Typography } from '@mui/material';
 import { useState } from 'react';
+import { useDevice } from '../DeviceProvider';
 import LuminousIcon from '../icons/LuminousIcon';
 
 interface MifaProps {
   article_title: string;
-  secret_level: string;
+  secret_level?: string;
   children: React.ReactNode;
 }
 const MifaWarning = ({ article_title, secret_level, children }: MifaProps) => {
   const [show, setShow] = useState(false);
+  const { deviceType } = useDevice();
+  const isMobile = deviceType === 'mobile';
+
   return (
     <>
       {show ? (
@@ -46,14 +51,25 @@ const MifaWarning = ({ article_title, secret_level, children }: MifaProps) => {
             }}
           >
             <Typography
-              sx={{
-                fontSize: 32,
-                color: 'rgba(255, 94, 124, 1)',
-                lineHeight: 1.43,
-                px: 14,
-                pt: '48px',
-                textAlign: 'center',
-              }}
+              sx={
+                isMobile
+                  ? {
+                      fontSize: pxToVw(20),
+                      color: 'rgba(255, 94, 124, 1)',
+                      lineHeight: 1.43,
+                      px: pxToVw(15),
+                      pt: pxToVw(20),
+                      textAlign: 'center',
+                    }
+                  : {
+                      fontSize: 32,
+                      color: 'rgba(255, 94, 124, 1)',
+                      lineHeight: 1.43,
+                      px: 14,
+                      pt: '48px',
+                      textAlign: 'center',
+                    }
+              }
             >
               {secret_level}
             </Typography>
@@ -70,14 +86,14 @@ const MifaWarning = ({ article_title, secret_level, children }: MifaProps) => {
                 sx={{
                   mt: { lg: 4, xlg: 4, xl: 8 },
                   mb: { lg: 5, xlg: 6, xl: 10 },
-                  height: 69,
+                  height: isMobile ? pxToVw(45) : 69,
                   width: 'fit-content',
-                  px: 10,
-                  py: 1.7,
+                  px: isMobile ? pxToVw(15) : 10,
+                  py: isMobile ? {} : 1.7,
                   borderRadius: 10,
                   background:
                     'linear-gradient(90deg, rgba(196, 198, 255, 1) 0%, rgba(250, 167, 222, 1) 100%)',
-                  fontSize: 30,
+                  fontSize: isMobile ? pxToVw(18) : 30,
                   fontWeight: 500,
                   color: '#fff',
                 }}

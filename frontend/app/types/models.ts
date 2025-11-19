@@ -146,12 +146,18 @@ export interface TopicMedia extends BaseModel {
   media?: Media;
 }
 
+export interface SecretText {
+  video?: string;
+  audio?: string;
+  article?: string;
+}
+
 export interface TopicMediaX extends Article, Omit<Media, 'summary'> {
   author?: string;
   questionOrder?: string;
   summary?: string;
   media_summary?: string;
-  secret_level?: string;
+  secret_level?: SecretText;
   hasQa?: boolean;
 }
 // API Response types

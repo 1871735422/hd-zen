@@ -496,8 +496,8 @@ const SearchPage = ({ isMobile }: { isMobile: boolean }) => {
           <Stack spacing={2}>
             {searchResults.map((item: TopicMediaX, index) => {
               // 判断是文章还是音视频数据
-              const isArticle = item?.fulltext !== '' || item?.introtext !== '';
-              // console.log(index + 1, item);
+              const isArticle = item?.fulltext || item?.introtext;
+              console.log(index + 1, item);
 
               // 搜到 summary当作视频
               const itemType = isArticle ? '文章' : '音视频';
@@ -517,7 +517,9 @@ const SearchPage = ({ isMobile }: { isMobile: boolean }) => {
                     content={
                       isArticle
                         ? item.fulltext || item.introtext || ''
-                        : `<p><b>概述：</b>${item?.summary}</p>`
+                        : item?.summary
+                          ? `<p><b>概述：</b>${item?.summary}</p>`
+                          : ''
                     }
                     from={
                       isArticle

@@ -1,5 +1,6 @@
 import MobileLessonPage from '@/app/components/mobile/MobileLessonPage';
 import AudioPage from '@/app/components/pc/AudioPage';
+import MifaWarning from '@/app/components/pc/MifaWarning';
 import ReadingPage from '@/app/components/pc/ReadingPage';
 import VideoPage from '@/app/components/pc/VideoPage';
 import { pxToVw } from '@/app/utils/mobileUtils';
@@ -10,7 +11,7 @@ import { Metadata } from 'next/types';
 import { getBookChapters, getBookMediaByOrder } from '../../../api';
 import LessonMeta from '../../../components/pc/LessonMeta';
 import LessonSidebar from '../../../components/pc/LessonSidebar';
-import { BookChapter } from '../../../types/models';
+import { BookChapter, SecretText } from '../../../types/models';
 
 // 15分钟缓存
 export const revalidate = 900;
@@ -105,7 +106,10 @@ interface refPageProps {
 const refPage = async ({ params, searchParams }: refPageProps) => {
   const resolvedParams = await params;
   const resolvedSearchParams = await searchParams;
-  let { tab: selectedKey } = resolvedSearchParams;
+  let { tab: selectedKey } = resolvedSearchParams as {
+    tab?: keyof SecretText;
+  };
+
   const bookOrder = resolvedParams.slug;
   const chapterOrder = resolvedParams.lesson?.replace('lesson', '');
   const bookMedia = await getBookMediaByOrder(bookOrder, chapterOrder);
@@ -133,6 +137,7 @@ const refPage = async ({ params, searchParams }: refPageProps) => {
   if (!media?.url_sd && !media?.url_hd) {
     excludeLabels.push('视频');
   }
+  const hasSecretWarn = media?.secret_level !== null;
 
   const TabRender = () => {
     if (
@@ -163,7 +168,11 @@ const refPage = async ({ params, searchParams }: refPageProps) => {
         title={media?.title || ''}
         author='慈诚罗珠堪布'
         date={media?.created || ''}
-        description={media?.article_summary || media?.media_summary || ''}
+        description={
+          selectedKey === 'article'
+            ? bookMedia[0]?.article_summary || bookMedia[0]?.media_summary || ''
+            : bookMedia[0]?.media_summary
+        }
         courseOrder={bookOrder}
         lessonOrder={chapterOrder}
         pdfUrl={media?.url_downpdf}
@@ -175,12 +184,38 @@ const refPage = async ({ params, searchParams }: refPageProps) => {
             px: pxToVw(15),
           }}
         >
-          <TabRender />
+          {hasSecretWarn && media.secret_level ? (
+            <MifaWarning
+              article_title={media.article_title}
+              secret_level={media.secret_level[selectedKey ?? 'video']}
+            >
+              <TabRender />
+            </MifaWarning>
+          ) : (
+            <TabRender />
+          )}
         </Box>
       </MobileLessonPage>
     );
   }
 
+  const PageContent = () => (
+    <>
+      <LessonMeta
+        title={bookMedia[0]?.article_title}
+        tags={bookTags?.length ? bookTags.map((tag: string) => tag.trim()) : []}
+        description={
+          selectedKey === 'article'
+            ? bookMedia[0]?.article_summary || bookMedia[0]?.media_summary || ''
+            : bookMedia[0]?.media_summary
+        }
+        author='作者：慈诚罗珠堪布'
+        date={bookMedia[0]?.created}
+      />
+      <TabRender />
+    </>
+  );
+  // PC端渲染
   return (
     <>
       <LessonSidebar
@@ -200,16 +235,16 @@ const refPage = async ({ params, searchParams }: refPageProps) => {
           borderRadius: 5,
         }}
       >
-        <LessonMeta
-          title={bookMedia[0]?.article_title}
-          tags={
-            bookTags?.length ? bookTags.map((tag: string) => tag.trim()) : []
-          }
-          description={bookMedia[0]?.article_summary ?? ''}
-          author={media.author ?? '作者：慈诚罗珠堪布'}
-          date={bookMedia[0]?.created}
-        />
-        <TabRender />
+        {hasSecretWarn && media.secret_level ? (
+          <MifaWarning
+            article_title={media.article_title}
+            secret_level={media.secret_level[selectedKey ?? 'video']}
+          >
+            <PageContent />
+          </MifaWarning>
+        ) : (
+          <PageContent />
+        )}
       </Box>
     </>
   );
