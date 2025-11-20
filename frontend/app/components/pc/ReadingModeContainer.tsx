@@ -1,11 +1,15 @@
 'use client';
+import {
+  MOBILE_READING_THEMES,
+  READING_THEMES as PC_READING_THEMES,
+} from '@/app/constants/colors';
 import { useDeviceType } from '@/app/utils/deviceUtils';
 import { pxToVw } from '@/app/utils/mobileUtils';
 import { Box, Chip, Divider, Paper, Stack, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { formatDate } from '../../utils/courseUtils';
 import { ScrollTop } from '../shared';
-import { READING_THEMES, useReadingMode } from './ReadingModeProvider';
+import { useReadingMode } from './ReadingModeProvider';
 import ReadingModeSidebar from './ReadingModeSidebar';
 
 interface ReadingModeContainerProps {
@@ -32,7 +36,12 @@ export default function ReadingModeContainer({
   const deviceType = useDeviceType();
   const isMobile = deviceType === 'mobile';
   // Minimal shared values to reduce repetition (keep rest unchanged)
-  const theme = READING_THEMES[state.backgroundTheme];
+  const READING_THEMES = isMobile ? MOBILE_READING_THEMES : PC_READING_THEMES;
+
+  const theme = isMobile
+    ? MOBILE_READING_THEMES[state.backgroundTheme]
+    : READING_THEMES[state.backgroundTheme];
+
   const rowStackSx = {
     marginBottom: 2,
     flexDirection: 'row',
@@ -161,7 +170,7 @@ export default function ReadingModeContainer({
         {(author || date) && (
           <Typography
             sx={{
-              color: theme.text,
+              color: 'rgba(153, 153, 153, 1)',
               fontSize: pxToVw(12),
               lineHeight: 2.3,
               textAlign: 'center',
@@ -178,7 +187,7 @@ export default function ReadingModeContainer({
         {summary && (
           <Typography
             sx={{
-              backgroundColor: 'rgba(240, 247, 255, 1)',
+              backgroundColor: theme.tagBg,
               borderRadius: pxToVw(20),
               px: pxToVw(15),
               py: pxToVw(9),
@@ -206,7 +215,6 @@ export default function ReadingModeContainer({
         bottom: 0,
         width: '100vw',
         height: '100vh',
-        backgroundColor: theme.background,
         py: isMobile ? 0 : 7,
         transition: 'background-color 0.3s ease',
         overflow: 'auto',
@@ -221,9 +229,8 @@ export default function ReadingModeContainer({
                   content: '""',
                   position: 'absolute',
                   width: '100%',
-                  height: pxToVw(68),
-                  background:
-                    'linear-gradient(180deg, rgba(250, 241, 235, 1) 0%, rgba(252, 235, 210, 0) 100%)',
+                  height: pxToVw(45),
+                  background: theme.tagText,
                 },
               }
             : {
@@ -261,6 +268,7 @@ export default function ReadingModeContainer({
               ? {
                   px: pxToVw(17),
                   py: pxToVw(39),
+                  backgroundColor: theme.background,
                 }
               : {
                   backgroundColor: theme.main,

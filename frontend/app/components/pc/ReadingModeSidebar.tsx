@@ -1,4 +1,9 @@
 'use client';
+import {
+  MOBILE_READING_THEMES,
+  READING_THEMES as PC_READING_THEMES,
+  ReadingTheme,
+} from '@/app/constants/colors';
 import { useDeviceType } from '@/app/utils/deviceUtils';
 import { pxToVw } from '@/app/utils/mobileUtils';
 import { Box, Button, Drawer, IconButton, Stack } from '@mui/material';
@@ -7,11 +12,9 @@ import LineSpaceDecreaseIcon from '../icons/LineSpaceDecreaseIcon';
 import LineSpaceIncreaseIcon from '../icons/LineSpaceIncreaseIcon';
 import SettingIcon from '../icons/SettingIcon';
 import FontSizeSlider from '../mobile/FontSizeSlider';
-import {
-  BackgroundTheme,
-  READING_THEMES,
-  useReadingMode,
-} from './ReadingModeProvider';
+import FontWeightSlider from '../mobile/FontWeightSlider';
+import LineSpacingSlider from '../mobile/LineSpacingSlider';
+import { useReadingMode } from './ReadingModeProvider';
 
 // 可复用的圆形按钮样式
 const CircleButton = styled(Button)(({ theme }) => ({
@@ -44,7 +47,7 @@ const CircleButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-// 主题颜色选择按钮
+// PC 主题颜色选择按钮
 const ThemeColorButton = styled(Button)(({ theme }) => ({
   [theme.breakpoints.up('lg')]: {
     width: 11,
@@ -69,6 +72,18 @@ const ThemeColorButton = styled(Button)(({ theme }) => ({
   },
 }));
 
+// Mobile 主题颜色选择按钮
+const MobileThemeColorButton = styled(Button)(() => ({
+  width: 17,
+  height: 17,
+  border: '1px solid rgba(153, 153, 153, 1)',
+  minWidth: 0,
+  borderRadius: '50%',
+  '&:hover': {
+    opacity: 0.8,
+  },
+}));
+
 interface ReadingModeSidebarProps {
   onExitReadingMode?: () => void;
 }
@@ -79,6 +94,8 @@ export default function ReadingModeSidebar({
   const {
     state,
     setFontSize,
+    setFontWeight,
+    setLineSpacing,
     setBackgroundTheme,
     increaseFontSize,
     decreaseFontSize,
@@ -87,26 +104,34 @@ export default function ReadingModeSidebar({
     toggleSidebar,
     toggleFontWeight,
   } = useReadingMode();
+  const isMobile = useDeviceType() === 'mobile';
 
-  const sidebarBg = READING_THEMES[state.backgroundTheme].sidebarBg;
-  const sidebarText = READING_THEMES[state.backgroundTheme].sidebarText;
-  const sidebarBackText = READING_THEMES[state.backgroundTheme].sidebarBackText;
-  const settingText = READING_THEMES[state.backgroundTheme].settingText;
-  const sidebarBackBg = READING_THEMES[state.backgroundTheme].sidebarBackBg;
-  const buttonBg = READING_THEMES[state.backgroundTheme].sidebarBtnBg;
+  const READING_THEMES = isMobile ? MOBILE_READING_THEMES : PC_READING_THEMES;
+  const currentTheme = READING_THEMES[state.backgroundTheme];
+  const {
+    sidebarBg,
+    sidebarText,
+    sidebarBackText,
+    settingText,
+    sidebarBackBg,
+    sidebarBtnBg,
+  } = currentTheme;
 
   const backgroundThemes: {
-    theme: BackgroundTheme;
+    theme: ReadingTheme;
     color: string;
     label: string;
   }[] = [
-    { theme: 'brown', color: READING_THEMES.brown.main, label: '棕' },
-    { theme: 'white', color: READING_THEMES.white.main, label: '白' },
-    { theme: 'green', color: READING_THEMES.green.main, label: '绿' },
-    { theme: 'dark', color: READING_THEMES.dark.main, label: '黑' },
+    { theme: 'brown', color: READING_THEMES.brown.sidebarBtnBg, label: '棕' },
+    { theme: 'white', color: READING_THEMES.white.sidebarBtnBg, label: '白' },
+    { theme: 'green', color: READING_THEMES.green.sidebarBtnBg, label: '绿' },
+    { theme: 'dark', color: READING_THEMES.dark.sidebarBtnBg, label: '黑' },
   ];
 
-  const isMobile = useDeviceType() === 'mobile';
+  const themeSelectedBorder =
+    state.backgroundTheme === 'dark'
+      ? 'rgba(245, 245, 245, 1)'
+      : 'rgba(128, 128, 128, 1)'; // 主题颜色选择按钮选中边框色
 
   if (isMobile) {
     return (
@@ -115,39 +140,40 @@ export default function ReadingModeSidebar({
           sx={{
             position: 'absolute',
             right: 0,
-            top: pxToVw(17),
+            top: pxToVw(20),
             zIndex: 1000,
           }}
         >
           {/* 设置按钮 */}
-          {!state.sidebarCollapsed && (
-            <Button
-              onClick={toggleSidebar}
-              sx={{
-                width: pxToVw(42),
-                height: pxToVw(53),
-                minWidth: 0,
-                borderTopLeftRadius: pxToVw(20),
-                borderBottomLeftRadius: pxToVw(20),
-                backgroundColor: sidebarBackBg,
-                color: sidebarBackText,
-                fontSize: pxToVw(32),
-                boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
-                zIndex: 2,
-              }}
-            >
-              <SettingIcon />
-            </Button>
-          )}
+
+          <Button
+            onClick={toggleSidebar}
+            sx={{
+              width: pxToVw(42),
+              height: pxToVw(53),
+              visibility: state.sidebarCollapsed ? 'hidden' : 'visible',
+              minWidth: 0,
+              borderTopLeftRadius: pxToVw(20),
+              borderBottomLeftRadius: pxToVw(20),
+              backgroundColor: currentTheme.sidebarBtnBg,
+              color: settingText,
+              fontSize: pxToVw(32),
+              boxShadow: '0px 2px 4px  rgba(181, 123, 53, 0.4)',
+              // boxShadow: `0px 2px 4px  ${currentTheme.tagBg}`,
+              zIndex: 2,
+            }}
+          >
+            <SettingIcon />
+          </Button>
 
           <Button
             onClick={onExitReadingMode}
             sx={{
               width: pxToVw(42),
-              height: pxToVw(85),
+              height: pxToVw(state.sidebarCollapsed ? 65 : 85),
               minWidth: 0,
-              mt: pxToVw(-20),
-              pt: pxToVw(20),
+              mt: state.sidebarCollapsed ? 0 : pxToVw(-20),
+              pt: state.sidebarCollapsed ? 0 : pxToVw(20),
               borderTopLeftRadius: pxToVw(20),
               borderBottomLeftRadius: pxToVw(20),
               backgroundColor: sidebarBackBg,
@@ -169,20 +195,54 @@ export default function ReadingModeSidebar({
           sx={{
             zIndex: 9999,
             '& .MuiDrawer-paper': {
-              borderTopLeftRadius: pxToVw(20),
-              borderTopRightRadius: pxToVw(20),
-              py: pxToVw(28),
+              borderTopLeftRadius: pxToVw(30),
+              borderTopRightRadius: pxToVw(30),
+              pt: pxToVw(28),
+              pb: pxToVw(38),
               px: pxToVw(25),
+              background: currentTheme.main,
+              boxShadow: `0px 2px 20px  ${currentTheme.divider}`,
+            },
+            '& .MuiSlider-rail': {
+              background: sidebarBg,
             },
           }}
         >
           {/* 滑动条容器  字体大小调节 */}
-          <FontSizeSlider
-            fontSize={state.fontSize}
-            setFontSize={setFontSize}
-            bgColor={
-              'linear-gradient(95.14deg, rgba(227, 241, 255, 1) 0%, rgba(247, 247, 247, 1) 100%)'
-            }
+          <FontSizeSlider fontSize={state.fontSize} setFontSize={setFontSize} />
+          <Box display={'flex'} alignItems={'center'} my={pxToVw(16)}>
+            {/* 四个颜色选择按钮 */}
+            <Stack
+              sx={{
+                flex: 1,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                pr: pxToVw(25),
+              }}
+            >
+              {backgroundThemes.map(({ theme, color, label }) => (
+                <MobileThemeColorButton
+                  key={theme}
+                  onClick={() => setBackgroundTheme(theme)}
+                  sx={{
+                    backgroundColor: `${color} !important`,
+                    border:
+                      state.backgroundTheme === theme
+                        ? `2px solid ${themeSelectedBorder}`
+                        : `1px solid ${themeSelectedBorder}`,
+                  }}
+                  title={label}
+                />
+              ))}
+            </Stack>
+            <FontWeightSlider
+              fontWeight={state.fontWeight}
+              setFontWeight={setFontWeight}
+            />
+          </Box>
+          <LineSpacingSlider
+            lineSpacing={state.lineSpacing}
+            setLineSpacing={setLineSpacing}
           />
         </Drawer>
       </>
@@ -261,7 +321,7 @@ export default function ReadingModeSidebar({
               py: 0.5,
               '& .MuiButton-text': {
                 color: sidebarText,
-                backgroundColor: buttonBg,
+                backgroundColor: sidebarBtnBg,
               },
             }}
           >
@@ -283,7 +343,7 @@ export default function ReadingModeSidebar({
             {/* 四个颜色选择框 - 框在一起有单独背景 */}
             <Box
               sx={{
-                backgroundColor: buttonBg,
+                backgroundColor: sidebarBtnBg,
                 borderRadius: {
                   lg: '20px',
                   xl: '30px',
@@ -337,10 +397,10 @@ export default function ReadingModeSidebar({
               <CircleButton
                 onClick={toggleFontWeight}
                 sx={{
-                  fontWeight: state.fontWeight === 'bold' ? 'bold' : 'normal',
+                  fontWeight: state.fontWeight,
                   backgroundColor:
-                    state.fontWeight === 'bold' ? sidebarText : buttonBg,
-                  color: state.fontWeight === 'bold' ? sidebarBg : sidebarText,
+                    state.fontWeight === 400 ? sidebarText : sidebarBtnBg,
+                  color: state.fontWeight === 400 ? sidebarBg : sidebarText,
                 }}
                 title='字体加粗'
               >

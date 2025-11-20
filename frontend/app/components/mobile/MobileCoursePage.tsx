@@ -27,6 +27,8 @@ const MobileCoursePage: React.FC<MobileCoursePageProps> = ({
   const [menuData, setMenuData] = useState<Menu[]>();
   const isCourse = courseType === 'course';
   const isReference = courseType === 'reference';
+  // console.log(courseTopics);
+
   useEffect(() => {
     if (isReference) {
       getCategories('学修参考资料').then(res => {

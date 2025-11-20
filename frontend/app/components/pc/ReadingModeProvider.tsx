@@ -1,22 +1,21 @@
 'use client';
 import { createContext, ReactNode, useContext, useState } from 'react';
-import { READING_THEMES, ReadingTheme } from '../../constants/colors';
-
-export type BackgroundTheme = ReadingTheme;
+import { ReadingTheme } from '../../constants/colors';
 
 export interface ReadingModeState {
-  backgroundTheme: BackgroundTheme;
+  backgroundTheme: ReadingTheme;
   fontSize: number;
   lineSpacing: number;
   mode: 'paged' | 'full';
   sidebarCollapsed: boolean; // 侧边栏收起状态
-  fontWeight: 'normal' | 'bold'; // 字体粗细
+  fontWeight: number; // 字体粗细
 }
 
 interface ReadingModeContextType {
   state: ReadingModeState;
-  setBackgroundTheme: (theme: BackgroundTheme) => void;
+  setBackgroundTheme: (theme: ReadingTheme) => void;
   setFontSize: (size: number) => void;
+  setFontWeight: (size: number) => void;
   setLineSpacing: (spacing: number) => void;
   setMode: (mode: 'paged' | 'full') => void;
   increaseFontSize: () => void;
@@ -37,7 +36,7 @@ const DEFAULT_STATE: ReadingModeState = {
   lineSpacing: 2,
   mode: 'paged',
   sidebarCollapsed: false,
-  fontWeight: 'normal',
+  fontWeight: 400,
 };
 
 interface ReadingModeProviderProps {
@@ -47,13 +46,18 @@ interface ReadingModeProviderProps {
 export function ReadingModeProvider({ children }: ReadingModeProviderProps) {
   const [state, setState] = useState<ReadingModeState>(DEFAULT_STATE);
 
-  const setBackgroundTheme = (theme: BackgroundTheme) => {
+  const setBackgroundTheme = (theme: ReadingTheme) => {
     setState(prev => ({ ...prev, backgroundTheme: theme }));
   };
 
   const setFontSize = (size: number) => {
     const clampedSize = Math.max(12, Math.min(36, size));
     setState(prev => ({ ...prev, fontSize: clampedSize }));
+  };
+
+  const setFontWeight = (size: number) => {
+    const clampedSize = Math.max(3, Math.min(7, size)) * 100;
+    setState(prev => ({ ...prev, fontWeight: clampedSize }));
   };
 
   const setLineSpacing = (spacing: number) => {
@@ -97,7 +101,7 @@ export function ReadingModeProvider({ children }: ReadingModeProviderProps) {
   const toggleFontWeight = () => {
     setState(prev => ({
       ...prev,
-      fontWeight: prev.fontWeight === 'normal' ? 'bold' : 'normal',
+      fontWeight: prev.fontWeight <= 400 ? 600 : 400,
     }));
   };
 
@@ -105,6 +109,7 @@ export function ReadingModeProvider({ children }: ReadingModeProviderProps) {
     state,
     setBackgroundTheme,
     setFontSize,
+    setFontWeight,
     setLineSpacing,
     setMode,
     increaseFontSize,
@@ -129,5 +134,3 @@ export function useReadingMode() {
   }
   return context;
 }
-
-export { READING_THEMES };

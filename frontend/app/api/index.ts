@@ -193,6 +193,7 @@ const mapRecordToCourseTopic = (record: PocketRecord): CourseTopic => {
     url_mp3size: record.url_mp3size || '',
     url_downpdf: record.url_downpdf || '',
     url_pdfsize: record.url_pdfsize || '',
+    url_cover: record.url_cover || '',
     content_id: record.content_id || '',
     asset_id: record.asset_id || '',
     // Legacy fields for backward compatibility
