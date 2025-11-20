@@ -175,16 +175,14 @@ export default function ReadingSidebar({
               py: pxToVw(28),
               px: pxToVw(25),
             },
+            '& .MuiSlider-rail': {
+              background:
+                'linear-gradient(95.14deg, rgba(227, 241, 255, 1) 0%, rgba(247, 247, 247, 1) 100%)',
+            },
           }}
         >
           {/* 滑动条容器  字体大小调节 */}
-          <FontSizeSlider
-            fontSize={state.fontSize}
-            setFontSize={setFontSize}
-            bgColor={
-              'linear-gradient(95.14deg, rgba(227, 241, 255, 1) 0%, rgba(247, 247, 247, 1) 100%)'
-            }
-          />
+          <FontSizeSlider fontSize={state.fontSize} setFontSize={setFontSize} />
           <Stack direction={'row'} alignItems={'center'} gap={2}>
             <SwitchBtn
               className={mode === 'paged' ? 'active' : ''}
