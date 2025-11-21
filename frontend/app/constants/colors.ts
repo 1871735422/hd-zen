@@ -19,6 +19,15 @@ export const MOBILE_CARDS_BG_COLOR = [
   'linear-gradient(180deg, rgba(236, 235, 252, 1) 0%, rgba(224, 204, 255, 1) 100%)',
 ];
 
+// 返回顶部按钮颜色
+
+export const SCROLL_TOP_BG_COLOR = {
+  white: 'rgba(158, 158, 158, 1)',
+  dark: 'rgba(66, 66, 66, 1)',
+  brown: 'rgba(171, 149, 126, 1)',
+  green: 'rgba(120, 148, 112, 1)',
+};
+
 // PC阅读模式配色方案
 export const READING_THEMES = {
   white: {

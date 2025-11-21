@@ -46,7 +46,7 @@ export default function FontWeightSlider({
           '&:after': {
             position: 'absolute',
             top: 0,
-            right: 0,
+            right: -2,
             height: pxToVw(34),
             width: pxToVw(34),
             content: '"B"',

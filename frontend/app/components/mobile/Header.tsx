@@ -31,7 +31,7 @@ const Header: React.FC = () => {
   const searchParams = useSearchParams();
   const urlKeywords = searchParams.get('keywords');
 
-  const [searchValue, setSearchValue] = useState(urlKeywords ?? '三殊胜');
+  const [searchValue, setSearchValue] = useState(urlKeywords ?? '');
   // console.log({ urlKeywords, searchValue });
   const { setIsSearchFocused } = useSearchFocus();
   const { addToHistory } = useSearchHistory();
@@ -41,10 +41,9 @@ const Header: React.FC = () => {
   };
 
   const handleSearch = () => {
-    if (searchValue.trim()) {
-      addToHistory(searchValue);
-      router.push(`/search?keywords=${encodeURIComponent(searchValue)}`);
-    }
+    const q = searchValue.trim() || '三殊胜';
+    addToHistory(q);
+    router.push(`/search?keywords=${encodeURIComponent(q)}`);
   };
 
   return (
@@ -133,7 +132,7 @@ const Header: React.FC = () => {
               <TextField
                 fullWidth
                 variant='standard'
-                placeholder={searchValue}
+                placeholder={'三殊胜'}
                 // autoFocus // 自动聚焦会导致输入法弹出，影响体验，改为点击时聚焦
                 value={searchValue}
                 onChange={e => setSearchValue(e.target.value)}

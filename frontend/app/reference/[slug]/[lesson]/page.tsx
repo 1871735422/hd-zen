@@ -165,8 +165,9 @@ const refPage = async ({ params, searchParams }: refPageProps) => {
   if (isMobile) {
     return (
       <MobileLessonPage
-        title={media?.title || ''}
-        author='慈诚罗珠堪布'
+        hasSiderbar={excludeLabels.length <= 1}
+        title={media?.title || media?.article_title || ''}
+        author={bookMedia[0]?.author || '作者：慈诚罗珠堪布'}
         date={media?.created || ''}
         description={
           selectedKey === 'article'
@@ -209,7 +210,7 @@ const refPage = async ({ params, searchParams }: refPageProps) => {
             ? bookMedia[0]?.article_summary || bookMedia[0]?.media_summary || ''
             : bookMedia[0]?.media_summary
         }
-        author='作者：慈诚罗珠堪布'
+        author={bookMedia[0]?.author || '作者：慈诚罗珠堪布'}
         date={bookMedia[0]?.created}
       />
       <TabRender />

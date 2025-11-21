@@ -2,6 +2,7 @@
 import {
   MOBILE_READING_THEMES,
   READING_THEMES as PC_READING_THEMES,
+  SCROLL_TOP_BG_COLOR,
 } from '@/app/constants/colors';
 import { useDeviceType } from '@/app/utils/deviceUtils';
 import { pxToVw } from '@/app/utils/mobileUtils';
@@ -322,6 +323,7 @@ export default function ReadingModeContainer({
           {/* 文章内容 */}
           <Box
             sx={{
+              px: pxToVw(isMobile ? 7 : 0),
               color: theme.text,
               fontSize: `${state.fontSize}px`,
               lineHeight: state.lineSpacing,
@@ -357,7 +359,11 @@ export default function ReadingModeContainer({
       </Box>
 
       <ScrollTop
-        bgColor={READING_THEMES[state.backgroundTheme].sidebarBackBg}
+        bgColor={
+          isMobile
+            ? SCROLL_TOP_BG_COLOR[state.backgroundTheme]
+            : theme.sidebarBackBg
+        }
         visible={visible}
       />
     </Box>

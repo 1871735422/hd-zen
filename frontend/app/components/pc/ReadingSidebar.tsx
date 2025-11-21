@@ -170,10 +170,11 @@ export default function ReadingSidebar({
           onClose={toggleSidebar}
           sx={{
             '& .MuiDrawer-paper': {
-              borderTopLeftRadius: pxToVw(20),
-              borderTopRightRadius: pxToVw(20),
+              borderTopLeftRadius: pxToVw(30),
+              borderTopRightRadius: pxToVw(30),
               py: pxToVw(28),
               px: pxToVw(25),
+              boxShadow: '0px 0px 20px  rgba(131, 181, 247, 0.8)',
             },
             '& .MuiSlider-rail': {
               background:
@@ -183,7 +184,12 @@ export default function ReadingSidebar({
         >
           {/* 滑动条容器  字体大小调节 */}
           <FontSizeSlider fontSize={state.fontSize} setFontSize={setFontSize} />
-          <Stack direction={'row'} alignItems={'center'} gap={2}>
+          <Stack
+            direction={'row'}
+            alignItems={'center'}
+            gap={2}
+            mt={pxToVw(18)}
+          >
             <SwitchBtn
               className={mode === 'paged' ? 'active' : ''}
               onClick={() => handleToggleMode('paged')}

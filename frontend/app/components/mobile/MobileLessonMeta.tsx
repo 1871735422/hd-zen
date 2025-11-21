@@ -17,6 +17,7 @@ interface MobileLessonMetaProps {
   epubUrl?: string;
   refCourse?: string;
   refUrl?: string;
+  hasSiderbar?: boolean;
 }
 
 export function MobileLessonMeta({
@@ -28,6 +29,7 @@ export function MobileLessonMeta({
   epubUrl,
   refCourse,
   refUrl,
+  hasSiderbar,
 }: MobileLessonMetaProps) {
   const highlightedDescription = useHighlightDescription(description);
   return (
@@ -38,7 +40,7 @@ export function MobileLessonMeta({
           sx={{
             pt: pxToVw(15),
             pb: pxToVw(25),
-            pl: refCourse ? pxToVw(15) : 0,
+            pl: hasSiderbar ? pxToVw(refCourse ? 15 : 42) : 0,
             fontSize: pxToVw(20),
             fontWeight: 500,
             textAlign: refCourse ? 'left' : 'center',

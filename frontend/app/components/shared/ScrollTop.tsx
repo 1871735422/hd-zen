@@ -40,7 +40,7 @@ export default function ScrollTop({ bgColor = color, visible = false }) {
           position: 'fixed',
           fontWeight: 500,
           bottom: 30,
-          right: 30,
+          right: 24,
           color: bgColor,
           zIndex: 1000,
           '& svg': {

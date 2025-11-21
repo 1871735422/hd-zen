@@ -19,6 +19,7 @@ interface MobileLessonPageProps {
   pdfUrl?: string;
   epubUrl?: string;
   excludeLabels: (typeof labelItemList)[number]['label'][];
+  hasSiderbar?: boolean;
 }
 
 const MobileLessonPage: React.FC<MobileLessonPageProps> = ({
@@ -32,6 +33,7 @@ const MobileLessonPage: React.FC<MobileLessonPageProps> = ({
   pdfUrl,
   epubUrl,
   excludeLabels,
+  hasSiderbar,
 }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -76,6 +78,7 @@ const MobileLessonPage: React.FC<MobileLessonPageProps> = ({
         description={description}
         pdfUrl={pdfUrl}
         epubUrl={epubUrl}
+        hasSiderbar={hasSiderbar}
       />
 
       {/* 相关资料侧边栏（可展开/收起）*/}

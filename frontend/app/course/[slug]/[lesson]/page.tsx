@@ -131,7 +131,7 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
   }
   const media = topicMedia[0];
   const topicTags = media?.tags;
-  const excludeLabels = [''];
+  const excludeLabels: string[] = [];
   if (!media?.hasQa) {
     excludeLabels.push('问答');
   }
@@ -179,8 +179,9 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
   if (isMobile) {
     return (
       <MobileLessonPage
+        hasSiderbar={excludeLabels.length <= 1}
         title={media?.title || ''}
-        author='慈诚罗珠堪布'
+        author={topicMedia[0]?.author || '作者：慈诚罗珠堪布'}
         date={media?.created || ''}
         description={
           selectedKey === 'article'
@@ -228,7 +229,7 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
               ''
             : topicMedia[0]?.media_summary
         }
-        author='作者：慈诚罗珠堪布'
+        author={topicMedia[0]?.author || '作者：慈诚罗珠堪布'}
         date={topicMedia[0]?.created}
       />
       <TabRender />
