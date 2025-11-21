@@ -56,8 +56,8 @@ export default function ResponsiveLayout({
         maxWidth={isMobile ? false : 'xxl'}
         component='main'
         sx={{
-          p: isMobile ? 0 : { xs: 0, sm: 0, md: 0, lg: 0, xl: 0, xxl: 0 },
-          m: isMobile ? 0 : { xs: 0, sm: 0, md: 0, lg: 0, xl: 0, xxl: 0 },
+          p: 0,
+          m: 0,
           flexGrow: 1,
           display: 'flex',
           flexDirection: 'column',

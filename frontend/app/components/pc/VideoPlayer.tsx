@@ -373,7 +373,7 @@ const VideoPlayer = forwardRef<
         fullscreen: {
           enabled: true,
           fallback: true,
-          iosNative: false, // 在 iOS 上禁用原生全屏以获得更多控制
+          iosNative: true, // 在 iOS 上原生全屏
         },
       });
 

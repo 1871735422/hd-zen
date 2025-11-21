@@ -48,10 +48,12 @@ export default function DeviceProvider({
   useEffect(() => {
     const isTouchDevice =
       'ontouchstart' in window || navigator.maxTouchPoints > 0;
-    const isPortrait = window.innerHeight > window.innerWidth;
-    const MOBILE_BREAKPOINT = isPortrait && isTouchDevice ? 768 : 1200; // px
 
     const checkDevice = () => {
+      const isPortrait = window.innerHeight > window.innerWidth;
+      const MOBILE_BREAKPOINT = isPortrait && isTouchDevice ? 768 : 1200; // px
+      // console.log({ isTouchDevice, isPortrait }, window.screen.orientation);
+
       // 1) 宽度判断
       const isSmallViewport = window.matchMedia(
         `(max-width: ${MOBILE_BREAKPOINT - 1}px)`
