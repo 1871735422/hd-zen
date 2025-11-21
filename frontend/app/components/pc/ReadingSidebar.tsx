@@ -141,7 +141,9 @@ export default function ReadingSidebar({
         }}
       >
         <Button onClick={handleEnterReadingMode} sx={buttonStyleMobile}>
-          <BookExpandIcon />
+          <Stack fontSize={21}>
+            <BookExpandIcon />
+          </Stack>
           阅读
           <br />
           模式

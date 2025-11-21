@@ -43,7 +43,7 @@ const RelateResourceBtn: React.FC<RelateResourceBtnProps> = ({
       sx={{
         position: 'absolute',
         left: `${pxToVw(-46)}`,
-        top: `calc(50% - ${pxToVw(40)})`,
+        top: `calc(50% - ${pxToVw(34)})`,
         width: pxToVw(90),
         height: pxToVw(90),
         borderRadius: '50%',

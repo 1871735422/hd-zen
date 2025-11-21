@@ -53,7 +53,7 @@ export default async function MobileAskPage() {
           background:
             'linear-gradient(229.09deg, rgba(255, 255, 255, 0.1) 0.02%, rgba(255, 255, 255, 0.28) 100%)',
           borderRadius: pxToVw(30),
-          border: '2px solid rgba(255, 255, 255, 0.1)',
+          border: '2px solid rgba(255, 255, 255, 0.25)',
           width: '100%',
           pt: pxToVw(20),
           textAlign: 'left',

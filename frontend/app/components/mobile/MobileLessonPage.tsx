@@ -16,6 +16,7 @@ interface MobileLessonPageProps {
   children?: React.ReactNode;
   courseOrder: string;
   lessonOrder: string;
+  mp3Url?: string;
   pdfUrl?: string;
   epubUrl?: string;
   excludeLabels: (typeof labelItemList)[number]['label'][];
@@ -30,6 +31,7 @@ const MobileLessonPage: React.FC<MobileLessonPageProps> = ({
   children,
   courseOrder,
   lessonOrder,
+  mp3Url,
   pdfUrl,
   epubUrl,
   excludeLabels,
@@ -76,6 +78,7 @@ const MobileLessonPage: React.FC<MobileLessonPageProps> = ({
         author={author}
         date={date}
         description={description}
+        mp3Url={mp3Url}
         pdfUrl={pdfUrl}
         epubUrl={epubUrl}
         hasSiderbar={hasSiderbar}

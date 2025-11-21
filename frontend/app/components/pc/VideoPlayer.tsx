@@ -341,16 +341,19 @@ const VideoPlayer = forwardRef<
       )
         .sort((a, b) => a - b)
         .map(n => Number(n));
+      // 根据设备类型配置控制条，移动端隐藏音量调节条以节省空间
+      const controls = [
+        'play',
+        'progress',
+        'current-time',
+        'mute',
+        // ...(isMobile ? [] : ['volume']), // 移动端隐藏音量条，只保留静音按钮
+        'settings',
+        'fullscreen',
+      ];
+
       playerRef.current = new PlyrLib(videoRef.current, {
-        controls: [
-          'play',
-          'progress',
-          'current-time',
-          'mute',
-          'volume',
-          'settings',
-          'fullscreen',
-        ],
+        controls,
         // settings must include 'quality' to show quality in settings menu
         settings: ['quality'],
         autoplay: false, // 启用自动播放

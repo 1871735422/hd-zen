@@ -180,7 +180,7 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
     return (
       <MobileLessonPage
         hasSiderbar={excludeLabels.length <= 1}
-        title={media?.title || ''}
+        title={topicMedia[0]?.article_title}
         author={topicMedia[0]?.author || '作者：慈诚罗珠堪布'}
         date={media?.created || ''}
         description={
@@ -192,8 +192,9 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
         }
         courseOrder={courseOrder}
         lessonOrder={lessonOrder}
-        pdfUrl={media?.url_downpdf}
-        epubUrl={media?.url_downepub}
+        mp3Url={selectedKey === 'audio' ? media?.url_downmp3 : undefined}
+        pdfUrl={selectedKey === 'article' ? media?.url_downpdf : undefined}
+        epubUrl={selectedKey === 'article' ? media?.url_downepub : undefined}
         excludeLabels={excludeLabels}
       >
         <Box

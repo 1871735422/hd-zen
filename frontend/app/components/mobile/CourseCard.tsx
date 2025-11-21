@@ -4,7 +4,6 @@ import { MOBILE_CARDS_BG_COLOR } from '@/app/constants/colors';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import Link from 'next/link';
 import { useState } from 'react';
 import { pxToVw } from '../../utils/mobileUtils';
 import ArrowTop from '../icons/ArrowTop';
@@ -34,30 +33,28 @@ const CourseCard: React.FC<CourseCardProps> = ({
         alignItems: 'flex-start',
       }}
     >
-      <Link href={`/course/${index + 1}`}>
-        <Box
+      <Box
+        component={'a'}
+        href={`/course/${index + 1}`}
+        sx={{
+          width: pxToVw(44),
+          display: 'flex',
+          justifyContent: 'center',
+          pt: pxToVw(index > 3 ? 10 : 16),
+        }}
+      >
+        <Typography
           sx={{
-            width: pxToVw(44),
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            py: pxToVw(16),
+            fontSize: pxToVw(20),
+            fontWeight: 500,
+            color: 'rgba(26, 41, 76, 1)',
+            writingMode: 'vertical-rl',
+            textAlign: 'center',
           }}
         >
-          <Typography
-            sx={{
-              fontSize: pxToVw(20),
-              fontWeight: 500,
-              color: 'rgba(26, 41, 76, 1)',
-              writingMode: 'vertical-rl',
-              textAlign: 'center',
-            }}
-          >
-            {expanded ? title : title.replace('的', '')}
-          </Typography>
-        </Box>
-      </Link>
+          {expanded ? title : title.replace('的', '')}
+        </Typography>
+      </Box>
       <Box
         onClick={() => setExpanded(!expanded)}
         sx={{

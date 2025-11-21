@@ -2,6 +2,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import React from 'react';
 import { pxToVw } from '../../utils/mobileUtils';
+import { MobileBaseLayout } from './MobileBaseLayout';
 import MobileReferenceCard from './MobileReferenceCard';
 interface MobileReferencePageProps {
   categories: Array<{
@@ -19,18 +20,11 @@ const MobileReferencePage: React.FC<MobileReferencePageProps> = ({
   categories,
 }) => {
   return (
-    <Box
-      sx={{
-        width: '100%',
-        minHeight: '100vh',
-        background: 'linear-gradient(180deg, #F5F9FC 0%, #FFFFFF 100%)',
-        paddingBottom: pxToVw(40),
-      }}
-    >
+    <MobileBaseLayout>
       {/* 说明文字区域 */}
       <Box
         sx={{
-          marginBottom: pxToVw(24),
+          marginBottom: pxToVw(15),
           paddingY: pxToVw(13),
           px: pxToVw(32),
           borderRadius: pxToVw(12),
@@ -92,7 +86,7 @@ const MobileReferencePage: React.FC<MobileReferencePageProps> = ({
           </Typography>
         </Box>
       )}
-    </Box>
+    </MobileBaseLayout>
   );
 };
 

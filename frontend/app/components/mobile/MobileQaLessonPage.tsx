@@ -184,6 +184,7 @@ export default function MobileQaLessonPage({
         {currentQuestion?.questionTitle && (
           <Box sx={{ p: pxToVw(16) }}>
             <MobileLessonMeta
+              hasSiderbar
               title={`${currentIndex + 1}. ${currentQuestion.questionTitle}`}
               author='作者：慈诚罗珠堪布'
               date={currentQuestion.questionCreated}

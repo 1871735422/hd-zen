@@ -2,21 +2,27 @@
 
 import { pxToVw } from '@/app/utils/mobileUtils';
 import { Button, Stack } from '@mui/material';
+import AudioDownIcon from '../icons/AudioDownIcon';
 import EpubDownIcon from '../icons/EpubDownIcon';
 import PdfDownIcon from '../icons/PdfDownIcon';
 
 interface MobileEBookDownloadProps {
   epubUrl?: string;
   pdfUrl?: string;
+  mp3Url?: string;
 }
 
-const MobileEBookDownload = ({ epubUrl, pdfUrl }: MobileEBookDownloadProps) => {
-  // 如果两个都没有，不渲染组件
-  if (!epubUrl && !pdfUrl) {
+const MobileEBookDownload = ({
+  epubUrl,
+  pdfUrl,
+  mp3Url,
+}: MobileEBookDownloadProps) => {
+  // 如果3个都没有，不渲染组件
+  if (!epubUrl && !pdfUrl && !mp3Url) {
     return null;
   }
 
-  const handleDownload = (url: string, type: 'epub' | 'pdf') => {
+  const handleDownload = (url: string, type: 'epub' | 'pdf' | 'mp3') => {
     // 创建一个隐藏的 a 标签进行下载
     const link = document.createElement('a');
     link.href = url;
@@ -61,6 +67,12 @@ const MobileEBookDownload = ({ epubUrl, pdfUrl }: MobileEBookDownloadProps) => {
         alignItems: 'flex-end',
       }}
     >
+      {mp3Url && (
+        <Button onClick={() => handleDownload(mp3Url, 'pdf')} sx={buttonStyles}>
+          <AudioDownIcon />
+          音频下载
+        </Button>
+      )}
       {pdfUrl && (
         <Button onClick={() => handleDownload(pdfUrl, 'pdf')} sx={buttonStyles}>
           <PdfDownIcon />

@@ -15,6 +15,7 @@ interface MobileLessonMetaProps {
   description?: string;
   pdfUrl?: string;
   epubUrl?: string;
+  mp3Url?: string;
   refCourse?: string;
   refUrl?: string;
   hasSiderbar?: boolean;
@@ -27,11 +28,13 @@ export function MobileLessonMeta({
   description,
   pdfUrl,
   epubUrl,
+  mp3Url,
   refCourse,
   refUrl,
   hasSiderbar,
 }: MobileLessonMetaProps) {
   const highlightedDescription = useHighlightDescription(description);
+
   return (
     <>
       <Box>
@@ -52,7 +55,11 @@ export function MobileLessonMeta({
           {clearCourseTitle(title)}
         </Typography>
 
-        <MobileEBookDownload pdfUrl={pdfUrl} epubUrl={epubUrl} />
+        <MobileEBookDownload
+          pdfUrl={pdfUrl}
+          epubUrl={epubUrl}
+          mp3Url={mp3Url}
+        />
         <Stack ml={refCourse ? pxToVw(15) : 0}>
           {/* 作者和日期 */}
           <Typography

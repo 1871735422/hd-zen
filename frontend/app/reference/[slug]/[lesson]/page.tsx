@@ -166,7 +166,7 @@ const refPage = async ({ params, searchParams }: refPageProps) => {
     return (
       <MobileLessonPage
         hasSiderbar={excludeLabels.length <= 1}
-        title={media?.title || media?.article_title || ''}
+        title={media?.article_title || media?.title || ''}
         author={bookMedia[0]?.author || '作者：慈诚罗珠堪布'}
         date={media?.created || ''}
         description={
@@ -176,8 +176,9 @@ const refPage = async ({ params, searchParams }: refPageProps) => {
         }
         courseOrder={bookOrder}
         lessonOrder={chapterOrder}
-        pdfUrl={media?.url_downpdf}
-        epubUrl={media?.url_downepub}
+        mp3Url={selectedKey === 'audio' ? media?.url_downmp3 : undefined}
+        pdfUrl={selectedKey === 'article' ? media?.url_downpdf : undefined}
+        epubUrl={selectedKey === 'article' ? media?.url_downepub : undefined}
         excludeLabels={excludeLabels}
       >
         <Box
