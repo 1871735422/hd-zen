@@ -115,9 +115,9 @@ export const MOBILE_READING_THEMES = {
     background: 'rgba(255, 251, 245, 1)', // 棕色主题背景
     tagBg: 'rgba(242, 231, 223, 0.53)',
     sidebarText: 'rgba(66, 66, 66, 1)', // 侧边栏字体色
-    sidebarBtnBg: '#e1caae', // 侧边栏按钮背景色
+    sidebarBackBg: '#e1caae', // 侧边栏按钮背景色
     sidebarBackText: 'rgba(145, 97, 65, 1)', // 侧边栏返回按钮字体色
-    sidebarBackBg: 'rgba(237, 214, 178, 0.8)', // 侧边栏返回按钮背景色
+    sidebarBtnBg: '#f1dcbe', // 侧边栏返回按钮背景色
     text: 'rgba(68, 68, 68, 1)', // 文字色
     settingText: 'rgba(140, 111, 90, 1)', // 设置按钮字体色
     sidebarBg:

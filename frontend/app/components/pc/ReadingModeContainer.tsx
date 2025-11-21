@@ -216,9 +216,11 @@ export default function ReadingModeContainer({
         bottom: 0,
         width: '100vw',
         height: '100vh',
-        py: isMobile ? 0 : 7,
+        pt: isMobile ? 0 : { lg: 5, xl: 7, xxl: 9 },
+        pb: 0,
         transition: 'background-color 0.3s ease',
         overflow: 'auto',
+        backgroundColor: theme.background,
       }}
     >
       {/* 文章内容和侧边栏容器 */}
@@ -237,7 +239,7 @@ export default function ReadingModeContainer({
             : {
                 position: 'relative',
                 maxWidth: { lg: 900, xl: 1240 },
-                margin: '40px auto 60px',
+                margin: '40px auto 0px',
                 zIndex: 2,
                 ':before': {
                   content: '""',
