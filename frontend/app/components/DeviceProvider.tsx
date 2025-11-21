@@ -46,7 +46,10 @@ export default function DeviceProvider({
   const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
-    const MOBILE_BREAKPOINT = 600; // px
+    const isTouchDevice =
+      'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    const isPortrait = window.innerHeight > window.innerWidth;
+    const MOBILE_BREAKPOINT = isPortrait && isTouchDevice ? 768 : 1200; // px
 
     const checkDevice = () => {
       // 1) 宽度判断

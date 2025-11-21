@@ -370,6 +370,11 @@ const VideoPlayer = forwardRef<
         },
         // 自定义快进/快退时间（秒）
         seekTime: 10, // 默认为 10 秒，可以根据需要调整为 5、15、30 等
+        fullscreen: {
+          enabled: true,
+          fallback: true,
+          iosNative: false, // 在 iOS 上禁用原生全屏以获得更多控制
+        },
       });
 
       // 创建 MediaPlayer 包装对象并注册到全局媒体列表

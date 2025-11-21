@@ -2,9 +2,10 @@ import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import ClarityAnalytics from './components/ClarityAnalytics';
 import DeviceProvider from './components/DeviceProvider';
 import ResponsiveLayout from './components/ResponsiveLayout';
+// @ts-ignore
 import './globals.css';
-import { getDeviceTypeFromHeaders } from './utils/serverDeviceUtils';
 import MuiThemeProvider from './theme-provider';
+import { getDeviceTypeFromHeaders } from './utils/serverDeviceUtils';
 
 export const metadata = {
   title: '慧灯禅修', // 可选：在这里定义默认 metadata，页面会覆盖 head
