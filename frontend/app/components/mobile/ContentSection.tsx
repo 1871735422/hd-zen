@@ -90,7 +90,7 @@ const ContentSection: React.FC = () => {
           variant='h2'
           sx={{
             fontSize: pxToVw(24),
-            fontWeight: 400,
+            fontWeight: 'bold',
             color: 'rgba(26, 41, 76, 1)',
             marginBottom: pxToVw(16),
             textAlign: 'left',

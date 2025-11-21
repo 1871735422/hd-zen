@@ -150,7 +150,7 @@ const Header: React.FC = () => {
                 }}
                 sx={{
                   '& .MuiInputBase-input': {
-                    color: 'rgba(192, 197, 207, 1)',
+                    color: '#444',
                     fontWeight: 500,
                   },
                 }}

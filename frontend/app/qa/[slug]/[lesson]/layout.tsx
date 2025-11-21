@@ -23,9 +23,9 @@ const LessonLayout = async ({
   const isMobile = deviceType === 'mobile';
 
   const questionsGrouped = await getAnswerMediasByOrder(courseOrder);
-  const courseName = questionsGrouped[lessonOrder - 1]?.topicTitle ?? '';
-  const lessonName =
-    questionsGrouped[lessonOrder - 1]?.questions[0]?.questionTitle ?? '';
+  const courseName =
+    questionsGrouped[lessonOrder - 1]?.questions[0]?.courseTitle ?? '';
+  const lessonName = questionsGrouped[lessonOrder - 1]?.topicTitle ?? '';
 
   const breadcrumbItems = [
     { label: '首页', href: '/' },

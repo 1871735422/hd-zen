@@ -63,7 +63,7 @@ const MobileVolumeNavigation: React.FC<MobileVolumeNavigationProps> = ({
     fontSize: pxToVw(16),
     fontWeight: 700,
     wordWrap: 'nowrap',
-    color: active ? '#fff' : 'rgba(0, 0, 0, 1)',
+    color: active ? '#fff' : '#444',
     background: active
       ? 'linear-gradient(90deg, rgba(70, 134, 207, 1) 0%, rgba(170, 207, 250, 1) 100%)'
       : '#fff',

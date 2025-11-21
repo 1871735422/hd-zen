@@ -127,10 +127,8 @@ export default function MobileQaLessonPage({
             position: 'absolute',
             top: pxToVw(0),
             left: pxToVw(0),
-            minHeight: pxToVw(100),
-            minWidth: pxToVw(40),
-            px: pxToVw(4),
-            py: pxToVw(3),
+            minHeight: pxToVw(97),
+            minWidth: pxToVw(38),
             borderRadius: `0 ${pxToVw(15)} ${pxToVw(15)} 0`,
             color: '#fff',
             background:
@@ -138,7 +136,7 @@ export default function MobileQaLessonPage({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: pxToVw(2),
+            gap: pxToVw(1),
             cursor: 'pointer',
           }}
         >

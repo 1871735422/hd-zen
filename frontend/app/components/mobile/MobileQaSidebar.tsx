@@ -153,7 +153,7 @@ const MobileQaSidebar: React.FC<MobileQaSidebarProps> = ({
             <Typography
               component={'span'}
               fontWeight={isSelected ? 700 : 'inherit'}
-              fontSize={pxToVw(12)}
+              fontSize={pxToVw(15)}
               sx={{
                 display: '-webkit-box',
                 WebkitLineClamp: 3,

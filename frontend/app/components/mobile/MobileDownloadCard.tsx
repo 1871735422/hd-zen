@@ -48,6 +48,7 @@ const DownloadOption: React.FC<DownloadOptionProps> = ({
         justifyContent: 'center',
         color: DOWNLOAD_RED_COLOR,
         borderRadius: pxToVw(12),
+        fontSize: pxToVw(26),
       }}
     >
       <Icon />
