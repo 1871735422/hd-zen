@@ -218,7 +218,7 @@ export default function ReadingSidebar({
       sx={{
         position: 'absolute',
         right: { lg: -60, xlg: -70, xl: -81, xxl: -95 },
-        top: 0,
+        top: 100,
         zIndex: 10,
         fontWeight: 500,
         fontFamily: 'Montserrat, "Segoe UI", "Arial Narrow", Arial, sans-serif',

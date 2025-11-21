@@ -179,7 +179,7 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
   if (isMobile) {
     return (
       <MobileLessonPage
-        hasSiderbar={excludeLabels.length <= 1}
+        hasSiderbar={excludeLabels.length <= 3}
         title={topicMedia[0]?.article_title}
         author={topicMedia[0]?.author || '作者：慈诚罗珠堪布'}
         date={media?.created || ''}

@@ -419,7 +419,7 @@ export default function ReadingContent({
           {fullText && (
             <Box
               className='reading-content'
-              sx={{ mr: 2, mb: 5 }}
+              sx={{ mb: 5 }}
               dangerouslySetInnerHTML={{ __html: displayFull }}
             />
           )}

@@ -4,7 +4,7 @@ import CourseCard from '@/app/components/pc/CourseCard';
 import { BookChapter } from '@/app/types/models';
 import { pxToVw } from '@/app/utils/mobileUtils';
 import { getDeviceTypeFromHeaders } from '@/app/utils/serverDeviceUtils';
-import { Box, Container, Typography } from '@mui/material';
+import { Box, Container } from '@mui/material';
 import { notFound } from 'next/navigation';
 
 // PC端参考资料页面组件
@@ -22,7 +22,7 @@ async function PCReferencePage({ books }: { books: BookChapter[] }) {
           pb: 16,
         }}
       >
-        {books?.length ? (
+        {books?.length &&
           (() => {
             const rows = [];
             for (let i = 0; i < books.length; i += 3) {
@@ -61,10 +61,7 @@ async function PCReferencePage({ books }: { books: BookChapter[] }) {
               );
             }
             return rows;
-          })()
-        ) : (
-          <Typography>即将推出</Typography>
-        )}
+          })()}
       </Box>
     </Container>
   );

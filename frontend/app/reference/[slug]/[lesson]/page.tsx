@@ -165,7 +165,7 @@ const refPage = async ({ params, searchParams }: refPageProps) => {
   if (isMobile) {
     return (
       <MobileLessonPage
-        hasSiderbar={excludeLabels.length <= 1}
+        hasSiderbar={excludeLabels.length <= 3}
         title={media?.article_title || media?.title || ''}
         author={bookMedia[0]?.author || '作者：慈诚罗珠堪布'}
         date={media?.created || ''}

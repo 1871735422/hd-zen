@@ -165,3 +165,9 @@ a {
 .icon-nada:before {
   content: '\e606';
 }
+
+/* 文章内的图片最大 100% */
+p > img {
+  max-width: 100%;
+  height: auto;
+}

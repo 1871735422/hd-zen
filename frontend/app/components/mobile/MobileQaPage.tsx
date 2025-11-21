@@ -134,7 +134,7 @@ const MobileQaPage: React.FC<MobileQaPageProps> = ({
                   fontSize: pxToVw(14),
                 }}
               >
-                即将推出
+                暂无问答
               </Typography>
             </Box>
           )}

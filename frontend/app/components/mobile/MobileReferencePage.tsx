@@ -67,25 +67,6 @@ const MobileReferencePage: React.FC<MobileReferencePageProps> = ({
           />
         ))}
       </Box>
-
-      {/* 如果没有数据 */}
-      {categories.length === 0 && (
-        <Box
-          sx={{
-            textAlign: 'center',
-            paddingY: pxToVw(60),
-          }}
-        >
-          <Typography
-            sx={{
-              fontSize: pxToVw(16),
-              color: '#999',
-            }}
-          >
-            即将推出
-          </Typography>
-        </Box>
-      )}
     </MobileBaseLayout>
   );
 };

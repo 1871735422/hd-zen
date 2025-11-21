@@ -313,6 +313,7 @@ export default function ReadingModeContainer({
               fontWeight: 'bold',
               color: theme.text,
               mt: isMobile ? 0 : -2,
+              mr: isMobile ? pxToVw(24) : 0,
               mb: isMobile ? pxToVw(34) : { lg: 7, xl: 10, xxl: 12 },
               fontSize: isMobile ? pxToVw(20) : { lg: 26, xl: 36, xxl: 40 },
               lineHeight: 1.45,
