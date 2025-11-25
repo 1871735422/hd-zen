@@ -1,6 +1,6 @@
 import { Box, Typography } from '@mui/material';
+import dynamic from 'next/dynamic';
 import { pb } from '../api';
-import MobileAskPage from '../components/mobile/AskPage';
 import QuestionCollectClient from '../components/shared/QuestionCollectClient';
 import { ASK_DEAD_FRIENDS1, ASK_DEAD_FRIENDS2 } from '../constants';
 import { Dict } from '../types/models';
@@ -111,6 +111,9 @@ async function PCAskPage() {
 export default async function QuestionCollectPage() {
   const deviceType = await getDeviceTypeFromHeaders();
 
+  const MobileAskPage = dynamic(() => import('../components/mobile/AskPage'), {
+    ssr: true,
+  });
   // 根据设备类型返回对应的组件
   if (deviceType === 'mobile') {
     return <MobileAskPage />;

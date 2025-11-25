@@ -1,11 +1,11 @@
 import { Avatar, Box, Container, Grid, Typography } from '@mui/material';
+import dynamic from 'next/dynamic';
 import { getDownloadResources } from '../api';
 import AudioDownIcon from '../components/icons/AudioDownIcon';
 import EpubDownIcon from '../components/icons/EpubDownIcon';
 import HeadphoneIcon from '../components/icons/HeadphoneIcon';
 import PdfDownIcon from '../components/icons/PdfDownIcon';
 import VideoDownIcon from '../components/icons/VideoDownIcon';
-import MobileDownloadPage from '../components/mobile/MobileDownloadPage';
 import FileIconContainer from '../components/shared/FileIconContainer';
 import TitleBanner from '../components/shared/TitleBanner';
 import { NAV_COLOR } from '../constants';
@@ -31,7 +31,7 @@ export const metadata = {
 export const revalidate = 3600; // 1 hour
 
 // PC端下载页面组件
-async function PCDownloadPage() {
+export default async function DownloadPage() {
   // 在 SSG 构建时获取下载资源数据
   // 如果获取失败，返回空数组避免构建失败
   let downloadItems: DownloadResource[];
@@ -41,6 +41,18 @@ async function PCDownloadPage() {
     console.warn('Failed to fetch download resources during build:', error);
     downloadItems = [];
   }
+
+  const deviceType = await getDeviceTypeFromHeaders();
+
+  // 根据设备类型返回对应的组件
+  if (deviceType === 'mobile') {
+    const MobileDownloadPage = dynamic(
+      () => import('../components/mobile/MobileDownloadPage'),
+      { ssr: true }
+    );
+    return <MobileDownloadPage />;
+  }
+
   return (
     <Box
       sx={{
@@ -223,15 +235,4 @@ async function PCDownloadPage() {
       </Container>
     </Box>
   );
-}
-
-export default async function DownloadPage() {
-  const deviceType = await getDeviceTypeFromHeaders();
-
-  // 根据设备类型返回对应的组件
-  if (deviceType === 'mobile') {
-    return <MobileDownloadPage />;
-  }
-
-  return <PCDownloadPage />;
 }

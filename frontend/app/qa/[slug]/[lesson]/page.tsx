@@ -3,11 +3,11 @@ import {
   getCourses,
   getCourseTopicsByCourse,
 } from '@/app/api';
-import MobileQaLessonPage from '@/app/components/mobile/MobileQaLessonPage';
 import NotFound from '@/app/not-found';
 import { CourseTopic } from '@/app/types/models';
 import { getDeviceTypeFromHeaders } from '@/app/utils/serverDeviceUtils';
 import { Container } from '@mui/material';
+import dynamic from 'next/dynamic';
 import QaClientWrapper from './QaClientWrapper';
 
 // 15分钟缓存
@@ -123,7 +123,10 @@ const qaPage = async ({ params, searchParams }: qaPageProps) => {
   const questionsData = questions as unknown as QLite[];
   // console.log('questionsData', questionsData);
   const initialIdx = questionOrder - 1;
-
+  const MobileQaLessonPage = dynamic(
+    () => import('@/app/components/mobile/MobileQaLessonPage'),
+    { ssr: true }
+  );
   // 移动端渲染
   if (isMobile) {
     return (

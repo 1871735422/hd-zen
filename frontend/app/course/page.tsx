@@ -1,10 +1,10 @@
 import { Box, Container } from '@mui/material';
+import dynamic from 'next/dynamic';
 import {
   getCourseByDisplayOrder,
   getCourses,
   getCourseTopicsByCourse,
 } from '../api';
-import { MobileBaseLayout } from '../components/mobile/MobileBaseLayout';
 import MobileCoursePage from '../components/mobile/MobileCoursePage';
 import BookCard from '../components/pc/BookCard';
 import { getDeviceTypeFromHeaders } from '../utils/serverDeviceUtils';
@@ -28,6 +28,11 @@ async function CoursePage() {
     const defaultCourseTopicsResult =
       await getCourseTopicsByCourse(defaultCourseId);
     const defaultCourseTopics = defaultCourseTopicsResult.items;
+
+    const MobileBaseLayout = dynamic(
+      () => import('../components/mobile/MobileBaseLayout'),
+      { ssr: true }
+    );
 
     return (
       <MobileBaseLayout>

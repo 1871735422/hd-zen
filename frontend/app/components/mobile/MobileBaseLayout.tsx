@@ -22,3 +22,5 @@ export const MobileBaseLayout = ({
     </Box>
   );
 };
+
+export default MobileBaseLayout;

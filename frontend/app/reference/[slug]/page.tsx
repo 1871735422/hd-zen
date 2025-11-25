@@ -1,6 +1,6 @@
 import { getBookChapters } from '@/app/api';
-import MobileCoursePage from '@/app/components/mobile/MobileCoursePage';
 import CourseCard from '@/app/components/pc/CourseCard';
+import MobileCoursePage from '@/app/components/mobile/MobileCoursePage';
 import { BookChapter } from '@/app/types/models';
 import { pxToVw } from '@/app/utils/mobileUtils';
 import { getDeviceTypeFromHeaders } from '@/app/utils/serverDeviceUtils';

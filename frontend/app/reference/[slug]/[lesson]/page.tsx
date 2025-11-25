@@ -1,4 +1,3 @@
-import MobileLessonPage from '@/app/components/mobile/MobileLessonPage';
 import AudioPage from '@/app/components/pc/AudioPage';
 import MifaWarning from '@/app/components/pc/MifaWarning';
 import ReadingPage from '@/app/components/pc/ReadingPage';
@@ -6,6 +5,7 @@ import VideoPage from '@/app/components/pc/VideoPage';
 import { pxToVw } from '@/app/utils/mobileUtils';
 import { getDeviceTypeFromHeaders } from '@/app/utils/serverDeviceUtils';
 import { Box } from '@mui/material';
+import dynamic from 'next/dynamic';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next/types';
 import { getBookChapters, getBookMediaByOrder } from '../../../api';
@@ -163,6 +163,10 @@ const refPage = async ({ params, searchParams }: refPageProps) => {
 
   // 移动端渲染
   if (isMobile) {
+    const MobileLessonPage = dynamic(
+      () => import('@/app/components/mobile/MobileLessonPage'),
+      { ssr: true }
+    );
     return (
       <MobileLessonPage
         hasSiderbar={excludeLabels.length <= 3}

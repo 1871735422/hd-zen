@@ -3,11 +3,11 @@ import {
   getCourses,
   getCourseTopicsByDisplayOrder,
 } from '@/app/api';
-import MobileQaPage from '@/app/components/mobile/MobileQaPage';
 import CourseCard from '@/app/components/pc/CourseCard';
 import DownloadQaResource from '@/app/components/shared/DownloadQaResource';
 import { getDeviceTypeFromHeaders } from '@/app/utils/serverDeviceUtils';
 import { Grid, Typography } from '@mui/material';
+import dynamic from 'next/dynamic';
 import QaSidebar from '../../components/pc/QaSidebar';
 
 // 15分钟缓存
@@ -84,6 +84,12 @@ export default async function QaPage({ params, searchParams }: QaPageProps) {
     // 如果有 isActive: true 的问题，正常显示；如果都是 false，显示"即将推出"
     const questions = activeQuestions;
     const showComingSoon = hasInactiveQuestions && activeQuestions.length === 0;
+
+    const MobileQaPage = dynamic(
+      () => import('../../components/mobile/MobileQaPage'),
+      { ssr: true }
+    );
+
     if (isMobile) {
       return (
         <MobileQaPage
