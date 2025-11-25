@@ -231,24 +231,20 @@ git config --global core.autocrlf false
 ## 常见问题解决
 
 1. **Husky 脚本无法执行**：
-
    - 使用管理员权限运行终端
    - 检查 `.husky` 目录下的文件执行权限
    - 确保已运行 `chmod +x .husky/pre-commit .husky/commit-msg`
 
 2. **提交信息格式错误**：
-
    - 确保提交信息符合规范：`type(scope): description`
    - 支持的 type：feat, fix, build, chore, ci, docs, style, refactor, perf, test
    - 示例：`git commit -m "feat(auth): 添加用户登录功能"`
 
 3. **lint-staged 执行失败**：
-
    - 确保所有代码符合 ESLint 和 Prettier 规范
    - 运行 `pnpm lint:fix` 和 `pnpm format` 修复代码格式
 
 4. **换行符问题**：
-
    - 确保已执行 `git config --global core.autocrlf false`
    - 重新克隆仓库
    - 或执行 `git add . --renormalize`

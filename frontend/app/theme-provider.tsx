@@ -57,7 +57,7 @@ const createAppTheme = () =>
       mode: 'light',
     },
     cssVariables: false,
-    unstable_strictMode: true,
+    // unstable_strictMode: true,
     breakpoints: {
       values: {
         xs: 0, // 手机 (≥ 0px, < 600px) - 强制使用lg样式

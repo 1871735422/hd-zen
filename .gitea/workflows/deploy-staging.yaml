@@ -41,6 +41,8 @@ jobs:
           
           # 构建项目（包含静态资源复制）
           timeout 600 pnpm build
+          cp -r .next/static .next/standalone/.next/
+          cp -r public .next/standalone/
           
           # 验证构建产物
           echo "🔍 验证构建产物..."

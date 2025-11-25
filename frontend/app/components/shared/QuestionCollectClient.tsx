@@ -1,19 +1,12 @@
 'use client';
 
+import { useDeviceType } from '@/app/utils/deviceUtils';
 import { pxToVw } from '@/app/utils/mobileUtils';
 import {
   Close as CloseIcon,
   OpenInNew as OpenInNewIcon,
 } from '@mui/icons-material';
-import {
-  Box,
-  IconButton,
-  Modal,
-  Tooltip,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from '@mui/material';
+import { Box, IconButton, Modal, Tooltip, Typography } from '@mui/material';
 import React, { useState } from 'react';
 
 interface QuestionCollectClientProps {
@@ -23,8 +16,7 @@ interface QuestionCollectClientProps {
 const QuestionCollectClient: React.FC<QuestionCollectClientProps> = ({
   qaLink,
 }) => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isMobile = useDeviceType() === 'mobile';
   const [modalOpen, setModalOpen] = useState(false);
 
   const handleOpenModal = () => {
