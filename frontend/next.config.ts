@@ -2,6 +2,7 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   images: {
+    unoptimized: true, // 禁用图像优化，以避免与某些部署环境的兼容性问题
     remotePatterns: [
       {
         protocol: 'https',
