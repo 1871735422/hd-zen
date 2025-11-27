@@ -1,4 +1,5 @@
 'use client';
+import { useDeviceType } from '@/app/utils/deviceUtils';
 import { Box, Button, Stack, Typography } from '@mui/material';
 
 interface PaginationProps {
@@ -20,6 +21,8 @@ export default function Pagination({
   mode = 'full',
   onModeChange,
 }: PaginationProps) {
+  const isMobile = useDeviceType() === 'mobile';
+
   if (totalPages <= 1) {
     return null;
   }
@@ -127,13 +130,16 @@ export default function Pagination({
         }}
       >
         {/* 首页 */}
-        <Button
-          onClick={handleFirstPage}
-          disabled={currentPage === 1}
-          sx={getButtonStyle(currentPage === 1)}
-        >
-          <span>«</span>
-        </Button>
+
+        {!isMobile && (
+          <Button
+            onClick={handleFirstPage}
+            disabled={currentPage === 1}
+            sx={getButtonStyle(currentPage === 1)}
+          >
+            <span>«</span>
+          </Button>
+        )}
 
         {/* 上一页 */}
         <Button
@@ -170,7 +176,7 @@ export default function Pagination({
             },
           }}
         >
-          <Typography fontSize={12} px={1}>
+          <Typography fontSize={12} px={0}>
             全文
           </Typography>
         </Button>
@@ -185,13 +191,15 @@ export default function Pagination({
         </Button>
 
         {/* 末页 */}
-        <Button
-          onClick={handleLastPage}
-          disabled={currentPage === totalPages}
-          sx={getButtonStyle(currentPage === totalPages)}
-        >
-          <span>»</span>
-        </Button>
+        {!isMobile && (
+          <Button
+            onClick={handleLastPage}
+            disabled={currentPage === totalPages}
+            sx={getButtonStyle(currentPage === totalPages)}
+          >
+            <span>»</span>
+          </Button>
+        )}
       </Stack>
     </Box>
   );
