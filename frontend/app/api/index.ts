@@ -593,7 +593,7 @@ export const getSearchResults = async (
   totalPages: number;
   currentPage: number;
 }> => {
-  console.log('Search called:', { title, content, type, cate });
+  console.log('Search called:', { title, content, type, cate, pageSize });
 
   if (!title && !content) {
     return { items: [], totalItems: 0, totalPages: 0, currentPage: 1 };
@@ -661,27 +661,32 @@ export const getSearchResults = async (
       const allItems: TopicMediaX[] = [];
       let totalItems = 0;
 
-      // 并行搜索课程相关的集合
+      // 并行搜索课程相关的集合，智能分配数量
       const searchPromises = courseCollections.map(
         async ({ name, filterBuilder }) => {
           const filter = filterBuilder(title, content);
           if (!filter) return { items: [], totalItems: 0 };
-          return searchCollection(name, filter, page, pageSize, sort);
+          // 获取足够的数据来支持当前页
+          return searchCollection(name, filter, 1, pageSize * page, sort);
         }
       );
 
       const results = await Promise.all(searchPromises);
-
       // 合并搜索结果
       results.forEach(result => {
         allItems.push(...result.items);
         totalItems += result.totalItems;
       });
 
+      // 应用分页确保返回正确的数量
+      const startIndex = (page - 1) * pageSize;
+      const endIndex = startIndex + pageSize;
+      const paginatedItems = allItems.slice(startIndex, endIndex);
+
       const totalPages = Math.ceil(totalItems / pageSize);
 
       return {
-        items: allItems,
+        items: paginatedItems,
         totalItems,
         totalPages,
         currentPage: page,
@@ -764,11 +769,41 @@ export const getSearchResults = async (
     const allItems: TopicMediaX[] = [];
     let totalItems = 0;
 
-    // 并行搜索所有配置的集合
+    // 第一阶段：并行获取各集合的总数
+    const countPromises = config.collections.map(
+      async ({ name, filterBuilder }) => {
+        const filter = filterBuilder(title, content);
+        const result = await pb.collection(name).getList(1, 1, { filter });
+        return { name, count: result.totalItems };
+      }
+    );
+
+    const counts = await Promise.all(countPromises);
+    const totalCountAcrossAll = counts.reduce((sum, c) => sum + c.count, 0);
+
+    // 第二阶段：按比例分配搜索数量，获取足够数据支持分页
     const searchPromises = config.collections.map(
       async ({ name, filterBuilder }) => {
         const filter = filterBuilder(title, content);
-        return searchCollection(name, filter, page, pageSize, sort);
+        const collectionCount = counts.find(c => c.name === name)?.count || 0;
+
+        // 按比例分配，确保总数不超过pageSize，每个集合至少1个项目
+        const allocatedSize =
+          collectionCount === 0
+            ? 0
+            : Math.max(
+                1,
+                Math.min(
+                  pageSize,
+                  Math.ceil((pageSize * collectionCount) / totalCountAcrossAll)
+                )
+              );
+
+        if (allocatedSize === 0) return { items: [], totalItems: 0 };
+
+        // 获取足够的数据来支持当前页：每集合获取 allocatedSize * page 的数据
+        const fetchSize = Math.min(allocatedSize * page, collectionCount);
+        return searchCollection(name, filter, 1, fetchSize, sort);
       }
     );
 
@@ -780,11 +815,16 @@ export const getSearchResults = async (
       totalItems += result.totalItems;
     });
 
+    // 应用分页确保返回正确的数量
+    const startIndex = (page - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+    const paginatedItems = allItems.slice(startIndex, endIndex);
+
     const totalPages = Math.ceil(totalItems / pageSize);
-    // console.log(`Global search (${type}): ${totalItems} items found`);
+    console.log(`Global search (${type}): ${totalItems} items found`);
 
     return {
-      items: allItems,
+      items: paginatedItems,
       totalItems,
       totalPages,
       currentPage: page,

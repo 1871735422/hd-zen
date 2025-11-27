@@ -521,7 +521,6 @@ console.log('Clarity:', window.clarity);
 如遇到问题：
 
 1. **查看文档**:
-
    - `docs/device-detection-optimization.md`
    - `docs/device-detection-quick-reference.md`
    - `docs/OPTIMIZATION_CHANGELOG.md`

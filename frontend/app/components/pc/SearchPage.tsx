@@ -182,13 +182,13 @@ const SearchPage = ({ isMobile }: { isMobile: boolean }) => {
       // 根据分类选择不同的搜索API
       const currentCate = cateType || cate;
       const currentSort = sortType || sort;
-      // console.log('currentCate', currentCate);
       const response = await fetch(
         `/api/search?${modelSelected === 'title' ? 'title' : 'keywords'}=${encodeURIComponent(keywords)}&page=${page}&pageSize=10&sort=${currentSort}&cate=${currentCate}&searchType=${searchTypeParam}`
       );
 
       if (response) {
         const data = await response.json();
+        console.log('currentCate', currentCate, 'search data', data);
         setSearchResults(data.items || []);
         setTotalPages(data.totalPages || 0);
         setTotalItems(data.totalItems || 0);
@@ -232,7 +232,6 @@ const SearchPage = ({ isMobile }: { isMobile: boolean }) => {
         `searchType=${searchType}`,
       ].join('&');
       const response = await fetch(`/api/search?${params}`);
-
       if (response) {
         const data = await response.json();
         setSearchResults(data.items || []);
@@ -497,7 +496,7 @@ const SearchPage = ({ isMobile }: { isMobile: boolean }) => {
             {searchResults.map((item: TopicMediaX, index) => {
               // 判断是文章还是音视频数据
               const isArticle = item?.fulltext || item?.introtext;
-              console.log(index + 1, item);
+              // console.log(index + 1, item);
 
               // 搜到 summary当作视频
               const itemType = isArticle ? '文章' : '音视频';
