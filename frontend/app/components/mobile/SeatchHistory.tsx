@@ -2,14 +2,15 @@
 
 import { STANDARD_TEXT_COLOR } from '@/app/constants/colors';
 import { pxToVw } from '@/app/utils/mobileUtils';
-import { Box, Button, Stack, Typography } from '@mui/material';
-import Link from 'next/link';
+import { Box, Button, Link, Stack, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useSearchHistory } from '../../hooks/useSearchHistory';
+import { useRouter } from 'next/navigation';
 
 function SeatchHistory() {
   const { history, clearHistory, isClient } = useSearchHistory();
   const [mounted, setMounted] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     setMounted(true);
@@ -67,8 +68,10 @@ function SeatchHistory() {
           history.map(keyword => (
             <Link
               key={keyword}
-              href={`/search?keywords=${encodeURIComponent(keyword)}`}
-              style={{
+              onClick={() => {
+                router.push(`/search?keywords=${encodeURIComponent(keyword)}`);
+              }}
+              sx={{
                 backgroundColor: '#fff',
                 padding: `${pxToVw(4.5)} ${pxToVw(13)}`,
                 borderRadius: pxToVw(20),

@@ -9,7 +9,7 @@ import TextField from '@mui/material/TextField';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSearchHistory } from '../../hooks/useSearchHistory';
 import { pxToVw } from '../../utils/mobileUtils';
 import BackIcon from '../icons/BackIcon';
@@ -32,6 +32,9 @@ const Header: React.FC = () => {
   const urlKeywords = searchParams.get('keywords');
 
   const [searchValue, setSearchValue] = useState(urlKeywords ?? '');
+  useEffect(() => {
+    setSearchValue(urlKeywords ?? '');
+  }, [urlKeywords]);
   // console.log({ urlKeywords, searchValue });
   const { setIsSearchFocused } = useSearchFocus();
   const { addToHistory } = useSearchHistory();
@@ -143,7 +146,7 @@ const Header: React.FC = () => {
                 onBlur={() => {
                   setTimeout(() => {
                     setIsSearchFocused(false);
-                  }, 100);
+                  }, 500);
                 }}
                 InputProps={{
                   disableUnderline: true,

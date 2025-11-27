@@ -7,7 +7,7 @@ import ContentSection from './ContentSection';
  * 移动端首页
  * 根据设计稿重新设计，包含Hero模块和课程介绍模块
  */
-const Home: React.FC = async () => {
+const Home: React.FC = () => {
   return (
     <Box
       sx={{

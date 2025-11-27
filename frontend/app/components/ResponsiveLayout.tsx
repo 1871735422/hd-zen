@@ -10,6 +10,8 @@ import {
 import SeatchHistory from './mobile/SeatchHistory';
 import DesktopFooter from './pc/Footer';
 import DesktopHeader from './pc/Header';
+import PageSkeleton from './mobile/PageSkeleton';
+import { usePageLoading } from '../hooks/usePageLoading';
 
 /**
  * 响应式布局组件
@@ -30,6 +32,7 @@ export default function ResponsiveLayout({
   children: React.ReactNode;
 }) {
   const { deviceType, isHydrated } = useDevice();
+  const { isLoading, pageType } = usePageLoading({ minDisplayTime: 600 });
 
   // 在水合完成前，不渲染任何内容，避免客户端和服务端不匹配导致的问题
   if (!isHydrated) {
@@ -41,9 +44,18 @@ export default function ResponsiveLayout({
   function MainContainerContent() {
     // read focus state to decide what to show in main area on mobile
     const { isSearchFocused } = useSearchFocus();
+
+    // 如果是移动端且正在加载，显示 skeleton
+    if (isMobile && isLoading) {
+      return <PageSkeleton type={pageType} />;
+    }
+
+    // 如果是移动端且搜索聚焦，显示搜索历史
     if (isMobile && isSearchFocused) {
       return <SeatchHistory />;
     }
+
+    // 正常渲染内容
     return <>{children}</>;
   }
 
