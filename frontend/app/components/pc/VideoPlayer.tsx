@@ -643,6 +643,9 @@ const VideoPlayer = forwardRef<
             backgroundColor: '#fff',
           }}
           preload='metadata'
+          playsInline
+          webkit-playsinline='true'
+          x-webkit-airplay='allow'
         />
       </Box>
     </>

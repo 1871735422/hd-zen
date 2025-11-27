@@ -17,6 +17,7 @@ import CheckedIcon from '../icons/CheckedIcon';
 import UncheckIcon from '../icons/UncheckIcon';
 import { SearchBox } from '../shared/SearchBox';
 import SearchInfoCard from './SearchInfoCard';
+import { CustomPagination } from '../shared';
 
 const searchCates = [
   { name: '全站搜索', value: 'all' },
@@ -73,16 +74,26 @@ const SearchPage = ({ isMobile }: { isMobile: boolean }) => {
   const [searchResults, setSearchResults] = useState<TopicMediaX[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [searchKeywords, setSearchKeywords] = useState(urlKeywords || '');
-  const [currentPage, setCurrentPage] = useState(1);
+  // 从URL参数获取页码，如果没有则默认为1
+  const urlPage = parseInt(searchParams.get('page') || '1', 10);
+  const [currentPage, setCurrentPage] = useState(urlPage);
   const [totalPages, setTotalPages] = useState(0);
   const [totalItems, setTotalItems] = useState(0);
+
+  // 监听URL中的page参数变化
+  useEffect(() => {
+    const urlPageParam = parseInt(searchParams.get('page') || '1', 10);
+    if (urlPageParam !== currentPage) {
+      setCurrentPage(urlPageParam);
+    }
+  }, [searchParams, currentPage]);
 
   // 从URL参数初始化搜索
   useEffect(() => {
     if (urlKeywords) {
-      handleSearch(urlKeywords);
+      handleSearch(urlKeywords, urlPage);
     }
-  }, [urlKeywords]);
+  }, [urlKeywords, urlPage]);
 
   // 监听URL中的searchType参数变化
   useEffect(() => {
@@ -92,12 +103,20 @@ const SearchPage = ({ isMobile }: { isMobile: boolean }) => {
     }
   }, [searchParams, searchType]);
 
+  // 监听URL中的page参数变化，当页面参数改变时重新搜索
+  useEffect(() => {
+    if (urlKeywords && urlPage > 1) {
+      handleSearch(urlKeywords, urlPage);
+    }
+  }, [urlPage]);
+
   // 更新URL参数
   const updateUrl = (
     keywords: string,
     searchTypeParam?: string,
     cateType?: string,
-    sortType?: string
+    sortType?: string,
+    pageParam?: number
   ) => {
     const params = new URLSearchParams(searchParams.toString());
     if (keywords) {
@@ -116,13 +135,18 @@ const SearchPage = ({ isMobile }: { isMobile: boolean }) => {
     if (sortType) {
       params.set('sort', sortType);
     }
+    if (pageParam && pageParam > 1) {
+      params.set('page', pageParam.toString());
+    } else {
+      params.delete('page'); // 第一页不显示page参数
+    }
     router.push(`/search?${params.toString()}`);
   };
 
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const newCate = (event.target as HTMLSelectElement).value;
-    // 更新URL参数
-    updateUrl(searchKeywords, searchType, newCate, sort);
+    // 更新URL参数，重置到第一页
+    updateUrl(searchKeywords, searchType, newCate, sort, 1);
     // 如果有搜索查询，重新搜索以应用新的分类
     if (searchKeywords) {
       handleSearchWithFilter(searchKeywords, 1, searchType, newCate); // 重置到第一页
@@ -152,6 +176,8 @@ const SearchPage = ({ isMobile }: { isMobile: boolean }) => {
 
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= totalPages && newPage !== currentPage) {
+      // 更新URL参数以保持浏览器历史
+      updateUrl(searchKeywords, searchType, cate, sort, newPage);
       handleSearchWithFilter(searchKeywords, newPage, searchType, cate);
     }
   };
@@ -176,7 +202,8 @@ const SearchPage = ({ isMobile }: { isMobile: boolean }) => {
     setIsLoading(true);
     setSearchKeywords(keywords);
     setCurrentPage(page);
-    updateUrl(keywords, searchTypeParam, cateType, sortType || sort);
+    // 不在handleSearchWithFilter中更新URL，因为调用者已经更新了
+    // updateUrl(keywords, searchTypeParam, cateType, sortType || sort);
 
     try {
       // 根据分类选择不同的搜索API
@@ -218,7 +245,7 @@ const SearchPage = ({ isMobile }: { isMobile: boolean }) => {
     setIsLoading(true);
     setSearchKeywords(keywords);
     setCurrentPage(page);
-    updateUrl(keywords, searchType, cate, sort);
+    updateUrl(keywords, searchType, cate, sort, page);
 
     try {
       // 简化统一搜索API调用逻辑
@@ -530,7 +557,7 @@ const SearchPage = ({ isMobile }: { isMobile: boolean }) => {
                       isArticle
                         ? `?tab=article#highlight=${encodeURIComponent(searchKeywords)}`
                         : courseInfo.mediaType === 'qa'
-                          ? `?tab=question${item?.questionOrder || 1}#highlight=${encodeURIComponent(searchKeywords)}`
+                          ? `?title=${item?.title || 1}#highlight=${encodeURIComponent(searchKeywords)}`
                           : `#highlight=${encodeURIComponent(searchKeywords)}`
                     }`}
                     keywords={searchKeywords ? [searchKeywords] : []}
@@ -579,6 +606,13 @@ const SearchPage = ({ isMobile }: { isMobile: boolean }) => {
         >
           <ResultSort />
           <SearchResutList />
+          <CustomPagination
+            totalPages={totalPages}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+            maxVisible={4}
+            mode='pagination'
+          />
         </Box>
       </Stack>
     );
@@ -641,6 +675,13 @@ const SearchPage = ({ isMobile }: { isMobile: boolean }) => {
             <SearchResutList />
           </Paper>
         </Box>
+        <CustomPagination
+          totalPages={totalPages}
+          currentPage={currentPage}
+          onPageChange={handlePageChange}
+          maxVisible={4}
+          mode='pagination'
+        />
       </Box>
     </Box>
   );

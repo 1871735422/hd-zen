@@ -51,7 +51,7 @@ export default function DeviceProvider({
 
     const checkDevice = () => {
       const isPortrait = window.innerHeight > window.innerWidth;
-      const MOBILE_BREAKPOINT = isPortrait && isTouchDevice ? 768 : 1200; // px
+      const MOBILE_BREAKPOINT = isPortrait && isTouchDevice ? 768 : 960; // px
       // console.log({ isTouchDevice, isPortrait }, window.screen.orientation);
 
       // 1) 宽度判断

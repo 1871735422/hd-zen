@@ -11,7 +11,6 @@ interface DeviceLayoutProps {
 
 export default function DeviceLayout({ children }: DeviceLayoutProps) {
   const { deviceType } = useDevice();
-
   // Mobile/Tablet: 使用移动端布局
   if (deviceType === 'mobile') {
     return (

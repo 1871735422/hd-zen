@@ -1,6 +1,8 @@
 'use client';
 import { useDeviceType } from '@/app/utils/deviceUtils';
 import { Box, Button, Stack, Typography } from '@mui/material';
+import PrevPage from '../icons/PrevPage';
+import { FirstPage, LastPage } from '@mui/icons-material';
 
 interface PaginationProps {
   totalPages: number;
@@ -8,7 +10,7 @@ interface PaginationProps {
   onPageChange: (page: number) => void;
   maxVisible?: number;
   size?: 'small' | 'medium' | 'large';
-  mode?: 'paged' | 'full';
+  mode?: 'paged' | 'full' | 'pagination';
   onModeChange?: (mode: 'paged' | 'full') => void;
 }
 
@@ -79,11 +81,11 @@ export default function Pagination({
             ...buttonSize,
             borderRadius: '50%',
             bgcolor:
-              i === currentPage && mode === 'paged'
+              i === currentPage && mode !== 'full'
                 ? 'rgba(130, 178, 232, 1)'
                 : 'rgba(230, 245, 255, 1)',
             color:
-              i === currentPage && mode === 'paged'
+              i === currentPage && mode !== 'full'
                 ? '#fff'
                 : 'rgba(86, 137, 204, 1)',
           }}
@@ -122,9 +124,12 @@ export default function Pagination({
         spacing={1.5}
         alignItems='center'
         sx={{
-          '& .MuiButton-root span': {
-            fontSize: 24,
-            pb: { lg: '3px', xl: '5px', xxl: '6px' },
+          '& .MuiButton-root': {
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          },
+          '& .MuiButton-root .MuiSvgIcon-root': {
             color: 'rgba(86, 137, 204, 1)',
           },
         }}
@@ -135,9 +140,9 @@ export default function Pagination({
           <Button
             onClick={handleFirstPage}
             disabled={currentPage === 1}
-            sx={getButtonStyle(currentPage === 1)}
+            sx={{ ...getButtonStyle(currentPage === 1), fontSize: 18 }}
           >
-            <span>«</span>
+            <FirstPage />
           </Button>
         )}
 
@@ -145,49 +150,57 @@ export default function Pagination({
         <Button
           onClick={handlePrevPage}
           disabled={currentPage === 1}
-          sx={getButtonStyle(currentPage === 1)}
+          sx={{ ...getButtonStyle(currentPage === 1), fontSize: 10 }}
         >
-          <span>‹</span>
+          <PrevPage />
         </Button>
 
         {/* 页码 */}
         {renderPageNumbers()}
 
         {/* 切换阅读全文 */}
-        <Button
-          onClick={handleFullTextClick}
-          sx={{
-            ...buttonSize,
-            borderRadius: '50%',
-            bgcolor:
-              mode === 'full'
-                ? 'rgba(130, 178, 232, 1)'
-                : 'rgba(230, 245, 255, 1)',
-            color: mode === 'full' ? '#fff' : 'rgba(86, 137, 204, 1)',
-            border:
-              mode === 'full' ? 'none' : '1px solid rgba(130, 178, 232, 1)',
-            '&:hover': {
+        {mode !== 'pagination' && (
+          <Button
+            onClick={handleFullTextClick}
+            sx={{
+              ...buttonSize,
+              borderRadius: '50%',
               bgcolor:
                 mode === 'full'
-                  ? 'rgba(130, 178, 232, 0.9)'
-                  : 'rgba(130, 178, 232, 0.1)',
+                  ? 'rgba(130, 178, 232, 1)'
+                  : 'rgba(230, 245, 255, 1)',
+              color: mode === 'full' ? '#fff' : 'rgba(86, 137, 204, 1)',
               border:
-                mode === 'full' ? 'none' : '1px solid rgba(130, 178, 232, 0.5)',
-            },
-          }}
-        >
-          <Typography fontSize={12} px={0}>
-            全文
-          </Typography>
-        </Button>
+                mode === 'full' ? 'none' : '1px solid rgba(130, 178, 232, 1)',
+              '&:hover': {
+                bgcolor:
+                  mode === 'full'
+                    ? 'rgba(130, 178, 232, 0.9)'
+                    : 'rgba(130, 178, 232, 0.1)',
+                border:
+                  mode === 'full'
+                    ? 'none'
+                    : '1px solid rgba(130, 178, 232, 0.5)',
+              },
+            }}
+          >
+            <Typography fontSize={12} px={0}>
+              全文
+            </Typography>
+          </Button>
+        )}
 
         {/* 下一页 */}
         <Button
           onClick={handleNextPage}
           disabled={currentPage === totalPages}
-          sx={getButtonStyle(currentPage === totalPages)}
+          sx={{
+            ...getButtonStyle(currentPage === totalPages),
+            fontSize: 10,
+            transform: 'rotate(180deg)',
+          }}
         >
-          <span>›</span>
+          <PrevPage />
         </Button>
 
         {/* 末页 */}
@@ -195,9 +208,9 @@ export default function Pagination({
           <Button
             onClick={handleLastPage}
             disabled={currentPage === totalPages}
-            sx={getButtonStyle(currentPage === totalPages)}
+            sx={{ ...getButtonStyle(currentPage === 1), fontSize: 18 }}
           >
-            <span>»</span>
+            <LastPage />
           </Button>
         )}
       </Stack>

@@ -36,10 +36,43 @@ export default function QaClientWrapper({
   courseName: string;
   lessonName: string;
 }) {
-  const [currentIndex, setCurrentIndex] = useState(Math.max(0, initialIndex));
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+
+  const [currentIndex, setCurrentIndex] = useState(() => {
+    const tabParam = searchParams?.get('tab');
+    const titleParam = searchParams?.get('title');
+
+    console.log('Debug - URL params:', { tabParam, titleParam });
+
+    if (tabParam) {
+      // Extract question number from tab (e.g., "question1" -> 1)
+      const match = tabParam.match(/question(\d+)/);
+      if (match) {
+        const index = Math.max(0, parseInt(match[1], 10) - 1);
+        console.log('Debug - Using tab param, index:', index);
+        return index;
+      }
+    } else if (titleParam) {
+      // Find question matching the title
+      const matchedIndex = questions.findIndex(
+        q => q.questionTitle === titleParam
+      );
+      console.log(
+        'Debug - Title param found, searching for:',
+        titleParam,
+        'matched index:',
+        matchedIndex
+      );
+      if (matchedIndex !== -1) {
+        return matchedIndex;
+      }
+    }
+
+    console.log('Debug - Using initialIndex:', Math.max(0, initialIndex));
+    return Math.max(0, initialIndex);
+  });
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams?.toString());
