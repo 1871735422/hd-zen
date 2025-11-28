@@ -8,6 +8,7 @@ import { CourseTopic } from '@/app/types/models';
 import { getDeviceTypeFromHeaders } from '@/app/utils/serverDeviceUtils';
 import { Container } from '@mui/material';
 import dynamic from 'next/dynamic';
+import { Metadata } from 'next/types';
 import QaClientWrapper from './QaClientWrapper';
 
 // 15分钟缓存
@@ -69,6 +70,58 @@ export async function generateStaticParams() {
   } catch (error) {
     console.error('Error generating static params for QA lessons:', error);
     return [];
+  }
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string; lesson: string }>;
+}): Promise<Metadata | undefined> {
+  const resolvedParams = await params;
+  const courseOrder = resolvedParams.slug;
+  const lessonOrder = resolvedParams.lesson?.replace('lesson', '');
+
+  try {
+    // 获取课程和课题信息
+    const { items: courses } = await getCourses();
+    const course = courses.find(c => c.displayOrder.toString() === courseOrder);
+
+    const { items: topics } = (await getCourseTopicsByCourse(
+      course?.id ?? ''
+    )) || { items: [] };
+    const topic = topics.find(
+      t => `lesson${t.ordering}` === resolvedParams.lesson
+    );
+
+    // 获取问答数据
+    const questionsGrouped = await getAnswerMediasByOrder(
+      courseOrder,
+      lessonOrder,
+      true
+    );
+    const questions = questionsGrouped.flatMap(group => group.questions);
+
+    if (!course || !topic || !questions.length) return;
+
+    const url = `/qa/${courseOrder}/lesson${lessonOrder}`;
+    const title = `${topic.title} - 问答`;
+    const description = `${course.title} - ${topic.title} 的问答内容`;
+
+    return {
+      title,
+      description,
+      alternates: { canonical: url },
+      openGraph: {
+        title,
+        description,
+        url,
+        type: 'article',
+      },
+    };
+  } catch (error) {
+    console.error('Error generating metadata for QA page:', error);
+    return;
   }
 }
 

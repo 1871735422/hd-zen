@@ -60,7 +60,9 @@ const CourseCard: React.FC<CourseCardProps> = ({
         sx={{
           flex: 1,
           backgroundColor: 'white',
-          padding: pxToVw(16),
+          px: pxToVw(16),
+          pt: pxToVw(16),
+          pb: pxToVw(20),
           position: 'relative',
           borderRadius: pxToVw(13),
         }}
@@ -83,7 +85,7 @@ const CourseCard: React.FC<CourseCardProps> = ({
         <IconButton
           sx={{
             position: 'absolute',
-            fontSize: pxToVw(13),
+            fontSize: pxToVw(10),
             backgroundColor:
               index === 5
                 ? 'rgba(238, 237, 255, 1)'
@@ -96,6 +98,22 @@ const CourseCard: React.FC<CourseCardProps> = ({
             color: 'rgba(70, 114, 166, 1)',
             transition: 'transform 0.3s',
             transform: expanded ? 'rotate(0deg)' : 'rotate(180deg)',
+            '&:hover': {
+              backgroundColor:
+                index === 5
+                  ? 'rgba(238, 237, 255, 1)'
+                  : index === 4
+                    ? 'rgba(237, 242, 255, 1)'
+                    : 'rgba(237, 246, 255, 1)',
+            },
+            '&:active': {
+              backgroundColor:
+                index === 5
+                  ? 'rgba(238, 237, 255, 1)'
+                  : index === 4
+                    ? 'rgba(237, 242, 255, 1)'
+                    : 'rgba(237, 246, 255, 1)',
+            },
           }}
         >
           <ArrowTop />

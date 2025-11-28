@@ -82,7 +82,7 @@ export async function generateMetadata({
   if (!course || !topic || !media) return;
 
   const url = `/course/${courseOrder}/lesson${lessonOrder}`;
-  const title = `${media.title || topic.title || '课程'} | 慧灯禅修`;
+  const title = `${topic.title || media.title}`;
   const description =
     media.article_summary ||
     media.article_introtext ||

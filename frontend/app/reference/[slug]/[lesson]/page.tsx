@@ -116,7 +116,7 @@ const refPage = async ({ params, searchParams }: refPageProps) => {
   // 设备检测
   const deviceType = await getDeviceTypeFromHeaders();
   const isMobile = deviceType === 'mobile';
-  console.log('bookMedia', bookMedia);
+  // console.log('bookMedia', bookMedia);
 
   if (!bookMedia) {
     notFound();

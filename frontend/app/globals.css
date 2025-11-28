@@ -42,13 +42,17 @@
     url('/fonts/iconfont.ttf') format('truetype');
 }
 
-.iconfont_s {
+.iconfont_s, .iconfont {
   font-family: 'iconfont' !important;
-  font-size: calc(1.05em); /* inherit * 1.2 */
+  font-size: 1em;
   font-weight: inherit;
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.iconfont_s {
+  font-size: calc(1.05em); /* inherit * 1.2 */
 }
 
 body,
@@ -124,47 +128,6 @@ a {
     color-scheme: dark;
   }
 } */
-
-/* Icon class definitions */
-.icon-ra-pc:before {
-  content: '\e61b';
-}
-
-.icon-nia-PC:before {
-  content: '\e61c';
-}
-
-.icon-yabujie:before {
-  content: '\e612';
-}
-
-.icon-riyuemingdian_:before {
-  content: '\e60f';
-}
-
-.icon-ra:before {
-  content: '\e609';
-}
-
-.icon-nia:before {
-  content: '\e60b';
-}
-
-.icon-qingxidujian:before {
-  content: '\e60c';
-}
-
-.icon-cangwenyangyue:before {
-  content: '\e603';
-}
-
-.icon-xiayinmu:before {
-  content: '\e604';
-}
-
-.icon-nada:before {
-  content: '\e606';
-}
 
 /* 文章内的图片最大 100% */
 p > img {

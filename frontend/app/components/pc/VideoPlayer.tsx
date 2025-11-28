@@ -602,7 +602,7 @@ const VideoPlayer = forwardRef<
             width: '100%',
             height: '100%',
             borderRadius: '12px',
-            backgroundImage: `url(${currentPoster})`,
+            backgroundImage: `url(${currentPoster}) , url(/images/book_cover5.webp)`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           },

@@ -28,7 +28,7 @@ const LessonLayout = async ({
 
   const breadcrumbItems = [
     { label: '首页', href: '/' },
-    { label: '学修参考资料', href: '/reference' },
+    { label: '学修参考资料', href: isMobile ? '/reference' : '/reference/1' },
     { label: courseName, href: `/reference/${courseOrder}` },
     {
       label: lessonCrumbLabel,

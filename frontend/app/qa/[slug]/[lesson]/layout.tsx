@@ -33,7 +33,7 @@ const LessonLayout = async ({
   // console.log('lessonName', lessonName, lessonOrder);
   const breadcrumbItems = [
     { label: '首页', href: '/' },
-    { label: '禅修课问答', href: '/qa' },
+    { label: '禅修课问答', href: '/qa/1' },
     { label: courseName, href: `/qa/${courseOrder}` },
     {
       label: lessonName,
