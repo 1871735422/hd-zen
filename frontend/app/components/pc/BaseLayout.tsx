@@ -22,6 +22,10 @@ function BaseLayout({
 }: BaseLayoutProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [imageHeight, setImageHeight] = useState<number>(680);
+  const categorieItems = categories?.map((category, idx) => ({
+    label: category,
+    slug: `${idx + 1}`,
+  }));
 
   useEffect(() => {
     const calculateImageHeight = () => {
@@ -143,10 +147,10 @@ function BaseLayout({
             {description?.split('\n')[1]}
           </Typography>
         )}
-        {categories && (
+        {categorieItems && categories && (
           <CategorySelector
-            categories={categories}
-            selectedCategory={selectedCategory || categories[0]}
+            categories={categorieItems}
+            selectedIdx={categories.indexOf(selectedCategory || categories[0])}
           />
         )}
         {children}

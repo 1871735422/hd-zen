@@ -35,13 +35,18 @@ export default function AudioPage({
         epub: [topicMedia[0].url_downepub],
       };
   const audioBookUrl = [
-    { title: topicMedia[0]?.title, url_mp3: topicMedia[0]?.ct_url_mp3 },
+    {
+      title: topicMedia[0]?.title,
+      url_mp3: topicMedia[0]?.ct_url_mp3,
+      url_downmp3: topicMedia[0]?.url_downmp3,
+    },
   ];
 
   const mp3Urls = showTitle
     ? topicMedia.map(item => ({
         title: item?.title,
         url_mp3: item?.url_mp3,
+        url_downmp3: item?.url_downmp3,
       }))
     : audioBookUrl;
   // console.log('mp3Urls', mp3Urls);
@@ -93,9 +98,7 @@ export default function AudioPage({
                 ) : (
                   <MediaDownloadButton
                     mediaType='audio'
-                    downloadUrls={topicMedia.map(
-                      item => item?.url_downmp3 || ''
-                    )}
+                    downloadUrls={[item?.url_downmp3 || '']}
                   />
                 )}
               </>

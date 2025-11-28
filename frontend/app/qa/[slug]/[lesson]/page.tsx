@@ -96,13 +96,13 @@ const qaPage = async ({ params, searchParams }: qaPageProps) => {
   const questionsGrouped = await getAnswerMediasByOrder(
     courseOrder,
     lessonOrder,
-    undefined,
     true
   );
   // 展平分组数据以便查找和遍历
   const questions = questionsGrouped.flatMap(group => group.questions);
   const courseName = questions[0]?.courseTitle ?? '';
   const lessonName = questions[0]?.topicTitle ?? '';
+  // console.log('questionsGrouped', questionsGrouped);
 
   if (!questions.length) {
     return <NotFound />;

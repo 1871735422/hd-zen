@@ -25,8 +25,12 @@ const LessonLayout = async ({
   const questionsGrouped = await getAnswerMediasByOrder(courseOrder);
   const courseName =
     questionsGrouped[lessonOrder - 1]?.questions[0]?.courseTitle ?? '';
-  const lessonName = questionsGrouped[lessonOrder - 1]?.topicTitle ?? '';
-
+  const lessonName =
+    questionsGrouped.find(
+      group => group.questions[0].topicOrder === lessonOrder
+    )?.topicTitle ?? '';
+  // console.log('questionsGrouped', questionsGrouped);
+  // console.log('lessonName', lessonName, lessonOrder);
   const breadcrumbItems = [
     { label: '首页', href: '/' },
     { label: '禅修课问答', href: '/qa' },
@@ -37,18 +41,23 @@ const LessonLayout = async ({
     },
   ];
 
+  const labels = buildLessonsTitle(questionsGrouped.length);
+  const categories = labels.map((label, idx) => ({
+    label,
+    slug: 'lesson' + questionsGrouped[idx].questions[0].topicOrder,
+  }));
+  // console.log('categories', categories);
+
   return (
     <BreadcrumbProvider>
       {/* PC 端显示 CategorySelector */}
       {!isMobile && (
         <Box mb={3}>
           <CategorySelector
-            categories={buildLessonsTitle(questionsGrouped.length)}
-            selectedCategory={
-              buildLessonsTitle(questionsGrouped.length)[
-                Number(lessonOrder) - 1
-              ]
-            }
+            categories={categories}
+            selectedIdx={categories.findIndex(
+              category => category.slug === lesson
+            )}
           />
         </Box>
       )}

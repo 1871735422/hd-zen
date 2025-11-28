@@ -325,19 +325,15 @@ export const getQuestionsByOrder = async (
 export const getAnswerMediasByOrder = async (
   courseOrder: string,
   topicOrder?: string,
-  questionOrder?: string,
   fetchMedia?: boolean
 ): Promise<QuestionResultGrouped[]> => {
   const filters = ['courseOrder = ' + courseOrder];
   if (topicOrder) {
     filters.push('topicOrder = ' + topicOrder);
   }
-  if (questionOrder) {
-    filters.push('questionOrder = ' + questionOrder);
-  }
 
   let fileds =
-    'courseTitle,topicTitle,questionTitle,questionContent,questionOrder,questionCreated,description,isActive';
+    'courseTitle,topicTitle,topicOrder,questionTitle,questionContent,questionOrder,questionCreated,description,isActive';
   if (fetchMedia) {
     fileds +=
       ',url_image,url_hd,url_sd,mp4_duration,url_downmp4,mp4_size,url_mp3,mp3_duration,url_downmp3,mp3_size,summary';

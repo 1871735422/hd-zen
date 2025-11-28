@@ -207,6 +207,7 @@ export interface CourseMedia extends BaseModel {
 export interface QuestionResult extends BaseModel, Media {
   courseTitle: string;
   topicTitle: string;
+  topicOrder: number;
   questionTitle: string;
   questionContent?: string;
   questionOrder: number;

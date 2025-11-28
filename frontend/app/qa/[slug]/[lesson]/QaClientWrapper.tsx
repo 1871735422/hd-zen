@@ -44,14 +44,14 @@ export default function QaClientWrapper({
     const tabParam = searchParams?.get('tab');
     const titleParam = searchParams?.get('title');
 
-    console.log('Debug - URL params:', { tabParam, titleParam });
+    // console.log('Debug - URL params:', { tabParam, titleParam });
 
     if (tabParam) {
       // Extract question number from tab (e.g., "question1" -> 1)
       const match = tabParam.match(/question(\d+)/);
       if (match) {
         const index = Math.max(0, parseInt(match[1], 10) - 1);
-        console.log('Debug - Using tab param, index:', index);
+        // console.log('Debug - Using tab param, index:', index);
         return index;
       }
     } else if (titleParam) {
@@ -123,7 +123,7 @@ export default function QaClientWrapper({
   }, [questions.length]);
 
   const hasVideo = currentQuestion?.url_hd || currentQuestion?.url_sd;
-  console.log('currentQuestion', currentQuestion);
+  // console.log('currentQuestion', currentQuestion);
   return (
     <Grid
       container

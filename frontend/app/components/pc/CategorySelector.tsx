@@ -5,20 +5,24 @@ import { ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { usePathname, useRouter } from 'next/navigation';
 import { sharedButtonStyles } from '../shared/ButtonStyles';
 
+type Category = {
+  label: string;
+  slug: string;
+};
 interface CategorySelectorProps {
-  categories: string[];
-  selectedCategory: string;
+  categories: Category[];
+  selectedIdx: number;
 }
 
 export default function CategorySelector({
   categories,
-  selectedCategory,
+  selectedIdx,
 }: CategorySelectorProps) {
   const router = useRouter();
   const pathname = usePathname();
-  const isLessonPage = /^\/qa\/\d+\/lesson\d+$/.test(pathname);
+  const isQaPage = /^\/qa\/\d+\/lesson\d+$/.test(pathname);
   const hideQaLayout =
-    isLessonPage && categories.length === 6 && categories[0] === '第一册';
+    isQaPage && categories.length === 6 && categories[0]?.label === '第一册';
 
   const getBtnPx = (zoom = 1) => {
     if (categories.length > 10) return 'auto';
@@ -31,28 +35,18 @@ export default function CategorySelector({
     <>
       {!hideQaLayout && (
         <ToggleButtonGroup
-          value={selectedCategory}
+          value={categories[selectedIdx]?.slug}
           exclusive
-          onChange={(_, value) => {
-            // console.log({ pathname,isLessonPage, value, categories });
+          onChange={(_, cateValue) => {
+            // console.log({ isQaPage, cateValue, categories });
 
-            if (!value && pathname.includes('lesson')) {
-              router.push(pathname.replace(/lesson\d+/, ''));
-            }
+            // 当点击已选中的按钮时，不进行跳转
+            if (!cateValue) return;
 
-            if (!value) return;
-
-            const categoryIndex = categories.indexOf(value);
-
-            if (isLessonPage) {
-              router.push(
-                pathname.replace(
-                  /lesson\d+/,
-                  `lesson${Math.max(1, categoryIndex + 1)}`
-                )
-              );
+            if (isQaPage) {
+              router.push(pathname.replace(/lesson\d+/, cateValue));
             } else {
-              router.push(`/${pathname.split('/')[1]}/${categoryIndex + 1}`);
+              router.push(`/${pathname.split('/')[1]}/${cateValue}`);
             }
           }}
           aria-label='reference categories'
@@ -104,8 +98,12 @@ export default function CategorySelector({
           }}
         >
           {categories.map(category => (
-            <ToggleButton key={category} value={category} aria-label={category}>
-              {category}
+            <ToggleButton
+              key={category.slug}
+              value={category.slug}
+              aria-label={category.label}
+            >
+              {category.label}
             </ToggleButton>
           ))}
         </ToggleButtonGroup>
