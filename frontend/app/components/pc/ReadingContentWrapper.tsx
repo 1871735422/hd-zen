@@ -174,6 +174,11 @@ export default function ReadingContent({
     targetIndex: number,
     minLength: number = 200
   ): number => {
+    // 如果目标索引超出文本长度，返回HTML末尾
+    if (targetIndex >= plainText.length) {
+      return html.length;
+    }
+
     // 1. 优先查找段落边界
     const paragraphBreaks = [
       ...html.matchAll(/<\/p>/gi),
@@ -245,6 +250,7 @@ export default function ReadingContent({
     const startIndex = (page - 1) * charsPerPage;
     const endIndex = startIndex + charsPerPage;
 
+    // 如果开始索引已经超过文本长度，返回空字符串
     if (startIndex >= plainText.length) {
       return '';
     }
@@ -252,7 +258,16 @@ export default function ReadingContent({
     // 找到当前页的开始位置
     const actualStartIndex =
       page === 1 ? 0 : findBestBreakPoint(html, plainText, startIndex);
-    const actualEndIndex = findBestBreakPoint(html, plainText, endIndex);
+
+    // 对于最后一页，确保显示所有剩余内容
+    let actualEndIndex: number;
+    if (endIndex >= plainText.length) {
+      // 这是最后一页，显示到文本末尾的所有内容
+      actualEndIndex = html.length;
+    } else {
+      // 不是最后一页，按正常方式找到结束位置
+      actualEndIndex = findBestBreakPoint(html, plainText, endIndex);
+    }
 
     return html.slice(actualStartIndex, actualEndIndex);
   };

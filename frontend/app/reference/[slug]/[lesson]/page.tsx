@@ -93,7 +93,7 @@ export async function generateMetadata({
       url,
       type: 'article',
       publishedTime: media.created,
-      authors: [media.author ?? '作者：慈诚罗珠堪布'],
+      authors: [media.author ?? ''],
     },
   };
 }
@@ -116,7 +116,7 @@ const refPage = async ({ params, searchParams }: refPageProps) => {
   // 设备检测
   const deviceType = await getDeviceTypeFromHeaders();
   const isMobile = deviceType === 'mobile';
-  // console.log('bookMedia', bookMedia);
+  console.log('bookMedia', bookMedia);
 
   if (!bookMedia) {
     notFound();
@@ -171,7 +171,7 @@ const refPage = async ({ params, searchParams }: refPageProps) => {
       <MobileLessonPage
         hasSiderbar={excludeLabels.length <= 3}
         title={media?.article_title || media?.title || ''}
-        author={bookMedia[0]?.author || '作者：慈诚罗珠堪布'}
+        author={bookMedia[0]?.author || ''}
         date={media?.created || ''}
         description={
           selectedKey === 'article'
@@ -215,7 +215,7 @@ const refPage = async ({ params, searchParams }: refPageProps) => {
             ? bookMedia[0]?.article_summary || bookMedia[0]?.media_summary || ''
             : bookMedia[0]?.media_summary
         }
-        author={bookMedia[0]?.author || '作者：慈诚罗珠堪布'}
+        author={bookMedia[0]?.author || ''}
         date={bookMedia[0]?.created}
       />
       <TabRender />

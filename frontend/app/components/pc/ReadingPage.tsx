@@ -33,7 +33,7 @@ export default async function ReadingPage({
       </Paper>
     );
   }
-
+  // console.log('topicMedia', topicMedia?.article_fulltext.slice(-100));
   // 如果是阅读模式，渲染专门的阅读模式组件
   if (isReadingMode) {
     const tags = topicTags ? topicTags.map(tag => tag.trim()) : [];
@@ -44,7 +44,7 @@ export default async function ReadingPage({
         title={topicMedia.article_title || topicMedia.title}
         tags={tags}
         summary={topicMedia.article_summary}
-        author='慈诚罗珠堪布'
+        author={topicMedia?.author || ''}
         date={
           topicMedia.created
             ? new Date(topicMedia.created).toLocaleDateString('zh-CN')

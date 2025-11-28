@@ -99,7 +99,7 @@ export async function generateMetadata({
       url,
       type: 'article',
       publishedTime: media.created,
-      authors: ['作者：慈诚罗珠堪布'],
+      authors: [media.author ?? ''],
     },
   };
 }
@@ -181,7 +181,7 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
       <MobileLessonPage
         hasSiderbar={excludeLabels.length <= 3}
         title={topicMedia[0]?.article_title}
-        author={topicMedia[0]?.author || '作者：慈诚罗珠堪布'}
+        author={topicMedia[0]?.author || ''}
         date={media?.created || ''}
         description={
           selectedKey === 'article'
@@ -230,7 +230,7 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
               ''
             : topicMedia[0]?.media_summary
         }
-        author={topicMedia[0]?.author || '作者：慈诚罗珠堪布'}
+        author={topicMedia[0]?.author || ''}
         date={topicMedia[0]?.created}
       />
       <TabRender />
