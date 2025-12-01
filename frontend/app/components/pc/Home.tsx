@@ -25,8 +25,9 @@ const Home: React.FC = async () => {
           minHeight: { lg: 550, xlg: 578, xl: 686, xxl: 686 },
           backgroundImage: {
             xxl: 'url(/images/hero-bg-xxl.jpg)',
-            xl: 'url(/images/hero-bg.webp)',
-            lg: 'url(/images/hero-bg.webp)',
+            xl: 'url(/images/hero-bg-xxl.jpg)',
+            lg: 'url(/images/hero-bg-xxl.jpg)',
+            xlg: 'url(/images/hero-bg-xxl.jpg)',
           },
           backgroundPosition: 'top',
           // backgroundSize: '100%',
@@ -38,8 +39,8 @@ const Home: React.FC = async () => {
         {/* hero 头图 */}
         <Box
           sx={{
-            height: { xl: '100%', lg: 546, xlg: 578 },
-            width: { lg: 530, xlg: 565, xl: 722, xxl: 722 },
+            height: { xl: 681, lg: 542, xlg: 578 },
+            width: { lg: 530, xlg: 565, xl: 722, xxl: 725 },
             position: 'absolute',
             top: 0,
             left: 0,

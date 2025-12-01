@@ -65,7 +65,7 @@ export default async function ReadingPage({
         }}
         data-reading-container
       >
-        {topicMedia?.url_mp3 && (
+        {(topicMedia?.url_mp3 || topicMedia?.ct_url_mp3) && (
           <AudioPage topicMedia={topicMediaX} showTitle={false} />
         )}
         <ReadingSidebar />

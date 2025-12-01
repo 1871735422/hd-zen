@@ -138,6 +138,11 @@ const refPage = async ({ params, searchParams }: refPageProps) => {
     excludeLabels.push('视频');
   }
   const hasSecretWarn = media?.secret_level !== null;
+  const description =
+    selectedKey === 'article' ||
+    (excludeLabels?.includes('视频') && excludeLabels?.includes('音频'))
+      ? bookMedia[0]?.article_summary || bookMedia[0]?.media_summary || ''
+      : bookMedia[0]?.media_summary;
 
   const TabRender = () => {
     if (
@@ -173,11 +178,7 @@ const refPage = async ({ params, searchParams }: refPageProps) => {
         title={media?.article_title || media?.title || ''}
         author={bookMedia[0]?.author || ''}
         date={media?.created || ''}
-        description={
-          selectedKey === 'article'
-            ? bookMedia[0]?.article_summary || bookMedia[0]?.media_summary || ''
-            : bookMedia[0]?.media_summary
-        }
+        description={description}
         courseOrder={bookOrder}
         lessonOrder={chapterOrder}
         mp3Url={selectedKey === 'audio' ? media?.url_downmp3 : undefined}
@@ -210,11 +211,7 @@ const refPage = async ({ params, searchParams }: refPageProps) => {
       <LessonMeta
         title={bookMedia[0]?.article_title}
         tags={bookTags?.length ? bookTags.map((tag: string) => tag.trim()) : []}
-        description={
-          selectedKey === 'article'
-            ? bookMedia[0]?.article_summary || bookMedia[0]?.media_summary || ''
-            : bookMedia[0]?.media_summary
-        }
+        description={description}
         author={bookMedia[0]?.author || ''}
         date={bookMedia[0]?.created}
       />

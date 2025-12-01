@@ -149,6 +149,12 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
   }
 
   const hasSecretWarn = media?.secret_level !== null;
+  const description =
+    selectedKey === 'article' ||
+    (excludeLabels?.includes('视频') && excludeLabels?.includes('音频'))
+      ? topicMedia[0]?.article_summary || topicMedia[0]?.media_summary || ''
+      : topicMedia[0]?.media_summary || topicMedia[0]?.article_summary;
+
   // console.log(!selectedKey, excludeLabels?.includes('视频'), media?.url_mp3);
   const TabRender = () => {
     if (
@@ -181,15 +187,9 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
       <MobileLessonPage
         hasSiderbar={excludeLabels.length <= 3}
         title={topicMedia[0]?.article_title}
-        author={topicMedia[0]?.author || ''}
+        author={topicMedia[0]?.author || '慈诚罗珠堪布'}
         date={media?.created || ''}
-        description={
-          selectedKey === 'article'
-            ? topicMedia[0]?.article_summary ||
-              topicMedia[0]?.media_summary ||
-              ''
-            : topicMedia[0]?.media_summary
-        }
+        description={description}
         courseOrder={courseOrder}
         lessonOrder={lessonOrder}
         mp3Url={selectedKey === 'audio' ? media?.url_downmp3 : undefined}
@@ -223,14 +223,8 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
         tags={
           topicTags?.length ? topicTags.map((tag: string) => tag.trim()) : []
         }
-        description={
-          selectedKey === 'article'
-            ? topicMedia[0]?.article_summary ||
-              topicMedia[0]?.media_summary ||
-              ''
-            : topicMedia[0]?.media_summary
-        }
-        author={topicMedia[0]?.author || ''}
+        description={description}
+        author={topicMedia[0]?.author || '慈诚罗珠堪布'}
         date={topicMedia[0]?.created}
       />
       <TabRender />

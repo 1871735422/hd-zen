@@ -21,6 +21,7 @@ export default function CategorySelector({
   const router = useRouter();
   const pathname = usePathname();
   const isQaPage = /^\/qa\/\d+\/lesson\d+$/.test(pathname);
+  const isSubLessonPage = /^\/\w+\/\d+\/lesson\d+$/.test(pathname);
   const hideQaLayout =
     isQaPage && categories.length === 6 && categories[0]?.label === '第一册';
 
@@ -39,6 +40,10 @@ export default function CategorySelector({
           exclusive
           onChange={(_, cateValue) => {
             // console.log({ isQaPage, cateValue, categories });
+
+            // 当已选中且在子路径时，跳转到上级
+            if (!cateValue && isSubLessonPage)
+              return router.push(pathname.replace(/lesson\d+/, ''));
 
             // 当点击已选中的按钮时，不进行跳转
             if (!cateValue) return;
