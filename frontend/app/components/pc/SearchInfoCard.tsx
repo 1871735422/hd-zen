@@ -60,12 +60,12 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
         {typeof index === 'number' && (
           <Box
             sx={{
-              minWidth: { sm: 19, md: 19, lg: 16, xl: 22, xxl: 26 },
+              minWidth: { lg: 18, xl: 22, xxl: 26 },
               aspectRatio: '1 / 1',
               borderRadius: '50%',
               bgcolor: 'rgba(86, 137, 204, 1)',
               color: '#fff',
-              fontSize: { lg: 13, xl: 16, xxl: 18 },
+              fontSize: { lg: 12, xl: 16, xxl: 18 },
               fontWeight: 500,
               display: 'flex',
               alignItems: 'center',
@@ -128,6 +128,7 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
         }}
       >
         <Box
+          onClick={() => setExpanded(v => !v)}
           component='div'
           sx={{ '& mark': { px: 0.25, borderRadius: 0.5 } }}
           dangerouslySetInnerHTML={{
@@ -152,7 +153,7 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
             flexDirection: 'column',
             color: 'rgba(84, 161, 209, 1)',
             mt: 0.5,
-            mb: type === '文章' ? (expanded ? 0 : -3) : 1,
+            mb: type === '文章' ? (expanded ? 0 : -2) : 1,
           }}
         >
           {type === '文章' && <FoldResultIcon expanded={expanded} />}

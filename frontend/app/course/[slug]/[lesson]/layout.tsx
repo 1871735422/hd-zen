@@ -40,7 +40,7 @@ const LessonLayout = async ({
 
   const breadcrumbItems = [
     { label: '首页', href: '/' },
-    { label: '慧灯禅修课', href: '/course' },
+    { label: '慧灯禅修课', href:isMobile ? '/course/1' : '/course' },
     { label: courseName, href: `/course/${courseOrder}` },
     {
       label: lessonCrumbLabel,
