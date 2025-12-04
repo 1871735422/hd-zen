@@ -43,7 +43,8 @@ export function MobileLessonMeta({
           sx={{
             pt: pxToVw(15),
             pb: pxToVw(25),
-            pl: hasSiderbar ? pxToVw(refCourse ? 25 : 42) : 0,
+            pl: hasSiderbar ? pxToVw(refCourse ? 25 : 62) : pxToVw(20),
+            pr: refCourse ? 0 : pxToVw(20),
             fontSize: pxToVw(20),
             fontWeight: 500,
             textAlign: refCourse ? 'left' : 'center',

@@ -165,6 +165,7 @@ const refPage = async ({ params, searchParams }: refPageProps) => {
     }
     return <VideoPage topicMedia={bookMedia} />;
   };
+  console.log(excludeLabels.length);
 
   // 移动端渲染
   if (isMobile) {
@@ -174,7 +175,7 @@ const refPage = async ({ params, searchParams }: refPageProps) => {
     );
     return (
       <MobileLessonPage
-        hasSiderbar={excludeLabels.length <= 3}
+        hasSiderbar={excludeLabels.length < 3}
         title={media?.article_title || media?.title || ''}
         author={bookMedia[0]?.author || ''}
         date={media?.created || ''}

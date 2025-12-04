@@ -646,11 +646,11 @@ const VideoPlayer = forwardRef<
           playsInline
           webkit-playsinline='true'
           x-webkit-airplay='allow'
-          poster="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+          poster='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
           muted
           x5-playsinline='true'
-          x5-video-player-type="h5"
-          x5-video-player-fullscreen="true"
+          x5-video-player-type='h5'
+          x5-video-player-fullscreen='true'
         />
       </Box>
     </>

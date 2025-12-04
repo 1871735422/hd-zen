@@ -42,7 +42,8 @@
     url('/fonts/iconfont.ttf') format('truetype');
 }
 
-.iconfont_s, .iconfont {
+.iconfont_s,
+.iconfont {
   font-family: 'iconfont' !important;
   font-size: 1em;
   font-weight: inherit;

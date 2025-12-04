@@ -4,7 +4,7 @@ import AppBreadcrumbs, {
 import { pxToVw } from '@/app/utils/mobileUtils';
 import { getDeviceTypeFromHeaders } from '@/app/utils/serverDeviceUtils';
 import { Box, Container, Stack } from '@mui/material';
-import { getBookChapters, getCategories } from '../../../api';
+import { getCategories } from '../../../api';
 
 const LessonLayout = async ({
   children,
@@ -15,10 +15,10 @@ const LessonLayout = async ({
 }) => {
   const resolvedParams = await params;
   const courseOrder = resolvedParams.slug;
-  const lessonOrder = resolvedParams.lesson.replace('lesson', '');
+  // const lessonOrder = resolvedParams.lesson.replace('lesson', '');
   // console.log({courseOrder,lessonOrder});
-  const bookChapters = await getBookChapters(courseOrder, lessonOrder);
-  const lessonCrumbLabel = bookChapters[0]?.article_title ?? '';
+  // const bookChapters = await getBookChapters(courseOrder, lessonOrder);
+  // const lessonCrumbLabel = bookChapters[0]?.article_title ?? '';
   const menuData = await getCategories('学修参考资料');
   const courseName =
     menuData[0]?.subMenu?.find(item => item.slug === courseOrder)?.name ?? '';
@@ -30,10 +30,10 @@ const LessonLayout = async ({
     { label: '首页', href: '/' },
     { label: '学修参考资料', href: isMobile ? '/reference' : '/reference/1' },
     { label: courseName, href: `/reference/${courseOrder}` },
-    {
-      label: lessonCrumbLabel,
-      href: `/reference/${courseOrder}/lesson${lessonOrder}`,
-    },
+    // {
+    //   label: lessonCrumbLabel,
+    //   href: `/reference/${courseOrder}/lesson${lessonOrder}`,
+    // },
   ];
 
   return (
