@@ -194,6 +194,7 @@ export default function MobileQaLessonPage({
 
         {currentQuestion?.url_hd || currentQuestion?.url_sd ? (
           <VideoPlayer
+            key={`video-${currentIndex}`} // 不加在微信内播放完 下一个时会报错
             videoList={videoList}
             currentIndex={currentIndex}
             onVideoChange={setCurrentIndex}
