@@ -4,7 +4,7 @@ import { clearCourseTitle } from '@/app/utils/courseUtils';
 import { Box, Typography } from '@mui/material';
 import Link from 'next/link';
 import React from 'react';
-import { CourseTopic, QuestionResult } from '../../types/models';
+import { QuestionResult } from '../../types/models';
 import { pxToVw } from '../../utils/mobileUtils';
 import { useDevice } from '../DeviceProvider';
 import { CornerBadge } from '../pc';
@@ -13,16 +13,18 @@ import MobileVolumeNavigation from './MobileVolumeNavigation';
 
 interface MobileQaPageProps {
   courseOrder: string;
-  courseTopics: CourseTopic[];
+  sidebarData: { label: string; path: string; displayOrder: number }[];
   questions: QuestionResult[];
   selectedLessonOrder: string;
+  showComingSoon?: boolean;
 }
 
 const MobileQaPage: React.FC<MobileQaPageProps> = ({
   courseOrder,
-  courseTopics,
+  sidebarData,
   questions,
   selectedLessonOrder,
+  showComingSoon = false,
 }) => {
   const { deviceType } = useDevice();
 
@@ -31,14 +33,9 @@ const MobileQaPage: React.FC<MobileQaPageProps> = ({
     return null;
   }
 
-  // 构建侧边栏数据
-  const sidebarData = courseTopics.map(topic => ({
-    label: topic.article_title || topic.title,
-    path: `/qa/${courseOrder}?tab=lesson${topic.ordering}`,
-    displayOrder: topic.ordering,
-  }));
-
-  const selectedIdx = Number(selectedLessonOrder) - 1;
+  const selectedIdx = sidebarData.findIndex(
+    item => item.displayOrder === Number(selectedLessonOrder)
+  );
 
   return (
     <Box
@@ -62,7 +59,24 @@ const MobileQaPage: React.FC<MobileQaPageProps> = ({
         }}
       >
         {/* 左侧：课程主题侧边栏 */}
-        <MobileQaSidebar items={sidebarData} selectedIdx={selectedIdx} />
+        {sidebarData.length > 0 ? (
+          <MobileQaSidebar items={sidebarData} selectedIdx={selectedIdx} />
+        ) : (
+          <Box
+            sx={{
+              textAlign: 'center',
+              paddingY: pxToVw(60),
+            }}
+          >
+            <Typography
+              sx={{
+                fontSize: pxToVw(14),
+              }}
+            >
+              本册暂无问答
+            </Typography>
+          </Box>
+        )}
 
         {/* 右侧：问题列表 */}
         <Box
@@ -120,9 +134,28 @@ const MobileQaPage: React.FC<MobileQaPageProps> = ({
               </Box>
             </Link>
           ))}
+          {showComingSoon && (
+            <Box
+              sx={{
+                padding: pxToVw(16),
+                backgroundColor: 'white',
+                borderRadius: pxToVw(15),
+                textAlign: 'center',
+              }}
+            >
+              <Typography
+                sx={{
+                  fontSize: pxToVw(15),
+                  color: 'rgba(102, 102, 102, 1)',
+                }}
+              >
+                即将推出
+              </Typography>
+            </Box>
+          )}
 
           {/* 空状态 */}
-          {questions.length === 0 && (
+          {questions.length === 0 && !showComingSoon && (
             <Box
               sx={{
                 textAlign: 'center',

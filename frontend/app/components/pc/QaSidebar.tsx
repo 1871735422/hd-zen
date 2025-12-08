@@ -147,7 +147,7 @@ export default function QaSidebar({
                         fontSize={{ lg: 16, xl: 20, xxl: 22 }}
                         fontWeight={700}
                       >
-                        {item.displayOrder}
+                        {idx + 1}
                       </Typography>
                     </Avatar>
                     <ListItemText

@@ -4,10 +4,10 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Box, Button, Stack, Typography } from '@mui/material';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { pxToVw } from '../../utils/mobileUtils';
 import ArrowTop from '../icons/ArrowTop';
-import VideoPlayer, { VideoItem } from '../pc/VideoPlayer';
+import VideoPlayer, { VideoItem, VideoPlayerRef } from '../pc/VideoPlayer';
 import { MobileLessonMeta } from './MobileLessonMeta';
 import MobileQaSidebar from './MobileQaSidebar';
 
@@ -42,6 +42,10 @@ export default function MobileQaLessonPage({
   const [currentIndex, setCurrentIndex] = useState(Math.max(0, initialIndex));
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
   const [showExpandButton, setShowExpandButton] = useState(false);
+  const videoPlayerRef = useRef<VideoPlayerRef>(null);
+  // 标记最近一次切换是否为手动切换（由于key导致重新挂载，需要在父组件维护状态）
+  // 用于区分自动切换和手动切换，确保自动切换逻辑正确
+  const lastSwitchWasManualRef = useRef(false);
 
   const router = useRouter();
   const pathname = usePathname();
@@ -86,13 +90,31 @@ export default function MobileQaLessonPage({
 
   const currentQuestion = questions[currentIndex];
 
-  const handlePrev = useCallback(() => {
-    setCurrentIndex(i => Math.max(0, i - 1));
+  // 手动切换处理：标记为手动切换并更新索引
+  const handleManualSwitch = useCallback((index: number) => {
+    lastSwitchWasManualRef.current = true; // 标记为手动切换
+    setCurrentIndex(index);
+    // 由于key导致重新挂载，VideoPlayer会在新实例中通过onManualSwitch回调处理
   }, []);
 
+  const handlePrev = useCallback(() => {
+    const prevIndex = Math.max(0, currentIndex - 1);
+    handleManualSwitch(prevIndex);
+  }, [currentIndex, handleManualSwitch]);
+
   const handleNext = useCallback(() => {
-    setCurrentIndex(i => Math.min(questions.length - 1, i + 1));
-  }, [questions.length]);
+    const nextIndex = Math.min(questions.length - 1, currentIndex + 1);
+    handleManualSwitch(nextIndex);
+  }, [currentIndex, questions.length, handleManualSwitch]);
+
+  // 侧边栏选择处理
+  const handleSidebarSelect = useCallback(
+    (index: number) => {
+      handleManualSwitch(index);
+      setIsSidebarExpanded(false); // 移动端选择后关闭侧边栏
+    },
+    [handleManualSwitch]
+  );
 
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout> | undefined;
@@ -170,7 +192,7 @@ export default function MobileQaLessonPage({
         <MobileQaSidebar
           items={sidebarItems}
           selectedIdx={currentIndex}
-          onSelect={setCurrentIndex}
+          onSelect={handleSidebarSelect}
           expanded={isSidebarExpanded}
           onClose={() => setIsSidebarExpanded(false)}
         />
@@ -194,10 +216,27 @@ export default function MobileQaLessonPage({
 
         {currentQuestion?.url_hd || currentQuestion?.url_sd ? (
           <VideoPlayer
+            ref={videoPlayerRef}
             key={`video-${currentIndex}`} // 不加在微信内播放完 下一个时会报错
             videoList={videoList}
             currentIndex={currentIndex}
-            onVideoChange={setCurrentIndex}
+            onVideoChange={index => {
+              // VideoPlayer自动切换时调用（通过ended事件触发advanceToNext）
+              // 更新索引以触发重新挂载，显示新视频
+              setCurrentIndex(index);
+              // 自动切换时清除手动切换标记，允许后续自动切换继续工作
+              lastSwitchWasManualRef.current = false;
+            }}
+            onManualSwitch={index => {
+              // 手动切换回调：VideoPlayer检测到手动切换时调用
+              // 由于key导致重新挂载，新实例可能无法触发此回调
+              // 但我们已经通过handleManualSwitch处理了手动切换
+              lastSwitchWasManualRef.current = true;
+              // 确保索引同步（虽然通常已经在handleManualSwitch中更新了）
+              if (index !== currentIndex) {
+                setCurrentIndex(index);
+              }
+            }}
           />
         ) : (
           <Typography sx={{ p: pxToVw(16), fontSize: pxToVw(14) }}>

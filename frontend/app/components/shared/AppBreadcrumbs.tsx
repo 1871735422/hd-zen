@@ -48,7 +48,7 @@ export default function AppBreadcrumbs({
         mx: 1,
         // Adjust margin for long labels on small screens
         [theme.breakpoints.down('sm')]:
-          items?.length > 3 && items[3]?.label.length >= 8
+          items?.length > 3 && items[3]?.label.length > 9
             ? {
                 '& .MuiBreadcrumbs-li:last-child': {
                   marginLeft: pxToVw(23),

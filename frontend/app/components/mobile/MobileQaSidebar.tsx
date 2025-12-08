@@ -2,7 +2,7 @@
 
 import { MAIN_BLUE_COLOR, STANDARD_TEXT_COLOR } from '@/app/constants/colors';
 import { clearCourseTitle } from '@/app/utils/courseUtils';
-import { Avatar, Box, IconButton, Typography } from '@mui/material';
+import { Avatar, Box, Drawer, IconButton, Typography } from '@mui/material';
 import Link from 'next/link';
 import React from 'react';
 import { pxToVw } from '../../utils/mobileUtils';
@@ -23,33 +23,32 @@ const MobileQaSidebar: React.FC<MobileQaSidebarProps> = ({
   expanded = true,
   onClose,
 }) => {
-  return (
+  // 侧边栏内容组件
+  const sidebarContent = (
     <Box
       sx={{
-        width: pxToVw(expanded ? 128 : 0),
-        flexShrink: 0,
+        width: pxToVw(128),
+        height: '100%',
         background:
           'linear-gradient(175.97deg, rgba(232, 247, 255, 1) 0%, rgba(224, 226, 255, 1) 99.94%)',
         borderRadius: `0 ${pxToVw(20)} ${pxToVw(20)} 0`,
         overflow: 'hidden',
         pt: pxToVw(onClose ? 58 : 40),
-        transition: 'width 0.3s ease-in-out',
-        '&:before': expanded
-          ? {
-              content: '""',
-              position: 'absolute',
-              top: pxToVw(-2),
-              left: 0,
-              borderRadius: `0 ${pxToVw(20)} 0 0`,
-              width: `calc(100% + ${pxToVw(9)})`,
-              height: `calc(100% + ${pxToVw(2)})`,
-              background: '#fff',
-              zIndex: -1,
-            }
-          : {},
+        position: 'relative',
+        '&:before': {
+          content: '""',
+          position: 'absolute',
+          top: pxToVw(-2),
+          left: 0,
+          borderRadius: `0 ${pxToVw(20)} 0 0`,
+          width: `calc(100% + ${pxToVw(9)})`,
+          height: `calc(100% + ${pxToVw(2)})`,
+          background: '#fff',
+          zIndex: -1,
+        },
       }}
     >
-      {expanded && (
+      {onClose && (
         <IconButton
           sx={{
             position: 'absolute',
@@ -66,7 +65,7 @@ const MobileQaSidebar: React.FC<MobileQaSidebarProps> = ({
       )}
       <Box
         sx={{
-          height: onSelect ? '75vh' : 'auto',
+          height: onSelect ? 'calc(100vh - 100px)' : 'auto',
           overflowY: 'auto',
           overflowX: 'hidden',
           '&:before':
@@ -167,7 +166,7 @@ const MobileQaSidebar: React.FC<MobileQaSidebarProps> = ({
                   }}
                 >
                   <Typography fontSize={pxToVw(12)} fontWeight={700}>
-                    {item.displayOrder}
+                    {idx + 1}
                   </Typography>
                 </Avatar>
               )}
@@ -220,6 +219,43 @@ const MobileQaSidebar: React.FC<MobileQaSidebarProps> = ({
           );
         })}
       </Box>
+    </Box>
+  );
+
+  // 如果有 onSelect，使用 Drawer modal 模式
+  if (onSelect) {
+    return (
+      <Drawer
+        anchor='left'
+        open={expanded}
+        onClose={onClose}
+        ModalProps={{
+          keepMounted: false, // 关闭时不保留 DOM，提升性能
+        }}
+        PaperProps={{
+          sx: {
+            width: pxToVw(128),
+            boxShadow: 'none',
+            backgroundColor: 'transparent',
+          },
+        }}
+      >
+        {sidebarContent}
+      </Drawer>
+    );
+  }
+
+  // 否则使用原有的固定侧边栏模式
+  return (
+    <Box
+      sx={{
+        width: pxToVw(expanded ? 128 : 0),
+        flexShrink: 0,
+        transition: 'width 0.3s ease-in-out',
+        overflow: 'hidden',
+      }}
+    >
+      {sidebarContent}
     </Box>
   );
 };

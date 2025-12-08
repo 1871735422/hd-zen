@@ -1,8 +1,4 @@
-import {
-  getAnswerMediasByOrder,
-  getCourses,
-  getCourseTopicsByDisplayOrder,
-} from '@/app/api';
+import { getAnswerMediasByOrder, getCourses } from '@/app/api';
 import CourseCard from '@/app/components/pc/CourseCard';
 import DownloadQaResource from '@/app/components/shared/DownloadQaResource';
 import { getDeviceTypeFromHeaders } from '@/app/utils/serverDeviceUtils';
@@ -48,32 +44,16 @@ export default async function QaPage({ params, searchParams }: QaPageProps) {
     // 获取所有问答数据（未过滤 topic），已按 topicTitle 分组
     const questionsGrouped = await getAnswerMediasByOrder(displayOrder);
 
-    // 获取课程主题信息，用于匹配 lessonOrder 和 topicTitle
-    const courseTopics =
-      (await getCourseTopicsByDisplayOrder(displayOrder))?.items || [];
-
-    // console.log({ courseTopics, questionsGrouped });
-    // 构建侧边栏数据：所有有问题数据的 topic 都显示
-    const sidebarData = courseTopics
-      .filter(topic => {
-        const group = questionsGrouped.find(
-          g => g.topicTitle === topic.article_title
-        );
-        return group && group.questions.length > 0;
-      })
-      .map((topic, idx) => ({
-        label: topic.article_title,
-        path: `/qa/${displayOrder}?tab=lesson${idx + 1}`,
-        displayOrder: idx + 1,
-      }))
-      .sort((a, b) => a.displayOrder - b.displayOrder);
+    // 构建侧边栏数据：应用与 categories 相同的数据处理逻辑，使用真实课名
+    const sidebarData = questionsGrouped.map(group => ({
+      label: group.topicTitle,
+      path: `/qa/${displayOrder}?tab=lesson${group.questions[0].topicOrder}`,
+      displayOrder: group.questions[0].topicOrder,
+    }));
 
     // 根据当前选中的 lessonOrder 过滤问题
-    const currentTopic = courseTopics.find(
-      (topic, idx) => idx + 1 === Number(lessonOrder)
-    );
     const currentGroup = questionsGrouped.find(
-      group => group.topicTitle === currentTopic?.article_title
+      group => group.questions[0].topicOrder === Number(lessonOrder)
     );
 
     // 过滤问题：只显示 isActive: true 的问题
@@ -94,9 +74,10 @@ export default async function QaPage({ params, searchParams }: QaPageProps) {
       return (
         <MobileQaPage
           courseOrder={displayOrder}
-          courseTopics={courseTopics}
+          sidebarData={sidebarData}
           questions={questions}
           selectedLessonOrder={lessonOrder}
+          showComingSoon={showComingSoon}
         />
       );
     }
@@ -125,7 +106,9 @@ export default async function QaPage({ params, searchParams }: QaPageProps) {
             {sidebarData.length > 0 ? (
               <QaSidebar
                 lesson={sidebarData}
-                selectedIdx={Number(lessonOrder) - 1}
+                selectedIdx={sidebarData.findIndex(
+                  item => item.displayOrder === Number(lessonOrder)
+                )}
               />
             ) : (
               <Typography variant='h5' sx={{ textAlign: 'center', py: 5 }}>

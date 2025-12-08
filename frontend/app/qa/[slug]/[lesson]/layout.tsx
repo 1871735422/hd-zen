@@ -23,14 +23,13 @@ const LessonLayout = async ({
   const isMobile = deviceType === 'mobile';
 
   const questionsGrouped = await getAnswerMediasByOrder(courseOrder);
-  const courseName =
-    questionsGrouped[lessonOrder - 1]?.questions[0]?.courseTitle ?? '';
+  const courseName = questionsGrouped[0]?.questions[0]?.courseTitle ?? '';
   const lessonName =
     questionsGrouped.find(
       group => group.questions[0].topicOrder === lessonOrder
     )?.topicTitle ?? '';
   // console.log('questionsGrouped', questionsGrouped);
-  // console.log('lessonName', lessonName, lessonOrder);
+  // console.log({ courseName, lessonName, lessonOrder });
   const breadcrumbItems = [
     { label: '首页', href: '/' },
     { label: '禅修课问答', href: '/qa/1' },

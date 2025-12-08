@@ -46,7 +46,9 @@
   font-family: TIBETBT;
   font-style: normal;
   font-weight: normal;
-  src: url('/fonts/himalaya.ttf'), url('/fonts/tibet.woff') format('woff');
+  src:
+    url('/fonts/himalaya.ttf'),
+    url('/fonts/tibet.woff') format('woff');
 }
 
 .tibet-font,

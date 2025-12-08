@@ -17,7 +17,7 @@ export async function generateMetadata({
 
   // Get the current course
   const course = await getCourseByDisplayOrder(slug);
-  console.log('course', course?.title);
+  // console.log('course', course?.title);
   if (!course) {
     return {
       title: '禅修课问答 | 慧灯禅修',
