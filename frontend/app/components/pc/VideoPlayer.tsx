@@ -1,6 +1,6 @@
 'use client';
-import { useDeviceType } from '@/app/utils/deviceUtils';
 import { trackVideoPlay } from '@/app/utils/clarityAnalytics';
+import { useDeviceType } from '@/app/utils/deviceUtils';
 import {
   pauseOtherMediaPlayers,
   registerMediaPlayer,
@@ -10,9 +10,8 @@ import {
 import { pxToVw } from '@/app/utils/mobileUtils';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import { Box, IconButton, Stack, Typography } from '@mui/material';
+import Artplayer from 'artplayer';
 import { useRouter, useSearchParams } from 'next/navigation';
-// @ts-ignore
-import 'plyr/dist/plyr.css';
 import {
   forwardRef,
   useEffect,
@@ -22,7 +21,6 @@ import {
 } from 'react';
 import PlayCircleIcon from '../icons/PlayCircleIcon';
 import MediaDownloadButton from './MediaDownloadButton';
-
 type Source = { src: string; type?: string; size?: number };
 
 export interface VideoItem {
@@ -37,24 +35,16 @@ export interface VideoPlayerRef {
   switchToVideo: (index: number) => void;
 }
 
-// 按需加载 Plyr，并做模块级缓存，避免重复拉取包体
-let plyrPromise: Promise<typeof import('plyr')> | null = null;
-async function loadPlyr() {
-  if (!plyrPromise) plyrPromise = import('plyr');
-  const { default: PlyrLib } = await plyrPromise;
-  return PlyrLib;
-}
-
 const VideoPlayer = forwardRef<
   VideoPlayerRef,
   {
-    videoList: VideoItem[]; // 必填参数，统一使用 videoList
+    videoList: VideoItem[];
     currentIndex?: number;
     onVideoChange?: (index: number) => void;
     urlParamName?: string;
     onManualSwitch?: (index: number) => void;
-    hasUserPlayedOnce?: boolean; // 外部传入：用户是否已经播放过（用于移动端组件重新挂载场景）
-    onUserPlayed?: () => void; // 用户首次播放时的回调（用于移动端同步状态）
+    hasUserPlayedOnce?: boolean;
+    onUserPlayed?: () => void;
   }
 >(function VideoPlayer(
   {
@@ -70,54 +60,36 @@ const VideoPlayer = forwardRef<
 ) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const videoRef = useRef<HTMLVideoElement | null>(null);
-  const playerRef = useRef<Plyr | null>(null);
-  const mediaPlayerRef = useRef<MediaPlayer | null>(null); // 保存媒体播放器包装对象
-  const [played, setPlayed] = useState(false);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const playerRef = useRef<Artplayer | null>(null);
+  const mediaPlayerRef = useRef<MediaPlayer | null>(null);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(currentIndex);
+  const [playerReady, setPlayerReady] = useState(false); // 播放器是否准备好
+  const [played, setPlayed] = useState(false); // 是否已播放（控制封面显示）
   const currentIndexRef = useRef(currentVideoIndex);
-  const hasStartedCurrentRef = useRef(false);
-  const playAttemptTokenRef = useRef(0);
-  const lastAdvanceTimeRef = useRef(0);
-  const videoStartTimeRef = useRef(0);
-  const autoAdvanceTokenRef = useRef(0);
-  const isAdvancingRef = useRef(false);
-  const hasInitializedFromUrlRef = useRef(false); // 记录是否已经从 URL 初始化过
-  const allowAutoAdvanceRef = useRef(true); // 是否允许自动切换
-  const isAutoAdvanceInProgressRef = useRef(false); // 标记是否正在进行自动切换
-  const hasUserPlayedOnceRef = useRef(false); // 记录用户是否已经手动播放过
-  const trackedVideoIdsRef = useRef<Set<string>>(new Set()); // 记录已统计的视频ID
+  const hasUserPlayedOnceRef = useRef(false);
+  const trackedVideoIdsRef = useRef<Set<string>>(new Set());
+  const hasInitializedFromUrlRef = useRef(false);
+  const allowAutoAdvanceRef = useRef(true);
 
-  // 同步外部传入的用户播放状态（用于移动端组件重新挂载场景）
+  // 同步外部传入的用户播放状态
   if (externalHasUserPlayedOnce !== undefined) {
     hasUserPlayedOnceRef.current = externalHasUserPlayedOnce;
   }
 
-  // 暴露给外部的方法
-  useImperativeHandle(
-    ref,
-    () => ({
-      switchToVideo: (index: number) => {
-        switchToVideo(index);
-      },
-    }),
-    []
-  );
-
-  // 统一使用 videoList，不再支持 sources fallback
   const videos: VideoItem[] = videoList;
+  const currentVideo = videos[currentVideoIndex];
+  const isMobile = useDeviceType() === 'mobile';
+  const isShowTitle = currentVideo?.title && urlParamName === 'showTitle';
 
-  // 作用：把当前索引写入 ref，避免 Plyr 回调闭包中拿到旧值
+  // 同步当前索引到 ref
   useEffect(() => {
     currentIndexRef.current = currentVideoIndex;
   }, [currentVideoIndex]);
 
-  // 初始化时从 URL 参数读取视频索引（只执行一次）
+  // 从 URL 初始化视频索引
   useEffect(() => {
-    // 防止重复初始化
     if (hasInitializedFromUrlRef.current) return;
-
-    // 仅在存在多个视频时，才根据 URL 初始化索引
     if (videos.length <= 1) {
       hasInitializedFromUrlRef.current = true;
       return;
@@ -126,32 +98,17 @@ const VideoPlayer = forwardRef<
     const urlParam = searchParams.get(urlParamName);
     if (urlParam && urlParam.startsWith('question')) {
       const tabNumber = parseInt(urlParam.replace('question', ''), 10);
-      const indexFromUrl = tabNumber - 1; // question1 -> videoList[0]
+      const indexFromUrl = tabNumber - 1;
       if (!isNaN(tabNumber) && tabNumber >= 1 && indexFromUrl < videos.length) {
         setCurrentVideoIndex(indexFromUrl);
       }
     }
-
     hasInitializedFromUrlRef.current = true;
-  }, [searchParams, urlParamName, videos.length]); // 移除 currentVideoIndex 依赖
+  }, [searchParams, urlParamName, videos.length]);
 
-  // Get current video
-  const currentVideo = videos[currentVideoIndex];
-  const currentSources = currentVideo?.sources || [];
-
-  // Helper: build plyr-compatible source list
-  const buildPlyrSources = (list: Source[]) =>
-    list.map(s => ({
-      src: s.src,
-      type: s.type ?? 'video/mp4',
-      size: s.size ?? 0,
-    }));
-
-  // 更新 URL 查询参数
+  // 更新 URL 参数
   const updateUrlParam = (index: number) => {
     const url = new URL(window.location.href);
-
-    // 只有当视频数 > 1 时才写入 question 参数；否则移除该参数
     if (videos.length <= 1) {
       if (url.searchParams.has(urlParamName)) {
         url.searchParams.delete(urlParamName);
@@ -159,426 +116,238 @@ const VideoPlayer = forwardRef<
       }
       return;
     }
-
-    const paramValue = `question${index + 1}`; // videoList[0] -> question1
-    if (url.searchParams.get(urlParamName) === paramValue) {
-      return;
-    }
+    const paramValue = `question${index + 1}`;
+    if (url.searchParams.get(urlParamName) === paramValue) return;
     url.searchParams.set(urlParamName, paramValue);
     router.replace(`${url.pathname}${url.search}`, { scroll: false });
   };
 
-  // 简化的自动播放逻辑
-  const attemptAutoPlay = (videoElement: HTMLVideoElement) => {
-    return videoElement
-      .play()
-      .then(() => {
-        setPlayed(true);
-      })
-      .catch(() => {
-        setPlayed(false);
-      });
-  };
-
-  // 检查视频是否应该自动切换到下一个
-  const shouldAdvanceToNext = (): boolean => {
-    // 检查是否允许自动切换（防止手动切换后的误触发）
-    if (!allowAutoAdvanceRef.current) {
-      return false;
-    }
-
-    // 基本条件检查
-    if (
-      !hasStartedCurrentRef.current ||
-      isAdvancingRef.current ||
-      currentIndexRef.current >= videos.length - 1
-    ) {
-      return false;
-    }
-
-    // 时间间隔检查 - 防止频繁切换
-    const now = Date.now();
-    const timeSinceLastAdvance = now - lastAdvanceTimeRef.current;
-    const timeSinceVideoStart = now - videoStartTimeRef.current;
-
-    // 对于手动切换后的第一个视频，需要更长的播放时间才能自动切换
-    const minPlayTime = lastAdvanceTimeRef.current === 0 ? 2000 : 800; // 手动切换后需要至少2秒
-
-    if (lastAdvanceTimeRef.current > 0 && timeSinceLastAdvance < 2000) {
-      return false; // 至少2秒间隔
-    }
-
-    if (videoStartTimeRef.current > 0 && timeSinceVideoStart < minPlayTime) {
-      return false;
-    }
-
-    return true;
-  };
-
-  // 手动切换到指定视频
+  // 切换到指定视频
   const switchToVideo = (index: number) => {
-    // 禁用自动切换直到当前视频自然播放结束
     allowAutoAdvanceRef.current = false;
-    isAdvancingRef.current = false;
-    isAutoAdvanceInProgressRef.current = false;
-
     updateUrlParam(index);
-    applySource(index, true, undefined, true);
+    applySource(index, hasUserPlayedOnceRef.current);
     onManualSwitch?.(index);
   };
 
-  // 切换到下一个视频（自动切换）
-  const advanceToNext = () => {
-    isAdvancingRef.current = true;
-    isAutoAdvanceInProgressRef.current = true;
-    lastAdvanceTimeRef.current = Date.now();
-    autoAdvanceTokenRef.current = Date.now();
-    const nextIndex = currentIndexRef.current + 1;
-
-    applySource(nextIndex, true, autoAdvanceTokenRef.current, false);
-  };
-
-  // 统一的切源方法：更新 Plyr 源并尝试自动播放
+  // 应用视频源（直接操作 player，不触发状态更新避免重新渲染）
   const applySource = (
     index: number,
     autoplay = false,
-    autoAdvanceToken?: number,
-    isManualSwitch = false // 新增：是否为手动切换
+    skipStateUpdate = false
   ) => {
     const player = playerRef.current;
-    const v = videoRef.current;
-    if (!player || !v) return;
+    if (!player) return;
 
-    // 边界保护
     const safeIndex = Math.max(0, Math.min(index, videos.length - 1));
+    const nextVideo = videos[safeIndex];
+    const nextSrc = nextVideo?.sources?.[0]?.src;
 
-    // 切源前先暂停，避免状态混乱
-    try {
-      v.pause();
-    } catch {}
+    if (!nextSrc) return;
 
-    // 如果是手动切换，重置相关状态但保留后续自动切换的能力
-    if (isManualSwitch) {
-      isAdvancingRef.current = false;
-      allowAutoAdvanceRef.current = false; // 禁用自动切换直到当前视频播放完成
-      // 不重置 autoAdvanceTokenRef，保留后续自动切换的能力
-    }
-
-    // 更新索引和同步状态
+    // 更新 ref（不触发渲染）
     currentIndexRef.current = safeIndex;
-    setCurrentVideoIndex(safeIndex);
-    onVideoChange?.(safeIndex);
 
-    // 更新 URL 查询参数
-    if (!isManualSwitch) {
+    // 只在非自动切换时更新状态和 URL（手动切换才需要）
+    if (!skipStateUpdate) {
+      setCurrentVideoIndex(safeIndex);
       updateUrlParam(safeIndex);
     }
 
-    // 延迟设置新源，确保前一个视频完全停止
-    setTimeout(() => {
-      if (currentIndexRef.current !== safeIndex) return; // 防止竞态条件
+    onVideoChange?.(safeIndex);
 
-      player.source = {
-        type: 'video',
-        title: videos[safeIndex]?.title ?? '',
-        sources: buildPlyrSources(videos[safeIndex]?.sources || []),
-      };
+    // 切换视频源（ArtPlayer 的 switchUrl 在 iOS 全屏下支持良好）
+    player.switchUrl(nextSrc);
 
-      // 在设置新源后重置播放状态
-      hasStartedCurrentRef.current = false;
-
-      try {
-        if (playerRef.current) {
-          playerRef.current.currentTime = 0;
-        }
-      } catch {}
-
-      // 自动播放：自动切换或用户已播放过
-      const shouldAutoPlay =
-        autoplay &&
-        (autoAdvanceToken !== undefined || hasUserPlayedOnceRef.current);
-      if (shouldAutoPlay) {
-        // 自动切换时标记用户已播放过，以便后续自动切换
-        if (autoAdvanceToken !== undefined) {
-          hasUserPlayedOnceRef.current = true;
-        }
-        const attemptToken = ++playAttemptTokenRef.current;
-
-        // 监听 Plyr 的 loadeddata 事件（数据加载完成）
-        const onLoadedData = () => {
-          if (
-            playAttemptTokenRef.current !== attemptToken ||
-            currentIndexRef.current !== safeIndex
-          ) {
-            return;
-          }
-
-          // 设置 playing 事件监听
-          const markPlaying = () => {
-            if (playAttemptTokenRef.current !== attemptToken) return;
-            hasStartedCurrentRef.current = true;
-            setPlayed(true);
-            isAdvancingRef.current = false;
-            videoStartTimeRef.current = Date.now();
-            allowAutoAdvanceRef.current = true;
-            v.removeEventListener('playing', markPlaying);
-          };
-          v.addEventListener('playing', markPlaying);
-
-          // 使用 Plyr 的 play 方法
-          try {
-            const playPromise = player.play();
-            if (playPromise && typeof playPromise.then === 'function') {
-              playPromise.catch(() => {
-                // 自动播放失败，静默处理
-              });
-            }
-          } catch {
-            // 播放异常，静默处理
-          }
-        };
-
-        // 监听 loadeddata 事件
-        player.once('loadeddata', onLoadedData);
-      }
-    }, 50);
+    // 自动播放
+    if (autoplay) {
+      player.play().catch(() => {});
+    }
   };
 
-  // 作用：仅首屏创建 Plyr 实例，并注册 timeupdate（预加载和推进）
+  // 暴露方法给父组件
+  useImperativeHandle(ref, () => ({ switchToVideo }), []);
+
+  // 初始化 ArtPlayer
   useEffect(() => {
-    let mounted = true;
-    (async () => {
-      const PlyrLib = await loadPlyr();
-      if (!mounted || !videoRef.current) return;
+    if (!containerRef.current) return;
 
-      // 计算清晰度列表（去重、排序）
-      const qualityOptions = Array.from(
-        new Set(currentSources.map(s => s.size).filter(Boolean) as number[])
-      )
-        .sort((a, b) => a - b)
-        .map(n => Number(n));
-      // 根据设备类型配置控制条，移动端隐藏音量调节条以节省空间
-      const controls = [
-        'play',
-        'progress',
-        'current-time',
-        'mute',
-        // ...(isMobile ? [] : ['volume']), // 移动端隐藏音量条，只保留静音按钮
-        'settings',
-        'fullscreen',
-      ];
+    // 获取初始视频
+    const getVideoAtIndex = (index: number) => {
+      const video = videos[index];
+      const sources = video?.sources || [];
+      return { video, sources };
+    };
 
-      playerRef.current = new PlyrLib(videoRef.current, {
-        controls,
-        // settings must include 'quality' to show quality in settings menu
-        settings: ['quality'],
-        autoplay: false, // 启用自动播放
-        muted: false, // 不静音，但如果自动播放失败会尝试静音
-        quality: {
-          default: qualityOptions[0] ?? currentSources[0]?.size ?? 720,
-          options: qualityOptions.length ? qualityOptions : [720],
-          forced: true, // ensure plyr will force quality changes by replacing src
-        },
-        // 启用键盘快捷键
-        keyboard: {
-          focused: true, // 播放器获得焦点时启用快捷键
-          global: true, // 全局启用快捷键（即使播放器未获得焦点）
-        },
-        // 自定义快进/快退时间（秒）
-        seekTime: 10, // 默认为 10 秒，可以根据需要调整为 5、15、30 等
-        fullscreen: {
-          enabled: true,
-          fallback: true,
-          iosNative: true, // 在 iOS 上原生全屏
-        },
-      });
+    const { video: initialVideo, sources: initialSources } = getVideoAtIndex(
+      currentIndexRef.current
+    );
 
-      // 创建 MediaPlayer 包装对象并注册到全局媒体列表
-      const mediaPlayer: MediaPlayer = {
-        pause: () => playerRef.current?.pause(),
-        get paused() {
-          return playerRef.current?.paused ?? true;
-        },
-        type: 'video',
-      };
-      mediaPlayerRef.current = mediaPlayer;
-      registerMediaPlayer(mediaPlayer);
+    // 画质映射（数字 -> 汉字）
+    const qualityMap: Record<number, string> = {
+      360: '流畅',
+      480: '标清',
+      720: '高清',
+      1080: '超清',
+    };
 
-      // 注册事件：播放标记、进度记录、结束后推进
-      try {
-        playerRef.current.on('play', () => {
-          hasStartedCurrentRef.current = true;
-          videoStartTimeRef.current = Date.now();
-          isAdvancingRef.current = false;
+    // 构建清晰度选项的函数
+    const buildQualities = (sources: Source[]) =>
+      sources
+        .filter(s => s.size)
+        .map(s => ({
+          default: s.size === sources[0]?.size,
+          html: qualityMap[s.size || 720] || `${s.size}P`,
+          url: s.src,
+        }));
 
-          // 视频播放统计
-          const currentVideo = videos[currentIndexRef.current];
-          if (
-            currentVideo &&
-            !trackedVideoIdsRef.current.has(currentVideo.id)
-          ) {
-            trackVideoPlay(currentVideo.id, currentVideo.title);
-            trackedVideoIdsRef.current.add(currentVideo.id);
-          }
+    const initialQualities = buildQualities(initialSources);
 
-          // 暂停所有其他媒体播放器（包括其他视频和音频）
-          pauseOtherMediaPlayers(mediaPlayer);
-        });
+    // 创建 ArtPlayer 实例
+    const player = new Artplayer({
+      container: containerRef.current,
+      url: initialSources[0]?.src || '',
+      poster: initialVideo?.poster || '',
+      autoplay: false,
+      autoSize: false,
+      autoMini: false,
+      loop: false,
+      flip: true,
+      playbackRate: true,
+      aspectRatio: true,
+      setting: false,
+      hotkey: true,
+      pip: false,
+      mutex: true,
+      backdrop: true,
+      fullscreen: true,
+      fullscreenWeb: false, // 使用原生全屏（iOS 支持良好）
+      subtitleOffset: false,
+      miniProgressBar: true,
+      playsInline: true,
+      quality: initialQualities.length > 0 ? initialQualities : undefined,
+      moreVideoAttr: {
+        playsInline: true,
+      },
+      theme: '#00b2ff',
+      lang: 'zh-cn',
+    });
 
-        // 简化：只监听播放开始事件
-        playerRef.current.on('timeupdate', () => {
-          if (!hasStartedCurrentRef.current) {
-            const player = playerRef.current;
-            if (player && player.currentTime > 0.25) {
-              hasStartedCurrentRef.current = true;
-            }
-          }
-        });
-        playerRef.current.on('ended', () => {
-          const player = playerRef.current;
-          if (!player) return;
+    playerRef.current = player;
 
-          // 防抖，视频仅播放1秒内就触发ended（如切源骚乱），不做自动切换
-          if (player.currentTime < 1 || !hasStartedCurrentRef.current) {
-            return;
-          }
+    // 创建媒体播放器包装对象
+    const mediaPlayer: MediaPlayer = {
+      pause: () => player.pause(),
+      get paused() {
+        const artVideo = player?.video;
+        return artVideo ? artVideo.paused : true;
+      },
+      type: 'video',
+    };
+    mediaPlayerRef.current = mediaPlayer;
+    registerMediaPlayer(mediaPlayer);
 
-          // 视频真正播放完成后，重新启用自动切换
-          if (!allowAutoAdvanceRef.current) {
-            allowAutoAdvanceRef.current = true;
-          }
+    // 监听播放器准备就绪
+    player.on('ready', () => {
+      player.cssVar('--art-background-color', 'white');
+      setPlayerReady(true);
+    });
 
-          // 判断是否应该切换
-          if (shouldAdvanceToNext()) {
-            advanceToNext();
-          }
-        });
-      } catch {
-        // 忽略事件注册异常（极少发生）
+    // 监听播放事件
+    player.on('play', () => {
+      setPlayed(true); // 隐藏封面
+
+      if (!hasUserPlayedOnceRef.current) {
+        hasUserPlayedOnceRef.current = true;
+        onUserPlayed?.();
       }
 
-      // 初始化：按当前索引切源
-      // 如果外部传入 hasUserPlayedOnce=true，说明用户已经播放过，应该自动播放（移动端自动切换场景）
-      const shouldAutoplayOnInit =
-        externalHasUserPlayedOnce === true || hasUserPlayedOnceRef.current;
-      applySource(currentVideoIndex, shouldAutoplayOnInit);
-    })();
+      // 视频播放统计
+      const currentVideo = videos[currentIndexRef.current];
+      if (currentVideo && !trackedVideoIdsRef.current.has(currentVideo.id)) {
+        trackVideoPlay(currentVideo.id, currentVideo.title);
+        trackedVideoIdsRef.current.add(currentVideo.id);
+      }
+
+      pauseOtherMediaPlayers(mediaPlayer);
+    });
+
+    // 在 loadedmetadata 事件中自动播放
+    player.on('video:loadedmetadata', () => {
+      // 用户播放过则自动播放
+      if (hasUserPlayedOnceRef.current) {
+        player.play().catch(() => {});
+      }
+    });
+
+    // 监听播放结束事件
+    player.on('video:ended', async () => {
+      if (player.currentTime < 1) return;
+
+      // 检查是否有下一个视频
+      if (currentIndexRef.current >= videos.length - 1) {
+        return;
+      }
+
+      const nextIndex = currentIndexRef.current + 1;
+      const nextVideo = videos[nextIndex];
+      const nextSrc = nextVideo?.sources?.[0]?.src;
+
+      if (!nextSrc) return;
+
+      // 更新索引（只更新 ref，不更新 state）
+      currentIndexRef.current = nextIndex;
+      onVideoChange?.(nextIndex);
+
+      // 使用 await 等待切换完成
+      await player.switchUrl(nextSrc);
+
+      // 延迟更新 URL
+      setTimeout(() => {
+        updateUrlParam(nextIndex);
+      }, 100);
+    });
+
+    // 如果外部传入用户已播放，自动播放
+    if (externalHasUserPlayedOnce || hasUserPlayedOnceRef.current) {
+      player.play().catch(() => {});
+    }
 
     return () => {
-      mounted = false;
-      // 从全局列表移除媒体播放器
       if (mediaPlayerRef.current) {
         unregisterMediaPlayer(mediaPlayerRef.current);
         mediaPlayerRef.current = null;
       }
-      playerRef.current?.destroy?.();
-      playerRef.current = null;
+      if (playerRef.current) {
+        playerRef.current.destroy();
+        playerRef.current = null;
+      }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, []); // 关键：只在初始化时执行一次，不依赖任何会变化的值
 
-  // 作用：切换索引时更新 Plyr 源，并尝试自动播放
+  // 监听外部传入的 currentIndex 变化（侧边栏切换）
   useEffect(() => {
     const player = playerRef.current;
-    const v = videoRef.current;
-    if (!player || !v) return;
+    if (!player) return;
 
-    if (played) {
-      player.autoplay = true;
-    }
+    // 如果外部索引和内部 ref 不一致，说明是外部控制的切换
+    if (currentIndex !== currentIndexRef.current) {
+      currentIndexRef.current = currentIndex;
 
-    // 如果外部传入 hasUserPlayedOnce=true，说明是自动切换导致的重新挂载，允许后续自动切换
-    if (externalHasUserPlayedOnce === true) {
-      allowAutoAdvanceRef.current = true;
-      isAdvancingRef.current = false;
-    } else if (!isAutoAdvanceInProgressRef.current) {
-      // 手动切换时，禁用自动切换直到当前视频真正播放完成
-      isAdvancingRef.current = false;
-      allowAutoAdvanceRef.current = false;
-    }
+      const video = videos[currentIndex];
+      const src = video?.sources?.[0]?.src;
 
-    isAutoAdvanceInProgressRef.current = false;
-
-    // 更新清晰度配置
-    const qualityOptions = Array.from(
-      new Set(currentSources.map(s => s.size).filter(Boolean) as number[])
-    )
-      .sort((a, b) => b - a)
-      .map(n => Number(n));
-
-    try {
-      if (qualityOptions.length) {
-        // @ts-ignore
-        player.options.quality = {
-          default: qualityOptions[0],
-          options: qualityOptions,
-          forced: true,
-        };
-      }
-    } catch (e) {
-      console.error(e);
-    }
-
-    // 设置新视频源
-    hasStartedCurrentRef.current = false;
-
-    player.source = {
-      type: 'video',
-      title: currentVideo?.title ?? '',
-      sources: buildPlyrSources(currentSources),
-    };
-
-    try {
-      if (playerRef.current) {
-        playerRef.current.currentTime = 0;
-      }
-    } catch {}
-
-    // 用户播放过则自动播放
-    const shouldAutoPlay =
-      hasUserPlayedOnceRef.current || externalHasUserPlayedOnce === true;
-
-    if (shouldAutoPlay) {
-      // 同步外部状态到内部 ref
-      if (externalHasUserPlayedOnce === true) {
-        hasUserPlayedOnceRef.current = true;
-      }
-
-      const attemptToken = ++playAttemptTokenRef.current;
-      const markPlaying = () => {
-        if (playAttemptTokenRef.current !== attemptToken) return;
-        hasStartedCurrentRef.current = true;
-        setPlayed(true);
-        videoStartTimeRef.current = Date.now();
-        allowAutoAdvanceRef.current = true;
-        v.removeEventListener('playing', markPlaying);
-      };
-      v.addEventListener('playing', markPlaying);
-
-      if (v.readyState >= 3) {
-        attemptAutoPlay(v);
-      } else {
-        const onCanPlayNew = () => {
-          v.removeEventListener('canplay', onCanPlayNew);
-          attemptAutoPlay(v);
-        };
-        v.addEventListener('canplay', onCanPlayNew, { once: true });
+      if (src) {
+        player.switchUrl(src);
+        if (hasUserPlayedOnceRef.current) {
+          player.play().catch(() => {});
+        }
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentVideoIndex]);
+  }, [currentIndex]); // 只依赖外部传入的 currentIndex
 
-  // 作用：父组件外部受控索引变动时，同步内部索引
-  useEffect(() => {
-    if (currentIndex !== currentVideoIndex) {
-      setCurrentVideoIndex(currentIndex);
-    }
-  }, [currentIndex, currentVideoIndex]);
-
-  const currentPoster = currentVideo?.poster;
-  const currentTitle = currentVideo?.title;
-  const isMobile = useDeviceType() === 'mobile';
-  const isShowTitle = currentTitle && urlParamName === 'showTitle';
   return (
     <>
       <Stack
@@ -606,7 +375,7 @@ const VideoPlayer = forwardRef<
               color: 'rgba(102, 102, 102, 1)',
             }}
           >
-            {currentTitle}
+            {currentVideo?.title}
           </Typography>
         )}
         {currentVideo?.url_downmp4 && !isMobile && (
@@ -623,12 +392,13 @@ const VideoPlayer = forwardRef<
       </Stack>
       <Box
         sx={{
+          borderRadius: '12px',
+          overflow: 'hidden',
           mb: isMobile ? pxToVw(20) : 10,
           position: 'relative',
-          '& .plyr--full-ui': {
-            visibility: played ? 'visible' : 'hidden',
-            borderRadius: '12px',
-            minHeight: isMobile ? pxToVw(200) : { lg: 360, xl: 400, xxl: 400 },
+          // 隐藏 ArtPlayer 中间的大播放/暂停按钮
+          '& .art-state': {
+            display: 'none !important',
           },
           '&.MuiBox-root:before': {
             position: 'absolute',
@@ -639,7 +409,7 @@ const VideoPlayer = forwardRef<
             width: '100%',
             height: '100%',
             borderRadius: '12px',
-            backgroundImage: `url(${currentPoster}) , url(/images/book_cover5.webp)`,
+            backgroundImage: `url(${currentVideo?.poster}) , url(/images/book_cover5.webp)`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           },
@@ -650,11 +420,9 @@ const VideoPlayer = forwardRef<
             onClick={() => {
               playerRef.current?.play();
               setPlayed(true);
-              hasStartedCurrentRef.current = true;
-              videoStartTimeRef.current = Date.now();
               if (!hasUserPlayedOnceRef.current) {
-                hasUserPlayedOnceRef.current = true; // 标记用户已手动播放
-                onUserPlayed?.(); // 通知父组件用户已播放
+                hasUserPlayedOnceRef.current = true;
+                onUserPlayed?.();
               }
             }}
             sx={{
@@ -673,24 +441,14 @@ const VideoPlayer = forwardRef<
             )}
           </IconButton>
         )}
-        <video
-          ref={videoRef}
-          className='plyr-react plyr--full-ui'
+        <div
+          ref={containerRef}
           style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'contain',
-            backgroundColor: '#fff',
+            aspectRatio: 16 / 9,
+            visibility: played ? 'visible' : 'hidden', // 未播放时隐藏播放器
+            opacity: playerReady ? 1 : 0,
+            transition: 'opacity 0.3s ease-in-out',
           }}
-          preload='metadata'
-          playsInline
-          webkit-playsinline='true'
-          x-webkit-airplay='allow'
-          poster='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
-          muted
-          x5-playsinline='true'
-          x5-video-player-type='h5'
-          x5-video-player-fullscreen='true'
         />
       </Box>
     </>

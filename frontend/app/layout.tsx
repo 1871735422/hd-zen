@@ -24,7 +24,7 @@ export default async function RootLayout({
   const isMobile = serverDeviceType === 'mobile';
 
   return (
-    <html lang='zh-Hans'>
+    <html lang='zh-Hans' suppressHydrationWarning>
       <body
         style={{
           minHeight: '100vh',
