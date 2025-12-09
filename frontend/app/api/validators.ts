@@ -146,12 +146,12 @@ export function validateWithZod<T>(
     let errorDetails = String(error);
     const zodErrors: Array<{ path: string; message: string }> = [];
 
-    if (error instanceof z.ZodError && error.errors) {
-      errorDetails = error.errors
-        .map(e => `${e.path.join('.')}: ${e.message}`)
+    if (error instanceof z.ZodError) {
+      errorDetails = error.issues
+        .map((e: z.ZodIssue) => `${e.path.join('.')}: ${e.message}`)
         .join(', ');
       zodErrors.push(
-        ...error.errors.map(e => ({
+        ...error.issues.map((e: z.ZodIssue) => ({
           path: e.path.join('.'),
           message: e.message,
         }))

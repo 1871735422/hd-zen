@@ -239,7 +239,7 @@ const MobileQaSidebar: React.FC<MobileQaSidebarProps> = ({
           if (document.activeElement instanceof HTMLElement) {
             document.activeElement.blur();
           }
-          onClose();
+          onClose?.();
         }}
         ModalProps={{
           keepMounted: false,
