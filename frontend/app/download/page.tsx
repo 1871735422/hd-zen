@@ -211,6 +211,8 @@ export default async function DownloadPage() {
                               `url_down${ft.key}` as keyof typeof item
                             ] as string) || '#'
                           }
+                          fileType={ft.key}
+                          fileName={item.name}
                         >
                           {ft.icon}
                           <Typography

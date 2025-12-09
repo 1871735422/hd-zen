@@ -1,5 +1,6 @@
 'use client';
 import { useDeviceType } from '@/app/utils/deviceUtils';
+import { trackAudioPlay } from '@/app/utils/clarityAnalytics';
 import {
   pauseOtherMediaPlayers,
   registerMediaPlayer,
@@ -15,6 +16,8 @@ import SpeakerIcon from '../icons/SpeakerIcon';
 
 export interface AudioPlayerProps {
   src: string;
+  audioId?: string;
+  audioTitle?: string;
 }
 
 function formatTime(totalSeconds: number): string {
@@ -40,7 +43,11 @@ const TimeLineLabel = ({ time }: { time: number }) => {
   );
 };
 
-export default function AudioPlayer({ src }: AudioPlayerProps) {
+export default function AudioPlayer({
+  src,
+  audioId,
+  audioTitle,
+}: AudioPlayerProps) {
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
@@ -49,6 +56,7 @@ export default function AudioPlayer({ src }: AudioPlayerProps) {
   const [duration, setDuration] = useState(0);
   const [showVolumeSlider, setShowVolumeSlider] = useState(false);
   const isDraggingRef = useRef(false);
+  const hasTrackedRef = useRef(false);
 
   useEffect(() => {
     const audioElement = new Audio(src);
@@ -85,6 +93,12 @@ export default function AudioPlayer({ src }: AudioPlayerProps) {
     audioElement.addEventListener('play', () => {
       pauseOtherMediaPlayers(mediaPlayer);
       setIsPlaying(true);
+
+      // 音频播放统计
+      if (audioId && !hasTrackedRef.current) {
+        trackAudioPlay(audioId, audioTitle);
+        hasTrackedRef.current = true;
+      }
     });
     // 监听暂停事件，同步 UI 状态
     audioElement.addEventListener('pause', () => {
@@ -100,8 +114,9 @@ export default function AudioPlayer({ src }: AudioPlayerProps) {
       setIsPlaying(false);
       setCurrentTime(0);
       setDuration(0);
+      hasTrackedRef.current = false;
     };
-  }, [src]);
+  }, [src, audioId, audioTitle]);
 
   const progress = useMemo(() => {
     if (!duration || duration <= 0) return 0;

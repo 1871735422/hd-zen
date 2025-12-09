@@ -1,5 +1,6 @@
 'use client';
 
+import { trackDownload } from '@/app/utils/clarityAnalytics';
 import { SvgIconProps } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
@@ -19,45 +20,56 @@ interface DownloadOptionProps {
   href: string;
   label: string;
   Icon: React.ComponentType<SvgIconProps>;
+  fileType: string;
+  fileName?: string;
 }
 const DownloadOption: React.FC<DownloadOptionProps> = ({
   href,
   label,
   Icon,
-}) => (
-  <Box
-    component='a'
-    href={href}
-    target='_blank'
-    rel='noopener noreferrer'
-    sx={{
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      textDecoration: 'none',
-      cursor: 'pointer',
-      '&:hover': { opacity: 0.8 },
-    }}
-  >
+  fileType,
+  fileName,
+}) => {
+  const handleClick = () => {
+    trackDownload(fileType, fileName, href);
+  };
+
+  return (
     <Box
+      component='a'
+      href={href}
+      target='_blank'
+      rel='noopener noreferrer'
+      onClick={handleClick}
       sx={{
-        width: pxToVw(30),
-        height: pxToVw(30),
         display: 'flex',
+        flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'center',
-        color: DOWNLOAD_RED_COLOR,
-        borderRadius: pxToVw(12),
-        fontSize: pxToVw(26),
+        textDecoration: 'none',
+        cursor: 'pointer',
+        '&:hover': { opacity: 0.8 },
       }}
     >
-      <Icon />
+      <Box
+        sx={{
+          width: pxToVw(30),
+          height: pxToVw(30),
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: DOWNLOAD_RED_COLOR,
+          borderRadius: pxToVw(12),
+          fontSize: pxToVw(26),
+        }}
+      >
+        <Icon />
+      </Box>
+      <Typography sx={{ fontSize: pxToVw(12), color: DOWNLOAD_RED_COLOR }}>
+        {label}
+      </Typography>
     </Box>
-    <Typography sx={{ fontSize: pxToVw(12), color: DOWNLOAD_RED_COLOR }}>
-      {label}
-    </Typography>
-  </Box>
-);
+  );
+};
 
 interface MobileDownloadCardProps {
   item: DownloadResource;
@@ -133,6 +145,8 @@ const MobileDownloadCard: React.FC<MobileDownloadCardProps> = ({
             href={item.url_downpdf}
             label={item.pdf_size || '560.2K'}
             Icon={PdfDownIcon}
+            fileType='pdf'
+            fileName={item.name}
           />
         )}
         {item.url_downepub && (
@@ -140,6 +154,8 @@ const MobileDownloadCard: React.FC<MobileDownloadCardProps> = ({
             href={item.url_downepub}
             label={item.epub_size || '18.08M'}
             Icon={EpubDownIcon}
+            fileType='epub'
+            fileName={item.name}
           />
         )}
       </Box>

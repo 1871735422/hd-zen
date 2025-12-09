@@ -1,4 +1,5 @@
 'use client';
+import { trackDownload } from '@/app/utils/clarityAnalytics';
 import { Button, SxProps, Theme, Typography } from '@mui/material';
 import React from 'react';
 import AudioDownIcon from '../icons/AudioDownIcon';
@@ -55,7 +56,9 @@ const MediaDownloadButton: React.FC<MediaDownloadButtonProps> = ({
   const IconComponent = mediaInfo.icon;
   // console.log({ mediaInfo, downloadUrls });
   const handleDownload = () => {
+    // 下载统计
     downloadUrls.forEach(url => {
+      trackDownload(mediaType, undefined, url);
       const link = document.createElement('a');
       link.href = url;
       link.download = '';

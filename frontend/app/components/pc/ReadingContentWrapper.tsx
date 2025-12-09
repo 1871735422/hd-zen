@@ -1,5 +1,6 @@
 'use client';
 import { useDeviceType } from '@/app/utils/deviceUtils';
+import { trackArticleRead } from '@/app/utils/clarityAnalytics';
 import { highlightAllKeywords } from '@/app/utils/highlight';
 import { Box, Stack } from '@mui/material';
 import React, { useCallback, useState } from 'react';
@@ -10,6 +11,8 @@ import { useReadingMode } from './ReadingModeProvider';
 interface ReadingContentProps {
   introText?: string;
   fullText?: string;
+  articleId?: string;
+  articleTitle?: string;
 }
 
 // 定义 window 对象的扩展接口
@@ -22,12 +25,15 @@ interface WindowWithReadingControls extends Window {
 export default function ReadingContent({
   introText,
   fullText,
+  articleId,
+  articleTitle,
 }: ReadingContentProps) {
   const { state } = useReadingMode();
   const isMobile = useDeviceType() === 'mobile';
   const [currentPage, setCurrentPage] = useState(1);
   const [mode, setMode] = useState<'paged' | 'full'>('full'); // 默认全文模式
   const [isClient, setIsClient] = useState(false);
+  const hasTrackedRef = React.useRef(false);
 
   // 缓存分页内容
   const [pageCache, setPageCache] = useState<Map<number, string>>(new Map());
@@ -40,6 +46,19 @@ export default function ReadingContent({
   React.useEffect(() => {
     setIsClient(true);
   }, []);
+
+  // 文章阅读统计
+  React.useEffect(() => {
+    if (
+      isClient &&
+      (introText || fullText) &&
+      articleId &&
+      !hasTrackedRef.current
+    ) {
+      trackArticleRead(articleId, articleTitle);
+      hasTrackedRef.current = true;
+    }
+  }, [isClient, introText, fullText, articleId, articleTitle]);
 
   // 初始化分页缓存
   React.useEffect(() => {

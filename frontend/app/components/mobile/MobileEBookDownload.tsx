@@ -1,5 +1,6 @@
 'use client';
 
+import { trackDownload } from '@/app/utils/clarityAnalytics';
 import { pxToVw } from '@/app/utils/mobileUtils';
 import { Button, Stack } from '@mui/material';
 import AudioDownIcon from '../icons/AudioDownIcon';
@@ -23,6 +24,10 @@ const MobileEBookDownload = ({
   }
 
   const handleDownload = (url: string, type: 'epub' | 'pdf' | 'mp3') => {
+    // 下载统计
+    const fileType = type === 'mp3' ? 'audio' : type;
+    trackDownload(fileType, undefined, url);
+
     // 创建一个隐藏的 a 标签进行下载
     const link = document.createElement('a');
     link.href = url;
@@ -68,7 +73,7 @@ const MobileEBookDownload = ({
       }}
     >
       {mp3Url && (
-        <Button onClick={() => handleDownload(mp3Url, 'pdf')} sx={buttonStyles}>
+        <Button onClick={() => handleDownload(mp3Url, 'mp3')} sx={buttonStyles}>
           <AudioDownIcon />
           音频下载
         </Button>

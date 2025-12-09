@@ -51,6 +51,7 @@ export default async function ReadingPage({
             : ''
         }
         content={content}
+        articleId={topicMedia.id}
       />
     );
   }
@@ -74,6 +75,8 @@ export default async function ReadingPage({
           <ReadingContentWrapper
             introText={topicMedia.article_introtext}
             fullText={topicMedia.article_fulltext}
+            articleId={topicMedia.id}
+            articleTitle={topicMedia.article_title || topicMedia.title}
           />
         </Stack>
       </Box>

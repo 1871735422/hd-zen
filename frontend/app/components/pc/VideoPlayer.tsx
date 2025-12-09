@@ -1,5 +1,6 @@
 'use client';
 import { useDeviceType } from '@/app/utils/deviceUtils';
+import { trackVideoPlay } from '@/app/utils/clarityAnalytics';
 import {
   pauseOtherMediaPlayers,
   registerMediaPlayer,
@@ -85,6 +86,7 @@ const VideoPlayer = forwardRef<
   const allowAutoAdvanceRef = useRef(true); // 是否允许自动切换
   const isAutoAdvanceInProgressRef = useRef(false); // 标记是否正在进行自动切换
   const hasUserPlayedOnceRef = useRef(false); // 记录用户是否已经手动播放过
+  const trackedVideoIdsRef = useRef<Set<string>>(new Set()); // 记录已统计的视频ID
 
   // 同步外部传入的用户播放状态（用于移动端组件重新挂载场景）
   if (externalHasUserPlayedOnce !== undefined) {
@@ -408,6 +410,16 @@ const VideoPlayer = forwardRef<
           hasStartedCurrentRef.current = true;
           videoStartTimeRef.current = Date.now();
           isAdvancingRef.current = false;
+
+          // 视频播放统计
+          const currentVideo = videos[currentIndexRef.current];
+          if (
+            currentVideo &&
+            !trackedVideoIdsRef.current.has(currentVideo.id)
+          ) {
+            trackVideoPlay(currentVideo.id, currentVideo.title);
+            trackedVideoIdsRef.current.add(currentVideo.id);
+          }
 
           // 暂停所有其他媒体播放器（包括其他视频和音频）
           pauseOtherMediaPlayers(mediaPlayer);

@@ -1,6 +1,7 @@
 'use client';
 
 import { getDownloadResources } from '@/app/api';
+import { trackDownload } from '@/app/utils/clarityAnalytics';
 import { Button, Typography } from '@mui/material';
 import VideoDownIcon from '../icons/VideoDownIcon';
 
@@ -23,6 +24,9 @@ export default function DownloadQaResource({
     if (!url) {
       return alert('本课下载资源不存在');
     }
+
+    // 下载统计
+    trackDownload('video', undefined, url);
     window.open(url);
   };
   return (

@@ -47,8 +47,12 @@ export default function AudioPage({
         title: item?.title,
         url_mp3: item?.url_mp3,
         url_downmp3: item?.url_downmp3,
+        id: item?.id,
       }))
-    : audioBookUrl;
+    : audioBookUrl.map(item => ({
+        ...item,
+        id: topicMedia[0]?.id,
+      }));
   // console.log('mp3Urls', mp3Urls);
 
   return (
@@ -80,7 +84,13 @@ export default function AudioPage({
               gap: { lg: '8px', xlg: '8px', xl: '10px', xxl: '15px' },
             }}
           >
-            {item?.url_mp3 && <AudioPlayer src={item?.url_mp3} />}
+            {item?.url_mp3 && (
+              <AudioPlayer
+                src={item?.url_mp3}
+                audioId={item?.id}
+                audioTitle={item?.title}
+              />
+            )}
             {!isMobile && (
               <>
                 {bookUrls ? (

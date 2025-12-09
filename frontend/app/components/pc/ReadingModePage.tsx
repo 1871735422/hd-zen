@@ -1,7 +1,8 @@
 'use client';
+import { trackArticleRead } from '@/app/utils/clarityAnalytics';
 import { Box } from '@mui/material';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import ReadingModeContainer from './ReadingModeContainer';
 import { ReadingModeProvider } from './ReadingModeProvider';
 
@@ -12,6 +13,7 @@ interface ReadingModePageProps {
   author?: string;
   date?: string;
   content: string;
+  articleId?: string;
 }
 
 export default function ReadingModePage({
@@ -21,15 +23,25 @@ export default function ReadingModePage({
   author,
   date,
   content,
+  articleId,
 }: ReadingModePageProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isClient, setIsClient] = useState(false);
+  const hasTrackedRef = useRef(false);
 
   // 确保只在客户端运行
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+  // 文章阅读统计
+  useEffect(() => {
+    if (isClient && articleId && !hasTrackedRef.current) {
+      trackArticleRead(articleId, title);
+      hasTrackedRef.current = true;
+    }
+  }, [isClient, articleId, title]);
 
   const handleExitReadingMode = useCallback(() => {
     if (typeof window === 'undefined') return;
