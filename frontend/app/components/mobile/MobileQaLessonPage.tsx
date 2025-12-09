@@ -43,9 +43,8 @@ export default function MobileQaLessonPage({
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
   const [showExpandButton, setShowExpandButton] = useState(false);
   const videoPlayerRef = useRef<VideoPlayerRef>(null);
-  // 标记最近一次切换是否为手动切换（由于key导致重新挂载，需要在父组件维护状态）
-  // 用于区分自动切换和手动切换，确保自动切换逻辑正确
-  const lastSwitchWasManualRef = useRef(false);
+  // 标记用户是否已经播放过视频（跨组件实例保持，用于自动播放）
+  const [hasUserPlayedOnce, setHasUserPlayedOnce] = useState(false);
 
   const router = useRouter();
   const pathname = usePathname();
@@ -90,11 +89,9 @@ export default function MobileQaLessonPage({
 
   const currentQuestion = questions[currentIndex];
 
-  // 手动切换处理：标记为手动切换并更新索引
+  // 手动切换处理
   const handleManualSwitch = useCallback((index: number) => {
-    lastSwitchWasManualRef.current = true; // 标记为手动切换
     setCurrentIndex(index);
-    // 由于key导致重新挂载，VideoPlayer会在新实例中通过onManualSwitch回调处理
   }, []);
 
   const handlePrev = useCallback(() => {
@@ -111,7 +108,11 @@ export default function MobileQaLessonPage({
   const handleSidebarSelect = useCallback(
     (index: number) => {
       handleManualSwitch(index);
-      setIsSidebarExpanded(false); // 移动端选择后关闭侧边栏
+      // 关闭前移除焦点，避免 aria-hidden 警告
+      if (document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur();
+      }
+      setIsSidebarExpanded(false);
     },
     [handleManualSwitch]
   );
@@ -220,19 +221,18 @@ export default function MobileQaLessonPage({
             key={`video-${currentIndex}`} // 不加在微信内播放完 下一个时会报错
             videoList={videoList}
             currentIndex={currentIndex}
+            hasUserPlayedOnce={hasUserPlayedOnce}
+            onUserPlayed={() => {
+              // 用户首次点击播放按钮时，设置状态以便后续自动播放
+              setHasUserPlayedOnce(true);
+            }}
             onVideoChange={index => {
-              // VideoPlayer自动切换时调用（通过ended事件触发advanceToNext）
-              // 更新索引以触发重新挂载，显示新视频
+              // 自动切换：更新索引并标记用户已播放，以便新组件实例自动播放
               setCurrentIndex(index);
-              // 自动切换时清除手动切换标记，允许后续自动切换继续工作
-              lastSwitchWasManualRef.current = false;
+              setHasUserPlayedOnce(true);
             }}
             onManualSwitch={index => {
-              // 手动切换回调：VideoPlayer检测到手动切换时调用
-              // 由于key导致重新挂载，新实例可能无法触发此回调
-              // 但我们已经通过handleManualSwitch处理了手动切换
-              lastSwitchWasManualRef.current = true;
-              // 确保索引同步（虽然通常已经在handleManualSwitch中更新了）
+              // 手动切换：确保索引同步
               if (index !== currentIndex) {
                 setCurrentIndex(index);
               }

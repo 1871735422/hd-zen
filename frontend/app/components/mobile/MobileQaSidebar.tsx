@@ -58,7 +58,13 @@ const MobileQaSidebar: React.FC<MobileQaSidebarProps> = ({
             color: STANDARD_TEXT_COLOR,
             fontSize: pxToVw(11),
           }}
-          onClick={onClose}
+          onClick={e => {
+            // 关闭前移除焦点，避免 aria-hidden 警告
+            if (e.currentTarget) {
+              e.currentTarget.blur();
+            }
+            onClose();
+          }}
         >
           <ArrowTop />
         </IconButton>
@@ -228,9 +234,18 @@ const MobileQaSidebar: React.FC<MobileQaSidebarProps> = ({
       <Drawer
         anchor='left'
         open={expanded}
-        onClose={onClose}
+        onClose={(_event, _reason) => {
+          // 关闭前移除焦点
+          if (document.activeElement instanceof HTMLElement) {
+            document.activeElement.blur();
+          }
+          onClose();
+        }}
         ModalProps={{
-          keepMounted: false, // 关闭时不保留 DOM，提升性能
+          keepMounted: false,
+          disableAutoFocus: true,
+          disableEnforceFocus: true,
+          disableRestoreFocus: true, // 关闭时不恢复焦点
         }}
         PaperProps={{
           sx: {

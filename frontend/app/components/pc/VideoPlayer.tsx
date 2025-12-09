@@ -52,14 +52,18 @@ const VideoPlayer = forwardRef<
     onVideoChange?: (index: number) => void;
     urlParamName?: string;
     onManualSwitch?: (index: number) => void;
+    hasUserPlayedOnce?: boolean; // 外部传入：用户是否已经播放过（用于移动端组件重新挂载场景）
+    onUserPlayed?: () => void; // 用户首次播放时的回调（用于移动端同步状态）
   }
 >(function VideoPlayer(
   {
     videoList,
     currentIndex = 0,
     onVideoChange,
-    urlParamName = 'tab', // 默认使用 tab 参数
-    onManualSwitch, // 手动切换回调
+    urlParamName = 'tab',
+    onManualSwitch,
+    hasUserPlayedOnce: externalHasUserPlayedOnce,
+    onUserPlayed,
   },
   ref
 ) {
@@ -78,10 +82,14 @@ const VideoPlayer = forwardRef<
   const autoAdvanceTokenRef = useRef(0);
   const isAdvancingRef = useRef(false);
   const hasInitializedFromUrlRef = useRef(false); // 记录是否已经从 URL 初始化过
-  const lastAutoAdvanceIndexRef = useRef(-1); // 记录最后一次自动切换的索引
   const allowAutoAdvanceRef = useRef(true); // 是否允许自动切换
   const isAutoAdvanceInProgressRef = useRef(false); // 标记是否正在进行自动切换
   const hasUserPlayedOnceRef = useRef(false); // 记录用户是否已经手动播放过
+
+  // 同步外部传入的用户播放状态（用于移动端组件重新挂载场景）
+  if (externalHasUserPlayedOnce !== undefined) {
+    hasUserPlayedOnceRef.current = externalHasUserPlayedOnce;
+  }
 
   // 暴露给外部的方法
   useImperativeHandle(
@@ -212,21 +220,20 @@ const VideoPlayer = forwardRef<
     isAdvancingRef.current = false;
     isAutoAdvanceInProgressRef.current = false;
 
-    updateUrlParam(index); // ★ 一定保证这里同步更新地址栏
-    applySource(index, true, undefined, true); // 最后为 true 标记手动切换
+    updateUrlParam(index);
+    applySource(index, true, undefined, true);
     onManualSwitch?.(index);
   };
 
   // 切换到下一个视频（自动切换）
   const advanceToNext = () => {
     isAdvancingRef.current = true;
-    isAutoAdvanceInProgressRef.current = true; // 标记正在进行自动切换
+    isAutoAdvanceInProgressRef.current = true;
     lastAdvanceTimeRef.current = Date.now();
     autoAdvanceTokenRef.current = Date.now();
     const nextIndex = currentIndexRef.current + 1;
-    lastAutoAdvanceIndexRef.current = nextIndex; // 记录自动切换的索引
 
-    applySource(nextIndex, true, autoAdvanceTokenRef.current, false); // 明确标记为非手动切换
+    applySource(nextIndex, true, autoAdvanceTokenRef.current, false);
   };
 
   // 统一的切源方法：更新 Plyr 源并尝试自动播放
@@ -284,8 +291,15 @@ const VideoPlayer = forwardRef<
         }
       } catch {}
 
-      // 使用 Plyr 推荐的方式处理源切换后的自动播放
-      if (autoplay && hasUserPlayedOnceRef.current) {
+      // 自动播放：自动切换或用户已播放过
+      const shouldAutoPlay =
+        autoplay &&
+        (autoAdvanceToken !== undefined || hasUserPlayedOnceRef.current);
+      if (shouldAutoPlay) {
+        // 自动切换时标记用户已播放过，以便后续自动切换
+        if (autoAdvanceToken !== undefined) {
+          hasUserPlayedOnceRef.current = true;
+        }
         const attemptToken = ++playAttemptTokenRef.current;
 
         // 监听 Plyr 的 loadeddata 事件（数据加载完成）
@@ -304,7 +318,7 @@ const VideoPlayer = forwardRef<
             setPlayed(true);
             isAdvancingRef.current = false;
             videoStartTimeRef.current = Date.now();
-            allowAutoAdvanceRef.current = true; // ★ 新视频开始播放时允许后续自动切换
+            allowAutoAdvanceRef.current = true;
             v.removeEventListener('playing', markPlaying);
           };
           v.addEventListener('playing', markPlaying);
@@ -431,8 +445,11 @@ const VideoPlayer = forwardRef<
         // 忽略事件注册异常（极少发生）
       }
 
-      // 初始化：按当前索引切源，首次不自动播放
-      applySource(currentVideoIndex, false);
+      // 初始化：按当前索引切源
+      // 如果外部传入 hasUserPlayedOnce=true，说明用户已经播放过，应该自动播放（移动端自动切换场景）
+      const shouldAutoplayOnInit =
+        externalHasUserPlayedOnce === true || hasUserPlayedOnceRef.current;
+      applySource(currentVideoIndex, shouldAutoplayOnInit);
     })();
 
     return () => {
@@ -458,17 +475,16 @@ const VideoPlayer = forwardRef<
       player.autoplay = true;
     }
 
-    // 检查是否为手动切换（非正在进行的自动切换）
-    const isManualSwitch = !isAutoAdvanceInProgressRef.current;
-
-    if (isManualSwitch) {
+    // 如果外部传入 hasUserPlayedOnce=true，说明是自动切换导致的重新挂载，允许后续自动切换
+    if (externalHasUserPlayedOnce === true) {
+      allowAutoAdvanceRef.current = true;
+      isAdvancingRef.current = false;
+    } else if (!isAutoAdvanceInProgressRef.current) {
       // 手动切换时，禁用自动切换直到当前视频真正播放完成
       isAdvancingRef.current = false;
-      allowAutoAdvanceRef.current = false; // 禁用自动切换
-      lastAutoAdvanceIndexRef.current = -1;
+      allowAutoAdvanceRef.current = false;
     }
 
-    // 重置自动切换进行状态
     isAutoAdvanceInProgressRef.current = false;
 
     // 更新清晰度配置
@@ -506,14 +522,23 @@ const VideoPlayer = forwardRef<
       }
     } catch {}
 
-    // 统一的播放尝试逻辑 - 只有用户播放过才自动播放
-    if (hasUserPlayedOnceRef.current) {
+    // 用户播放过则自动播放
+    const shouldAutoPlay =
+      hasUserPlayedOnceRef.current || externalHasUserPlayedOnce === true;
+
+    if (shouldAutoPlay) {
+      // 同步外部状态到内部 ref
+      if (externalHasUserPlayedOnce === true) {
+        hasUserPlayedOnceRef.current = true;
+      }
+
       const attemptToken = ++playAttemptTokenRef.current;
       const markPlaying = () => {
         if (playAttemptTokenRef.current !== attemptToken) return;
         hasStartedCurrentRef.current = true;
         setPlayed(true);
         videoStartTimeRef.current = Date.now();
+        allowAutoAdvanceRef.current = true;
         v.removeEventListener('playing', markPlaying);
       };
       v.addEventListener('playing', markPlaying);
@@ -615,7 +640,10 @@ const VideoPlayer = forwardRef<
               setPlayed(true);
               hasStartedCurrentRef.current = true;
               videoStartTimeRef.current = Date.now();
-              hasUserPlayedOnceRef.current = true; // 标记用户已手动播放
+              if (!hasUserPlayedOnceRef.current) {
+                hasUserPlayedOnceRef.current = true; // 标记用户已手动播放
+                onUserPlayed?.(); // 通知父组件用户已播放
+              }
             }}
             sx={{
               position: 'absolute',

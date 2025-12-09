@@ -64,8 +64,8 @@ const MobileQaPage: React.FC<MobileQaPageProps> = ({
         ) : (
           <Box
             sx={{
-              textAlign: 'center',
               paddingY: pxToVw(60),
+              justifyContent: 'center',
             }}
           >
             <Typography
@@ -82,7 +82,7 @@ const MobileQaPage: React.FC<MobileQaPageProps> = ({
         <Box
           sx={{
             flex: 1,
-            display: 'flex',
+            display: questions.length > 0 ? 'flex' : 'none',
             flexDirection: 'column',
             gap: pxToVw(8),
           }}
@@ -150,24 +150,6 @@ const MobileQaPage: React.FC<MobileQaPageProps> = ({
                 }}
               >
                 即将推出
-              </Typography>
-            </Box>
-          )}
-
-          {/* 空状态 */}
-          {questions.length === 0 && !showComingSoon && (
-            <Box
-              sx={{
-                textAlign: 'center',
-                paddingY: pxToVw(60),
-              }}
-            >
-              <Typography
-                sx={{
-                  fontSize: pxToVw(14),
-                }}
-              >
-                暂无问答
               </Typography>
             </Box>
           )}

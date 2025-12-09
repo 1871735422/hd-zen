@@ -165,7 +165,6 @@ const refPage = async ({ params, searchParams }: refPageProps) => {
     }
     return <VideoPage topicMedia={bookMedia} />;
   };
-  console.log(excludeLabels.length);
 
   // 移动端渲染
   if (isMobile) {
