@@ -6,18 +6,23 @@ import {
   Course,
   CourseTopic,
   DownloadResource,
-  Media,
   PaginatedResponse,
   PocketRecord,
   QuestionResult,
   QuestionResultGrouped,
-  Questions,
-  ReferenceBook,
   SearchCate,
   SearchType,
   TagRelation,
   TopicMediaX,
 } from '../types/models';
+import {
+  CategorySchema,
+  CourseSchema,
+  CourseTopicSchema,
+  QuestionResultSchema,
+  TagRelationSchema,
+  validateWithZod,
+} from './validators';
 
 // Initialize PocketBase using environment variable
 // 客户端组件只能访问 NEXT_PUBLIC_ 开头的环境变量
@@ -142,31 +147,22 @@ const searchConfigs: Record<SearchType, SearchConfig> = {
   },
 };
 
-const mapRecordToCategory = (record: PocketRecord): Category => ({
-  id: record.id,
-  name: record.name,
-  title: record.title,
-  description: record.description,
-  displayOrder: record.displayOrder,
-  slug: record.slug,
-  isActive: record.isActive,
-  created: record.created,
-  updated: record.updated,
-});
+const mapRecordToCategory = (record: PocketRecord): Category => {
+  return validateWithZod(
+    CategorySchema,
+    record,
+    `Invalid category data (id: ${record.id})`
+  );
+};
 
 const mapRecordToCourse = (record: PocketRecord): Course => {
-  const course: Course = {
-    id: record.id,
-    categoryId: record.categoryId,
-    title: record.title,
-    description: record.description,
-    cover: record.cover,
-    displayOrder: record.displayOrder,
-    isActive: record.isActive,
-    created: record.created,
-    updated: record.updated,
-  };
+  const course = validateWithZod(
+    CourseSchema,
+    record,
+    `Invalid course data (id: ${record.id})`
+  ) as Course;
 
+  // 处理 expand 字段（如果需要）
   if (record.expand?.categoryId) {
     course.category = mapRecordToCategory(record.expand.categoryId);
   }
@@ -175,39 +171,39 @@ const mapRecordToCourse = (record: PocketRecord): Course => {
 };
 
 const mapRecordToCourseTopic = (record: PocketRecord): CourseTopic => {
-  const courseTopic: CourseTopic = {
-    id: record.id,
+  // 预处理数据，确保符合 schema（处理可选字段和默认值）
+  // tags 可能是数组，需要转换为字符串
+  let tagsValue: string | undefined = undefined;
+  if (record.tags) {
+    if (Array.isArray(record.tags)) {
+      tagsValue = record.tags.join(',');
+    } else if (typeof record.tags === 'string') {
+      tagsValue = record.tags;
+    }
+  }
+
+  const processedRecord = {
+    ...record,
     courseId: record.courseId || '',
-    // New schema fields
     article_title: record.article_title || '',
     article_alias: record.article_alias || '',
     ordering: record.ordering || 0,
-    article_introtext: record.article_introtext || '',
-    article_fulltext: record.article_fulltext || '',
-    article_summary: record.article_summary || '',
-    tags: record.tags || '',
-    url: record.url || '',
-    url_mp3: record.url_mp3 || '',
-    url_duration: record.url_duration || '',
-    url_downmp3: record.url_downmp3 || '',
-    url_mp3size: record.url_mp3size || '',
-    url_downpdf: record.url_downpdf || '',
-    url_pdfsize: record.url_pdfsize || '',
-    url_cover: record.url_cover || '',
-    content_id: record.content_id || '',
-    asset_id: record.asset_id || '',
-    // Legacy fields for backward compatibility
     title: record.article_title || record.title || '',
-    description: record.article_introtext || record.description || '',
     topicOrder: record.ordering || record.topicOrder || 0,
-    hasVideo: record.hasVideo || !!record.url,
-    hasAudio: record.hasAudio || !!record.url_mp3,
-    hasText: record.hasText || !!record.article_fulltext,
-    hasQA: record.hasQA || false,
+    hasVideo: record.hasVideo ?? !!record.url,
+    hasAudio: record.hasAudio ?? !!record.url_mp3,
+    hasText: record.hasText ?? !!record.article_fulltext,
+    hasQA: record.hasQA ?? false,
     isActive: record.isActive !== false,
-    created: record.created,
-    updated: record.updated,
+    // 处理 tags 字段：数组转字符串
+    tags: tagsValue,
   };
+
+  const courseTopic = validateWithZod(
+    CourseTopicSchema,
+    processedRecord,
+    `Invalid course topic data (id: ${record.id})`
+  ) as CourseTopic;
 
   if (record.expand?.courseId) {
     courseTopic.course = mapRecordToCourse(record.expand.courseId);
@@ -270,58 +266,6 @@ export const getCourses = async (): Promise<PaginatedResponse<Course>> => {
   }
 };
 
-/**
- *
- * @param displayOrder 课程编号 如：1
- * @returns 课程内容
- */
-export const getCourseTopicsByDisplayOrder = async (
-  displayOrder: string
-): Promise<PaginatedResponse<CourseTopic>> => {
-  const result = await pb.collection('courseTopics').getFullList({
-    filter: `courseId.displayOrder = "${displayOrder}"`,
-    expand: 'courseId',
-    sort: 'ordering',
-    fields: 'article_title,ordering',
-  });
-
-  return {
-    items: result.map(record => mapRecordToCourseTopic(record as PocketRecord)),
-    totalItems: result.length,
-    totalPages: 1,
-    page: 1,
-    perPage: result.length,
-  };
-};
-
-/**
- *
- * @param volume 第几册课程 如：1
- * @param lesson 课时编号 如：1
- * @returns 此问题内容列表
- */
-export const getQuestionsByOrder = async (
-  volume: string,
-  lesson: string
-): Promise<PaginatedResponse<Questions>> => {
-  const result = await pb.collection('questions').getFullList({
-    filter: [
-      'topicId.courseId.displayOrder = ' + volume,
-      'topicId.ordering = ' + lesson,
-    ].join(' && '),
-    expand: 'topicId,topicId.courseId',
-    // fields: 'title,topicId.expand.ordering',
-  });
-
-  return {
-    items: result.map(record => record as unknown as Questions),
-    totalItems: result.length,
-    totalPages: 1,
-    page: 1,
-    perPage: result.length,
-  };
-};
-
 export const getAnswerMediasByOrder = async (
   courseOrder: string,
   topicOrder?: string,
@@ -347,7 +291,26 @@ export const getAnswerMediasByOrder = async (
 
   if (!result) return [];
 
-  const items = result as unknown as QuestionResult[];
+  // 验证并转换数据（预处理：视图数据可能缺少基础字段）
+  const items = result.map(record => {
+    // 预处理数据，补充可能缺失的基础字段
+    const processedRecord = {
+      // 先展开原有数据
+      ...record,
+      // 基础字段（视图可能没有，提供默认值）- 后设置会覆盖前面的
+      id: record.id || `temp_${Date.now()}_${Math.random()}`,
+      created: record.created || new Date().toISOString(),
+      updated: record.updated || new Date().toISOString(),
+      // title 可能不存在，使用 questionTitle 作为后备
+      title: record.title || record.questionTitle || '',
+    };
+
+    return validateWithZod(
+      QuestionResultSchema,
+      processedRecord,
+      `Invalid question result data (id: ${processedRecord.id})`
+    );
+  });
 
   // 按 topicTitle 分组
   const groupedMap = new Map<string, QuestionResult[]>();
@@ -384,45 +347,6 @@ export const getCourseByDisplayOrder = async (
   }
 };
 
-export const getReferenceByDisplayOrder = async (
-  displayOrder: string
-): Promise<Course | null> => {
-  try {
-    const record = await pb
-      .collection('courses')
-      .getFirstListItem(`displayOrder="${displayOrder}"`);
-    return mapRecordToCourse(record as PocketRecord);
-  } catch (error) {
-    console.error(`Error fetching course ${displayOrder}:`, error);
-    return null;
-  }
-};
-
-/**
- *
- * @returns 课程内容列表
- */
-export const getCourseTopics = async (): Promise<
-  PaginatedResponse<CourseTopic>
-> => {
-  const result = await pb.collection('courseTopics').getFullList({
-    sort: 'ordering',
-    expand: 'courseId',
-  });
-
-  const mappedCourseTopics = result.map(record =>
-    mapRecordToCourseTopic(record as PocketRecord)
-  );
-
-  return {
-    items: mappedCourseTopics,
-    totalItems: mappedCourseTopics.length,
-    totalPages: 1,
-    page: 1,
-    perPage: mappedCourseTopics.length,
-  };
-};
-
 export const getCourseTopicsByCourse = async (
   courseId: string
 ): Promise<PaginatedResponse<CourseTopic>> => {
@@ -448,81 +372,20 @@ export const getCourseTopicsByCourse = async (
       `Error fetching course topics for course ${courseId}:`,
       error
     );
-    // If the filter fails, get all topics and filter client-side
-    try {
-      const allTopics = await getCourseTopics();
-      const filteredTopics = allTopics.items.filter(
-        topic => topic.courseId === courseId
-      );
-
-      return {
-        items: filteredTopics,
-        totalItems: filteredTopics.length,
-        totalPages: 1,
-        page: 1,
-        perPage: filteredTopics.length,
-      };
-    } catch (fallbackError) {
-      console.error('Fallback error:', fallbackError);
-      return {
-        items: [],
-        totalItems: 0,
-        totalPages: 1,
-        page: 1,
-        perPage: 0,
-      };
-    }
-  }
-};
-
-export const getCourseTopicById = async (
-  topicId: string
-): Promise<CourseTopic | null> => {
-  try {
-    const record = await pb.collection('courseTopics').getOne(topicId, {
-      expand: 'courseId',
-    });
-    return mapRecordToCourseTopic(record as PocketRecord);
-  } catch {
-    // Handle error silently in server-side context
-    return null;
+    return {
+      items: [],
+      totalItems: 0,
+      totalPages: 1,
+      page: 1,
+      perPage: 0,
+    };
   }
 };
 
 /**
  *
  * @param courseOrder 第几册课程 如：1
- * @param lessonOrder 课时编号 如：1
- * @returns 此课时内容
- */
-export const getCourseTopicByOrder = async (
-  courseOrder: string,
-  lessonOrder: string
-): Promise<CourseTopic | null> => {
-  try {
-    const record = await pb
-      .collection('courseTopics')
-      .getFirstListItem(
-        [
-          'courseId.displayOrder = ' + courseOrder,
-          'ordering = ' + lessonOrder,
-        ].join(' && '),
-        {
-          expand: 'courseId',
-        }
-      );
-
-    return mapRecordToCourseTopic(record as PocketRecord);
-  } catch {
-    // Handle error silently in server-side context
-    return null;
-  }
-};
-
-/**
- *
- * @param courseOrder 第几册课程 如：1
- * @param lessonOrder 课时编号 如：1
+ * @param topicOrder 课时编号 如：1
  * @returns 此课时媒体内容
  */
 export const getTopicMediaByOrder = async (
@@ -551,28 +414,25 @@ export const getTopicMediaByOrder = async (
   }
 };
 
-// Utility function to get course cover image URL
-export const getCourseImageUrl = (
-  course: Course,
-  thumbnail = false
-): string => {
-  if (!course.cover) return '';
-  const thumbParam = thumbnail ? '?thumb=100x0' : '';
-  return `${config.apiUrl}/api/files/courses/${course.id}/${course.cover}${thumbParam}`;
-};
-
-// Utility function to get media thumbnail URL
-export const getMediaImageUrl = (media: Media): string => {
-  return media.url_image || media.image1_url || '';
-};
-
 export const getTagRelations = async (tag: string): Promise<TagRelation[]> => {
   if (!tag) return [];
-  const resultList = await pb.collection('vGetTagRelation').getFullList({
-    filter: `tags ~ "${tag}"`,
-  });
-  // console.log('resultList', resultList);
-  return resultList as unknown as TagRelation[];
+  try {
+    const resultList = await pb.collection('vGetTagRelation').getFullList({
+      filter: `tags ~ "${tag}"`,
+    });
+
+    // 验证每个结果
+    return resultList.map(record =>
+      validateWithZod(
+        TagRelationSchema,
+        record,
+        `Invalid tag relation data (id: ${record.id || 'unknown'})`
+      )
+    );
+  } catch (error) {
+    console.error('Error fetching tag relations:', error);
+    return [];
+  }
 };
 
 export const getSearchResults = async (
@@ -849,18 +709,6 @@ export const getDownloadResources = async (
     sort: 'displayOrder',
   });
   return records as unknown as DownloadResource[];
-};
-
-export const getReferenceBooks = async (
-  bookOrder: number
-): Promise<ReferenceBook[]> => {
-  const records = await pb.collection('referenceBooks').getFullList({
-    filter: `displayOrder ~ ${bookOrder}`,
-    sort: 'displayOrder',
-  });
-  // console.log(records);
-
-  return records as unknown as ReferenceBook[];
 };
 
 export const getBookChapters = async (

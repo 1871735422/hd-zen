@@ -65,12 +65,13 @@ const MobileQaPage: React.FC<MobileQaPageProps> = ({
           <Box
             sx={{
               paddingY: pxToVw(60),
-              justifyContent: 'center',
+              flex: 1,
             }}
           >
             <Typography
               sx={{
                 fontSize: pxToVw(14),
+                textAlign: 'center',
               }}
             >
               本册暂无问答

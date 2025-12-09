@@ -2,7 +2,13 @@
 import { pxToVw } from '@/app/utils/mobileUtils';
 import { Breadcrumbs, Link, useTheme } from '@mui/material';
 import NextLink from 'next/link';
-import React, { createContext, useContext, useState } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 
 export interface BreadcrumbItem {
   label: string;
@@ -36,25 +42,67 @@ export default function AppBreadcrumbs({
   const theme = useTheme();
   const finalItems =
     useContext && extraBreadcrumb ? [...items, extraBreadcrumb] : items;
-  // console.log({ items }, items[3]?.label.length);
+
+  const [shouldAddMargin, setShouldAddMargin] = useState(false);
+  const breadcrumbsRef = useRef<HTMLOListElement>(null);
+
+  // 检测最后一个面包屑项是否换行（第二行）
+  useEffect(() => {
+    const checkIfWrapped = () => {
+      if (!breadcrumbsRef.current || !items || items.length <= 3) {
+        setShouldAddMargin(false);
+        return;
+      }
+
+      const container = breadcrumbsRef.current;
+
+      // 获取第一个和最后一个列表项的位置
+      const listItems = container.querySelectorAll('.MuiBreadcrumbs-li');
+      const firstItem = listItems[0] as HTMLElement;
+      const lastItem = listItems[listItems.length - 1] as HTMLElement;
+
+      if (!firstItem || !lastItem) {
+        setShouldAddMargin(false);
+        return;
+      }
+
+      const firstItemTop = firstItem.offsetTop;
+      const lastItemTop = lastItem.offsetTop;
+
+      // 如果最后一个项目与第一个项目不在同一行（top 位置不同），说明换行了
+      const isWrapped = lastItemTop > firstItemTop;
+      setShouldAddMargin(isWrapped);
+    };
+
+    // 延迟检查，确保 DOM 已渲染
+    const timer = setTimeout(checkIfWrapped, 0);
+    checkIfWrapped();
+
+    // 监听窗口大小变化
+    window.addEventListener('resize', checkIfWrapped);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('resize', checkIfWrapped);
+    };
+  }, [items]);
 
   return (
     <Breadcrumbs
+      ref={breadcrumbsRef}
       className='breadcrum'
       aria-label='breadcrumb'
       sx={{
         color,
         mb: 1,
         mx: 1,
-        // Adjust margin for long labels on small screens
-        [theme.breakpoints.down('sm')]:
-          items?.length > 3 && items[3]?.label.length > 9
-            ? {
-                '& .MuiBreadcrumbs-li:last-child': {
-                  marginLeft: pxToVw(23),
-                },
-              }
-            : {},
+        // 如果最后一个面包屑项换行了（第二行），给第二行添加左边距
+        [theme.breakpoints.down('sm')]: shouldAddMargin
+          ? {
+              '& .MuiBreadcrumbs-li:last-child a': {
+                paddingLeft: pxToVw(23),
+              },
+            }
+          : {},
       }}
     >
       {finalItems.map((item, index) => (

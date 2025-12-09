@@ -18,36 +18,6 @@ export interface PocketRecord {
   expand?: Record<string, any>;
 }
 
-// Questions
-export interface Questions extends BaseModel {
-  topicId: string;
-  title: string;
-  description?: string;
-  assetId?: string;
-  contentId: string;
-  isActive: boolean;
-}
-
-// Answers
-export interface Answers extends BaseModel {
-  topicId: string;
-  title: string;
-  assetId?: string;
-  questionId: string;
-  isActive: boolean;
-}
-
-// answerMedia
-export interface AnswerMedia extends BaseModel {
-  topicId: string;
-  title: string;
-  assetId?: string;
-  answerId: string;
-  displayOrder: number;
-  isActive: boolean;
-  media?: Media;
-}
-
 // Category
 export interface Category extends BaseModel {
   name: string;
@@ -137,15 +107,6 @@ export interface CourseTopic extends BaseModel {
   isActive: boolean;
 }
 
-// TopicMedia models
-export interface TopicMedia extends BaseModel {
-  topicId: string;
-  mediaId: string;
-  isActive: boolean;
-  topic?: CourseTopic;
-  media?: Media;
-}
-
 export interface SecretText {
   video?: string;
   audio?: string;
@@ -190,17 +151,6 @@ export interface Article extends BaseModel {
   url_downpdf: string;
   url_downepub: string;
   ct_url_mp3: string;
-}
-
-// CourseMedia - 课程媒体
-export interface CourseMedia extends BaseModel {
-  title: string;
-  courseId: string;
-  mediaId: string;
-  displayOrder: number;
-  isActive: boolean;
-  course?: Course;
-  media?: Media;
 }
 
 // QuestionResult - 问答媒体
@@ -254,10 +204,6 @@ export interface BookChapter extends DownloadResource {
   article_title: string;
   expand?: { bookId: { displayOrder: number } };
   ordering: number;
-}
-export interface ReferenceBook extends Course {
-  author?: string;
-  description?: string;
 }
 
 export interface Dict extends BaseModel {
