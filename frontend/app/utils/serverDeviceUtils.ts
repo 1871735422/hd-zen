@@ -5,6 +5,8 @@
  * 优先使用 Client Hints (Sec-CH-UA-Mobile)，回退到 User-Agent
  */
 
+import { MOBILE_UA_REGEX } from '../constants';
+
 /**
  * 判断是否为移动设备（服务器端）
  *
@@ -18,7 +20,7 @@ export function isMobileUserAgent(userAgent?: string): boolean {
 
   // 简单通用的移动设备检测
   // 涵盖 99% 的移动设备场景
-  return /mobile|android|iphone|ipad|ipod/i.test(userAgent);
+  return MOBILE_UA_REGEX.test(userAgent);
 }
 
 /**
@@ -66,8 +68,18 @@ export async function getDeviceTypeFromHeaders(): Promise<
     const userAgent = headersList.get('user-agent') || '';
     const isMobileFromUA = userAgent ? isMobileUserAgent(userAgent) : null;
 
+    // 3. 读取视口宽度（Client Hints），对 CH/UA 误判的移动端做兜底
+    const viewportWidth = await getViewportWidth();
+    const isNarrowViewport =
+      typeof viewportWidth === 'number' && viewportWidth < 960;
+
     // 如果 Client Hints 明确标记为移动端，直接返回
     if (isMobileHint === true) {
+      return 'mobile';
+    }
+
+    // 视口宽度很窄时，优先认为是移动端（与客户端断点保持一致）
+    if (isNarrowViewport && isMobileFromUA === true) {
       return 'mobile';
     }
 

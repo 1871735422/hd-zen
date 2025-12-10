@@ -2,6 +2,8 @@
 
 import { createContext, useContext, useEffect, useState } from 'react';
 
+import { MOBILE_UA_REGEX } from '../constants';
+
 export type DeviceType = 'mobile' | 'desktop';
 
 interface DeviceContextType {
@@ -46,23 +48,21 @@ export default function DeviceProvider({
   const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
-    const isTouchDevice =
-      'ontouchstart' in window || navigator.maxTouchPoints > 0;
-
     const checkDevice = () => {
-      const isPortrait = window.innerHeight > window.innerWidth;
-      const MOBILE_BREAKPOINT = isPortrait && isTouchDevice ? 768 : 960; // px
-      // console.log({ isTouchDevice, isPortrait }, window.screen.orientation);
-
-      // 1) 宽度判断
-      const isSmallViewport = window.matchMedia(
-        `(max-width: ${MOBILE_BREAKPOINT - 1}px)`
-      ).matches;
-      // 2) iPad 归为移动端（即使宽度较大）
       const ua = navigator.userAgent || '';
-      const isIpad = /iPad/i.test(ua);
+      const isMobileUA = MOBILE_UA_REGEX.test(ua);
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+      const isLandscape = viewportWidth > viewportHeight;
 
-      const isMobile = isSmallViewport || isIpad;
+      // 移动端横屏时，用较短边作为有效宽度；否则使用正常宽度
+      const effectiveWidth =
+        isMobileUA && isLandscape
+          ? Math.min(viewportWidth, viewportHeight)
+          : viewportWidth;
+
+      const isNarrowViewport = effectiveWidth < 960;
+      const isMobile = isMobileUA && isNarrowViewport;
       setDeviceType(isMobile ? 'mobile' : 'desktop');
     };
 

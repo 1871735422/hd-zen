@@ -1,8 +1,10 @@
 'use client';
 
 import { Container } from '@mui/material';
+import { usePageLoading } from '../hooks/usePageLoading';
 import { useDevice } from './DeviceProvider';
 import MobileHeader from './mobile/Header';
+import PageSkeleton from './mobile/PageSkeleton';
 import {
   SearchFocusProvider,
   useSearchFocus,
@@ -10,8 +12,6 @@ import {
 import SeatchHistory from './mobile/SeatchHistory';
 import DesktopFooter from './pc/Footer';
 import DesktopHeader from './pc/Header';
-import PageSkeleton from './mobile/PageSkeleton';
-import { usePageLoading } from '../hooks/usePageLoading';
 
 /**
  * 响应式布局组件

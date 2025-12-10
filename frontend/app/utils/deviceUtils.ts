@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { MOBILE_UA_REGEX } from '../constants';
 
 export type DeviceType = 'mobile' | 'tablet' | 'desktop';
 
@@ -27,10 +28,16 @@ export function useDeviceType(): DeviceType {
   useEffect(() => {
     const checkDevice = () => {
       const width = window.innerWidth;
-      if (width < 600) {
+      const height = window.innerHeight;
+      const isLandscape = width > height;
+      const isMobileUA = isMobileUserAgent(navigator.userAgent);
+
+      // 移动端横屏时，用较短边作为有效宽度；否则使用正常宽度
+      const effectiveWidth =
+        isMobileUA && isLandscape ? Math.min(width, height) : width;
+
+      if (effectiveWidth < 960 && isMobileUA) {
         setDeviceType('mobile');
-      } else if (width < 960) {
-        setDeviceType('tablet');
       } else {
         setDeviceType('desktop');
       }
@@ -54,16 +61,5 @@ export function useDeviceType(): DeviceType {
  */
 export function isMobileUserAgent(userAgent?: string): boolean {
   if (!userAgent) return false;
-  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-    userAgent
-  );
+  return MOBILE_UA_REGEX.test(userAgent);
 }
-
-/**
- * 获取响应式断点值
- */
-export const breakpoints = {
-  mobile: 0,
-  tablet: 600,
-  desktop: 960,
-} as const;
