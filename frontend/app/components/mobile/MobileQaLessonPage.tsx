@@ -218,7 +218,6 @@ export default function MobileQaLessonPage({
         {currentQuestion?.url_hd || currentQuestion?.url_sd ? (
           <VideoPlayer
             ref={videoPlayerRef}
-            key={`video-${currentIndex}`} // 不加在微信内播放完 下一个时会报错
             videoList={videoList}
             currentIndex={currentIndex}
             hasUserPlayedOnce={hasUserPlayedOnce}
@@ -227,7 +226,7 @@ export default function MobileQaLessonPage({
               setHasUserPlayedOnce(true);
             }}
             onVideoChange={index => {
-              // 自动切换：更新索引并标记用户已播放，以便新组件实例自动播放
+              // 自动切换：更新索引并标记用户已播放
               setCurrentIndex(index);
               setHasUserPlayedOnce(true);
             }}
