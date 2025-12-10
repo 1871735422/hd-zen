@@ -249,7 +249,7 @@ const VideoPlayer = forwardRef<
 
     // 监听播放器准备就绪
     player.on('ready', () => {
-      player.cssVar('--art-background-color', 'white');
+      // player.cssVar('--art-background-color', 'white'); // 播放器背景色，如果需要可以打开
       setPlayerReady(true);
     });
 
