@@ -2,7 +2,14 @@
 
 import { MAIN_BLUE_COLOR, STANDARD_TEXT_COLOR } from '@/app/constants/colors';
 import { clearCourseTitle } from '@/app/utils/courseUtils';
-import { Avatar, Box, Drawer, IconButton, Typography } from '@mui/material';
+import {
+  Avatar,
+  Box,
+  Drawer,
+  IconButton,
+  Stack,
+  Typography,
+} from '@mui/material';
 import Link from 'next/link';
 import React from 'react';
 import { pxToVw } from '../../utils/mobileUtils';
@@ -33,52 +40,17 @@ const MobileQaSidebar: React.FC<MobileQaSidebarProps> = ({
           'linear-gradient(175.97deg, rgba(232, 247, 255, 1) 0%, rgba(224, 226, 255, 1) 99.94%)',
         borderRadius: `0 ${pxToVw(20)} ${pxToVw(20)} 0`,
         overflow: 'hidden',
-        pt: pxToVw(onClose ? 58 : 40),
         position: 'relative',
-        '&:before': {
-          content: '""',
-          position: 'absolute',
-          top: pxToVw(-2),
-          left: 0,
-          borderRadius: `0 ${pxToVw(20)} 0 0`,
-          width: `calc(100% + ${pxToVw(9)})`,
-          height: `calc(100% + ${pxToVw(2)})`,
-          background: '#fff',
-          zIndex: -1,
-        },
       }}
     >
-      {onClose && (
-        <IconButton
-          sx={{
-            position: 'absolute',
-            top: pxToVw(3),
-            left: `calc(50% - ${pxToVw(27)} / 2)`,
-            zIndex: 100,
-            color: STANDARD_TEXT_COLOR,
-            fontSize: pxToVw(11),
-          }}
-          onClick={e => {
-            // 关闭前移除焦点，避免 aria-hidden 警告
-            if (e.currentTarget) {
-              e.currentTarget.blur();
-            }
-            onClose();
-          }}
-        >
-          <ArrowTop />
-        </IconButton>
-      )}
-      <Box
+      <Stack
         sx={{
-          height: onSelect ? 'calc(100vh - 100px)' : 'auto',
-          overflowY: 'auto',
-          overflowX: 'hidden',
-          '&:before':
-            onSelect && selectedIdx === 0
+          height: pxToVw(onClose ? 58 : 40),
+          '&:after':
+            selectedIdx === 0
               ? {
                   position: 'absolute',
-                  top: pxToVw(38),
+                  top: pxToVw(onSelect ? 38 : 20),
                   right: pxToVw(0),
                   content: '""',
                   background: '#fff',
@@ -89,6 +61,35 @@ const MobileQaSidebar: React.FC<MobileQaSidebarProps> = ({
                   mask: 'radial-gradient(100% 100% at 0% 0%, transparent 0 100%, white 100%)',
                 }
               : {},
+        }}
+      >
+        {onClose && (
+          <IconButton
+            sx={{
+              position: 'absolute',
+              top: pxToVw(3),
+              left: `calc(50% - ${pxToVw(27)} / 2)`,
+              zIndex: 100,
+              color: STANDARD_TEXT_COLOR,
+              fontSize: pxToVw(11),
+            }}
+            onClick={e => {
+              // 关闭前移除焦点，避免 aria-hidden 警告
+              if (e.currentTarget) {
+                e.currentTarget.blur();
+              }
+              onClose();
+            }}
+          >
+            <ArrowTop />
+          </IconButton>
+        )}
+      </Stack>
+      <Box
+        sx={{
+          height: onSelect ? 'calc(100vh - 100px)' : 'auto',
+          overflowY: 'auto',
+          overflowX: 'hidden',
         }}
       >
         {items.map((item, idx) => {
