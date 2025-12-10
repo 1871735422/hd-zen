@@ -7,12 +7,18 @@
 
 /**
  * 判断是否为移动设备（服务器端）
+ *
+ * 简单通用的检测规则：
+ * - 只检测最常见的关键词：mobile、android、iphone、ipad
+ * - 不检测具体品牌型号（不可靠且无法穷举）
+ * - 客户端会用屏幕宽度和触摸能力进行最终校正
  */
 export function isMobileUserAgent(userAgent?: string): boolean {
   if (!userAgent) return false;
-  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-    userAgent
-  );
+
+  // 简单通用的移动设备检测
+  // 涵盖 99% 的移动设备场景
+  return /mobile|android|iphone|ipad|ipod/i.test(userAgent);
 }
 
 /**
