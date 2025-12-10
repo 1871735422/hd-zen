@@ -51,6 +51,7 @@ export function isMobileFromClientHints(headers: Headers): boolean | null {
  * - 此时会返回默认值 'desktop'
  * - 客户端 DeviceProvider 会在水合后进行校正
  */
+
 export async function getDeviceTypeFromHeaders(): Promise<
   'mobile' | 'desktop'
 > {
@@ -60,14 +61,29 @@ export async function getDeviceTypeFromHeaders(): Promise<
 
     // 1. 优先尝试 Client Hints
     const isMobileHint = isMobileFromClientHints(headersList);
-    if (isMobileHint !== null) {
-      return isMobileHint ? 'mobile' : 'desktop';
+
+    // 2. 同时拿到 User-Agent，避免部分浏览器（如部分国产浏览器）CH 误报
+    const userAgent = headersList.get('user-agent') || '';
+    const isMobileFromUA = userAgent ? isMobileUserAgent(userAgent) : null;
+
+    // 如果 Client Hints 明确标记为移动端，直接返回
+    if (isMobileHint === true) {
+      return 'mobile';
     }
 
-    // 2. 回退到 User-Agent 检测
-    const userAgent = headersList.get('user-agent') || '';
-    if (userAgent) {
-      return isMobileUserAgent(userAgent) ? 'mobile' : 'desktop';
+    // 如果 Client Hints 标记为桌面，但 UA 判断为移动端，取移动端（更保守，避免误判成桌面）
+    if (isMobileHint === false && isMobileFromUA === true) {
+      return 'mobile';
+    }
+
+    // Client Hints 明确标记桌面且 UA 也非移动，则返回桌面
+    if (isMobileHint === false) {
+      return 'desktop';
+    }
+
+    // Client Hints 不可用时，回退到 UA 判断
+    if (isMobileFromUA !== null) {
+      return isMobileFromUA ? 'mobile' : 'desktop';
     }
 
     // 3. 如果 headers 完全不可用（如热更新），返回默认值
