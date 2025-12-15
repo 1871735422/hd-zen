@@ -9,7 +9,7 @@ import { getDeviceTypeFromHeaders } from '@/app/utils/serverDeviceUtils';
 import { Container } from '@mui/material';
 import dynamic from 'next/dynamic';
 import { Metadata } from 'next/types';
-import QaClientWrapper from './QaClientWrapper';
+import QaClientWrapper from '../../../components/pc/QaClientWrapper';
 
 // 15分钟缓存
 export const revalidate = 900;

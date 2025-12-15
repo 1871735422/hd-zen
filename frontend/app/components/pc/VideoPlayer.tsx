@@ -334,6 +334,7 @@ const VideoPlayer = forwardRef<
     // 如果外部索引和内部 ref 不一致，说明是外部控制的切换
     if (currentIndex !== currentIndexRef.current) {
       currentIndexRef.current = currentIndex;
+      setCurrentVideoIndex(currentIndex); // 同步更新 state，确保下载按钮等 UI 更新
 
       const video = videos[currentIndex];
       const src = video?.sources?.[0]?.src;
