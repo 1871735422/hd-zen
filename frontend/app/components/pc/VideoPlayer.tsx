@@ -295,8 +295,9 @@ const VideoPlayer = forwardRef<
 
       if (!nextSrc) return;
 
-      // 更新索引（只更新 ref，不更新 state）
+      // 更新索引
       currentIndexRef.current = nextIndex;
+      setCurrentVideoIndex(nextIndex); // 同步更新 state，确保下载按钮等 UI 更新
       onVideoChange?.(nextIndex);
 
       // 使用 await 等待切换完成
