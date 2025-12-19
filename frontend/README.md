@@ -161,6 +161,57 @@ pnpm type-check
 pnpm format
 ```
 
+### E2E 测试
+
+项目使用 **Playwright** 进行端到端测试。
+
+#### 快速开始
+
+```bash
+# 1. 安装浏览器（首次运行需要）
+pnpm exec playwright install chromium
+
+# 2. 运行所有 E2E 测试
+pnpm test:e2e
+
+# 3. 运行特定测试
+pnpm test:e2e:video          # 视频播放和下载测试
+pnpm test:e2e:consistency     # 资源一致性测试
+pnpm test:e2e:home           # 首页、Ask、下载测试
+pnpm test:e2e:qa             # QA 测试
+pnpm test:e2e:search         # 搜索测试
+```
+
+#### 测试脚本说明
+
+**本地开发环境测试：**
+
+| 脚本                        | 说明                                     |
+| --------------------------- | ---------------------------------------- |
+| `pnpm test:e2e`             | 运行所有 E2E 测试（默认 localhost:3000） |
+| `pnpm test:e2e:ui`          | 交互式 UI 模式运行测试                   |
+| `pnpm test:e2e:debug`       | 调试模式                                 |
+| `pnpm test:e2e:video`       | 只运行视频播放和下载测试                 |
+| `pnpm test:e2e:consistency` | 只运行资源一致性测试                     |
+
+**线上生产环境测试：**
+
+| 脚本                       | 说明                                         |
+| -------------------------- | -------------------------------------------- |
+| `pnpm test:e2e:prod`       | 测试线上环境（https://zenweb.huidengzg.com） |
+| `pnpm test:e2e:prod:ui`    | 线上环境 UI 模式                             |
+| `pnpm test:e2e:prod:video` | 线上环境只测试视频功能                       |
+
+**自定义环境测试：**
+
+```bash
+# Windows PowerShell
+$env:PLAYWRIGHT_TEST_BASE_URL="https://your-custom-url.com"; pnpm test:e2e
+
+# Linux/Mac
+PLAYWRIGHT_TEST_BASE_URL="https://your-custom-url.com" pnpm test:e2e
+```
+
 ### VS Code 配置
 
 项目已包含 `.vscode` 配置，包含推荐的插件和编辑器设置。首次打开项目时，VS Code 会提示安装推荐的插件：
@@ -227,6 +278,36 @@ git config --global core.autocrlf false
 
 - 提交 PR 前，请更新 CHANGELOG.md（参考[如何维护更新日志](http://localhost:60093/public/hd-Gitea/src/branch/main/如何维护更新日志.md)）
 - 提交 PR 前，请更新 README.md
+
+## 监控与错误追踪
+
+### 已集成功能
+
+1. **Vercel Analytics** - 性能监控（已添加到 layout.tsx）
+2. **Vercel Logs** - 错误日志自动收集（console.error 会自动记录）
+
+### 如何查看 ZOD 验证错误
+
+#### 方法 1：Vercel Dashboard（推荐）
+
+1. 登录 [Vercel Dashboard](https://vercel.com/dashboard)
+2. 选择你的项目
+3. 进入 **Logs** 页面
+4. 搜索：`[Zod Validation Error]`
+5. 查看错误详情
+
+#### 方法 2：Vercel CLI
+
+```bash
+# 安装 Vercel CLI（如果还没安装）
+pnpm add -g vercel
+
+# 查看实时日志
+vercel logs --follow
+
+# 过滤 ZOD 错误
+vercel logs --follow | grep "Zod Validation Error"
+```
 
 ## 常见问题解决
 

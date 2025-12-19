@@ -170,7 +170,7 @@ export function validateWithZod<T>(
     }
 
     // 生产环境：记录日志（会被日志服务收集）
-    console.error('[Zod Validation Error]', {
+    const errorLog = {
       message: errorMessage,
       details: errorDetails,
       zodErrors,
@@ -179,16 +179,15 @@ export function validateWithZod<T>(
           ? data.id
           : 'unknown',
       timestamp: new Date().toISOString(),
-    });
+    };
+    console.error('[Zod Validation Error]', errorLog);
 
     // 如果配置了监控服务，发送错误
     if (monitoringService) {
       monitoringService.captureException(validationError, {
         validation: true,
         schema: schema.constructor.name || 'Unknown',
-        errorMessage,
-        errorDetails,
-        zodErrors,
+        ...errorLog,
         receivedData: data,
       });
     }
