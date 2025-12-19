@@ -1,4 +1,5 @@
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
+import { Analytics } from '@vercel/analytics/react';
 import ClarityAnalytics from './components/ClarityAnalytics';
 import DeviceProvider from './components/DeviceProvider';
 import ResponsiveLayout from './components/ResponsiveLayout';
@@ -45,6 +46,8 @@ export default async function RootLayout({
 
             {/* Clarity Analytics - 在客户端初始化 */}
             <ClarityAnalytics projectId={projectId} />
+            {/* Vercel Analytics - 性能监控和错误追踪 */}
+            <Analytics />
           </MuiThemeProvider>
         </AppRouterCacheProvider>
       </body>
