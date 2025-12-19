@@ -35,7 +35,7 @@ export default function LessonMeta({
         fontWeight={600}
         px={0}
         fontSize={{
-          lg: 30,
+          lg: isQuestion ? 24 : 30,
           xl: isQuestion ? 32 : 36,
           xxl: isQuestion ? 36 : 40,
         }}

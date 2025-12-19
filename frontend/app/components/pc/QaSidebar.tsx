@@ -154,7 +154,7 @@ export default function QaSidebar({
                       primary={
                         <Typography
                           fontWeight={isSelected ? 700 : 'inherit'}
-                          fontSize={{ lg: 17, xl: 20, xxl: 22 }}
+                          fontSize={{ lg: 15, xl: 20, xxl: 22 }}
                           marginRight={{ lg: 1, xl: 2, xxl: 2.5 }}
                           sx={{
                             display: '-webkit-box',
