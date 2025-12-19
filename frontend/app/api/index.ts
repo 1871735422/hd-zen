@@ -242,9 +242,23 @@ export const getCourses = async (): Promise<PaginatedResponse<Course>> => {
       requestKey: null, // Disable auto-cancellation
     });
 
-    const mappedCourses = result.map(record =>
-      mapRecordToCourse(record as PocketRecord)
-    );
+    // 转换并验证每个结果，单个记录失败不影响其他记录
+    const mappedCourses: Course[] = [];
+    for (const record of result) {
+      try {
+        const course = mapRecordToCourse(record as PocketRecord);
+        mappedCourses.push(course);
+      } catch (error) {
+        // 单个记录验证失败，记录错误但继续处理其他记录
+        console.error(
+          `Skipping invalid course record (id: ${record.id || 'unknown'}):`,
+          error
+        );
+        if (process.env.NODE_ENV === 'development') {
+          console.error('Record data:', record);
+        }
+      }
+    }
 
     return {
       items: mappedCourses,
@@ -292,25 +306,51 @@ export const getAnswerMediasByOrder = async (
   if (!result) return [];
 
   // 验证并转换数据（预处理：视图数据可能缺少基础字段）
-  const items = result.map(record => {
-    // 预处理数据，补充可能缺失的基础字段
-    const processedRecord = {
-      // 先展开原有数据
-      ...record,
-      // 基础字段（视图可能没有，提供默认值）- 后设置会覆盖前面的
-      id: record.id || `temp_${Date.now()}_${Math.random()}`,
-      created: record.created || new Date().toISOString(),
-      updated: record.updated || new Date().toISOString(),
-      // title 可能不存在，使用 questionTitle 作为后备
-      title: record.title || record.questionTitle || '',
-    };
+  const items: QuestionResult[] = [];
+  for (const record of result) {
+    try {
+      // 预处理数据，补充可能缺失的基础字段并处理类型转换
+      const processedRecord = {
+        // 先展开原有数据
+        ...record,
+        // 基础字段（视图可能没有，提供默认值）- 后设置会覆盖前面的
+        id: String(record.id || `temp_${Date.now()}_${Math.random()}`),
+        created: record.created || new Date().toISOString(),
+        updated: record.updated || record.created || new Date().toISOString(),
+        // title 可能不存在，使用 questionTitle 作为后备
+        title: record.title || record.questionTitle || '',
+        // 确保 topicOrder 和 questionOrder 是数字（可能是字符串）
+        topicOrder:
+          typeof record.topicOrder === 'number'
+            ? record.topicOrder
+            : typeof record.topicOrder === 'string'
+              ? Number.parseInt(record.topicOrder, 10) || 0
+              : 0,
+        questionOrder:
+          typeof record.questionOrder === 'number'
+            ? record.questionOrder
+            : typeof record.questionOrder === 'string'
+              ? Number.parseInt(record.questionOrder, 10) || 0
+              : 0,
+      };
 
-    return validateWithZod(
-      QuestionResultSchema,
-      processedRecord,
-      `Invalid question result data (id: ${processedRecord.id})`
-    );
-  });
+      const validated = validateWithZod(
+        QuestionResultSchema,
+        processedRecord,
+        `Invalid question result data (id: ${processedRecord.id})`
+      );
+      items.push(validated);
+    } catch (error) {
+      // 单个记录验证失败，记录错误但继续处理其他记录
+      console.error(
+        `Skipping invalid question result record (id: ${record.id || 'unknown'}):`,
+        error
+      );
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Record data:', record);
+      }
+    }
+  }
 
   // 按 topicTitle 分组
   const groupedMap = new Map<string, QuestionResult[]>();
@@ -358,14 +398,30 @@ export const getCourseTopicsByCourse = async (
       requestKey: null, // Disable auto-cancellation
     });
 
+    // 转换并验证每个结果，单个记录失败不影响其他记录
+    const mappedTopics: CourseTopic[] = [];
+    for (const record of result) {
+      try {
+        const topic = mapRecordToCourseTopic(record as PocketRecord);
+        mappedTopics.push(topic);
+      } catch (error) {
+        // 单个记录验证失败，记录错误但继续处理其他记录
+        console.error(
+          `Skipping invalid course topic record (id: ${record.id || 'unknown'}):`,
+          error
+        );
+        if (process.env.NODE_ENV === 'development') {
+          console.error('Record data:', record);
+        }
+      }
+    }
+
     return {
-      items: result.map(record =>
-        mapRecordToCourseTopic(record as PocketRecord)
-      ),
-      totalItems: result.length,
+      items: mappedTopics,
+      totalItems: mappedTopics.length,
       totalPages: 1,
       page: 1,
-      perPage: result.length,
+      perPage: mappedTopics.length,
     };
   } catch (error) {
     console.error(
@@ -421,14 +477,57 @@ export const getTagRelations = async (tag: string): Promise<TagRelation[]> => {
       filter: `tags ~ "${tag}"`,
     });
 
-    // 验证每个结果
-    return resultList.map(record =>
-      validateWithZod(
-        TagRelationSchema,
-        record,
-        `Invalid tag relation data (id: ${record.id || 'unknown'})`
-      )
-    );
+    // 转换并验证每个结果
+    const validatedResults: TagRelation[] = [];
+    for (const record of resultList) {
+      try {
+        // 数据格式转换：处理可能的类型不匹配和缺失字段
+        const transformedRecord = {
+          ...record,
+          // 确保 id, created, updated 存在
+          id: String(record.id ?? ''),
+          created: record.created ?? new Date().toISOString(),
+          updated: record.updated ?? record.created ?? new Date().toISOString(),
+          // 如果 tags 是字符串，转换为数组
+          tags: Array.isArray(record.tags)
+            ? record.tags
+            : typeof record.tags === 'string'
+              ? record.tags
+                  .split(',')
+                  .map(t => t.trim())
+                  .filter(Boolean)
+              : [],
+          // 确保 courseOrder 和 topicOrder 是字符串（可能是数字）
+          courseOrder: String(record.courseOrder ?? ''),
+          topicOrder: String(record.topicOrder ?? ''),
+          // 处理可能缺失的 topicActive 字段
+          topicActive:
+            record.topicActive !== undefined
+              ? Boolean(record.topicActive)
+              : record.courseActive !== undefined
+                ? Boolean(record.courseActive)
+                : true,
+        };
+
+        const validated = validateWithZod(
+          TagRelationSchema,
+          transformedRecord,
+          `Invalid tag relation data (id: ${record.id || 'unknown'})`
+        );
+        validatedResults.push(validated);
+      } catch (error) {
+        // 单个记录验证失败，记录错误但继续处理其他记录
+        console.error(
+          `Skipping invalid tag relation record (id: ${record.id || 'unknown'}):`,
+          error
+        );
+        if (process.env.NODE_ENV === 'development') {
+          console.error('Record data:', record);
+        }
+      }
+    }
+
+    return validatedResults;
   } catch (error) {
     console.error('Error fetching tag relations:', error);
     return [];
