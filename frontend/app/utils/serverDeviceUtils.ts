@@ -89,23 +89,24 @@ export async function getDeviceTypeFromHeaders(): Promise<
       effectiveWidth = viewportWidth;
     }
 
-    // 断点：<= 960px 视为移动端（包含 960px 的平板设备）
-    const isNarrowViewport = effectiveWidth !== null && effectiveWidth <= 960;
-
-    // 如果 Client Hints 明确标记为移动端，直接返回
-    if (isMobileHint === true) {
-      return 'mobile';
-    }
+    // 断点：<= 1024px 视为移动端（包含 iPad Pro 1024px 等平板设备）
+    const isNarrowViewport = effectiveWidth !== null && effectiveWidth <= 1024;
 
     // 核心判断逻辑：与客户端完全一致
-    // 需要同时满足：移动 UA + 窄视口（有效宽度 <= 960px）
+    // 需要同时满足：移动 UA + 窄视口（有效宽度 <= 1024px）
+    // 优先使用有效宽度判断，确保与服务端和客户端逻辑一致
     if (isMobileFromUA === true && isNarrowViewport) {
       return 'mobile';
     }
 
-    // 如果 Client Hints 标记为桌面，但 UA 判断为移动端，取移动端（更保守，避免误判成桌面）
-    // 注意：这里不检查视口宽度，因为 Client Hints 可能更准确
-    if (isMobileHint === false && isMobileFromUA === true) {
+    // 如果 Client Hints 明确标记为移动端，且 UA 也是移动端，返回移动端
+    // 但如果没有有效宽度信息，则依赖 Client Hints
+    if (isMobileHint === true && isMobileFromUA === true) {
+      return 'mobile';
+    }
+
+    // 如果 Client Hints 标记为桌面，但 UA 判断为移动端且有效宽度很窄，取移动端（更保守）
+    if (isMobileHint === false && isMobileFromUA === true && isNarrowViewport) {
       return 'mobile';
     }
 

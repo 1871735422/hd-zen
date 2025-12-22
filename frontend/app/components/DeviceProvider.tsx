@@ -69,14 +69,14 @@ export default function DeviceProvider({
       const isLandscape = viewportWidth > viewportHeight;
 
       // 移动端横屏时，用较短边作为有效宽度；否则使用正常宽度
-      // 与服务端断点保持一致（960px）
+      // 与服务端断点保持一致（1024px，包含 iPad Pro 等平板设备）
       const effectiveWidth =
         isMobileUA && isLandscape
           ? Math.min(viewportWidth, viewportHeight)
           : viewportWidth;
 
-      // 断点：<= 960px 视为移动端（包含 960px 的平板设备）
-      const isNarrowViewport = effectiveWidth <= 960;
+      // 断点：<= 1024px 视为移动端（包含 iPad Pro 1024px 等平板设备）
+      const isNarrowViewport = effectiveWidth <= 1024;
       // 需要同时满足：移动 UA + 窄视口（与服务端逻辑一致）
       const isMobile = isMobileUA && isNarrowViewport;
       setDeviceType(isMobile ? 'mobile' : 'desktop');

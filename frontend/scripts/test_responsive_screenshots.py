@@ -342,6 +342,38 @@ for mobile in MOBILE_DEVICE_SPECS:
         "year": year
     })
 
+# 去重：合并相同宽高的设备（保留第一个设备名称）
+seen_devices = {}
+deduplicated_devices = []
+merged_info = []  # 记录合并信息，稍后统一输出
+
+for device in DEVICES:
+    # 使用 (width, height, is_mobile, has_touch) 作为唯一键
+    key = (device["width"], device["height"], device["is_mobile"], device["has_touch"])
+
+    if key in seen_devices:
+        # 如果已存在相同宽高的设备，跳过并记录合并信息
+        existing_device = seen_devices[key]
+        merged_info.append({
+            "merged": device["name"],
+            "kept": existing_device["name"],
+            "size": f"{device['width']}x{device['height']}"
+        })
+    else:
+        # 首次出现，添加到结果列表
+        seen_devices[key] = device
+        deduplicated_devices.append(device)
+
+DEVICES = deduplicated_devices
+
+# 如果有合并的设备，在开始截图前统一输出
+if merged_info:
+    print("\n" + "="*50)
+    print("🔄 设备合并信息（相同宽高的设备已合并）:")
+    for info in merged_info:
+        print(f"   {info['merged']} -> {info['kept']} ({info['size']})")
+    print("="*50 + "\n")
+
 OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "screenshots")
 
 # -----------------------------------------------------------------------------
@@ -446,8 +478,9 @@ async def capture_screenshots():
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=True)
 
-        for device_conf in DEVICES:
-            print(f"\n📱 正在模拟设备: {device_conf['name']} ({device_conf['width']}x{device_conf['height']})")
+        total_devices = len(DEVICES)
+        for index, device_conf in enumerate(DEVICES, 1):
+            print(f"\n📱 正在模拟设备 [{index}/{total_devices}]: {device_conf['name']} ({device_conf['width']}x{device_conf['height']})")
 
             # 创建上下文，配置视口
             # 显式设置 screen 尺寸，增强横屏模拟效果
