@@ -86,6 +86,7 @@ const CourseCard: React.FC<CourseCardProps> = ({
           sx={{
             position: 'absolute',
             fontSize: pxToVw(10),
+            p: pxToVw(8),
             backgroundColor:
               index === 5
                 ? 'rgba(238, 237, 255, 1)'
