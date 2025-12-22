@@ -20,11 +20,7 @@ export default function CornerBadge({ content, isMobile }: CornerBadgeProps) {
               lg: content ? 80 : 88,
               xl: content ? 100 : 110,
             },
-        height: isMobile
-          ? pxToVw(36)
-          : content
-            ? pxToVw(60)
-            : { lg: pxToVw(65), xl: pxToVw(80) },
+        height: isMobile ? pxToVw(36) : content ? 60 : { lg: 65, xl: 80 },
         display: 'flex',
         zIndex: 1,
         background: `url(/images/${
