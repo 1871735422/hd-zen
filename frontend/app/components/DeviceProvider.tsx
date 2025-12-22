@@ -87,15 +87,14 @@ export default function DeviceProvider({
         isMobile = isMobileUA;
       }
 
-      setDeviceType(isMobile ? 'mobile' : 'desktop');
+      const newDeviceType = isMobile ? 'mobile' : 'desktop';
+      setDeviceType(newDeviceType);
     };
 
-    // 首次客户端加载时，立即检查一次
-    checkDevice();
-    // 然后标记为已水合
+    // 标记为已水合（使用服务端的初始值）
     setIsHydrated(true);
 
-    // 添加监听器
+    // 添加窗口大小变化监听器（只在窗口大小变化时才更新）
     window.addEventListener('resize', checkDevice);
 
     // 清理函数
