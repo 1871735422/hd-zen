@@ -113,6 +113,7 @@ const Header: React.FC = () => {
               sx={{
                 ml: pxToVw(4),
                 mr: pxToVw(16),
+                fontSize: pxToVw(24),
               }}
               aria-label='返回'
             >
@@ -121,7 +122,7 @@ const Header: React.FC = () => {
 
             <Box
               sx={{
-                maxWidth: 243,
+                maxWidth: pxToVw(245),
                 flex: 1,
                 display: 'flex',
                 alignItems: 'center',
@@ -155,6 +156,7 @@ const Header: React.FC = () => {
                   '& .MuiInputBase-input': {
                     color: '#444',
                     fontWeight: 500,
+                    fontSize: pxToVw(16),
                   },
                 }}
               />

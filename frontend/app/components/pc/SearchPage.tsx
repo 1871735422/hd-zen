@@ -15,9 +15,9 @@ import { HELPER_TEXT_COLOR, MAIN_BLUE_COLOR } from '../../constants/colors';
 import type { TopicMediaX } from '../../types/models';
 import CheckedIcon from '../icons/CheckedIcon';
 import UncheckIcon from '../icons/UncheckIcon';
+import { CustomPagination } from '../shared';
 import { SearchBox } from '../shared/SearchBox';
 import SearchInfoCard from './SearchInfoCard';
-import { CustomPagination } from '../shared';
 
 const searchCates = [
   { name: '全站搜索', value: 'all' },
@@ -339,6 +339,7 @@ const SearchPage = ({ isMobile }: { isMobile: boolean }) => {
               border: '1px solid rgba(212, 212, 212, 1)',
               padding: '3px 20px 3px 4px',
               backgroundColor: '#fff',
+              fontSize: isMobile ? pxToVw(13) : 14,
             }}
           >
             {searchCates.map(item => (
@@ -357,7 +358,7 @@ const SearchPage = ({ isMobile }: { isMobile: boolean }) => {
       <>
         <Box
           sx={{
-            width: 260,
+            width: isMobile ? pxToVw(260) : 260,
             display: 'flex',
             flexDirection: 'row',
             justifyContent: 'space-between',
@@ -376,7 +377,6 @@ const SearchPage = ({ isMobile }: { isMobile: boolean }) => {
           {resultSort.map(item => (
             <Button
               key={item.value}
-              size='small'
               onClick={() => handleSortChange(item.value)}
               sx={
                 isMobile
@@ -384,6 +384,7 @@ const SearchPage = ({ isMobile }: { isMobile: boolean }) => {
                       borderRadius: pxToVw(30),
                       px: pxToVw(10),
                       py: pxToVw(1),
+                      fontSize: pxToVw(13),
                       background:
                         sort === item.value
                           ? 'linear-gradient(90deg, rgba(165, 209, 240, 1) 0%, rgba(173, 178, 247, 1) 100%)'
@@ -432,6 +433,7 @@ const SearchPage = ({ isMobile }: { isMobile: boolean }) => {
                   variant={searchType === item.value ? 'contained' : 'text'}
                   onClick={() => handleSearchTypeChange(item.value)}
                   sx={{
+                    fontSize: isMobile ? pxToVw(13) : 14,
                     borderRadius: isMobile ? pxToVw(30) : '30px',
                     width: isMobile ? pxToVw(64) : 80,
                     height: isMobile ? pxToVw(24) : 22,

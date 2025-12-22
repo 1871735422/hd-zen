@@ -30,11 +30,15 @@ const MifaWarning = ({ article_title, secret_level, children }: MifaProps) => {
             textAlign={'center'}
             mt={{ lg: 6.4, xlg: 7, xl: 8 }}
             mb={3}
-            fontSize={{
-              lg: 30,
-              xl: 36,
-              xxl: 40,
-            }}
+            fontSize={
+              isMobile
+                ? pxToVw(20)
+                : {
+                    lg: 30,
+                    xl: 36,
+                    xxl: 40,
+                  }
+            }
             color={STANDARD_TEXT_COLOR}
           >
             {clearCourseTitle(article_title)}

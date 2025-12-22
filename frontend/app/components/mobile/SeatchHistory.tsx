@@ -3,9 +3,9 @@
 import { STANDARD_TEXT_COLOR } from '@/app/constants/colors';
 import { pxToVw } from '@/app/utils/mobileUtils';
 import { Box, Button, Link, Stack, Typography } from '@mui/material';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useSearchHistory } from '../../hooks/useSearchHistory';
-import { useRouter } from 'next/navigation';
 
 function SeatchHistory() {
   const { history, clearHistory, isClient } = useSearchHistory();
@@ -63,7 +63,7 @@ function SeatchHistory() {
           </Button>
         )}
       </Box>
-      <Stack direction='row' spacing={pxToVw(10)} flexWrap='wrap'>
+      <Stack direction='row' flexWrap='wrap' gap={pxToVw(10)}>
         {history.length > 0 ? (
           history.map(keyword => (
             <Link
