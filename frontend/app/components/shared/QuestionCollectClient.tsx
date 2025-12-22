@@ -1,6 +1,6 @@
 'use client';
 
-import { useDeviceType } from '@/app/utils/deviceUtils';
+import { useDevice } from '@/app/components/DeviceProvider';
 import { pxToVw } from '@/app/utils/mobileUtils';
 import {
   Close as CloseIcon,
@@ -16,7 +16,8 @@ interface QuestionCollectClientProps {
 const QuestionCollectClient: React.FC<QuestionCollectClientProps> = ({
   qaLink,
 }) => {
-  const isMobile = useDeviceType() === 'mobile';
+  const { deviceType } = useDevice();
+  const isMobile = deviceType === 'mobile';
   const [modalOpen, setModalOpen] = useState(false);
 
   const handleOpenModal = () => {

@@ -65,7 +65,7 @@ export function MobileLessonMeta({
           {/* 作者和日期 */}
           <Typography
             sx={{
-              pl: refCourse ? 0 : pxToVw(22),
+              pl: refCourse ? 0 : pxToVw(30),
               pb: refCourse ? 0 : pxToVw(6),
               fontSize: pxToVw(12),
               color: 'rgba(153, 153, 153, 1)',
@@ -108,7 +108,7 @@ export function MobileLessonMeta({
             textAlign: 'justify',
           }}
         >
-          <Typography>
+          <Typography sx={{ fontSize: pxToVw(16) }}>
             <strong>概述：</strong>
             <span
               dangerouslySetInnerHTML={{ __html: highlightedDescription }}

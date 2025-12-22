@@ -1,6 +1,6 @@
 'use client';
 import { pxToVw } from '@/app/utils/mobileUtils';
-import { Breadcrumbs, Link, useTheme } from '@mui/material';
+import { Breadcrumbs, Link } from '@mui/material';
 import NextLink from 'next/link';
 import React, {
   createContext,
@@ -9,6 +9,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import { useDevice } from '../DeviceProvider';
 
 export interface BreadcrumbItem {
   label: string;
@@ -39,7 +40,7 @@ export default function AppBreadcrumbs({
   color = 'rgba(42, 130, 228, 1)',
 }: AppBreadcrumbsProps) {
   const { extraBreadcrumb } = useBreadcrumb();
-  const theme = useTheme();
+  const { deviceType } = useDevice();
   const finalItems =
     useContext && extraBreadcrumb ? [...items, extraBreadcrumb] : items;
 
@@ -86,6 +87,8 @@ export default function AppBreadcrumbs({
     };
   }, [items]);
 
+  const isMobile = deviceType === 'mobile';
+
   return (
     <Breadcrumbs
       ref={breadcrumbsRef}
@@ -95,14 +98,14 @@ export default function AppBreadcrumbs({
         color,
         mb: 1,
         mx: 1,
-        // 如果最后一个面包屑项换行了（第二行），给第二行添加左边距
-        [theme.breakpoints.down('sm')]: shouldAddMargin
+        // 如果最后一个面包屑项换行了（第二行），给第二行添加左边距（仅移动端）
+        ...(isMobile && shouldAddMargin
           ? {
               '& .MuiBreadcrumbs-li:last-child a': {
                 paddingLeft: pxToVw(23),
               },
             }
-          : {},
+          : {}),
       }}
     >
       {finalItems.map((item, index) => (
@@ -113,7 +116,7 @@ export default function AppBreadcrumbs({
           href={item.href || ''}
           underline='hover'
           color='inherit'
-          fontSize={{ lg: 13, xl: 16, xxl: 18 }}
+          fontSize={isMobile ? pxToVw(13) : { lg: 13, xl: 16, xxl: 18 }}
         >
           {item.label}
         </Link>

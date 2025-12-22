@@ -1,5 +1,5 @@
 'use client';
-import { useDeviceType } from '@/app/utils/deviceUtils';
+import { useDevice } from '@/app/components/DeviceProvider';
 import { Box, Button, Stack, Typography } from '@mui/material';
 import PrevPage from '../icons/PrevPage';
 import { FirstPage, LastPage } from '@mui/icons-material';
@@ -23,7 +23,8 @@ export default function Pagination({
   mode = 'full',
   onModeChange,
 }: PaginationProps) {
-  const isMobile = useDeviceType() === 'mobile';
+  const { deviceType } = useDevice();
+  const isMobile = deviceType === 'mobile';
 
   if (totalPages <= 1) {
     return null;
