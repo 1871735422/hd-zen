@@ -141,11 +141,8 @@ function BaseLayout({
               mb: { sm: 3, md: 4, lg: 4.3, xl: 6, xxl: 8 },
               px: { sm: 1.5, md: 2, lg: 2.1, xl: 3, xxl: 4 },
             }}
-          >
-            {description?.split('\n')[0]}
-            <br />
-            {description?.split('\n')[1]}
-          </Typography>
+            dangerouslySetInnerHTML={{ __html: description }}
+          />
         )}
         {categorieItems && categories && (
           <CategorySelector

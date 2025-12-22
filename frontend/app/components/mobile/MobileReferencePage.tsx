@@ -1,24 +1,24 @@
+import { getCategories } from '@/app/api';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import React from 'react';
 import { pxToVw } from '../../utils/mobileUtils';
 import { MobileBaseLayout } from './MobileBaseLayout';
-import MobileReferenceCard from './MobileReferenceCard';
-interface MobileReferencePageProps {
-  categories: Array<{
-    id: number;
-    name: string;
-    displayOrder: number;
-  }>;
-}
+import MobileReferenceCard, {
+  MobileReferenceCardProps,
+} from './MobileReferenceCard';
 
 /**
  * 移动端学修参考资料页面
  * 根据设计稿实现卡片网格布局
  */
-const MobileReferencePage: React.FC<MobileReferencePageProps> = ({
-  categories,
-}) => {
+
+interface MobileReferencePageProps {
+  categories: MobileReferenceCardProps[];
+}
+async function MobileReferencePage({ categories }: MobileReferencePageProps) {
+  const menuData = await getCategories('学修参考资料');
+  const description = menuData[0]?.description;
+
   return (
     <MobileBaseLayout>
       {/* 说明文字区域 */}
@@ -36,17 +36,8 @@ const MobileReferencePage: React.FC<MobileReferencePageProps> = ({
             fontSize: pxToVw(16),
             lineHeight: 1.5,
           }}
-        >
-          本栏目提供加行修法的必修资料：《大圆满前行引导文》
-        </Typography>
-        <Typography
-          sx={{
-            fontSize: pxToVw(16),
-            lineHeight: 1.5,
-          }}
-        >
-          辅助参考资料：《前行备忘录》《菩提道次第广论》《稻秆经》《大圆满心性休息》
-        </Typography>
+          dangerouslySetInnerHTML={{ __html: description }}
+        />
       </Box>
 
       {/* 卡片网格 */}
@@ -60,15 +51,16 @@ const MobileReferencePage: React.FC<MobileReferencePageProps> = ({
       >
         {categories.map(category => (
           <MobileReferenceCard
-            key={category.id}
-            title={category.name}
-            bookOrder={category.displayOrder.toString()}
-            chapterOrder={category.displayOrder}
+            key={category.bookOrder}
+            cover={category.cover}
+            title={category.title}
+            bookOrder={category.bookOrder}
+            chapterOrder={category.chapterOrder}
           />
         ))}
       </Box>
     </MobileBaseLayout>
   );
-};
+}
 
 export default MobileReferencePage;

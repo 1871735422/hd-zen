@@ -2,8 +2,8 @@ import { Box, Container } from '@mui/material';
 import dynamic from 'next/dynamic';
 import {
   getCourseByDisplayOrder,
-  getCourses,
   getCourseTopicsByCourse,
+  getCourses,
 } from '../api';
 import MobileCoursePage from '../components/mobile/MobileCoursePage';
 import BookCard from '../components/pc/BookCard';
@@ -16,7 +16,6 @@ export const metadata = {
 
 async function CoursePage() {
   const { items: courses } = await getCourses();
-
   // 服务端检测设备类型
   const deviceType = await getDeviceTypeFromHeaders();
   const isMobile = deviceType === 'mobile';
@@ -125,6 +124,7 @@ async function CoursePage() {
                       key={course.id}
                       idx={i + idx}
                       title={course.title}
+                      cover={course.cover}
                       description={course.description || ''}
                     />
                   ))}

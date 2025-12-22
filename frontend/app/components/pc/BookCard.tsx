@@ -8,10 +8,16 @@ import React from 'react';
 interface BookCardProps {
   idx: number;
   title: string;
+  cover?: string;
   description: string;
 }
 
-const BookCard: React.FC<BookCardProps> = ({ title, description, idx }) => {
+const BookCard: React.FC<BookCardProps> = ({
+  title,
+  description,
+  idx,
+  cover,
+}) => {
   return (
     <Card
       component={'a'}
@@ -94,7 +100,7 @@ const BookCard: React.FC<BookCardProps> = ({ title, description, idx }) => {
         }}
       >
         <Image
-          src={`/images/book_cover${idx + 1}.webp`}
+          src={cover || `/images/book_cover${idx + 1}.webp`}
           alt={title}
           fill
           sizes='100vw'

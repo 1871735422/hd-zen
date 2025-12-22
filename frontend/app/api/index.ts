@@ -220,9 +220,10 @@ export const getCategories = async (name?: string): Promise<Array<Menu>> => {
       filter: `isActive = true ${name ? '&& name = "' + name + '"' : ''}`,
     });
 
-    return result.map(({ name, slug, subMenu }) => {
+    return result.map(({ name, description, slug, subMenu }) => {
       return {
         name,
+        description,
         slug,
         subMenu,
       };

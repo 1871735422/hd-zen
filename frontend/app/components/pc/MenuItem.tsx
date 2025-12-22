@@ -10,7 +10,9 @@ import DropDownIcon from '../icons/DropDownIcon';
 
 export type Menu = {
   name: string;
+  description: string;
   slug: string;
+  cover?: string;
   subMenu: Menu[] | null;
 };
 

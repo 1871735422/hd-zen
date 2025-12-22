@@ -72,7 +72,8 @@ export function MobileLessonMeta({
               lineHeight: 2.3,
             }}
           >
-            {author} {date ? ` / ${formatDate(date)}` : ''}
+            {author && `作者：${author} `}{' '}
+            {date ? ` / ${formatDate(date)}` : ''}
           </Typography>
           {refCourse && (
             <Typography

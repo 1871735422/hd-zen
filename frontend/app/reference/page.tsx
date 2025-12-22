@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
-import { getDeviceTypeFromHeaders } from '../utils/serverDeviceUtils';
 import { getCategories } from '../api';
 import MobileReferencePage from '../components/mobile/MobileReferencePage';
+import { getDeviceTypeFromHeaders } from '../utils/serverDeviceUtils';
 
 export default async function ReferenceRedirect() {
   const deviceType = await getDeviceTypeFromHeaders();
@@ -11,10 +11,12 @@ export default async function ReferenceRedirect() {
     const menuData = await getCategories('学修参考资料');
     const subMenu = menuData[0]?.subMenu || [];
     const categories = subMenu.map(item => ({
-      id: parseInt(item.slug, 10),
-      name: item.name,
-      displayOrder: parseInt(item.slug, 10),
+      cover: item.cover,
+      bookOrder: item.slug,
+      chapterOrder: 0,
+      title: item.name,
     }));
+    console.log({ categories });
     return <MobileReferencePage categories={categories} />;
   }
 

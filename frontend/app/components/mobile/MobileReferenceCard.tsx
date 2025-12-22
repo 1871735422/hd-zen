@@ -5,10 +5,11 @@ import Link from 'next/link';
 import React from 'react';
 import { pxToVw } from '../../utils/mobileUtils';
 
-interface MobileReferenceCardProps {
+export interface MobileReferenceCardProps {
   title: string;
   bookOrder: string;
   chapterOrder: number;
+  cover?: string;
 }
 
 /**
@@ -18,6 +19,7 @@ interface MobileReferenceCardProps {
 const MobileReferenceCard: React.FC<MobileReferenceCardProps> = ({
   title,
   bookOrder,
+  cover,
 }) => {
   return (
     <Link
@@ -31,7 +33,7 @@ const MobileReferenceCard: React.FC<MobileReferenceCardProps> = ({
           width: pxToVw(110),
           height: pxToVw(137),
           borderRadius: pxToVw(16),
-          background: `url(/images/mobile/refBook${bookOrder}.png)`,
+          background: `url(${cover})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
