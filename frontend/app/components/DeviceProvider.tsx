@@ -61,7 +61,7 @@ export default function DeviceProvider({
   const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
-    const checkDevice = () => {
+    const checkDevice = (isInitialCheck = false) => {
       const ua = navigator.userAgent || '';
       const isMobileUA = MOBILE_UA_REGEX.test(ua);
       const viewportWidth = window.innerWidth;
@@ -88,20 +88,37 @@ export default function DeviceProvider({
       }
 
       const newDeviceType = isMobile ? 'mobile' : 'desktop';
-      setDeviceType(newDeviceType);
+
+      // 首次检测时：如果客户端检测结果与服务端不一致，才更新
+      // 这样可以纠正生产环境中服务端检测错误的情况
+      if (isInitialCheck) {
+        if (newDeviceType !== serverDeviceType) {
+          setDeviceType(newDeviceType);
+        }
+      } else {
+        // 窗口大小变化时，直接更新
+        setDeviceType(newDeviceType);
+      }
     };
 
-    // 标记为已水合（使用服务端的初始值）
+    // 标记为已水合（使用服务端的初始值，避免闪烁）
     setIsHydrated(true);
 
-    // 添加窗口大小变化监听器（只在窗口大小变化时才更新）
-    window.addEventListener('resize', checkDevice);
+    // 首次客户端检测：使用 requestAnimationFrame 延迟执行
+    // 如果服务端检测错误（生产环境常见），会立即纠正
+    const rafId = requestAnimationFrame(() => {
+      checkDevice(true);
+    });
+
+    // 添加窗口大小变化监听器
+    window.addEventListener('resize', () => checkDevice(false));
 
     // 清理函数
     return () => {
-      window.removeEventListener('resize', checkDevice);
+      cancelAnimationFrame(rafId);
+      window.removeEventListener('resize', () => checkDevice(false));
     };
-  }, []); // 依赖项为空，确保只在客户端挂载时运行一次
+  }, [serverDeviceType]); // 添加 serverDeviceType 作为依赖
 
   return (
     <DeviceContext.Provider value={{ deviceType, isHydrated }}>

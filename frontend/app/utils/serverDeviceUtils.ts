@@ -43,10 +43,11 @@ export function isMobileFromClientHints(headers: Headers): boolean | null {
 /**
  * 从 Headers 获取设备类型（用于 Next.js Server Components）
  *
- * 检测策略：
- * 1. 优先使用 Client Hints (Sec-CH-UA-Mobile) - 更准确、隐私友好
+ * 检测策略（与客户端逻辑完全一致）：
+ * 1. 优先使用视口宽度（Client Hints）- 最准确
  * 2. 回退到 User-Agent 检测 - 兼容不支持 Client Hints 的浏览器
- * 3. 默认返回 desktop - 保守策略
+ * 3. 最后回退到 Client Hints (Sec-CH-UA-Mobile)
+ * 4. 默认返回 desktop - 保守策略
  *
  * 注意：
  * - 在开发环境热更新时，headers 可能不可用
@@ -61,14 +62,12 @@ export async function getDeviceTypeFromHeaders(): Promise<
     const { headers } = await import('next/headers');
     const headersList = await headers();
 
-    // 1. 优先尝试 Client Hints
-    const isMobileHint = isMobileFromClientHints(headersList);
-
-    // 2. 同时拿到 User-Agent，避免部分浏览器（如部分国产浏览器）CH 误报
+    // 1. 获取 User-Agent（用于判断移动设备）
     const userAgent = headersList.get('user-agent') || '';
-    const isMobileFromUA = userAgent ? isMobileUserAgent(userAgent) : null;
+    const isMobileUA = userAgent ? isMobileUserAgent(userAgent) : false;
 
-    // 3. 读取视口宽度和高度（Client Hints），计算有效宽度（与客户端逻辑一致）
+    // 2. 读取视口宽度和高度（Client Hints），计算有效宽度
+    // 优先使用视口宽度，因为这是最准确的判断依据
     const viewportWidth = await getViewportWidth();
     const viewportHeight = await getViewportHeight();
 
@@ -81,7 +80,7 @@ export async function getDeviceTypeFromHeaders(): Promise<
     ) {
       const isLandscape = viewportWidth > viewportHeight;
       effectiveWidth =
-        isMobileFromUA === true && isLandscape
+        isMobileUA && isLandscape
           ? Math.min(viewportWidth, viewportHeight)
           : viewportWidth;
     } else if (typeof viewportWidth === 'number') {
@@ -89,45 +88,30 @@ export async function getDeviceTypeFromHeaders(): Promise<
       effectiveWidth = viewportWidth;
     }
 
-    // 断点：<= 960px 视为移动端（iPad Pro 1024px 等大屏平板视为 PC 端）
-    const isNarrowViewport = effectiveWidth !== null && effectiveWidth <= 960;
-
-    // 核心判断逻辑：与客户端完全一致
-    // 优先使用有效宽度判断，确保与服务端和客户端逻辑一致
-    // 需要同时满足：移动 UA + 窄视口（有效宽度 <= 960px）
-    if (isMobileFromUA === true && isNarrowViewport) {
-      return 'mobile';
-    }
-
-    // 如果有效宽度信息可用，优先使用有效宽度判断（即使 Client Hints 有不同标记）
-    // 这样可以确保与客户端逻辑完全一致
+    // 3. 核心判断逻辑：与客户端完全一致
+    // 断点：960px，大于 960px 的平板（如 iPad Pro 1024px）视为 PC 端
     if (effectiveWidth !== null) {
-      // 有效宽度 > 960px，视为桌面端
+      // 有效宽度 > 960px → desktop
       if (effectiveWidth > 960) {
         return 'desktop';
       }
-      // 有效宽度 <= 960px 但 UA 不是移动端，视为桌面端
-      if (isMobileFromUA === false) {
-        return 'desktop';
-      }
-      // 有效宽度 <= 960px 且 UA 是移动端，视为移动端
-      if (isMobileFromUA === true) {
-        return 'mobile';
-      }
+      // 有效宽度 <= 960px 且移动 UA → mobile
+      // 有效宽度 <= 960px 但非移动 UA → desktop
+      return isMobileUA ? 'mobile' : 'desktop';
     }
 
-    // 如果有效宽度信息不可用，回退到 Client Hints + UA 判断
-    if (isMobileHint === true && isMobileFromUA === true) {
+    // 4. 如果视口宽度不可用，回退到 Client Hints + UA 判断
+    const isMobileHint = isMobileFromClientHints(headersList);
+    if (isMobileHint === true && isMobileUA) {
       return 'mobile';
     }
-
-    if (isMobileHint === false && isMobileFromUA === false) {
+    if (isMobileHint === false && !isMobileUA) {
       return 'desktop';
     }
 
-    // Client Hints 不可用时，回退到 UA 判断
-    if (isMobileFromUA !== null) {
-      return isMobileFromUA ? 'mobile' : 'desktop';
+    // 5. Client Hints 不可用时，回退到 UA 判断
+    if (isMobileUA) {
+      return 'mobile';
     }
 
     // 如果 headers 完全不可用（如热更新），返回默认值
@@ -140,8 +124,15 @@ export async function getDeviceTypeFromHeaders(): Promise<
     return 'desktop';
   } catch (error) {
     // 如果导入失败，默认返回桌面版
+    // 生产环境也记录错误，方便调试
+    const errorMessage = error instanceof Error ? error.message : String(error);
     if (process.env.NODE_ENV === 'development') {
       console.error('[DeviceDetection] Failed to get device type:', error);
+    } else {
+      // 生产环境使用 console.warn，避免过多错误日志
+      console.warn(
+        `[DeviceDetection] Failed to get device type: ${errorMessage}. Using default "desktop".`
+      );
     }
     return 'desktop';
   }
