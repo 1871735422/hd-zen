@@ -32,7 +32,7 @@ export default function CornerBadge({ content, isMobile }: CornerBadgeProps) {
           position: 'absolute',
           top: isMobile ? pxToVw(1) : '13%',
           right: isMobile ? pxToVw(5) : '18%',
-          fontSize: isMobile ? pxToVw(16) : { lg: pxToVw(20), xl: pxToVw(24) },
+          fontSize: isMobile ? pxToVw(16) : { lg: 20, xl: 24 },
           color: 'white',
         },
       }}
