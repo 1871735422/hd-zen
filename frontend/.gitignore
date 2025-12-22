@@ -15,7 +15,7 @@
 /test-results/
 /playwright-report/
 /playwright/.cache/
-
+/scripts/screenshots/
 # next.js
 /.next/
 /out/

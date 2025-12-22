@@ -1,10 +1,10 @@
 'use client';
+import { useDevice } from '@/app/components/DeviceProvider';
 import {
   MOBILE_READING_THEMES,
   READING_THEMES as PC_READING_THEMES,
   SCROLL_TOP_BG_COLOR,
 } from '@/app/constants/colors';
-import { useDeviceType } from '@/app/utils/deviceUtils';
 import { pxToVw } from '@/app/utils/mobileUtils';
 import { Box, Chip, Divider, Paper, Stack, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
@@ -34,7 +34,7 @@ export default function ReadingModeContainer({
 }: ReadingModeContainerProps) {
   const { state } = useReadingMode();
   const [visible, setVisible] = useState(false);
-  const deviceType = useDeviceType();
+  const { deviceType } = useDevice();
   const isMobile = deviceType === 'mobile';
   // Minimal shared values to reduce repetition (keep rest unchanged)
   const READING_THEMES = isMobile ? MOBILE_READING_THEMES : PC_READING_THEMES;

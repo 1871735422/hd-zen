@@ -1,6 +1,6 @@
 'use client';
+import { useDevice } from '@/app/components/DeviceProvider';
 import MediaDownloadButton from '@/app/components/pc/MediaDownloadButton';
-import { useDeviceType } from '@/app/utils/deviceUtils';
 import { pxToVw } from '@/app/utils/mobileUtils';
 import { Box, Paper, Typography } from '@mui/material';
 import { Fragment } from 'react';
@@ -16,7 +16,8 @@ export default function AudioPage({
   topicMedia,
   showTitle = true,
 }: AudioPageProps) {
-  const isMobile = useDeviceType() === 'mobile';
+  const { deviceType } = useDevice();
+  const isMobile = deviceType === 'mobile';
 
   if (!topicMedia.length) {
     return (

@@ -1,6 +1,6 @@
 'use client';
 import { trackVideoPlay } from '@/app/utils/clarityAnalytics';
-import { useDeviceType } from '@/app/utils/deviceUtils';
+import { useDevice } from '@/app/components/DeviceProvider';
 import {
   pauseOtherMediaPlayers,
   registerMediaPlayer,
@@ -79,7 +79,8 @@ const VideoPlayer = forwardRef<
 
   const videos: VideoItem[] = videoList;
   const currentVideo = videos[currentVideoIndex];
-  const isMobile = useDeviceType() === 'mobile';
+  const { deviceType } = useDevice();
+  const isMobile = deviceType === 'mobile';
   const isShowTitle = currentVideo?.title && urlParamName === 'showTitle';
 
   // 同步当前索引到 ref

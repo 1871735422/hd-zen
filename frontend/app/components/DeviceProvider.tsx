@@ -4,6 +4,10 @@ import { createContext, useContext, useEffect, useState } from 'react';
 
 import { MOBILE_UA_REGEX } from '../constants';
 
+/**
+ * 设备类型
+ * 统一使用此类型定义，避免类型不一致
+ */
 export type DeviceType = 'mobile' | 'desktop';
 
 interface DeviceContextType {
@@ -18,7 +22,16 @@ const DeviceContext = createContext<DeviceContextType>({
 
 /**
  * 客户端设备检测 Hook
- * 使用 matchMedia API 进行精确的响应式检测
+ *
+ * 返回：
+ * - deviceType: 'mobile' | 'desktop' - 当前设备类型
+ * - isHydrated: boolean - 是否已完成客户端水合（用于避免 SSR 不匹配）
+ *
+ * 使用示例：
+ * ```typescript
+ * const { deviceType, isHydrated } = useDevice();
+ * const isMobile = deviceType === 'mobile';
+ * ```
  */
 export function useDevice() {
   return useContext(DeviceContext);
@@ -56,12 +69,15 @@ export default function DeviceProvider({
       const isLandscape = viewportWidth > viewportHeight;
 
       // 移动端横屏时，用较短边作为有效宽度；否则使用正常宽度
+      // 与服务端断点保持一致（960px）
       const effectiveWidth =
         isMobileUA && isLandscape
           ? Math.min(viewportWidth, viewportHeight)
           : viewportWidth;
 
-      const isNarrowViewport = effectiveWidth < 960;
+      // 断点：<= 960px 视为移动端（包含 960px 的平板设备）
+      const isNarrowViewport = effectiveWidth <= 960;
+      // 需要同时满足：移动 UA + 窄视口（与服务端逻辑一致）
       const isMobile = isMobileUA && isNarrowViewport;
       setDeviceType(isMobile ? 'mobile' : 'desktop');
     };

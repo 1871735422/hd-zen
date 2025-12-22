@@ -207,7 +207,7 @@ export default function MobileQaLessonPage({
             <MobileLessonMeta
               hasSiderbar
               title={`${currentIndex + 1}. ${currentQuestion.questionTitle}`}
-              author='作者：慈诚罗珠堪布'
+              author='慈诚罗珠堪布'
               date={currentQuestion.questionCreated}
               refCourse={`${courseName} > ${lessonName}`}
               refUrl={`/course/${courseOrder}/lesson${lessonOrder}`}

@@ -43,28 +43,62 @@
   - 支持多 URL 批量测试（分号分隔）。
   - 自动补全 `https://` 协议。
   - 移动端设备包含详细的层级分类（Apple, Huawei, Samsung, Xiaomi 等）。
+  - **默认只测试 2015 年以后的设备**（可通过 `--all-devices` 测试所有机型）。
+  - **默认只测试 View 视图**（可通过 `--full-page` 同时测试 Full Page 视图）。
 
 **使用方法 (Usage)：**
 
 - **模式 A：自定义 URL 测试（推荐）**
 
   ```bash
-  # 测试单个页面
-  python _TEST/test_responsive_screenshots.py -url "google.com"
+  # 测试单个页面（默认：2015年以后的设备，只测试View视图）
+  python scripts/test_responsive_screenshots.py -url "google.com"
 
   # 测试多个页面（使用分号分隔）
-  python _TEST/test_responsive_screenshots.py -url "baidu.com;bing.com"
+  python scripts/test_responsive_screenshots.py -url "baidu.com;bing.com"
 
-  python _TEST/test_responsive_screenshots.py -url "cxk.fohuifayu.com/course/1"
+  # 测试本地开发环境
+  python scripts/test_responsive_screenshots.py -url "localhost:3000"
+
+  # 测试所有机型（包括2015年以前的旧设备）
+  python scripts/test_responsive_screenshots.py -url "google.com" --all-devices
+
+  # 同时测试View和Full Page视图
+  python scripts/test_responsive_screenshots.py -url "google.com" --full-page
+
+  # 测试所有机型 + Full Page视图
+  python scripts/test_responsive_screenshots.py -url "google.com" --all-devices --full-page
   ```
 
 - **模式 B：默认列表测试**
   如果不带参数运行，将测试脚本内预置的默认页面列表（通常为测试环境页面）。
+
   ```bash
-  python _TEST/test_responsive_screenshots.py
+  # 默认模式：2015年以后的设备，只测试View视图
+  python scripts/test_responsive_screenshots.py
+
+  # 测试所有机型
+  python scripts/test_responsive_screenshots.py --all-devices
+
+  # 同时测试Full Page视图
+  python scripts/test_responsive_screenshots.py --full-page
+
+  # 测试所有机型 + Full Page视图
+  python scripts/test_responsive_screenshots.py --all-devices --full-page
   ```
 
-**输出**：截图保存在 `_TEST/screenshots/` 目录下，按域名/页面名称分类。
+**命令行参数说明：**
+
+| 参数            | 说明                                     | 默认值                       |
+| :-------------- | :--------------------------------------- | :--------------------------- |
+| `-url`          | 自定义测试 URL，多个 URL 用分号 `;` 分隔 | 使用默认页面列表             |
+| `--all-devices` | 测试所有机型（包括 2015 年以前的旧设备） | 仅测试 2015 年以后的设备     |
+| `--full-page`   | 同时测试 Full Page 视图（完整页面截图）  | 仅测试 View 视图（首屏截图） |
+
+**输出**：截图保存在 `scripts/screenshots/` 目录下，按页面名称分类。每个页面包含：
+
+- `{设备名}_View_{宽}x{高}.png` - View 视图（首屏截图）
+- `{设备名}_Full_{宽}x{高}.png` - Full Page 视图（完整页面截图，仅在启用 `--full-page` 时生成）
 
 ---
 
@@ -72,9 +106,8 @@
 
 | 目录/文件              | 说明                                              |
 | :--------------------- | :------------------------------------------------ |
-| `_TEST/screenshots/`   | `test_responsive_screenshots.py` 的截图输出目录。 |
-| `_TEST/screenshotsFH/` | `test_screenshots_fh.py` 的截图输出目录。         |
-| `控制台日志`           | `test_all_url.py` 的检查结果直接输出到终端。      |
+| `scripts/screenshots/` | `test_responsive_screenshots.py` 的截图输出目录。 |
+| `控制台日志`           | 检查结果直接输出到终端。                          |
 
 ---
 

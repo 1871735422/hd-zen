@@ -19,6 +19,8 @@ except ImportError:
 # 命令行参数解析
 parser = argparse.ArgumentParser(description='Responsive Screenshots Tool')
 parser.add_argument('-url', type=str, help='自定义测试 URL，多个 URL 用分号 ; 分隔 (例如: "google.com;bing.com")')
+parser.add_argument('--all-devices', action='store_true', help='测试所有机型（包括2015年以前的旧设备）')
+parser.add_argument('--full-page', action='store_true', help='同时测试 Full Page 视图（默认只测试 View 视图）')
 args, unknown = parser.parse_known_args()
 
 # 生成目标 URL 列表
@@ -31,27 +33,33 @@ if args.url:
         url = raw_url.strip()
         if not url:
             continue
-        
-        # 补全协议
+
+        # 补全协议（本地开发通常使用 http://）
         if not url.startswith('http://') and not url.startswith('https://'):
-            url = 'https://' + url
-            
-        # 简单的命名生成逻辑
+            # 如果是 localhost 或 127.0.0.1，使用 http://，否则使用 https://
+            if 'localhost' in url or '127.0.0.1' in url:
+                url = 'http://' + url
+            else:
+                url = 'https://' + url
+
+        # 简单的命名生成逻辑（只使用路径，不包含域名，避免特殊字符问题）
         try:
             from urllib.parse import urlparse
             parsed = urlparse(url)
-            # 用域名+路径作为名称，替换特殊字符
-            domain = parsed.netloc.replace('www.', '')
+            # 只使用路径部分，替换特殊字符为安全字符
             path = parsed.path.strip('/').replace('/', '_')
+            # 如果路径为空，使用根路径名称
             if path:
-                name = f"{domain}_{path}"
+                # 只保留路径，不包含域名（避免 localhost:3000 等特殊字符）
+                name = path
             else:
-                name = domain
+                # 如果没有路径，使用根路径标识
+                name = "root"
         except:
             name = f"Custom_Page_{i+1}"
-            
+
         TARGET_URLS.append({"name": name, "url": url})
-    
+
     if not TARGET_URLS:
         print("⚠️ 提供的 URL 无效，将使用默认列表。")
 
@@ -83,228 +91,246 @@ if not TARGET_URLS:
 PC_DEVICES = [
     # --- Mac Laptops (Legacy & Modern) ---
     # 1. 11" MacBook Air Legacy (16:9)
-    {"name": "Mac_Air_11_Legacy_1366w", "width": 1366, "height": 768},
-    
+    {"name": "Mac_Air_11_Legacy_1366w", "width": 1366, "height": 768, "year": 2010},
+
     # 2. 12" MacBook / 13" Old Pro (16:10)
-    {"name": "Mac_Small_1280w", "width": 1280, "height": 800},
-    
+    {"name": "Mac_Small_1280w", "width": 1280, "height": 800, "year": 2010},
+
     # 3. 13.3" Air/Pro Retina Default (16:10) - Most Common
-    {"name": "Mac_Std_1440w", "width": 1440, "height": 900},
-    
+    {"name": "Mac_Std_1440w", "width": 1440, "height": 900, "year": 2012},
+
     # 4. 14" MacBook Pro M-Series (Notch)
-    {"name": "Mac_Pro_14_1512w", "width": 1512, "height": 982},
-    
+    {"name": "Mac_Pro_14_1512w", "width": 1512, "height": 982, "year": 2021},
+
     # 5. 15.4" Pro Legacy Scaled (More Space)
-    {"name": "Mac_Pro_15_Legacy_1680w", "width": 1680, "height": 1050},
-    
+    {"name": "Mac_Pro_15_Legacy_1680w", "width": 1680, "height": 1050, "year": 2010},
+
     # 6. 16" MacBook Pro M-Series (Notch)
-    {"name": "Mac_Pro_16_1728w", "width": 1728, "height": 1117},
+    {"name": "Mac_Pro_16_1728w", "width": 1728, "height": 1117, "year": 2021},
 
     # --- Mac Desktops (iMac & Displays) ---
     # 7. 21.5" iMac Non-Retina / FHD External
-    {"name": "Mac_Desktop_FHD_1920w", "width": 1920, "height": 1080},
-    
+    {"name": "Mac_Desktop_FHD_1920w", "width": 1920, "height": 1080, "year": 2012},
+
     # 8. 21.5" iMac 4K Retina Default
-    {"name": "Mac_Desktop_4K_2048w", "width": 2048, "height": 1152},
-    
+    {"name": "Mac_Desktop_4K_2048w", "width": 2048, "height": 1152, "year": 2015},
+
     # 9. 24" iMac M-Series 4.5K Default
-    {"name": "Mac_Desktop_24_2240w", "width": 2240, "height": 1260},
-    
+    {"name": "Mac_Desktop_24_2240w", "width": 2240, "height": 1260, "year": 2021},
+
     # 10. 27" iMac 5K / Studio Display Default
-    {"name": "Mac_Desktop_5K_2560w", "width": 2560, "height": 1440},
-    
+    {"name": "Mac_Desktop_5K_2560w", "width": 2560, "height": 1440, "year": 2014},
+
     # 11. 32" Pro Display XDR 6K Default
-    {"name": "Mac_Desktop_XDR_3008w", "width": 3008, "height": 1692},
+    {"name": "Mac_Desktop_XDR_3008w", "width": 3008, "height": 1692, "year": 2019},
 
     # --- Windows Laptops (Samsung, Dell, Lenovo, Microsoft 2010-2025) ---
     # 12. 13.5" Surface Laptop (3:2 Aspect Ratio) @ 150% Scale
     # Native: 2256x1504 -> Logical: 1504x1002
-    {"name": "Win_Surface_Laptop_1504w", "width": 1504, "height": 1002},
+    {"name": "Win_Surface_Laptop_1504w", "width": 1504, "height": 1002, "year": 2017},
 
     # 13. 12.3"-13" Surface Pro (3:2 Aspect Ratio) @ 200% Scale
     # Native: 2736x1824 (Pro 7) / 2880x1920 (Pro 8/9/X) -> Logical: ~1368x912 or 1440x960
     # Using common Pro 7 logical:
-    {"name": "Win_Surface_Pro_1368w", "width": 1368, "height": 912},
+    {"name": "Win_Surface_Pro_1368w", "width": 1368, "height": 912, "year": 2019},
 
     # 14. 13.4" Dell XPS 13 / Modern 16:10 Ultrabooks (FHD+)
     # Native: 1920x1200 @ 100% (or 3840x2400 @ 200%)
-    {"name": "Win_XPS_16_10_1920w", "width": 1920, "height": 1200},
+    {"name": "Win_XPS_16_10_1920w", "width": 1920, "height": 1200, "year": 2018},
 
     # 15. 14" Lenovo ThinkPad X1 Carbon / T-Series (16:10)
     # Native: 2240x1400 @ 150% -> Logical: ~1493x933
     # Or Standard FHD+ 1920x1200
-    {"name": "Win_ThinkPad_16_10_1920w", "width": 1920, "height": 1200},
+    {"name": "Win_ThinkPad_16_10_1920w", "width": 1920, "height": 1200, "year": 2018},
 
     # 16. Standard 15.6" Laptop (FHD 16:9) @ 125% Scale (Very Common)
     # Native: 1920x1080 -> Logical: 1536x864
-    {"name": "Win_FHD_Scaled_125_1536w", "width": 1536, "height": 864},
+    {"name": "Win_FHD_Scaled_125_1536w", "width": 1536, "height": 864, "year": 2016},
 
     # 17. Standard 13.3"/14" Laptop (FHD 16:9) @ 150% Scale
     # Native: 1920x1080 -> Logical: 1280x720
-    {"name": "Win_FHD_Scaled_150_1280w", "width": 1280, "height": 720},
+    {"name": "Win_FHD_Scaled_150_1280w", "width": 1280, "height": 720, "year": 2016},
 
     # 18. Legacy Business Laptop (14" 1600x900)
     # Common in 2010-2015 era (ThinkPad T420/T440)
-    {"name": "Win_Legacy_1600w", "width": 1600, "height": 900},
+    {"name": "Win_Legacy_1600w", "width": 1600, "height": 900, "year": 2010},
 
     # 19. Legacy Budget Laptop (15.6" 1366x768)
     # The dominant resolution for 2010-2018 budget laptops
-    {"name": "Win_Legacy_1366w", "width": 1366, "height": 768},
+    {"name": "Win_Legacy_1366w", "width": 1366, "height": 768, "year": 2010},
 
     # 20. Samsung Galaxy Book / High-End OLED (16:10 3K)
     # Native: 2880x1800 @ 200% -> Logical: 1440x900 (Same as Mac default)
     # Native: 2880x1800 @ 175% -> Logical: ~1645x1028
-    {"name": "Win_OLED_3K_Scaled_1440w", "width": 1440, "height": 900},
+    {"name": "Win_OLED_3K_Scaled_1440w", "width": 1440, "height": 900, "year": 2021},
 
     # --- Standard External Monitors (PC/Windows Default) ---
     # 21. Standard 1080p Monitor (100% Scale)
-    {"name": "PC_Monitor_1080p_1920w", "width": 1920, "height": 1080},
+    {"name": "PC_Monitor_1080p_1920w", "width": 1920, "height": 1080, "year": 2010},
 
     # 22. Standard 2K QHD Monitor (100% Scale)
-    {"name": "PC_Monitor_2K_2560w", "width": 2560, "height": 1440},
+    {"name": "PC_Monitor_2K_2560w", "width": 2560, "height": 1440, "year": 2012},
 
     # 23. Standard 4K UHD Monitor (150% Scale - Very Common Windows setting)
     # Native: 3840x2160 -> Logical: 2560x1440
-    {"name": "PC_Monitor_4K_Scaled_150_2560w", "width": 2560, "height": 1440},
+    {"name": "PC_Monitor_4K_Scaled_150_2560w", "width": 2560, "height": 1440, "year": 2016},
 
     # 24. Standard 4K UHD Monitor (200% Scale - "Retina" style)
     # Native: 3840x2160 -> Logical: 1920x1080
-    {"name": "PC_Monitor_4K_Scaled_200_1920w", "width": 1920, "height": 1080},
+    {"name": "PC_Monitor_4K_Scaled_200_1920w", "width": 1920, "height": 1080, "year": 2016},
 
     # 25. Standard 4K UHD Monitor (100% Scale - Massive Workspace)
-    {"name": "PC_Monitor_4K_Native_3840w", "width": 3840, "height": 2160},
+    {"name": "PC_Monitor_4K_Native_3840w", "width": 3840, "height": 2160, "year": 2016},
 ]
 
-# 2. 移动设备基础数据 (名称, 竖屏逻辑宽, 竖屏逻辑高)
+# 2. 移动设备基础数据 (名称, 竖屏逻辑宽, 竖屏逻辑高, 年份)
 # Playwright 使用 CSS 逻辑像素，而非物理像素
 MOBILE_DEVICE_SPECS = [
     # =========================================================================
     # 1. Apple iPhone Series (2010-2025)
     # =========================================================================
     # 1.1. 3.5"/4.0" Legacy Small (iPhone 4S/5/5S/SE1)
-    ("Apple_iPhone_Small_320w", 320, 568),
-    
+    {"name": "Apple_iPhone_Small_320w", "width": 320, "height": 568, "year": 2010},
+
     # 1.2. 4.7" Classic Retina (iPhone 6/7/8/SE2/SE3)
-    ("Apple_iPhone_Classic_375w", 375, 667),
-    
+    {"name": "Apple_iPhone_Classic_375w", "width": 375, "height": 667, "year": 2014},
+
     # 1.3. 5.5" Classic Plus (iPhone 6/7/8 Plus)
-    ("Apple_iPhone_Plus_414w", 414, 736),
-    
+    {"name": "Apple_iPhone_Plus_414w", "width": 414, "height": 736, "year": 2014},
+
     # 1.4. 5.8"/5.4" Notch Small (iPhone X/XS/11Pro, iPhone 12/13 Mini)
-    ("Apple_iPhone_Notch_Small_375w_Tall", 375, 812),
-    
+    {"name": "Apple_iPhone_Notch_Small_375w_Tall", "width": 375, "height": 812, "year": 2017},
+
     # 1.5. 6.1" Notch/Dynamic Standard (iPhone 12/13/14/15/16 Pro)
     # Note: 12/13/14Pro are 390w; 14Pro/15/16 are 393w. Merged as 393w.
-    ("Apple_iPhone_Modern_Std_393w", 393, 852),
-    
+    {"name": "Apple_iPhone_Modern_Std_393w", "width": 393, "height": 852, "year": 2020},
+
     # 1.6. 6.1"/6.5" Notch Large Legacy (iPhone XR/11/XS Max)
-    ("Apple_iPhone_Notch_Large_414w_Tall", 414, 896),
-    
+    {"name": "Apple_iPhone_Notch_Large_414w_Tall", "width": 414, "height": 896, "year": 2018},
+
     # 1.7. 6.7"/6.9" Modern Max (iPhone 12/13/14 Plus, 13-16 Pro Max)
     # Note: 12/13/14Plus are 428w; 14-16 Pro Max are 430w. Merged as 430w.
-    ("Apple_iPhone_Modern_Max_430w", 430, 932),
+    {"name": "Apple_iPhone_Modern_Max_430w", "width": 430, "height": 932, "year": 2020},
 
     # =========================================================================
     # 2. Huawei & Honor Series (High-End Android)
     # =========================================================================
     # 2.1. Huawei Mate 60/50 Pro, P60 Pro (Massive Screen)
     # Logic Width: 432px (Very common for modern Huawei flagships)
-    ("Huawei_Mate_Pro_432w", 432, 960),
-    
+    {"name": "Huawei_Mate_Pro_432w", "width": 432, "height": 960, "year": 2022},
+
     # 2.2. Huawei P40/P50 / Honor Magic Standard
     # Logic Width: 360px (Legacy standard) or 393px (Modern standard)
     # We use 360px here to represent the "Standard Android" baseline heavily used by Huawei/Honor mid-range
-    ("Huawei_Honor_Std_360w", 360, 780),
-    
+    {"name": "Huawei_Honor_Std_360w", "width": 360, "height": 780, "year": 2020},
+
     # 2.3. Huawei Mate X3/X5 Foldable (Inner Screen)
     # ~2200x2480 physical -> ~420dpi -> ~ 5.3" aspect
     # Logic: ~970px width unfolded (Approximate)
-    ("Huawei_Mate_X_Inner_970w", 970, 1100),
+    {"name": "Huawei_Mate_X_Inner_970w", "width": 970, "height": 1100, "year": 2023},
 
     # =========================================================================
     # 3. Samsung Galaxy Series
     # =========================================================================
     # 3.1. Samsung Galaxy S20/S21/S22/S23 Ultra (The "Phablet" King)
     # Logic Width: 412px (Distinctive Samsung Width)
-    ("Samsung_Ultra_412w", 412, 915),
-    
+    {"name": "Samsung_Ultra_412w", "width": 412, "height": 915, "year": 2020},
+
     # 3.2. Samsung Galaxy S20/S21/S22/S23 Base & Plus
     # Logic Width: 360px (Samsung strictly adheres to 360dp for non-Ultra usually, though newer Plus models creep up)
     # Covered by "Android_Std_360w" generally, but listed for clarity
-    ("Samsung_S_Base_360w", 360, 800),
-    
+    {"name": "Samsung_S_Base_360w", "width": 360, "height": 800, "year": 2020},
+
     # 3.3. Samsung Galaxy Z Fold 4/5/6 (Outer Screen - Narrow)
     # 904x2316 physical -> Logic ~344px to 400px depending on model
     # Fold 4/5 are notoriously narrow: ~344px or 320px in older models
-    ("Samsung_Fold_Outer_344w", 344, 900),
-    
+    {"name": "Samsung_Fold_Outer_344w", "width": 344, "height": 900, "year": 2022},
+
     # 3.4. Samsung Galaxy Z Fold 4/5/6 (Inner Screen - Boxy)
-    ("Samsung_Fold_Inner_900w", 900, 1080),
+    {"name": "Samsung_Fold_Inner_900w", "width": 900, "height": 1080, "year": 2022},
 
     # =========================================================================
     # 4. Xiaomi, Oppo, Vivo, Google Pixel
     # =========================================================================
     # 4.1. Xiaomi 13/14, Pixel 7/8, Oppo Find X6/X7
     # Modern Android Flagship Standard: 393px (Matches iPhone Pro width)
-    ("Android_Flagship_Modern_393w", 393, 851),
-    
+    {"name": "Android_Flagship_Modern_393w", "width": 393, "height": 851, "year": 2022},
+
     # 4.2. Oppo Find N2/N3 (Foldable Outer - Wide)
     # Oppo's foldable outer screen is wider/shorter than Samsung's
     # Logic: ~410px - 430px
-    ("Oppo_Find_N_Outer_412w", 412, 800),
+    {"name": "Oppo_Find_N_Outer_412w", "width": 412, "height": 800, "year": 2022},
 
     # 4.3. Generic Budget/Mid-Range Android (Redmi Note, Galaxy A, Honor X)
     # The absolute most common viewport on the web for Android
-    ("Android_Universal_360w", 360, 800),
+    {"name": "Android_Universal_360w", "width": 360, "height": 800, "year": 2016},
 
     # =========================================================================
     # 5. Tablets (Apple & Android)
     # =========================================================================
     # 5.1. iPad Mini 6 / 8.3" (New Aspect)
-    ("iPad_Mini_New_744w", 744, 1133),
-    
+    {"name": "iPad_Mini_New_744w", "width": 744, "height": 1133, "year": 2021},
+
     # 5.2. iPad Standard 10.2" / Legacy 9.7" (4:3)
-    ("iPad_Classic_768w", 768, 1024),
-    
+    {"name": "iPad_Classic_768w", "width": 768, "height": 1024, "year": 2010},
+
     # 5.3. iPad Air/Pro 11" (Modern Standard)
-    ("iPad_Air_Pro_820w", 820, 1180),
-    
+    {"name": "iPad_Air_Pro_820w", "width": 820, "height": 1180, "year": 2018},
+
     # 5.4. iPad Pro 12.9" (Legacy Large)
-    ("iPad_Pro_Large_1024w", 1024, 1366),
-    
+    {"name": "iPad_Pro_Large_1024w", "width": 1024, "height": 1366, "year": 2015},
+
     # 5.5. iPad Pro 13" M4 (2024 Ultimate)
-    ("iPad_Pro_M4_1032w", 1032, 1376),
-    
+    {"name": "iPad_Pro_M4_1032w", "width": 1032, "height": 1376, "year": 2024},
+
     # 5.6. Android Tablet Standard (11" 16:10) - Huawei MatePad, Samsung Tab S
-    ("Android_Tab_11_800w", 800, 1280),
-    
+    {"name": "Android_Tab_11_800w", "width": 800, "height": 1280, "year": 2020},
+
     # 5.7. Android Tablet Large (12.4"+) - Samsung Tab S8+/Ultra
     # Logic often scales to ~900-1000px width
-    ("Android_Tab_Large_960w", 960, 1440),
+    {"name": "Android_Tab_Large_960w", "width": 960, "height": 1440, "year": 2022},
 ]
 
 # 构建最终测试列表
 DEVICES = []
 
+# 年份阈值：默认只处理2015年以后的设备
+YEAR_THRESHOLD = 2015
+
 # 添加 PC
 for pc in PC_DEVICES:
+    # 如果未启用 --all-devices，则过滤掉2015年以前的设备
+    if not args.all_devices and pc.get("year", 2020) < YEAR_THRESHOLD:
+        continue
+
     DEVICES.append({
         "name": pc["name"],
         "width": pc["width"],
         "height": pc["height"],
         "is_mobile": False,
-        "has_touch": False
+        "has_touch": False,
+        "year": pc.get("year", 2020)
     })
 
 # 添加移动设备 (自动生成横竖屏)
-for name, w, h in MOBILE_DEVICE_SPECS:
+for mobile in MOBILE_DEVICE_SPECS:
+    # 如果未启用 --all-devices，则过滤掉2015年以前的设备
+    if not args.all_devices and mobile.get("year", 2020) < YEAR_THRESHOLD:
+        continue
+
+    name = mobile["name"]
+    w = mobile["width"]
+    h = mobile["height"]
+    year = mobile.get("year", 2020)
+
     # 竖屏 (Portrait)
     DEVICES.append({
         "name": f"{name}_Portrait",
         "width": w,
         "height": h,
         "is_mobile": True,
-        "has_touch": True
+        "has_touch": True,
+        "year": year
     })
     # 横屏 (Landscape) - 宽高互换
     DEVICES.append({
@@ -312,7 +338,8 @@ for name, w, h in MOBILE_DEVICE_SPECS:
         "width": h,
         "height": w,
         "is_mobile": True,
-        "has_touch": True
+        "has_touch": True,
+        "year": year
     })
 
 OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "screenshots")
@@ -408,6 +435,8 @@ async def capture_screenshots():
     print(f"📅 时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print(f"🔗 目标页面数: {len(TARGET_URLS)}")
     print(f"📱 模拟设备数: {len(DEVICES)}")
+    print(f"📅 设备筛选: {'所有机型' if args.all_devices else '2015年以后的机型'}")
+    print(f"📸 截图模式: {'View + Full Page' if args.full_page else 'View 视图'}")
     if args.url:
         print(f"📌 模式: 自定义 URL 测试")
     else:
@@ -419,7 +448,7 @@ async def capture_screenshots():
 
         for device_conf in DEVICES:
             print(f"\n📱 正在模拟设备: {device_conf['name']} ({device_conf['width']}x{device_conf['height']})")
-            
+
             # 创建上下文，配置视口
             # 显式设置 screen 尺寸，增强横屏模拟效果
             context = await browser.new_context(
@@ -436,15 +465,15 @@ async def capture_screenshots():
             for target in TARGET_URLS:
                 url = target["url"]
                 page_name = target["name"]
-                
+
                 print(f"  📸 正在截图: {page_name} ...", end="", flush=True)
-                
+
                 try:
                     # 延长超时时间到 60秒，避免高清大图加载超时
                     await page.goto(url, wait_until="networkidle", timeout=60000)
                     await page.wait_for_timeout(300)
                     search_info = await try_fill_search_input(page, "三殊胜")
-                    
+
                     # 创建页面专属文件夹
                     page_dir = os.path.join(OUTPUT_DIR, page_name)
                     if not os.path.exists(page_dir):
@@ -454,12 +483,13 @@ async def capture_screenshots():
                     viewport_filename = f"{device_conf['name']}_View_{device_conf['width']}x{device_conf['height']}.png"
                     viewport_filepath = os.path.join(page_dir, viewport_filename)
                     await page.screenshot(path=viewport_filepath, full_page=False)
-                    
-                    # 2. 截取全长图 (Full Page)
-                    full_filename = f"{device_conf['name']}_Full_{device_conf['width']}x{device_conf['height']}.png"
-                    full_filepath = os.path.join(page_dir, full_filename)
-                    await page.screenshot(path=full_filepath, full_page=True)
-                    
+
+                    # 2. 截取全长图 (Full Page) - 仅在启用 --full-page 时执行
+                    if args.full_page:
+                        full_filename = f"{device_conf['name']}_Full_{device_conf['width']}x{device_conf['height']}.png"
+                        full_filepath = os.path.join(page_dir, full_filename)
+                        await page.screenshot(path=full_filepath, full_page=True)
+
                     # 获取实际视口宽度用于验证
                     actual_width = await page.evaluate("window.innerWidth")
                     if search_info:
@@ -469,7 +499,7 @@ async def capture_screenshots():
                         )
                     else:
                         print(f" ✅ [w:{actual_width}px] [search:not_found] -> {page_name}/{viewport_filename}")
-                    
+
                 except Exception as e:
                     print(f" ❌ 失败: {e}")
 

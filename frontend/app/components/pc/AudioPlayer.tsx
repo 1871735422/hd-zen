@@ -1,5 +1,5 @@
 'use client';
-import { useDeviceType } from '@/app/utils/deviceUtils';
+import { useDevice } from '@/app/components/DeviceProvider';
 import { trackAudioPlay } from '@/app/utils/clarityAnalytics';
 import {
   pauseOtherMediaPlayers,
@@ -175,7 +175,8 @@ export default function AudioPlayer({
       setIsMuted(false);
     }
   };
-  const isMobile = useDeviceType() === 'mobile';
+  const { deviceType } = useDevice();
+  const isMobile = deviceType === 'mobile';
 
   return (
     <Box

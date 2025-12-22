@@ -1,6 +1,6 @@
 'use client';
 import { MAIN_BLUE_COLOR } from '@/app/constants/colors';
-import { useDeviceType } from '@/app/utils/deviceUtils';
+import { useDevice } from '@/app/components/DeviceProvider';
 import { pxToVw } from '@/app/utils/mobileUtils';
 import {
   Button,
@@ -53,7 +53,7 @@ export default function ReadingSidebar({
   const [mode, setMode] = useState<'paged' | 'full'>(defaultMode);
   const router = useRouter();
   const searchParams = useSearchParams();
-  const deviceType = useDeviceType();
+  const { deviceType } = useDevice();
   const isMobile = deviceType === 'mobile';
   const defaultBg = 'rgba(237, 246, 252, 1)';
   const activeBg = 'rgba(130, 178, 232, 1)';

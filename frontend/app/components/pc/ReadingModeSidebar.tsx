@@ -4,7 +4,7 @@ import {
   READING_THEMES as PC_READING_THEMES,
   ReadingTheme,
 } from '@/app/constants/colors';
-import { useDeviceType } from '@/app/utils/deviceUtils';
+import { useDevice } from '@/app/components/DeviceProvider';
 import { pxToVw } from '@/app/utils/mobileUtils';
 import { Box, Button, Drawer, IconButton, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -104,7 +104,8 @@ export default function ReadingModeSidebar({
     toggleSidebar,
     toggleFontWeight,
   } = useReadingMode();
-  const isMobile = useDeviceType() === 'mobile';
+  const { deviceType } = useDevice();
+  const isMobile = deviceType === 'mobile';
 
   const READING_THEMES = isMobile ? MOBILE_READING_THEMES : PC_READING_THEMES;
   const currentTheme = READING_THEMES[state.backgroundTheme];

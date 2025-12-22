@@ -1,5 +1,5 @@
 'use client';
-import { useDeviceType } from '@/app/utils/deviceUtils';
+import { useDevice } from '@/app/components/DeviceProvider';
 import { trackArticleRead } from '@/app/utils/clarityAnalytics';
 import { highlightAllKeywords } from '@/app/utils/highlight';
 import { Box, Stack } from '@mui/material';
@@ -29,7 +29,8 @@ export default function ReadingContent({
   articleTitle,
 }: ReadingContentProps) {
   const { state } = useReadingMode();
-  const isMobile = useDeviceType() === 'mobile';
+  const { deviceType } = useDevice();
+  const isMobile = deviceType === 'mobile';
   const [currentPage, setCurrentPage] = useState(1);
   const [mode, setMode] = useState<'paged' | 'full'>('full'); // 默认全文模式
   const [isClient, setIsClient] = useState(false);

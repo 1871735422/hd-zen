@@ -68,22 +68,43 @@ export async function getDeviceTypeFromHeaders(): Promise<
     const userAgent = headersList.get('user-agent') || '';
     const isMobileFromUA = userAgent ? isMobileUserAgent(userAgent) : null;
 
-    // 3. 读取视口宽度（Client Hints），对 CH/UA 误判的移动端做兜底
+    // 3. 读取视口宽度和高度（Client Hints），计算有效宽度（与客户端逻辑一致）
     const viewportWidth = await getViewportWidth();
-    const isNarrowViewport =
-      typeof viewportWidth === 'number' && viewportWidth < 960;
+    const viewportHeight = await getViewportHeight();
+
+    // 计算有效宽度：移动端横屏时使用较短边，否则使用宽度
+    // 与客户端逻辑完全一致
+    let effectiveWidth: number | null = null;
+    if (
+      typeof viewportWidth === 'number' &&
+      typeof viewportHeight === 'number'
+    ) {
+      const isLandscape = viewportWidth > viewportHeight;
+      effectiveWidth =
+        isMobileFromUA === true && isLandscape
+          ? Math.min(viewportWidth, viewportHeight)
+          : viewportWidth;
+    } else if (typeof viewportWidth === 'number') {
+      // 如果无法获取高度，回退到只使用宽度
+      effectiveWidth = viewportWidth;
+    }
+
+    // 断点：<= 960px 视为移动端（包含 960px 的平板设备）
+    const isNarrowViewport = effectiveWidth !== null && effectiveWidth <= 960;
 
     // 如果 Client Hints 明确标记为移动端，直接返回
     if (isMobileHint === true) {
       return 'mobile';
     }
 
-    // 视口宽度很窄时，优先认为是移动端（与客户端断点保持一致）
-    if (isNarrowViewport && isMobileFromUA === true) {
+    // 核心判断逻辑：与客户端完全一致
+    // 需要同时满足：移动 UA + 窄视口（有效宽度 <= 960px）
+    if (isMobileFromUA === true && isNarrowViewport) {
       return 'mobile';
     }
 
     // 如果 Client Hints 标记为桌面，但 UA 判断为移动端，取移动端（更保守，避免误判成桌面）
+    // 注意：这里不检查视口宽度，因为 Client Hints 可能更准确
     if (isMobileHint === false && isMobileFromUA === true) {
       return 'mobile';
     }
@@ -93,12 +114,12 @@ export async function getDeviceTypeFromHeaders(): Promise<
       return 'desktop';
     }
 
-    // Client Hints 不可用时，回退到 UA 判断
+    // Client Hints 不可用时，回退到 UA 判断（不检查视口，因为可能无法获取）
     if (isMobileFromUA !== null) {
       return isMobileFromUA ? 'mobile' : 'desktop';
     }
 
-    // 3. 如果 headers 完全不可用（如热更新），返回默认值
+    // 如果 headers 完全不可用（如热更新），返回默认值
     // 客户端 DeviceProvider 会在水合后校正
     if (process.env.NODE_ENV === 'development') {
       console.warn(
@@ -133,6 +154,28 @@ export async function getViewportWidth(): Promise<number | null> {
     return null;
   } catch (error) {
     console.error('Failed to get viewport width:', error);
+    return null;
+  }
+}
+
+/**
+ * 获取视口高度（从 Client Hints）
+ * 用于判断横屏情况，计算有效宽度
+ */
+export async function getViewportHeight(): Promise<number | null> {
+  try {
+    const { headers } = await import('next/headers');
+    const headersList = await headers();
+    const viewportHeight = headersList.get('sec-ch-viewport-height');
+
+    if (viewportHeight) {
+      const height = parseInt(viewportHeight, 10);
+      return isNaN(height) ? null : height;
+    }
+
+    return null;
+  } catch (error) {
+    console.error('Failed to get viewport height:', error);
     return null;
   }
 }
