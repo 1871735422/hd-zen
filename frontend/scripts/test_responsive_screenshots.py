@@ -21,6 +21,8 @@ parser = argparse.ArgumentParser(description='Responsive Screenshots Tool')
 parser.add_argument('-url', type=str, help='自定义测试 URL，多个 URL 用分号 ; 分隔 (例如: "google.com;bing.com")')
 parser.add_argument('--all-devices', action='store_true', help='测试所有机型（包括2015年以前的旧设备）')
 parser.add_argument('--full-page', action='store_true', help='同时测试 Full Page 视图（默认只测试 View 视图）')
+parser.add_argument('--device-type', type=str, choices=['mobile', 'tablet', 'pc', 'all'], default='all',
+                    help='只测试指定类型的设备: mobile(手机), tablet(平板), pc(桌面), all(全部，默认)')
 args, unknown = parser.parse_known_args()
 
 # 生成目标 URL 列表
@@ -297,50 +299,95 @@ DEVICES = []
 # 年份阈值：默认只处理2015年以后的设备
 YEAR_THRESHOLD = 2015
 
-# 添加 PC
-for pc in PC_DEVICES:
-    # 如果未启用 --all-devices，则过滤掉2015年以前的设备
-    if not args.all_devices and pc.get("year", 2020) < YEAR_THRESHOLD:
-        continue
+# 判断是否为平板设备（根据设备名称或宽度）
+def is_tablet_device(device_name: str, portrait_width: int) -> bool:
+    """判断设备是否为平板（基于竖屏宽度）"""
+    tablet_keywords = ['iPad', 'Tab', 'Tablet', 'MatePad']
+    # 检查设备名称中是否包含平板关键词
+    if any(keyword in device_name for keyword in tablet_keywords):
+        return True
+    # 根据宽度判断：>= 600px 且 <= 1024px 的移动设备通常是平板
+    # 手机通常 < 500px（竖屏宽度）
+    if 600 <= portrait_width <= 1024:
+        return True
+    return False
 
-    DEVICES.append({
-        "name": pc["name"],
-        "width": pc["width"],
-        "height": pc["height"],
-        "is_mobile": False,
-        "has_touch": False,
-        "year": pc.get("year", 2020)
-    })
+# 判断是否为手机设备
+def is_phone_device(device_name: str, portrait_width: int) -> bool:
+    """判断设备是否为手机（基于竖屏宽度）"""
+    # 如果宽度 < 600px，通常是手机
+    if portrait_width < 600:
+        return True
+    # 检查设备名称中是否包含手机关键词
+    phone_keywords = ['iPhone', 'Galaxy_S', 'Huawei_Mate_Pro', 'Huawei_Honor_Std',
+                      'Samsung_Ultra', 'Samsung_S_Base', 'Samsung_Fold_Outer',
+                      'Android_Flagship', 'Oppo_Find_N_Outer', 'Android_Universal']
+    if any(keyword in device_name for keyword in phone_keywords):
+        # 排除平板关键词
+        if not is_tablet_device(device_name, portrait_width):
+            return True
+    return False
+
+# 添加 PC
+if args.device_type in ['pc', 'all']:
+    for pc in PC_DEVICES:
+        # 如果未启用 --all-devices，则过滤掉2015年以前的设备
+        if not args.all_devices and pc.get("year", 2020) < YEAR_THRESHOLD:
+            continue
+
+        DEVICES.append({
+            "name": pc["name"],
+            "width": pc["width"],
+            "height": pc["height"],
+            "is_mobile": False,
+            "has_touch": False,
+            "year": pc.get("year", 2020),
+            "device_type": "pc"
+        })
 
 # 添加移动设备 (自动生成横竖屏)
-for mobile in MOBILE_DEVICE_SPECS:
-    # 如果未启用 --all-devices，则过滤掉2015年以前的设备
-    if not args.all_devices and mobile.get("year", 2020) < YEAR_THRESHOLD:
-        continue
+if args.device_type in ['mobile', 'tablet', 'all']:
+    for mobile in MOBILE_DEVICE_SPECS:
+        # 如果未启用 --all-devices，则过滤掉2015年以前的设备
+        if not args.all_devices and mobile.get("year", 2020) < YEAR_THRESHOLD:
+            continue
 
-    name = mobile["name"]
-    w = mobile["width"]
-    h = mobile["height"]
-    year = mobile.get("year", 2020)
+        name = mobile["name"]
+        w = mobile["width"]  # 竖屏宽度
+        h = mobile["height"]  # 竖屏高度
+        year = mobile.get("year", 2020)
 
-    # 竖屏 (Portrait)
-    DEVICES.append({
-        "name": f"{name}_Portrait",
-        "width": w,
-        "height": h,
-        "is_mobile": True,
-        "has_touch": True,
-        "year": year
-    })
-    # 横屏 (Landscape) - 宽高互换
-    DEVICES.append({
-        "name": f"{name}_Landscape",
-        "width": h,
-        "height": w,
-        "is_mobile": True,
-        "has_touch": True,
-        "year": year
-    })
+        # 判断设备类型（基于竖屏宽度）
+        is_tablet = is_tablet_device(name, w)
+        is_phone = is_phone_device(name, w)
+        device_type = "tablet" if is_tablet else ("phone" if is_phone else "mobile")
+
+        # 根据 --device-type 参数过滤
+        if args.device_type == 'mobile' and not is_phone:
+            continue
+        if args.device_type == 'tablet' and not is_tablet:
+            continue
+
+        # 竖屏 (Portrait)
+        DEVICES.append({
+            "name": f"{name}_Portrait",
+            "width": w,
+            "height": h,
+            "is_mobile": True,
+            "has_touch": True,
+            "year": year,
+            "device_type": device_type
+        })
+        # 横屏 (Landscape) - 宽高互换
+        DEVICES.append({
+            "name": f"{name}_Landscape",
+            "width": h,
+            "height": w,
+            "is_mobile": True,
+            "has_touch": True,
+            "year": year,
+            "device_type": device_type
+        })
 
 # 去重：合并相同宽高的设备（保留第一个设备名称）
 seen_devices = {}
@@ -463,11 +510,21 @@ async def capture_screenshots():
         os.makedirs(OUTPUT_DIR)
         print(f"📁 创建截图目录: {OUTPUT_DIR}")
 
+    # 统计设备类型
+    device_type_counts = {}
+    for device in DEVICES:
+        device_type = device.get("device_type", "unknown")
+        device_type_counts[device_type] = device_type_counts.get(device_type, 0) + 1
+
     print(f"🚀 开始响应式截图测试...")
     print(f"📅 时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print(f"🔗 目标页面数: {len(TARGET_URLS)}")
     print(f"📱 模拟设备数: {len(DEVICES)}")
+    if device_type_counts:
+        type_info = ", ".join([f"{k}: {v}" for k, v in device_type_counts.items()])
+        print(f"📊 设备类型分布: {type_info}")
     print(f"📅 设备筛选: {'所有机型' if args.all_devices else '2015年以后的机型'}")
+    print(f"🎯 设备类型过滤: {args.device_type}")
     print(f"📸 截图模式: {'View + Full Page' if args.full_page else 'View 视图'}")
     if args.url:
         print(f"📌 模式: 自定义 URL 测试")

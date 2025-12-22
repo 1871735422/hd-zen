@@ -89,33 +89,43 @@ export async function getDeviceTypeFromHeaders(): Promise<
       effectiveWidth = viewportWidth;
     }
 
-    // 断点：<= 1024px 视为移动端（包含 iPad Pro 1024px 等平板设备）
-    const isNarrowViewport = effectiveWidth !== null && effectiveWidth <= 1024;
+    // 断点：<= 960px 视为移动端（iPad Pro 1024px 等大屏平板视为 PC 端）
+    const isNarrowViewport = effectiveWidth !== null && effectiveWidth <= 960;
 
     // 核心判断逻辑：与客户端完全一致
-    // 需要同时满足：移动 UA + 窄视口（有效宽度 <= 1024px）
     // 优先使用有效宽度判断，确保与服务端和客户端逻辑一致
+    // 需要同时满足：移动 UA + 窄视口（有效宽度 <= 960px）
     if (isMobileFromUA === true && isNarrowViewport) {
       return 'mobile';
     }
 
-    // 如果 Client Hints 明确标记为移动端，且 UA 也是移动端，返回移动端
-    // 但如果没有有效宽度信息，则依赖 Client Hints
+    // 如果有效宽度信息可用，优先使用有效宽度判断（即使 Client Hints 有不同标记）
+    // 这样可以确保与客户端逻辑完全一致
+    if (effectiveWidth !== null) {
+      // 有效宽度 > 960px，视为桌面端
+      if (effectiveWidth > 960) {
+        return 'desktop';
+      }
+      // 有效宽度 <= 960px 但 UA 不是移动端，视为桌面端
+      if (isMobileFromUA === false) {
+        return 'desktop';
+      }
+      // 有效宽度 <= 960px 且 UA 是移动端，视为移动端
+      if (isMobileFromUA === true) {
+        return 'mobile';
+      }
+    }
+
+    // 如果有效宽度信息不可用，回退到 Client Hints + UA 判断
     if (isMobileHint === true && isMobileFromUA === true) {
       return 'mobile';
     }
 
-    // 如果 Client Hints 标记为桌面，但 UA 判断为移动端且有效宽度很窄，取移动端（更保守）
-    if (isMobileHint === false && isMobileFromUA === true && isNarrowViewport) {
-      return 'mobile';
-    }
-
-    // Client Hints 明确标记桌面且 UA 也非移动，则返回桌面
-    if (isMobileHint === false) {
+    if (isMobileHint === false && isMobileFromUA === false) {
       return 'desktop';
     }
 
-    // Client Hints 不可用时，回退到 UA 判断（不检查视口，因为可能无法获取）
+    // Client Hints 不可用时，回退到 UA 判断
     if (isMobileFromUA !== null) {
       return isMobileFromUA ? 'mobile' : 'desktop';
     }
