@@ -1,21 +1,18 @@
-import { SvgIcon, SxProps } from '@mui/material';
+import { SvgIcon } from '@mui/material';
 
-const CharIcon = ({ sx }: { sx?: SxProps }) => (
+const CharIcon = () => (
   <SvgIcon
     sx={{
-      width: 18,
-      height: 18,
-      cursor: 'pointer',
-      ...sx,
+      fontSize: '0.85em',
     }}
   >
     <svg
       xmlns='http://www.w3.org/2000/svg'
       xmlnsXlink='http://www.w3.org/1999/xlink'
-      width='19.99005126953125'
-      height='20'
       viewBox='0 0 19.99005126953125 20'
-      fill='none'
+      fill='currentColor'
+      width={'1em'}
+      height={'1em'}
     >
       <defs>
         <linearGradient id='char_icon_g' x1='0' y1='0' x2='1' y2='1'>

@@ -1,16 +1,10 @@
-import { SvgIcon, SxProps } from '@mui/material';
+import { SvgIcon } from '@mui/material';
 
-const HeadphoneIcon = ({ sx }: { sx?: SxProps }) => (
-  <SvgIcon
-    sx={{
-      cursor: 'pointer',
-      ...sx,
-    }}
-  >
+const HeadphoneIcon = () => (
+  <SvgIcon>
     <svg
       xmlns='http://www.w3.org/2000/svg'
       xmlnsXlink='http://www.w3.org/1999/xlink'
-      width='31.25128173828125'
       viewBox='0 0 31.25128173828125 30'
       fill='currentColor'
     >

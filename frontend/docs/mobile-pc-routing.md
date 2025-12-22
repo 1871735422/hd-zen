@@ -32,7 +32,6 @@ app/components/
 │   ├── Header.tsx
 │   ├── Footer.tsx
 │   ├── Home.tsx
-│   ├── MobileNavigationDrawer.tsx
 │   └── MobileSearchButton.tsx
 │
 └── shared/          # 共享组件（PC 和移动端共用）

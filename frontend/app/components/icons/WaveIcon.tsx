@@ -1,19 +1,12 @@
-import { SvgIcon, SxProps } from '@mui/material';
+import { SvgIcon } from '@mui/material';
 
-const WaveIcon = ({ sx }: { sx?: SxProps }) => (
-  <SvgIcon
-    sx={{
-      width: 24,
-      height: 24,
-      cursor: 'pointer',
-      ...sx,
-    }}
-  >
+const WaveIcon = () => (
+  <SvgIcon>
     <svg
       xmlns='http://www.w3.org/2000/svg'
       xmlnsXlink='http://www.w3.org/1999/xlink'
-      width='26'
-      height='26'
+      width='1em'
+      height='1em'
       viewBox='0 0 26 26'
       fill='none'
     >
