@@ -1,6 +1,7 @@
 'use client';
 // SearchInfoCard.tsx
 import { highlightKeywords } from '@/app/utils/highlight';
+import { mobileSizes, pxToVw } from '@/app/utils/mobileUtils';
 import {
   Box,
   Link as MuiLink,
@@ -9,6 +10,7 @@ import {
   Typography,
 } from '@mui/material';
 import React, { useState } from 'react';
+import { useDevice } from '../DeviceProvider';
 import BookExpandIcon from '../icons/BookExpandIcon';
 import BookIcon from '../icons/BookIcon';
 import FoldResultIcon from '../icons/FoldResultIcon';
@@ -39,33 +41,35 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
   style,
 }) => {
   const [expanded, setExpanded] = useState(false);
+  const { deviceType } = useDevice();
+  const isMobile = deviceType === 'mobile';
 
   return (
     <Box
       style={style}
       sx={{
         width: '100%',
-        borderRadius: 2,
+        borderRadius: isMobile ? mobileSizes.borderRadius.md : 2,
         boxShadow: 0,
-        pt: 2,
+        pt: isMobile ? mobileSizes.spacing.md : 2,
       }}
     >
       <Stack
         direction='row'
         alignItems='center'
         sx={{
-          mb: '-16px !important',
+          mb: isMobile ? pxToVw(-16) : '-16px !important',
         }}
       >
         {typeof index === 'number' && (
           <Box
             sx={{
-              minWidth: { lg: 18, xl: 22, xxl: 26 },
+              minWidth: isMobile ? pxToVw(18) : { lg: 18, xl: 22, xxl: 26 },
               aspectRatio: '1 / 1',
               borderRadius: '50%',
               bgcolor: 'rgba(86, 137, 204, 1)',
               color: '#fff',
-              fontSize: { lg: 12, xl: 16, xxl: 18 },
+              fontSize: isMobile ? pxToVw(12) : { lg: 12, xl: 16, xxl: 18 },
               fontWeight: 500,
               display: 'flex',
               alignItems: 'center',
@@ -79,10 +83,12 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
         <Typography
           variant='h6'
           sx={{
-            fontSize: { lg: 13, xl: 18, xxl: 20 },
+            fontSize: isMobile
+              ? mobileSizes.fontSize.lg
+              : { lg: 13, xl: 18, xxl: 20 },
             fontWeight: 500,
             color: 'rgba(86, 137, 204, 1)',
-            ml: '8px !important',
+            ml: isMobile ? mobileSizes.spacing.sm : '8px !important',
             flex: 1,
           }}
           dangerouslySetInnerHTML={{
@@ -96,9 +102,11 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
           sx={{
             color: 'rgba(194, 194, 194, 1)',
             cursor: 'default',
-            fontSize: { lg: 13, xl: 16, xxl: 18 },
-            lineHeight: '27px',
-            gap: 0.5,
+            fontSize: isMobile
+              ? mobileSizes.fontSize.sm
+              : { lg: 13, xl: 16, xxl: 18 },
+            lineHeight: isMobile ? 1.5 : '27px',
+            gap: isMobile ? mobileSizes.spacing.xs : 0.5,
           }}
         >
           {type === '文章' ? <BookIcon /> : <VideoCamIcon />}
@@ -109,9 +117,11 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
       <Box
         sx={{
           position: 'relative',
-          mt: 1.25,
+          mt: isMobile ? mobileSizes.spacing.md : 1.25,
           color: 'text.secondary',
-          fontSize: { lg: 13, xlg: 14, xl: 16, xxl: 16 },
+          fontSize: isMobile
+            ? mobileSizes.fontSize.base
+            : { lg: 13, xlg: 14, xl: 16, xxl: 16 },
           lineHeight: 1.7,
           overflow: 'hidden',
           ...(expanded
@@ -124,7 +134,7 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
                 WebkitLineClamp: 5, // 显示5行完整内容
               }),
           transition: 'max-height 220ms ease',
-          pr: 0.5,
+          pr: isMobile ? mobileSizes.spacing.xs : 0.5,
         }}
       >
         <Box
@@ -152,11 +162,23 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
             display: 'flex',
             flexDirection: 'column',
             color: 'rgba(84, 161, 209, 1)',
-            mt: 0.5,
-            mb: type === '文章' ? (expanded ? 0 : -2) : 1,
+            fontSize: isMobile ? pxToVw(14) : 14,
+            mt: isMobile ? pxToVw(14) : 0.5,
+            mb:
+              type === '文章'
+                ? expanded
+                  ? 0
+                  : isMobile
+                    ? pxToVw(-16)
+                    : -2
+                : isMobile
+                  ? pxToVw(16)
+                  : 1,
           }}
         >
-          {type === '文章' && <FoldResultIcon expanded={expanded} />}
+          {type === '文章' && (
+            <FoldResultIcon isMobile={isMobile} expanded={expanded} />
+          )}
         </Stack>
         <Stack
           direction='row'
@@ -170,7 +192,9 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
           {from && (
             <Typography
               variant='body2'
-              fontSize={{ lg: 10, xl: 14, xxl: 16 }}
+              fontSize={
+                isMobile ? mobileSizes.fontSize.xs : { lg: 10, xl: 14, xxl: 16 }
+              }
               sx={{ color: 'rgba(194, 194, 194, 1)' }}
             >
               来源：{from}
@@ -189,15 +213,15 @@ export const SearchInfoCard: React.FC<SearchInfoCardProps> = ({
                   color: 'rgba(130, 178, 232, 1)',
                   '& svg': {
                     color: 'rgba(178, 207, 202, 1)',
-                    fontSize: 16,
+                    fontSize: isMobile ? mobileSizes.fontSize.sm : 16,
                   },
                 }}
               >
                 {type === '文章' ? <BookExpandIcon /> : <PlayMediaIcon />}
                 <Typography
                   sx={{
-                    ml: 0.5,
-                    fontSize: 14,
+                    ml: isMobile ? mobileSizes.spacing.xs : 0.5,
+                    fontSize: isMobile ? mobileSizes.fontSize.sm : 14,
                     color: 'rgba(130, 178, 232, 1)',
                   }}
                 >

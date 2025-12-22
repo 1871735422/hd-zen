@@ -98,6 +98,7 @@ const Header: React.FC = () => {
               onClick={() => router.push('/search')}
               sx={{
                 color: 'rgba(86, 137, 204, 1)',
+                fontSize: pxToVw(19),
                 p: 0,
               }}
               aria-label='搜索'

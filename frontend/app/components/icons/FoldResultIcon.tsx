@@ -1,10 +1,15 @@
 import { Box, SvgIcon } from '@mui/material';
+import { pxToVw } from '../../utils/mobileUtils';
 
 interface FoldResultIconProps {
+  isMobile?: boolean;
   expanded?: boolean;
 }
 
-const FoldResultIcon = ({ expanded = false }: FoldResultIconProps) => (
+const FoldResultIcon = ({
+  expanded = false,
+  isMobile = false,
+}: FoldResultIconProps) => (
   <Box
     sx={{
       display: 'flex',
@@ -18,7 +23,7 @@ const FoldResultIcon = ({ expanded = false }: FoldResultIconProps) => (
         top: expanded ? '70%' : 0,
         left: '50%',
         transform: 'translateX(-50%)',
-        fontSize: { lg: 12, xl: 14 },
+        fontSize: isMobile ? pxToVw(12) : { lg: 12, xl: 14 },
         color: 'rgba(84, 161, 209, 1)',
         fontWeight: 500,
         whiteSpace: 'nowrap',
@@ -28,7 +33,7 @@ const FoldResultIcon = ({ expanded = false }: FoldResultIconProps) => (
   >
     <SvgIcon
       sx={{
-        fontSize: 52,
+        fontSize: isMobile ? pxToVw(52) : 52,
         transform: expanded ? 'rotateX(180deg)' : 'rotateX(0deg)',
         transition: 'transform 200ms ease',
       }}

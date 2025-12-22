@@ -106,6 +106,10 @@ export default function AppBreadcrumbs({
               },
             }
           : {}),
+        fontSize: isMobile ? pxToVw(13) : { lg: 13, xl: 16, xxl: 18 },
+        '& .MuiBreadcrumbs-li>a': {
+          fontSize: isMobile ? pxToVw(13) : { lg: 13, xl: 16, xxl: 18 },
+        },
       }}
     >
       {finalItems.map((item, index) => (
@@ -116,7 +120,6 @@ export default function AppBreadcrumbs({
           href={item.href || ''}
           underline='hover'
           color='inherit'
-          fontSize={isMobile ? pxToVw(13) : { lg: 13, xl: 16, xxl: 18 }}
         >
           {item.label}
         </Link>

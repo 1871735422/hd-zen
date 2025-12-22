@@ -462,7 +462,7 @@ const SearchPage = ({ isMobile }: { isMobile: boolean }) => {
               justifyContent: 'space-between',
               alignItems: 'center',
               color: HELPER_TEXT_COLOR,
-              fontSize: 12,
+              fontSize: isMobile ? pxToVw(12) : 12,
               px: 1,
             }}
           >
