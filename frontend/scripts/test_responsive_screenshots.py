@@ -552,6 +552,17 @@ async def capture_screenshots():
 
             page = await context.new_page()
 
+            # 禁用浏览器缓存：使用路由拦截修改响应头，确保每次截图都是最新内容
+            # 这样可以避免浏览器缓存导致截图显示旧内容
+            async def disable_cache_route(route):
+                response = await route.fetch()
+                headers = dict(response.headers)
+                headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+                headers["Pragma"] = "no-cache"
+                headers["Expires"] = "0"
+                await route.fulfill(response=response, headers=headers)
+            await context.route("**/*", disable_cache_route)
+
             for target in TARGET_URLS:
                 url = target["url"]
                 page_name = target["name"]
