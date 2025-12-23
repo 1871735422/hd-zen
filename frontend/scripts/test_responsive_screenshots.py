@@ -21,8 +21,14 @@ parser = argparse.ArgumentParser(description='Responsive Screenshots Tool')
 parser.add_argument('-url', type=str, help='自定义测试 URL，多个 URL 用分号 ; 分隔 (例如: "google.com;bing.com")')
 parser.add_argument('--all-devices', action='store_true', help='测试所有机型（包括2015年以前的旧设备）')
 parser.add_argument('--full-page', action='store_true', help='同时测试 Full Page 视图（默认只测试 View 视图）')
-parser.add_argument('--device-type', type=str, choices=['mobile', 'tablet', 'pc', 'all'], default='all',
-                    help='只测试指定类型的设备: mobile(手机), tablet(平板), pc(桌面), all(全部，默认)')
+parser.add_argument('--DT', '--device-type', type=str, choices=['mobile', 'tablet', 'pc', 'all'], default='all',
+                    dest='device_type', help='只测试指定类型的设备: mobile(手机), tablet(平板), pc(桌面), all(全部，默认)')
+parser.add_argument('--skip-existing', action='store_true',
+                    help='跳过已存在的截图文件，实现断点续传（默认：重新生成所有截图）')
+parser.add_argument('--cache-max-age', type=int, default=300,
+                    help='HTML 文档缓存时间（秒），默认 300 秒（5分钟）。设置为 0 禁用缓存')
+parser.add_argument('--parallel', type=int, default=8,
+                    help='并行处理的设备数量，默认 3。增加此值可提高速度，但会消耗更多内存和 CPU')
 args, unknown = parser.parse_known_args()
 
 # 生成目标 URL 列表
@@ -497,6 +503,126 @@ async def try_fill_search_input(page, text: str):
 
     return None
 
+async def process_device(browser, device_conf, index, total_devices, semaphore):
+    """处理单个设备的截图任务"""
+    async with semaphore:  # 控制并发数量
+        print(f"\n📱 正在模拟设备 [{index}/{total_devices}]: {device_conf['name']} ({device_conf['width']}x{device_conf['height']})")
+
+        # 创建上下文，配置视口
+        # 显式设置 screen 尺寸，增强横屏模拟效果
+        context = await browser.new_context(
+            viewport={"width": device_conf["width"], "height": device_conf["height"]},
+            screen={"width": device_conf["width"], "height": device_conf["height"]},
+            is_mobile=device_conf["is_mobile"],
+            has_touch=device_conf["has_touch"],
+            device_scale_factor=2 if device_conf["is_mobile"] else 1, # 提升移动端截图清晰度
+            user_agent="Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15E148 Safari/604.1" if device_conf["is_mobile"] else None
+        )
+
+        page = None
+        try:
+            page = await context.new_page()
+
+            # 设置合理的缓存策略：为 HTML 文档设置短期缓存
+            # 这样既能确保内容相对新鲜，又能在同一脚本运行期间让不同设备共享缓存，提高速度
+            # 注意：只对 HTML 文档拦截并设置缓存，其他资源（JS/CSS/图片）直接使用服务器缓存策略
+            cache_max_age = args.cache_max_age
+            if cache_max_age > 0:
+                async def set_cache_policy(route):
+                    if route.request.resource_type == "document":
+                        # 对 HTML 文档设置缓存时间
+                        # 这样可以确保在脚本运行期间（通常几分钟内）不同设备可以共享缓存
+                        response = await route.fetch()
+                        headers = dict(response.headers)
+                        headers["Cache-Control"] = f"public, max-age={cache_max_age}"
+                        await route.fulfill(response=response, headers=headers)
+                    else:
+                        # 其他资源（JS/CSS/图片等）直接继续，不拦截
+                        # 这些资源通常服务器已经设置了合理的缓存策略（如长期缓存），直接使用即可
+                        await route.continue_()
+
+                await context.route("**/*", set_cache_policy)
+
+            for target in TARGET_URLS:
+                url = target["url"]
+                page_name = target["name"]
+
+                # 创建页面专属文件夹
+                page_dir = os.path.join(OUTPUT_DIR, page_name)
+                if not os.path.exists(page_dir):
+                    os.makedirs(page_dir, exist_ok=True)
+
+                # 检查需要截图的文件
+                viewport_filename = f"{device_conf['name']}_View_{device_conf['width']}x{device_conf['height']}.png"
+                viewport_filepath = os.path.join(page_dir, viewport_filename)
+
+                full_filename = f"{device_conf['name']}_Full_{device_conf['width']}x{device_conf['height']}.png"
+                full_filepath = os.path.join(page_dir, full_filename)
+
+                # 断点续传：检查文件是否已存在
+                skip_viewport = args.skip_existing and os.path.exists(viewport_filepath)
+                skip_full = args.skip_existing and args.full_page and os.path.exists(full_filepath)
+
+                # 如果两个文件都已存在且启用了跳过，则完全跳过这个任务
+                if skip_viewport and (not args.full_page or skip_full):
+                    print(f"  ⏭️  跳过已存在: {page_name} ({viewport_filename})")
+                    continue
+
+                # 构建跳过提示信息
+                skip_info = []
+                if skip_viewport:
+                    skip_info.append("View")
+                if skip_full:
+                    skip_info.append("Full")
+                skip_msg = f" [跳过: {', '.join(skip_info)}]" if skip_info else ""
+
+                print(f"  📸 正在截图: {page_name}{skip_msg} ...", end="", flush=True)
+
+                try:
+                    # 只有在需要生成至少一个截图时才加载页面
+                    if not skip_viewport or (args.full_page and not skip_full):
+                        # 延长超时时间到 60秒，避免高清大图加载超时
+                        await page.goto(url, wait_until="networkidle", timeout=60000)
+                        await page.wait_for_timeout(300)
+
+                    # 1. 截取首屏 (Viewport) - 能直观看到横竖屏区别
+                    if not skip_viewport:
+                        await page.screenshot(path=viewport_filepath, full_page=False)
+
+                    # 2. 截取全长图 (Full Page) - 仅在启用 --full-page 时执行
+                    if args.full_page and not skip_full:
+                        await page.screenshot(path=full_filepath, full_page=True)
+
+                    # 获取实际视口宽度用于验证（如果页面已加载）
+                    if not skip_viewport or (args.full_page and not skip_full):
+                        actual_width = await page.evaluate("window.innerWidth")
+                        print(f" ✅ [w:{actual_width}px] -> {page_name}/{viewport_filename}")
+                    else:
+                        print(f" ✅ 已跳过")
+
+                except Exception as e:
+                    print(f" ❌ 失败: {e}")
+                    # 继续处理下一个任务，不中断整个流程
+                    continue
+        finally:
+            # 清理路由拦截，避免关闭 context 时超时
+            try:
+                await context.unroute("**/*")
+            except Exception:
+                pass
+
+            # 关闭页面和上下文
+            try:
+                if page:
+                    await page.close()
+            except Exception:
+                pass
+
+            try:
+                await context.close()
+            except Exception:
+                pass
+
 async def capture_screenshots():
     """执行截图任务"""
     if not HAS_PLAYWRIGHT:
@@ -526,6 +652,10 @@ async def capture_screenshots():
     print(f"📅 设备筛选: {'所有机型' if args.all_devices else '2015年以后的机型'}")
     print(f"🎯 设备类型过滤: {args.device_type}")
     print(f"📸 截图模式: {'View + Full Page' if args.full_page else 'View 视图'}")
+    print(f"🔄 断点续传: {'已启用（跳过已存在的截图）' if args.skip_existing else '已禁用（重新生成所有截图）'}")
+    cache_info = f"{args.cache_max_age}秒" if args.cache_max_age > 0 else "已禁用"
+    print(f"💾 缓存策略: HTML 文档缓存 {cache_info}，其他资源使用服务器默认缓存")
+    print(f"⚡ 并行处理: {args.parallel} 个设备同时运行")
     if args.url:
         print(f"📌 模式: 自定义 URL 测试")
     else:
@@ -536,75 +666,18 @@ async def capture_screenshots():
         browser = await p.chromium.launch(headless=True)
 
         total_devices = len(DEVICES)
-        for index, device_conf in enumerate(DEVICES, 1):
-            print(f"\n📱 正在模拟设备 [{index}/{total_devices}]: {device_conf['name']} ({device_conf['width']}x{device_conf['height']})")
 
-            # 创建上下文，配置视口
-            # 显式设置 screen 尺寸，增强横屏模拟效果
-            context = await browser.new_context(
-                viewport={"width": device_conf["width"], "height": device_conf["height"]},
-                screen={"width": device_conf["width"], "height": device_conf["height"]},
-                is_mobile=device_conf["is_mobile"],
-                has_touch=device_conf["has_touch"],
-                device_scale_factor=2 if device_conf["is_mobile"] else 1, # 提升移动端截图清晰度
-                user_agent="Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15E148 Safari/604.1" if device_conf["is_mobile"] else None
-            )
+        # 创建信号量来控制并发数量
+        semaphore = asyncio.Semaphore(args.parallel)
 
-            page = await context.new_page()
+        # 创建所有设备的任务
+        tasks = [
+            process_device(browser, device_conf, index + 1, total_devices, semaphore)
+            for index, device_conf in enumerate(DEVICES)
+        ]
 
-            # 禁用浏览器缓存：使用路由拦截修改响应头，确保每次截图都是最新内容
-            # 这样可以避免浏览器缓存导致截图显示旧内容
-            async def disable_cache_route(route):
-                response = await route.fetch()
-                headers = dict(response.headers)
-                headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
-                headers["Pragma"] = "no-cache"
-                headers["Expires"] = "0"
-                await route.fulfill(response=response, headers=headers)
-            await context.route("**/*", disable_cache_route)
-
-            for target in TARGET_URLS:
-                url = target["url"]
-                page_name = target["name"]
-
-                print(f"  📸 正在截图: {page_name} ...", end="", flush=True)
-
-                try:
-                    # 延长超时时间到 60秒，避免高清大图加载超时
-                    await page.goto(url, wait_until="networkidle", timeout=60000)
-                    await page.wait_for_timeout(300)
-                    search_info = await try_fill_search_input(page, "三殊胜")
-
-                    # 创建页面专属文件夹
-                    page_dir = os.path.join(OUTPUT_DIR, page_name)
-                    if not os.path.exists(page_dir):
-                        os.makedirs(page_dir, exist_ok=True)
-
-                    # 1. 截取首屏 (Viewport) - 能直观看到横竖屏区别
-                    viewport_filename = f"{device_conf['name']}_View_{device_conf['width']}x{device_conf['height']}.png"
-                    viewport_filepath = os.path.join(page_dir, viewport_filename)
-                    await page.screenshot(path=viewport_filepath, full_page=False)
-
-                    # 2. 截取全长图 (Full Page) - 仅在启用 --full-page 时执行
-                    if args.full_page:
-                        full_filename = f"{device_conf['name']}_Full_{device_conf['width']}x{device_conf['height']}.png"
-                        full_filepath = os.path.join(page_dir, full_filename)
-                        await page.screenshot(path=full_filepath, full_page=True)
-
-                    # 获取实际视口宽度用于验证
-                    actual_width = await page.evaluate("window.innerWidth")
-                    if search_info:
-                        m = search_info["metrics"]
-                        print(
-                            f" ✅ [w:{actual_width}px] [search:{m['fontSize']}, {m['width']}x{m['height']}] -> {page_name}/{viewport_filename}"
-                        )
-                    else:
-                        print(f" ✅ [w:{actual_width}px] [search:not_found] -> {page_name}/{viewport_filename}")
-
-                except Exception as e:
-                    print(f" ❌ 失败: {e}")
-
-            await context.close()
+        # 并行执行所有任务
+        await asyncio.gather(*tasks)
 
         await browser.close()
 

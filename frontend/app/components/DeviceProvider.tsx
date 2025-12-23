@@ -104,8 +104,11 @@ export default function DeviceProvider({
     // 标记为已水合（使用服务端的初始值，避免闪烁）
     setIsHydrated(true);
 
-    // 首次客户端检测：使用 requestAnimationFrame 延迟执行
-    // 如果服务端检测错误（生产环境常见），会立即纠正
+    // 首次客户端检测：立即执行一次，然后使用 requestAnimationFrame 再检测一次
+    // 立即执行确保能尽快纠正服务端检测错误的情况，避免 header 和内容不一致
+    checkDevice(true);
+
+    // 使用 requestAnimationFrame 延迟再检测一次，确保在 DOM 完全准备好后再确认
     const rafId = requestAnimationFrame(() => {
       checkDevice(true);
     });

@@ -45,6 +45,10 @@
   - 移动端设备包含详细的层级分类（Apple, Huawei, Samsung, Xiaomi 等）。
   - **默认只测试 2015 年以后的设备**（可通过 `--all-devices` 测试所有机型）。
   - **默认只测试 View 视图**（可通过 `--full-page` 同时测试 Full Page 视图）。
+  - **支持设备类型过滤**：可只测试手机、平板或桌面设备。
+  - **并行处理**：默认同时处理 8 个设备，大幅提升测试速度。
+  - **断点续传**：支持跳过已存在的截图，中断后可继续执行。
+  - **智能缓存策略**：HTML 文档使用 5 分钟缓存，平衡速度与内容新鲜度。
 
 **使用方法 (Usage)：**
 
@@ -59,6 +63,30 @@
 
   # 测试本地开发环境
   python scripts/test_responsive_screenshots.py -url "localhost:3000"
+
+  # 只测试平板设备（使用简短的参数名 --DT）
+  python scripts/test_responsive_screenshots.py -url "localhost:3000" --DT tablet
+
+  # 只测试手机设备
+  python scripts/test_responsive_screenshots.py -url "localhost:3000" --DT mobile
+
+  # 只测试桌面设备
+  python scripts/test_responsive_screenshots.py -url "localhost:3000" --DT pc
+
+  # 启用断点续传（跳过已存在的截图）
+  python scripts/test_responsive_screenshots.py -url "localhost:3000" --skip-existing
+
+  # 自定义并行数量（如果机器性能足够，可以提高并行数加速）
+  python scripts/test_responsive_screenshots.py -url "localhost:3000" --parallel 10
+
+  # 自定义缓存时间（10分钟，600秒）
+  python scripts/test_responsive_screenshots.py -url "localhost:3000" --cache-max-age 600
+
+  # 禁用缓存（每次获取最新内容）
+  python scripts/test_responsive_screenshots.py -url "localhost:3000" --cache-max-age 0
+
+  # 组合使用多个参数
+  python scripts/test_responsive_screenshots.py -url "localhost:3000" --DT tablet --skip-existing --parallel 5
 
   # 测试所有机型（包括2015年以前的旧设备）
   python scripts/test_responsive_screenshots.py -url "google.com" --all-devices
@@ -77,8 +105,11 @@
   # 默认模式：2015年以后的设备，只测试View视图
   python scripts/test_responsive_screenshots.py
 
-  # 测试所有机型
-  python scripts/test_responsive_screenshots.py --all-devices
+  # 只测试平板设备，启用断点续传
+  python scripts/test_responsive_screenshots.py --DT tablet --skip-existing
+
+  # 测试所有机型，启用并行加速
+  python scripts/test_responsive_screenshots.py --all-devices --parallel 10
 
   # 同时测试Full Page视图
   python scripts/test_responsive_screenshots.py --full-page
@@ -89,16 +120,33 @@
 
 **命令行参数说明：**
 
-| 参数            | 说明                                     | 默认值                       |
-| :-------------- | :--------------------------------------- | :--------------------------- |
-| `-url`          | 自定义测试 URL，多个 URL 用分号 `;` 分隔 | 使用默认页面列表             |
-| `--all-devices` | 测试所有机型（包括 2015 年以前的旧设备） | 仅测试 2015 年以后的设备     |
-| `--full-page`   | 同时测试 Full Page 视图（完整页面截图）  | 仅测试 View 视图（首屏截图） |
+| 参数                     | 说明                                                                                  | 默认值                       |
+| :----------------------- | :------------------------------------------------------------------------------------ | :--------------------------- |
+| `-url`                   | 自定义测试 URL，多个 URL 用分号 `;` 分隔                                              | 使用默认页面列表             |
+| `--all-devices`          | 测试所有机型（包括 2015 年以前的旧设备）                                              | 仅测试 2015 年以后的设备     |
+| `--full-page`            | 同时测试 Full Page 视图（完整页面截图）                                               | 仅测试 View 视图（首屏截图） |
+| `--DT` / `--device-type` | 只测试指定类型的设备：`mobile`（手机）、`tablet`（平板）、`pc`（桌面）、`all`（全部） | `all`                        |
+| `--skip-existing`        | 跳过已存在的截图文件，实现断点续传                                                    | 重新生成所有截图             |
+| `--cache-max-age`        | HTML 文档缓存时间（秒），设置为 0 禁用缓存                                            | `300`（5分钟）               |
+| `--parallel`             | 并行处理的设备数量，增加此值可提高速度，但会消耗更多内存和 CPU                        | `8`                          |
+
+**参数使用技巧：**
+
+- **设备类型过滤**：使用 `--DT tablet` 可以只测试平板设备，大幅减少测试时间，适合快速验证特定设备类型。
+- **断点续传**：使用 `--skip-existing` 可以在脚本中断后继续执行，只生成缺失的截图，节省时间。
+- **并行处理**：默认并行数为 8，如果机器性能足够（内存 16GB+，CPU 8 核+），可以提高到 10-15 以加速。如果遇到内存不足，可以降低到 3-5。
+- **缓存策略**：默认 5 分钟缓存既能保证内容相对新鲜，又能在同一次运行中让不同设备共享缓存，提高速度。如果测试环境内容频繁变化，可以设置为 0 禁用缓存。
 
 **输出**：截图保存在 `scripts/screenshots/` 目录下，按页面名称分类。每个页面包含：
 
 - `{设备名}_View_{宽}x{高}.png` - View 视图（首屏截图）
 - `{设备名}_Full_{宽}x{高}.png` - Full Page 视图（完整页面截图，仅在启用 `--full-page` 时生成）
+
+**性能优化：**
+
+- **并行处理**：脚本默认使用 8 个并行任务，可以显著提升测试速度。根据机器性能调整 `--parallel` 参数。
+- **智能缓存**：HTML 文档使用 5 分钟缓存，同一脚本运行期间不同设备可以共享缓存，减少网络请求。
+- **断点续传**：使用 `--skip-existing` 参数可以在中断后继续执行，避免重复生成已完成的截图。
 
 ---
 

@@ -68,8 +68,9 @@ export async function getDeviceTypeFromHeaders(): Promise<
 
     // 2. 读取视口宽度和高度（Client Hints），计算有效宽度
     // 优先使用视口宽度，因为这是最准确的判断依据
-    const viewportWidth = await getViewportWidth();
-    const viewportHeight = await getViewportHeight();
+    // 注意：使用已获取的 headersList，避免重复调用 headers()
+    const viewportWidth = getViewportWidthFromHeaders(headersList);
+    const viewportHeight = getViewportHeightFromHeaders(headersList);
 
     // 计算有效宽度：移动端横屏时使用较短边，否则使用宽度
     // 与客户端逻辑完全一致
@@ -139,21 +140,41 @@ export async function getDeviceTypeFromHeaders(): Promise<
 }
 
 /**
+ * 从 Headers 获取视口宽度（从 Client Hints）
+ * 用于更精确的响应式判断
+ */
+function getViewportWidthFromHeaders(headersList: Headers): number | null {
+  const viewportWidth = headersList.get('sec-ch-viewport-width');
+  if (viewportWidth) {
+    const width = parseInt(viewportWidth, 10);
+    return isNaN(width) ? null : width;
+  }
+  return null;
+}
+
+/**
+ * 从 Headers 获取视口高度（从 Client Hints）
+ * 用于判断横屏情况，计算有效宽度
+ */
+function getViewportHeightFromHeaders(headersList: Headers): number | null {
+  const viewportHeight = headersList.get('sec-ch-viewport-height');
+  if (viewportHeight) {
+    const height = parseInt(viewportHeight, 10);
+    return isNaN(height) ? null : height;
+  }
+  return null;
+}
+
+/**
  * 获取视口宽度（从 Client Hints）
  * 用于更精确的响应式判断
+ * @deprecated 优先使用 getViewportWidthFromHeaders，避免重复调用 headers()
  */
 export async function getViewportWidth(): Promise<number | null> {
   try {
     const { headers } = await import('next/headers');
     const headersList = await headers();
-    const viewportWidth = headersList.get('sec-ch-viewport-width');
-
-    if (viewportWidth) {
-      const width = parseInt(viewportWidth, 10);
-      return isNaN(width) ? null : width;
-    }
-
-    return null;
+    return getViewportWidthFromHeaders(headersList);
   } catch (error) {
     console.error('Failed to get viewport width:', error);
     return null;
@@ -163,19 +184,13 @@ export async function getViewportWidth(): Promise<number | null> {
 /**
  * 获取视口高度（从 Client Hints）
  * 用于判断横屏情况，计算有效宽度
+ * @deprecated 优先使用 getViewportHeightFromHeaders，避免重复调用 headers()
  */
 export async function getViewportHeight(): Promise<number | null> {
   try {
     const { headers } = await import('next/headers');
     const headersList = await headers();
-    const viewportHeight = headersList.get('sec-ch-viewport-height');
-
-    if (viewportHeight) {
-      const height = parseInt(viewportHeight, 10);
-      return isNaN(height) ? null : height;
-    }
-
-    return null;
+    return getViewportHeightFromHeaders(headersList);
   } catch (error) {
     console.error('Failed to get viewport height:', error);
     return null;
