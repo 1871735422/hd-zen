@@ -34,11 +34,9 @@ export default function ResponsiveLayout({
   const { deviceType, isHydrated } = useDevice();
   const { isLoading, pageType } = usePageLoading({ minDisplayTime: 600 });
 
-  // 在水合完成前，不渲染任何内容，避免客户端和服务端不匹配导致的问题
-  if (!isHydrated) {
-    return null;
-  }
-
+  // 使用客户端的设备类型
+  // DeviceProvider 会立即执行客户端检测，如果与服务端不一致会更新
+  // 初始值来自服务端检测，确保 SSR 和客户端一致
   const isMobile = deviceType === 'mobile';
 
   function MainContainerContent() {
