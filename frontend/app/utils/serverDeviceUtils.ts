@@ -58,6 +58,22 @@ export function isMobileFromClientHints(headers: Headers): boolean | null {
 export async function getDeviceTypeFromHeaders(): Promise<
   'mobile' | 'desktop'
 > {
+  // 在构建时（静态生成），headers() 不可用且会导致构建失败
+  // 检查是否在构建时：Next.js 在构建时会设置特定的环境变量
+  // 如果在构建时，直接返回默认值，不调用 headers()
+  const isBuildTime =
+    process.env.NEXT_PHASE === 'phase-production-build' ||
+    process.env.NEXT_PHASE === 'phase-export' ||
+    // 如果没有请求上下文，可能是构建时
+    (typeof process !== 'undefined' &&
+      process.env.NODE_ENV === 'production' &&
+      !process.env.VERCEL);
+
+  if (isBuildTime) {
+    // 构建时返回默认值 desktop，客户端会在水合后进行校正
+    return 'desktop';
+  }
+
   try {
     const { headers } = await import('next/headers');
     const headersList = await headers();

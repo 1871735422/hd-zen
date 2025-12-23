@@ -31,7 +31,7 @@ export default function ResponsiveLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { deviceType, isHydrated } = useDevice();
+  const { deviceType } = useDevice();
   const { isLoading, pageType } = usePageLoading({ minDisplayTime: 600 });
 
   // 使用客户端的设备类型

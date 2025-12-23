@@ -583,7 +583,24 @@ async def process_device(browser, device_conf, index, total_devices, semaphore):
                     if not skip_viewport or (args.full_page and not skip_full):
                         # 延长超时时间到 60秒，避免高清大图加载超时
                         await page.goto(url, wait_until="networkidle", timeout=60000)
-                        await page.wait_for_timeout(300)
+
+                        # 等待客户端设备检测完成（DeviceProvider 的 useEffect 执行）
+                        # 这是必要的，因为设备检测逻辑在客户端执行：
+                        # 1. 服务端返回初始 HTML（基于 headers 检测）
+                        # 2. 客户端 JavaScript 执行，DeviceProvider 的 useEffect 运行
+                        # 3. 客户端检测设备类型，如果与服务端不一致会更新状态
+                        # 4. ResponsiveLayout 根据更新后的状态重新渲染对应的 header
+                        # 类似于 Chrome DevTools 切换设备后需要刷新才能看到正确内容的情况
+                        # 这里我们等待足够的时间让客户端检测和渲染完成
+                        await page.wait_for_timeout(800)
+
+                        # 可选：等待 header 元素可见，确保渲染完成
+                        # 如果页面有 header，等待它出现；如果没有或找不到，继续执行
+                        try:
+                            await page.wait_for_selector('header, [role="banner"], .MuiAppBar-root',
+                                                          state='visible', timeout=2000)
+                        except Exception:
+                            pass  # header 可能不存在或结构不同，不影响截图
 
                     # 1. 截取首屏 (Viewport) - 能直观看到横竖屏区别
                     if not skip_viewport:
