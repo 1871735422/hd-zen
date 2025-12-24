@@ -78,6 +78,8 @@ export async function getDeviceTypeFromHeaders(): Promise<
     // 1. 获取 User-Agent（用于判断移动设备）
     const userAgent = headersList.get('user-agent') || '';
     const isMobileUA = userAgent ? isMobileUserAgent(userAgent) : false;
+    const isMobileHint = isMobileFromClientHints(headersList);
+    const isMobileLike = isMobileUA || isMobileHint === true;
 
     // 2. 读取视口宽度和高度（Client Hints），计算有效宽度
     // 优先使用视口宽度，因为这是最准确的判断依据
@@ -96,7 +98,7 @@ export async function getDeviceTypeFromHeaders(): Promise<
       const isLandscape = viewportWidth > viewportHeight;
       // 横屏时：如果宽度 <= 960px（手机横屏），使用较短边；如果宽度 > 960px（平板横屏），使用宽度
       effectiveWidth =
-        isMobileUA && isLandscape && viewportWidth <= 960
+        isMobileLike && isLandscape && viewportWidth <= 960
           ? Math.min(viewportWidth, viewportHeight)
           : viewportWidth;
     } else if (typeof viewportWidth === 'number') {
@@ -104,30 +106,24 @@ export async function getDeviceTypeFromHeaders(): Promise<
       effectiveWidth = viewportWidth;
     }
 
-    // 3. 核心判断逻辑：与客户端完全一致
+    // 3. 核心判断逻辑：与客户端保持一致
     // 断点：960px，大于 960px 的平板（如 iPad Pro 1024px）视为 PC 端
     if (effectiveWidth !== null) {
       // 有效宽度 > 960px → desktop
       if (effectiveWidth > 960) {
         return 'desktop';
       }
-      // 有效宽度 <= 960px 且移动 UA → mobile
-      // 有效宽度 <= 960px 但非移动 UA → desktop
-      return isMobileUA ? 'mobile' : 'desktop';
+      // 有效宽度 <= 960px 且为移动 UA / Client Hints 移动 → mobile
+      // 有效宽度 <= 960px 且二者均非移动 → desktop
+      return isMobileLike ? 'mobile' : 'desktop';
     }
 
     // 4. 如果视口宽度不可用，回退到 Client Hints + UA 判断
-    const isMobileHint = isMobileFromClientHints(headersList);
-    if (isMobileHint === true && isMobileUA) {
+    if (isMobileHint === true || isMobileUA) {
       return 'mobile';
     }
     if (isMobileHint === false && !isMobileUA) {
       return 'desktop';
-    }
-
-    // 5. Client Hints 不可用时，回退到 UA 判断
-    if (isMobileUA) {
-      return 'mobile';
     }
 
     // 如果 headers 完全不可用（如热更新），返回默认值

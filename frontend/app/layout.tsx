@@ -44,7 +44,9 @@ export default async function RootLayout({
               {/* 响应式布局 - 基于客户端检测动态渲染，解决热更新问题 */}
               {/* Suspense 边界：MobileHeader 使用了 useSearchParams()，需要 Suspense 包裹 */}
               <Suspense fallback={null}>
-                <ResponsiveLayout>{children}</ResponsiveLayout>
+                <ResponsiveLayout initialDeviceType={serverDeviceType}>
+                  {children}
+                </ResponsiveLayout>
               </Suspense>
             </DeviceProvider>
 

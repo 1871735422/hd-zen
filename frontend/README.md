@@ -283,17 +283,35 @@ git config --global core.autocrlf false
 
 ### 检测策略
 
-项目使用**统一的设备检测逻辑**，确保服务端（SSR）和客户端渲染的一致性：
+项目使用**统一的设备检测逻辑**，尽量保证服务端（SSR）和客户端渲染的一致性：
+
+#### 0. 整体流程概览
+
+- 服务端在 `layout.tsx` 中调用 `getDeviceTypeFromHeaders()`，得到 `serverDeviceType`。
+- `serverDeviceType` 会传入：
+  - `DeviceProvider` 的 `serverDeviceType`（客户端上下文初始值）。
+  - `ResponsiveLayout` 的 `initialDeviceType`（首屏布局依据）。
+- 客户端水合完成前：
+  - `ResponsiveLayout` 强制使用 `initialDeviceType`，保证 SSR 与首帧 HTML 完全一致。
+- 客户端水合完成后：
+  - `DeviceProvider` 使用 UA、视口宽高和触摸能力再次检测设备类型。
+  - 只在“SSR 判为 desktop，但客户端检测为 mobile”时纠正为 mobile，防止桌面窗口缩小时仍用 PC 布局。
+  - 不会把 SSR 判为 mobile 的页面改回 desktop，避免出现“PC Header + 移动主体”的不一致。
+  - Header 使用 `next/dynamic` 且 `ssr: false` 渲染，只在客户端根据最终设备类型选择 PC/移动版。
 
 #### 1. **检测方式**
 
-- **服务端**：优先使用 Client Hints（`sec-ch-viewport-width`），回退到 User-Agent 检测
-- **客户端**：使用 `window.innerWidth` 和 `window.innerHeight`
+- **服务端**：
+  - 优先使用 Client Hints：`sec-ch-viewport-width` / `sec-ch-viewport-height`
+  - 使用 `Sec-CH-UA-Mobile` + User-Agent 判断是否为“移动/类移动设备”
+- **客户端**：
+  - 使用 `window.innerWidth` 和 `window.innerHeight`
+  - 使用 `navigator.userAgent` + 触摸能力（`navigator.maxTouchPoints` / `ontouchstart`）
 
 #### 2. **有效宽度计算**
 
 ```
-如果 (移动设备UA && 横屏 && 横屏宽度 <= 960px):
+如果 (移动/类移动设备 && 横屏 && 横屏宽度 <= 960px):
   有效宽度 = Math.min(宽度, 高度)  // 手机横屏，使用较短边
 否则:
   有效宽度 = 宽度  // 平板横屏或竖屏，直接使用宽度
@@ -310,21 +328,21 @@ git config --global core.autocrlf false
 如果 有效宽度 > 960px:
   返回 'desktop'  // 大屏设备（平板横屏、桌面）
 否则:
-  如果 移动设备UA:
-    返回 'mobile'  // 手机或小屏设备
+  如果 为移动/类移动设备(UA / Client Hints / 触摸):
+    返回 'mobile'  // 手机或小屏触屏设备
   否则:
-    返回 'desktop'  // 桌面浏览器缩小窗口
+    返回 'desktop'  // 桌面浏览器缩小窗口或非触屏小窗口
 ```
 
 #### 4. **关键断点**
 
 - **960px**：判断 mobile 和 desktop 的分界点
 - 大于 960px 的设备视为 desktop（包括 iPad Pro、平板横屏等）
-- 小于等于 960px 且为移动 UA 的设备视为 mobile
+- 小于等于 960px 且为移动/类移动设备（含触屏）视为 mobile
 
 #### 5. **一致性保证**
 
-- 服务端和客户端使用**完全相同的计算和判断逻辑**
+- 服务端和客户端使用**同一套“有效宽度 + 移动特征”规则**
 - 客户端在首次渲染时立即检测，如果与服务端不一致会更新（只影响 header，不影响页面内容）
 - 支持窗口大小变化时的动态更新
 

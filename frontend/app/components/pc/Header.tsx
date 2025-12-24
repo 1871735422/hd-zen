@@ -40,6 +40,7 @@ const Header: React.FC = () => {
     <AppBar
       id='back-to-top-anchor'
       position='sticky'
+      suppressHydrationWarning
       sx={{
         top: 0,
         maxWidth: 'xxl',

@@ -67,34 +67,32 @@ export default function DeviceProvider({
       const viewportWidth = window.innerWidth;
       const viewportHeight = window.innerHeight;
       const isLandscape = viewportWidth > viewportHeight;
+      const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      const isMobileLike = hasTouch || isMobileUA;
 
       // 移动端横屏时，只有当横屏宽度 <= 960px 才使用较短边（处理手机横屏）
       // 如果横屏宽度 > 960px，说明设备足够大（如平板），应该直接使用宽度判断为 desktop
       // 断点：960px，大于 960px 的平板（如 iPad Pro 1024px）视为 PC 端
       const effectiveWidth =
-        isMobileUA && isLandscape && viewportWidth <= 960
+        isMobileLike && isLandscape && viewportWidth <= 960
           ? Math.min(viewportWidth, viewportHeight)
           : viewportWidth;
 
       // 核心判断逻辑：与服务端完全一致
       // 1. 有效宽度 > 960px → desktop
-      // 2. 有效宽度 <= 960px 且移动 UA → mobile
-      // 3. 有效宽度 <= 960px 但非移动 UA → desktop
+      // 2. 有效宽度 <= 960px 且为触屏/移动设备 → mobile
+      // 3. 有效宽度 <= 960px 且非触屏且非移动 UA → desktop
       // 注意：客户端 window.innerWidth 总是存在，所以 effectiveWidth 不会是 null
       let newDeviceType: 'mobile' | 'desktop';
       if (effectiveWidth > 960) {
         newDeviceType = 'desktop';
       } else {
-        // 有效宽度 <= 960px 时，根据移动 UA 判断
-        newDeviceType = isMobileUA ? 'mobile' : 'desktop';
+        newDeviceType = isMobileLike ? 'mobile' : 'desktop';
       }
 
-      // 首次检测时：如果客户端检测结果与服务端不一致，才更新
-      // 这样可以纠正生产环境中服务端检测错误的情况
-      // 注意：即使更新了，也只影响 header（ResponsiveLayout），页面内容已在服务端渲染完成，不会重新渲染，避免闪烁
       if (isInitialCheck) {
-        if (newDeviceType !== serverDeviceType) {
-          setDeviceType(newDeviceType);
+        if (serverDeviceType === 'desktop' && newDeviceType === 'mobile') {
+          setDeviceType('mobile');
         }
       } else {
         // 窗口大小变化时，直接更新

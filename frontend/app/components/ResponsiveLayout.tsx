@@ -1,9 +1,9 @@
 'use client';
 
 import { Container } from '@mui/material';
+import dynamic from 'next/dynamic';
 import { usePageLoading } from '../hooks/usePageLoading';
-import { useDevice } from './DeviceProvider';
-import MobileHeader from './mobile/Header';
+import { useDevice, type DeviceType } from './DeviceProvider';
 import PageSkeleton from './mobile/PageSkeleton';
 import {
   SearchFocusProvider,
@@ -11,7 +11,14 @@ import {
 } from './mobile/SearchFocusContext';
 import SeatchHistory from './mobile/SeatchHistory';
 import DesktopFooter from './pc/Footer';
-import DesktopHeader from './pc/Header';
+
+const MobileHeader = dynamic(() => import('./mobile/Header'), {
+  ssr: false,
+});
+
+const DesktopHeader = dynamic(() => import('./pc/Header'), {
+  ssr: false,
+});
 
 /**
  * 响应式布局组件
@@ -28,16 +35,16 @@ import DesktopHeader from './pc/Header';
  */
 export default function ResponsiveLayout({
   children,
+  initialDeviceType,
 }: {
   children: React.ReactNode;
+  initialDeviceType: DeviceType;
 }) {
-  const { deviceType } = useDevice();
+  const { deviceType, isHydrated } = useDevice();
+  const effectiveDeviceType = isHydrated ? deviceType : initialDeviceType;
   const { isLoading, pageType } = usePageLoading({ minDisplayTime: 600 });
 
-  // 使用客户端的设备类型
-  // DeviceProvider 会立即执行客户端检测，如果与服务端不一致会更新
-  // 初始值来自服务端检测，确保 SSR 和客户端一致
-  const isMobile = deviceType === 'mobile';
+  const isMobile = effectiveDeviceType === 'mobile';
 
   function MainContainerContent() {
     // read focus state to decide what to show in main area on mobile

@@ -52,6 +52,7 @@ const Header: React.FC = () => {
   return (
     <AppBar
       position='sticky'
+      suppressHydrationWarning
       sx={{
         top: 0,
         background: '#fff',
