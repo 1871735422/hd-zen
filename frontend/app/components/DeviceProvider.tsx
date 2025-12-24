@@ -67,8 +67,7 @@ export default function DeviceProvider({
       const viewportWidth = window.innerWidth;
       const viewportHeight = window.innerHeight;
       const isLandscape = viewportWidth > viewportHeight;
-      const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-      const isMobileLike = hasTouch || isMobileUA;
+      const isMobileLike = isMobileUA;
 
       // 移动端横屏时，只有当横屏宽度 <= 960px 才使用较短边（处理手机横屏）
       // 如果横屏宽度 > 960px，说明设备足够大（如平板），应该直接使用宽度判断为 desktop
@@ -95,30 +94,24 @@ export default function DeviceProvider({
           setDeviceType('mobile');
         }
       } else {
-        // 窗口大小变化时，直接更新
         setDeviceType(newDeviceType);
       }
     };
 
-    // 标记为已水合（使用服务端的初始值，避免闪烁）
+    // 标记为已水合
     setIsHydrated(true);
 
-    // 首次客户端检测：立即同步执行，确保尽快纠正服务端检测错误
-    // 同步执行确保在首次渲染时就能得到正确的设备类型
+    // 首次客户端检测：用于在 headers 判为 desktop 但客户端更像 mobile 时纠正为 mobile
     checkDevice(true);
 
-    // 使用 requestAnimationFrame 延迟再检测一次，确保在 DOM 完全准备好后再确认
-    const rafId = requestAnimationFrame(() => {
-      checkDevice(true);
-    });
+    const handleResize = () => checkDevice(false);
 
     // 添加窗口大小变化监听器
-    window.addEventListener('resize', () => checkDevice(false));
+    window.addEventListener('resize', handleResize);
 
     // 清理函数
     return () => {
-      cancelAnimationFrame(rafId);
-      window.removeEventListener('resize', () => checkDevice(false));
+      window.removeEventListener('resize', handleResize);
     };
   }, [serverDeviceType]); // 添加 serverDeviceType 作为依赖
 

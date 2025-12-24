@@ -23,8 +23,8 @@ parser.add_argument('--all-devices', action='store_true', help='测试所有机�
 parser.add_argument('--full-page', action='store_true', help='同时测试 Full Page 视图（默认只测试 View 视图）')
 parser.add_argument('--DT', '--device-type', type=str, choices=['mobile', 'tablet', 'pc', 'all'], default='all',
                     dest='device_type', help='只测试指定类型的设备: mobile(手机), tablet(平板), pc(桌面), all(全部，默认)')
-parser.add_argument('--skip-existing', action='store_true',
-                    help='跳过已存在的截图文件，实现断点续传（默认：重新生成所有截图）')
+parser.add_argument('--skip-existing', action='store_true', default=True,
+                    help='跳过已存在的截图文件，实现断点续传（默认：开启）')
 parser.add_argument('--cache-max-age', type=int, default=300,
                     help='HTML 文档缓存时间（秒），默认 300 秒（5分钟）。设置为 0 禁用缓存')
 parser.add_argument('--parallel', type=int, default=8,
@@ -80,7 +80,7 @@ if not TARGET_URLS:
     for i in range(1, 7):
         TARGET_URLS.append({"name": f"Course_{i}", "url": f"https://cxk.fohuifayu.com/course/{i}"})
 
-    TARGET_URLS.append({"name": "lesson_2_1", "url": "https://cxk.fohuifayu.com/course/2/lesson1"})
+    TARGET_URLS.append({"name": "Course_2_1", "url": "https://cxk.fohuifayu.com/course/2/lesson1"})
 
     # 3. 问答页面 (1-3)
     for i in range(1, 4):
@@ -92,7 +92,7 @@ if not TARGET_URLS:
     for i in range(1, 6):
         TARGET_URLS.append({"name": f"Reference_{i}", "url": f"https://cxk.fohuifayu.com/reference/{i}"})
 
-    TARGET_URLS.append({"name": "ref_3_5", "url": "https://cxk.fohuifayu.com/reference/3/lesson5"})
+    TARGET_URLS.append({"name": "Reference_3_5", "url": "https://cxk.fohuifayu.com/reference/3/lesson5"})
 
     # 5. 下载页面
     TARGET_URLS.append({"name": "Download", "url": "https://cxk.fohuifayu.com/download"})
