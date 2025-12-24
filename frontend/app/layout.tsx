@@ -14,6 +14,8 @@ export const metadata = {
   description: '慧灯之光禅修网站 — 专为现代人定制的佛法学修网站',
 };
 
+export const dynamic = 'force-dynamic';
+
 export default async function RootLayout({
   children,
 }: Readonly<{

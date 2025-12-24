@@ -80,13 +80,19 @@ if not TARGET_URLS:
     for i in range(1, 7):
         TARGET_URLS.append({"name": f"Course_{i}", "url": f"https://cxk.fohuifayu.com/course/{i}"})
 
-    # 3. 问答页面 (1-6)
-    for i in range(1, 7):
+    TARGET_URLS.append({"name": "lesson_2_1", "url": "https://cxk.fohuifayu.com/course/2/lesson1"})
+
+    # 3. 问答页面 (1-3)
+    for i in range(1, 4):
         TARGET_URLS.append({"name": f"QA_{i}", "url": f"https://cxk.fohuifayu.com/qa/{i}"})
+
+    TARGET_URLS.append({"name": "Qa_2_1", "url": "https://cxk.fohuifayu.com/qa/2/lesson5?tab=question1"})
 
     # 4. 参考资料页面 (1-6)
     for i in range(1, 6):
         TARGET_URLS.append({"name": f"Reference_{i}", "url": f"https://cxk.fohuifayu.com/reference/{i}"})
+
+    TARGET_URLS.append({"name": "ref_3_5", "url": "https://cxk.fohuifayu.com/reference/3/lesson5"})
 
     # 5. 下载页面
     TARGET_URLS.append({"name": "Download", "url": "https://cxk.fohuifayu.com/download"})

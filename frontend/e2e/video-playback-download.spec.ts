@@ -127,7 +127,7 @@ async function getCurrentVideoDownloadUrl(page: Page): Promise<string | null> {
           downloadButton
             .closest('[data-download-url]')
             ?.getAttribute('data-download-url');
-        return href;
+        return href ?? null;
       }
       return null;
     });

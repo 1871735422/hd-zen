@@ -291,6 +291,7 @@ git config --global core.autocrlf false
 - `serverDeviceType` 会传入：
   - `DeviceProvider` 的 `serverDeviceType`（客户端上下文初始值）。
   - `ResponsiveLayout` 的 `initialDeviceType`（首屏布局依据）。
+- 为避免 SSG 构建阶段固定为某一种设备类型（如默认 desktop）导致线上手机拿到 PC 页面，`layout.tsx` 使用 `export const dynamic = 'force-dynamic'`，全站按请求 SSR 渲染，每次请求都会用真实的请求头进行设备检测。
 - 客户端水合完成前：
   - `ResponsiveLayout` 强制使用 `initialDeviceType`，保证 SSR 与首帧 HTML 完全一致。
 - 客户端水合完成后：
