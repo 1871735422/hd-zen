@@ -1,3 +1,4 @@
+import { getContentWaitingForUpdateText } from '@/app/api';
 import { pxToVw } from '@/app/utils/mobileUtils';
 import { getDeviceTypeFromHeaders } from '@/app/utils/serverDeviceUtils';
 import { Box, Paper, Stack, Typography } from '@mui/material';
@@ -25,10 +26,11 @@ export default async function ReadingPage({
   const hasContent =
     topicMedia?.article_fulltext || topicMedia?.article_introtext;
   if (!hasContent) {
+    const hintText = await getContentWaitingForUpdateText();
     return (
       <Paper sx={{ p: 4, textAlign: 'center' }}>
         <Typography variant='h6' color='text.secondary'>
-          此课程暂无文字内容
+          {hintText || '此课程暂无文字内容'}
         </Typography>
       </Paper>
     );

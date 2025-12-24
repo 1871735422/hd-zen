@@ -1,6 +1,6 @@
 'use client';
 
-import { getCategories } from '@/app/api';
+import { getCategories, getContentWaitingForUpdateText } from '@/app/api';
 import { STANDARD_TEXT_COLOR } from '@/app/constants/colors';
 import { Box, Stack, Typography } from '@mui/material';
 import Link from 'next/link';
@@ -25,6 +25,7 @@ const MobileCoursePage: React.FC<MobileCoursePageProps> = ({
   const pathname = usePathname();
   const slug = pathname.slice(pathname.lastIndexOf('/') + 1);
   const [menuData, setMenuData] = useState<Menu[]>();
+  const [hintText, setHintText] = useState('');
   const isCourse = courseType === 'course';
   const isReference = courseType === 'reference';
   // console.log(courseTopics);
@@ -35,6 +36,16 @@ const MobileCoursePage: React.FC<MobileCoursePageProps> = ({
         setMenuData(res);
       });
     }
+  }, [isReference]);
+
+  useEffect(() => {
+    getContentWaitingForUpdateText()
+      .then(text => {
+        if (text) {
+          setHintText(text);
+        }
+      })
+      .catch(() => {});
   }, []);
 
   const courseName = menuData
@@ -163,7 +174,7 @@ const MobileCoursePage: React.FC<MobileCoursePageProps> = ({
                 color: '#999',
               }}
             >
-              暂无课程内容
+              {hintText || '暂无课程内容'}
             </Typography>
           </Box>
         )}

@@ -1,4 +1,5 @@
 import {
+  getContentWaitingForUpdateText,
   getCourseByDisplayOrder,
   getCourseTopicsByCourse,
   getCourses,
@@ -32,6 +33,7 @@ interface CoursePageProps {
 }
 
 export default async function CoursePage({ params }: CoursePageProps) {
+  let hintText = '';
   const resolvedParams = await params;
   const displayOrder = resolvedParams.slug;
   const deviceType = await getDeviceTypeFromHeaders();
@@ -49,6 +51,7 @@ export default async function CoursePage({ params }: CoursePageProps) {
     }
 
     const courseTopics = courseTopicsResult.items;
+    hintText = (await getContentWaitingForUpdateText()) || '';
 
     // 移动端：使用移动端组件
     if (isMobile) {
@@ -142,7 +145,7 @@ export default async function CoursePage({ params }: CoursePageProps) {
         {courseTopics.length === 0 && (
           <Box sx={{ textAlign: 'center', py: 8 }}>
             <Typography variant='h6' sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
-              此课程暂无内容
+              {hintText || '此课程暂无内容'}
             </Typography>
           </Box>
         )}

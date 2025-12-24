@@ -1,4 +1,8 @@
-import { getAnswerMediasByOrder, getCourses } from '@/app/api';
+import {
+  getAnswerMediasByOrder,
+  getContentWaitingForUpdateText,
+  getCourses,
+} from '@/app/api';
 import CourseCard from '@/app/components/pc/CourseCard';
 import DownloadQaResource from '@/app/components/shared/DownloadQaResource';
 import { getDeviceTypeFromHeaders } from '@/app/utils/serverDeviceUtils';
@@ -40,7 +44,11 @@ export default async function QaPage({ params, searchParams }: QaPageProps) {
   const deviceType = await getDeviceTypeFromHeaders();
   const isMobile = deviceType === 'mobile';
 
+  let hintText = '';
   try {
+    hintText = await getContentWaitingForUpdateText();
+    // console.log({ result });
+
     // 获取所有问答数据（未过滤 topic），已按 topicTitle 分组
     const questionsGrouped = await getAnswerMediasByOrder(displayOrder);
 
@@ -102,20 +110,20 @@ export default async function QaPage({ params, searchParams }: QaPageProps) {
               lessonOrder={lessonOrder}
             />
           )}
-          <Grid size={3}>
-            {sidebarData.length > 0 ? (
+          {sidebarData.length > 0 ? (
+            <Grid size={3}>
               <QaSidebar
                 lesson={sidebarData}
                 selectedIdx={sidebarData.findIndex(
                   item => item.displayOrder === Number(lessonOrder)
                 )}
               />
-            ) : (
-              <Typography variant='h5' sx={{ textAlign: 'center', py: 5 }}>
-                本册暂无问答
-              </Typography>
-            )}
-          </Grid>
+            </Grid>
+          ) : (
+            <Typography variant='h5' sx={{ p: 5 }}>
+              {hintText}
+            </Typography>
+          )}
           <Grid
             container
             spacing={3.5}
@@ -124,6 +132,7 @@ export default async function QaPage({ params, searchParams }: QaPageProps) {
               pt: 5,
               pb: 5,
               height: 'fit-content',
+              display: questions.length > 0 ? 'flex' : 'none',
             }}
             size={9}
           >

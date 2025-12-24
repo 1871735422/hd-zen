@@ -1,9 +1,10 @@
 'use client';
 import { useDevice } from '@/app/components/DeviceProvider';
 import MediaDownloadButton from '@/app/components/pc/MediaDownloadButton';
+import { getContentWaitingForUpdateText } from '@/app/api';
 import { pxToVw } from '@/app/utils/mobileUtils';
 import { Box, Paper, Typography } from '@mui/material';
-import { Fragment } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { TopicMediaX } from '../../types/models';
 import AudioPlayer from './AudioPlayer';
 
@@ -18,12 +19,23 @@ export default function AudioPage({
 }: AudioPageProps) {
   const { deviceType } = useDevice();
   const isMobile = deviceType === 'mobile';
+  const [hintText, setHintText] = useState('');
+
+  useEffect(() => {
+    getContentWaitingForUpdateText()
+      .then(text => {
+        if (text) {
+          setHintText(text);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   if (!topicMedia.length) {
     return (
       <Paper sx={{ p: 4, textAlign: 'center' }}>
         <Typography variant='h6' color='text.secondary'>
-          此课程暂无音频内容
+          {hintText || '此课程暂无音频内容'}
         </Typography>
       </Paper>
     );

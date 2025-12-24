@@ -1,9 +1,10 @@
 'use client';
 
+import { getContentWaitingForUpdateText } from '@/app/api';
 import { clearCourseTitle } from '@/app/utils/courseUtils';
 import { Box, Typography } from '@mui/material';
 import Link from 'next/link';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { QuestionResult } from '../../types/models';
 import { pxToVw } from '../../utils/mobileUtils';
 import { useDevice } from '../DeviceProvider';
@@ -27,6 +28,17 @@ const MobileQaPage: React.FC<MobileQaPageProps> = ({
   showComingSoon = false,
 }) => {
   const { deviceType } = useDevice();
+  const [hintText, setHintText] = useState('');
+
+  useEffect(() => {
+    getContentWaitingForUpdateText()
+      .then(text => {
+        if (text) {
+          setHintText(text);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   // 只在移动端显示
   if (deviceType !== 'mobile') {
@@ -74,7 +86,7 @@ const MobileQaPage: React.FC<MobileQaPageProps> = ({
                 textAlign: 'center',
               }}
             >
-              本册暂无问答
+              {hintText || '本册暂无问答'}
             </Typography>
           </Box>
         )}

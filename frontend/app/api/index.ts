@@ -5,6 +5,7 @@ import {
   Category,
   Course,
   CourseTopic,
+  Dict,
   DownloadResource,
   PaginatedResponse,
   PocketRecord,
@@ -41,6 +42,20 @@ export const config = {
 } as const;
 
 // Helper functions for mapping records
+
+export const getContentWaitingForUpdateText = async (): Promise<string> => {
+  try {
+    const resultList = await pb.collection('dicts').getList(1, 50, {
+      filter: 'key="content_waiting_for_update"',
+      fields: 'value',
+    });
+    const result = resultList.items as unknown as Dict[];
+    return result[0]?.value || '';
+  } catch (error) {
+    console.error(error);
+    return '';
+  }
+};
 
 // Search utility functions
 export const getKeywords = (text: string): string[] =>
