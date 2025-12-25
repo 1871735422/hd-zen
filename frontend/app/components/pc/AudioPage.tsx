@@ -1,9 +1,9 @@
 'use client';
+import { getContentWaitingForUpdateText } from '@/app/api';
 import { useDevice } from '@/app/components/DeviceProvider';
 import MediaDownloadButton from '@/app/components/pc/MediaDownloadButton';
-import { getContentWaitingForUpdateText } from '@/app/api';
 import { pxToVw } from '@/app/utils/mobileUtils';
-import { Box, Paper, Typography } from '@mui/material';
+import { Box, Paper, Stack, Typography } from '@mui/material';
 import { Fragment, useEffect, useState } from 'react';
 import { TopicMediaX } from '../../types/models';
 import AudioPlayer from './AudioPlayer';
@@ -97,12 +97,14 @@ export default function AudioPage({
               gap: { lg: '8px', xlg: '8px', xl: '10px', xxl: '15px' },
             }}
           >
-            {item?.url_mp3 && (
+            {item?.url_mp3 ? (
               <AudioPlayer
                 src={item?.url_mp3}
                 audioId={item?.id}
                 audioTitle={item?.title}
               />
+            ) : (
+              <Stack flexGrow={1} />
             )}
             {!isMobile && (
               <>

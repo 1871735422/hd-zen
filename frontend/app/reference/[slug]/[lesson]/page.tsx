@@ -77,11 +77,7 @@ export async function generateMetadata({
 
   const url = `/reference/${bookOrder}/lesson${chapterOrder}`;
   const title = `${media.title || chapter.article_title || '参考资料'} | 慧灯禅修`;
-  const description =
-    media.article_summary ||
-    media.article_introtext ||
-    chapter.article_title ||
-    '慧灯禅修参考资料';
+  const description = media.article_summary || media.article_introtext;
 
   return {
     title,
@@ -139,9 +135,8 @@ const refPage = async ({ params, searchParams }: refPageProps) => {
   }
   const hasSecretWarn = media?.secret_level !== null;
   const description =
-    selectedKey === 'article' ||
-    (excludeLabels?.includes('视频') && excludeLabels?.includes('音频'))
-      ? bookMedia[0]?.article_summary || bookMedia[0]?.media_summary || ''
+    selectedKey === 'article'
+      ? bookMedia[0]?.article_summary
       : bookMedia[0]?.media_summary;
 
   const TabRender = () => {

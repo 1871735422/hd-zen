@@ -60,7 +60,7 @@ export default function LessonDescriptionBlock({
       }}
     >
       {tags && tags.length > 0 && (
-        <Box sx={{ display: 'flex', gap: 1 }}>
+        <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
           <Typography variant='subtitle1'>标签：</Typography>
           <Stack
             direction='row'
@@ -82,7 +82,7 @@ export default function LessonDescriptionBlock({
           </Stack>
         </Box>
       )}
-      <Stack flexDirection={'row'} mt={2}>
+      <Stack flexDirection={'row'}>
         <Typography variant='subtitle1'>
           {`${isQuestion ? '问题' : '概述'}`}：
         </Typography>
