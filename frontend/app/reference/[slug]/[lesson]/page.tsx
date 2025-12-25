@@ -162,6 +162,9 @@ const refPage = async ({ params, searchParams }: refPageProps) => {
     }
     return <VideoPage topicMedia={bookMedia} />;
   };
+  const showEbookDownload =
+    selectedKey === 'article' ||
+    (excludeLabels?.includes('视频') && excludeLabels?.includes('音频'));
 
   // 移动端渲染
   if (isMobile) {
@@ -179,8 +182,8 @@ const refPage = async ({ params, searchParams }: refPageProps) => {
         description={description}
         courseOrder={bookOrder}
         lessonOrder={chapterOrder}
-        pdfUrl={selectedKey === 'article' ? media?.url_downpdf : undefined}
-        epubUrl={selectedKey === 'article' ? media?.url_downepub : undefined}
+        pdfUrl={showEbookDownload ? media?.url_downpdf : undefined}
+        epubUrl={showEbookDownload ? media?.url_downepub : undefined}
         excludeLabels={excludeLabels}
       >
         <Box
