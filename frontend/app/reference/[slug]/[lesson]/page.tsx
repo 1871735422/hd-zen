@@ -9,7 +9,11 @@ import { Box } from '@mui/material';
 import dynamic from 'next/dynamic';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next/types';
-import { getBookChapters, getBookMediaByOrder } from '../../../api';
+import {
+  getBookChapters,
+  getBookMediaByOrder,
+  getReferenceBooks,
+} from '../../../api';
 import LessonMeta from '../../../components/pc/LessonMeta';
 import LessonSidebar from '../../../components/pc/LessonSidebar';
 import { BookChapter, SecretText } from '../../../types/models';
@@ -95,12 +99,12 @@ export async function generateMetadata({
   };
 }
 
-interface refPageProps {
+interface RefPageProps {
   params: Promise<{ slug: string; lesson: string }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-const refPage = async ({ params, searchParams }: refPageProps) => {
+const RefPage = async ({ params, searchParams }: RefPageProps) => {
   const resolvedParams = await params;
   const resolvedSearchParams = await searchParams;
   let { tab: selectedKey } = resolvedSearchParams as {
@@ -110,10 +114,16 @@ const refPage = async ({ params, searchParams }: refPageProps) => {
   const bookOrder = resolvedParams.slug;
   const chapterOrder = resolvedParams.lesson?.replace('lesson', '');
   const bookMedia = await getBookMediaByOrder(bookOrder, chapterOrder);
+  const refBooks = await getReferenceBooks();
+  // console.log('refBooks', refBooks);
   // 设备检测
   const deviceType = await getDeviceTypeFromHeaders();
   const isMobile = deviceType === 'mobile';
   // console.log('bookMedia', bookMedia);
+  const audioAuthor = refBooks.find(
+    book => book.id === bookMedia[0].bookId
+  )?.author;
+  // console.log('audioAuthor', audioAuthor);
 
   if (!bookMedia) {
     notFound();
@@ -140,6 +150,8 @@ const refPage = async ({ params, searchParams }: refPageProps) => {
       ? bookMedia[0]?.article_summary
       : bookMedia[0]?.media_summary;
 
+  let author = bookMedia[0]?.author;
+
   const TabRender = () => {
     if (
       selectedKey === 'audio' ||
@@ -165,6 +177,14 @@ const refPage = async ({ params, searchParams }: refPageProps) => {
   };
   const showEbookDownload = shouldShowEbookDownload(selectedKey, excludeLabels);
 
+  if (
+    excludeLabels.includes('视频') &&
+    !excludeLabels.includes('音频') &&
+    selectedKey !== 'article'
+  ) {
+    author = audioAuthor;
+  }
+
   // 移动端渲染
   if (isMobile) {
     const MobileLessonPage = dynamic(
@@ -176,7 +196,7 @@ const refPage = async ({ params, searchParams }: refPageProps) => {
       <MobileLessonPage
         hasSiderbar={excludeLabels.length < 3}
         title={media?.article_title || media?.title || ''}
-        author={bookMedia[0]?.author || ''}
+        author={author || ''}
         date={media?.created || ''}
         description={description}
         courseOrder={bookOrder}
@@ -211,7 +231,7 @@ const refPage = async ({ params, searchParams }: refPageProps) => {
         title={bookMedia[0]?.article_title}
         tags={bookTags?.length ? bookTags.map((tag: string) => tag.trim()) : []}
         description={description}
-        author={bookMedia[0]?.author || ''}
+        author={author || ''}
         date={bookMedia[0]?.created}
       />
       <TabRender />
@@ -252,4 +272,4 @@ const refPage = async ({ params, searchParams }: refPageProps) => {
   );
 };
 
-export default refPage;
+export default RefPage;

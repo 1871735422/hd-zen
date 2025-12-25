@@ -11,6 +11,7 @@ import {
   PocketRecord,
   QuestionResult,
   QuestionResultGrouped,
+  ReferenceBook,
   SearchCate,
   SearchType,
   TagRelation,
@@ -843,6 +844,14 @@ export const getBookChapters = async (
   });
 
   return records as unknown as BookChapter[];
+};
+
+export const getReferenceBooks = async (): Promise<ReferenceBook[]> => {
+  const records = await pb.collection('referenceBooks').getFullList({
+    filter: 'isActive = true',
+  });
+
+  return records as unknown as ReferenceBook[];
 };
 
 export const getBookMediaByOrder = async (

@@ -115,6 +115,7 @@ export interface SecretText {
 
 export interface TopicMediaX extends Article, Omit<Media, 'summary'> {
   author?: string;
+  bookId?: string;
   questionOrder?: string;
   summary?: string;
   media_summary?: string;
@@ -204,6 +205,12 @@ export interface BookChapter extends DownloadResource {
   article_title: string;
   expand?: { bookId: { displayOrder: number } };
   ordering: number;
+}
+
+export interface ReferenceBook extends BaseModel {
+  categoryId: string;
+  title?: string;
+  author?: string; // 音频作者
 }
 
 export interface Dict extends BaseModel {
