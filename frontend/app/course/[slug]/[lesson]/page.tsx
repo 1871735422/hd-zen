@@ -161,6 +161,7 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
       selectedKey === 'audio' ||
       (!selectedKey && excludeLabels?.includes('视频') && media?.url_mp3)
     ) {
+      selectedKey = 'audio';
       return <AudioPage topicMedia={topicMedia} />;
     }
 
@@ -192,7 +193,6 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
         description={description}
         courseOrder={courseOrder}
         lessonOrder={lessonOrder}
-        mp3Url={selectedKey === 'audio' ? media?.url_downmp3 : undefined}
         pdfUrl={selectedKey === 'article' ? media?.url_downpdf : undefined}
         epubUrl={selectedKey === 'article' ? media?.url_downepub : undefined}
         excludeLabels={excludeLabels}

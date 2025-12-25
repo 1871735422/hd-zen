@@ -4,7 +4,7 @@ import { Box } from '@mui/material';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useCallback } from 'react';
 import { pxToVw } from '../../utils/mobileUtils';
-import { labelItemList, SiderbarKey } from '../pc/LessonSidebar';
+import { SiderbarKey, labelItemList } from '../pc/LessonSidebar';
 import { MobileLessonMeta } from './MobileLessonMeta';
 import MobileRelatedResources from './MobileRelatedResources';
 

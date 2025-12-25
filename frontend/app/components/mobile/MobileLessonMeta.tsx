@@ -66,6 +66,7 @@ export function MobileLessonMeta({
           <Typography
             sx={{
               pl: refCourse ? 0 : pxToVw(30),
+              pr: pxToVw(90),
               pb: refCourse ? 0 : pxToVw(6),
               fontSize: pxToVw(12),
               color: 'rgba(153, 153, 153, 1)',

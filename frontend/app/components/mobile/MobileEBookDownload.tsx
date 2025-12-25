@@ -13,6 +13,32 @@ interface MobileEBookDownloadProps {
   mp3Url?: string;
 }
 
+export const buttonStyles = {
+  width: pxToVw(90),
+  height: pxToVw(32),
+  borderTopLeftRadius: pxToVw(30),
+  borderBottomLeftRadius: pxToVw(30),
+  borderTopRightRadius: 0,
+  borderBottomRightRadius: 0,
+  color: '#fff',
+  background:
+    'linear-gradient(90deg, rgba(196, 198, 255, 1) 0%, rgba(250, 167, 222, 1) 100%)',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: pxToVw(2),
+  fontSize: pxToVw(12),
+  fontWeight: 700,
+  textTransform: 'none' as const,
+  boxShadow: 'none',
+  '&:hover': {
+    boxShadow: 'none',
+  },
+  '& svg': {
+    fontSize: pxToVw(20),
+  },
+};
+
 const MobileEBookDownload = ({
   epubUrl,
   pdfUrl,
@@ -35,32 +61,6 @@ const MobileEBookDownload = ({
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-  };
-
-  const buttonStyles = {
-    width: pxToVw(90),
-    height: pxToVw(32),
-    borderTopLeftRadius: pxToVw(30),
-    borderBottomLeftRadius: pxToVw(30),
-    borderTopRightRadius: 0,
-    borderBottomRightRadius: 0,
-    color: '#fff',
-    background:
-      'linear-gradient(90deg, rgba(196, 198, 255, 1) 0%, rgba(250, 167, 222, 1) 100%)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: pxToVw(2),
-    fontSize: pxToVw(12),
-    fontWeight: 700,
-    textTransform: 'none' as const,
-    boxShadow: 'none',
-    '&:hover': {
-      boxShadow: 'none',
-    },
-    '& svg': {
-      fontSize: pxToVw(20),
-    },
   };
 
   return (

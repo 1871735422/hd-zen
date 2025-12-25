@@ -3,9 +3,11 @@ import { getContentWaitingForUpdateText } from '@/app/api';
 import { useDevice } from '@/app/components/DeviceProvider';
 import MediaDownloadButton from '@/app/components/pc/MediaDownloadButton';
 import { pxToVw } from '@/app/utils/mobileUtils';
-import { Box, Paper, Stack, Typography } from '@mui/material';
+import { Box, Button, Paper, Stack, Typography } from '@mui/material';
 import { Fragment, useEffect, useState } from 'react';
 import { TopicMediaX } from '../../types/models';
+import AudioDownIcon from '../icons/AudioDownIcon';
+import { buttonStyles } from '../mobile/MobileEBookDownload';
 import AudioPlayer from './AudioPlayer';
 
 interface AudioPageProps {
@@ -41,12 +43,14 @@ export default function AudioPage({
     );
   }
 
-  const bookUrls = showTitle
-    ? null
-    : {
-        pdf: [topicMedia[0].url_downpdf],
-        epub: [topicMedia[0].url_downepub],
-      };
+  const firstMedia = topicMedia[0];
+  const bookUrls =
+    firstMedia?.url_downpdf || firstMedia?.url_downepub
+      ? {
+          pdf: firstMedia.url_downpdf ? [firstMedia.url_downpdf] : [],
+          epub: firstMedia.url_downepub ? [firstMedia.url_downepub] : [],
+        }
+      : null;
   const audioBookUrl = [
     {
       title: topicMedia[0]?.title,
@@ -55,7 +59,7 @@ export default function AudioPage({
     },
   ];
 
-  const mp3Urls = showTitle
+  const audioItems = showTitle
     ? topicMedia.map(item => ({
         title: item?.title,
         url_mp3: item?.url_mp3,
@@ -66,7 +70,6 @@ export default function AudioPage({
         ...item,
         id: topicMedia[0]?.id,
       }));
-  // console.log('mp3Urls', mp3Urls);
 
   return (
     <Box
@@ -76,18 +79,25 @@ export default function AudioPage({
         flexDirection: 'column',
       }}
     >
-      {mp3Urls.map((item, idx) => (
+      {audioItems.map((item, idx) => (
         <Fragment key={idx}>
-          {item.title && showTitle && (
-            <Typography
-              fontWeight={500}
-              color='#444'
-              my={2}
-              fontSize={isMobile ? pxToVw(16) : { lg: 18, xl: 24, xxl: 28 }}
-            >
-              {item.title}
-            </Typography>
-          )}
+          <Stack my={2} direction={'row'} justifyContent={'space-between'}>
+            {item.title && showTitle && (
+              <Typography
+                fontWeight={500}
+                color='#444'
+                fontSize={isMobile ? pxToVw(16) : { lg: 18, xl: 24, xxl: 28 }}
+              >
+                {item.title}
+              </Typography>
+            )}
+            {isMobile && showTitle && item.url_downmp3 && (
+              <Button href={item.url_downmp3} sx={buttonStyles}>
+                <AudioDownIcon />
+                音频下载
+              </Button>
+            )}
+          </Stack>
           <Box
             sx={{
               display: 'flex',
@@ -107,26 +117,39 @@ export default function AudioPage({
               <Stack flexGrow={1} />
             )}
             {!isMobile && (
-              <>
-                {bookUrls ? (
-                  <Box display={'flex'}>
-                    <MediaDownloadButton
-                      mediaType='pdf'
-                      downloadUrls={bookUrls['pdf']}
-                    />{' '}
-                    &nbsp;
-                    <MediaDownloadButton
-                      mediaType='epub'
-                      downloadUrls={bookUrls['epub']}
-                    />
-                  </Box>
-                ) : (
-                  <MediaDownloadButton
-                    mediaType='audio'
-                    downloadUrls={[item?.url_downmp3 || '']}
-                  />
+              <Box display={'flex'}>
+                {bookUrls && (
+                  <>
+                    {bookUrls.pdf.length > 0 && (
+                      <MediaDownloadButton
+                        mediaType='pdf'
+                        downloadUrls={bookUrls.pdf}
+                      />
+                    )}
+                    {bookUrls.epub.length > 0 && (
+                      <>
+                        &nbsp;
+                        <MediaDownloadButton
+                          mediaType='epub'
+                          downloadUrls={bookUrls.epub}
+                        />
+                      </>
+                    )}
+                  </>
                 )}
-              </>
+                {item?.url_downmp3 && (
+                  <>
+                    {bookUrls &&
+                      (bookUrls.pdf.length > 0 || bookUrls.epub.length > 0) && (
+                        <>&nbsp;</>
+                      )}
+                    <MediaDownloadButton
+                      mediaType='audio'
+                      downloadUrls={[item.url_downmp3]}
+                    />
+                  </>
+                )}
+              </Box>
             )}
           </Box>
         </Fragment>

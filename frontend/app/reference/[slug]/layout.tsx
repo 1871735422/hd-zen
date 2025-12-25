@@ -53,7 +53,7 @@ export default async function CourseLayout({
     getCourseByDisplayOrder(slug),
     getCategories('学修参考资料'),
   ]);
-  console.log({ course, menuData });
+  // console.log({ course, menuData });
   if (!course) {
     notFound();
   }

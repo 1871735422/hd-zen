@@ -143,8 +143,10 @@ const refPage = async ({ params, searchParams }: refPageProps) => {
     if (
       selectedKey === 'audio' ||
       (!selectedKey && excludeLabels?.includes('视频') && media?.url_mp3)
-    )
+    ) {
+      selectedKey = 'audio';
       return <AudioPage topicMedia={bookMedia} />;
+    }
     if (
       selectedKey === 'article' ||
       (excludeLabels?.includes('视频') && !media?.mp3_duration)
@@ -167,6 +169,7 @@ const refPage = async ({ params, searchParams }: refPageProps) => {
       () => import('@/app/components/mobile/MobileLessonPage'),
       { ssr: true }
     );
+    console.log('media', media);
     return (
       <MobileLessonPage
         hasSiderbar={excludeLabels.length < 3}
@@ -176,7 +179,6 @@ const refPage = async ({ params, searchParams }: refPageProps) => {
         description={description}
         courseOrder={bookOrder}
         lessonOrder={chapterOrder}
-        mp3Url={selectedKey === 'audio' ? media?.url_downmp3 : undefined}
         pdfUrl={selectedKey === 'article' ? media?.url_downpdf : undefined}
         epubUrl={selectedKey === 'article' ? media?.url_downepub : undefined}
         excludeLabels={excludeLabels}
