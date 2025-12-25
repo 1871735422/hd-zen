@@ -11,3 +11,5 @@ export const ASK_DEAD_FRIENDS2 =
 
 export const MOBILE_UA_REGEX =
   /mobile|android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini|xiaomi|miui/i;
+
+export const PROBLEMATIC_MOBILE_BROWSER_REGEX = /HeyTapBrowser|OPPO/i;

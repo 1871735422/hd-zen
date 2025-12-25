@@ -5,7 +5,10 @@
  * 优先使用 Client Hints (Sec-CH-UA-Mobile)，回退到 User-Agent
  */
 
-import { MOBILE_UA_REGEX } from '../constants';
+import {
+  MOBILE_UA_REGEX,
+  PROBLEMATIC_MOBILE_BROWSER_REGEX,
+} from '../constants';
 
 /**
  * 判断是否为移动设备（服务器端）
@@ -78,14 +81,20 @@ export async function getDeviceTypeFromHeaders(): Promise<
     // 1. 获取 User-Agent（用于判断移动设备）
     const userAgent = headersList.get('user-agent') || '';
     const isMobileUA = userAgent ? isMobileUserAgent(userAgent) : false;
+    const isProblematicMobileUA =
+      userAgent && PROBLEMATIC_MOBILE_BROWSER_REGEX.test(userAgent);
     const isMobileHint = isMobileFromClientHints(headersList);
     const isMobileLike = isMobileUA || isMobileHint === true;
 
     // 2. 读取视口宽度和高度（Client Hints），计算有效宽度
     // 优先使用视口宽度，因为这是最准确的判断依据
     // 注意：使用已获取的 headersList，避免重复调用 headers()
-    const viewportWidth = getViewportWidthFromHeaders(headersList);
-    const viewportHeight = getViewportHeightFromHeaders(headersList);
+    const viewportWidth = isProblematicMobileUA
+      ? null
+      : getViewportWidthFromHeaders(headersList);
+    const viewportHeight = isProblematicMobileUA
+      ? null
+      : getViewportHeightFromHeaders(headersList);
 
     // 计算有效宽度：移动端横屏时，只有当横屏宽度 <= 960px 才使用较短边（处理手机横屏）
     // 如果横屏宽度 > 960px，说明设备足够大（如平板），应该直接使用宽度判断为 desktop
