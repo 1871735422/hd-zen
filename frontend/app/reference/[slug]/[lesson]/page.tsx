@@ -2,6 +2,7 @@ import AudioPage from '@/app/components/pc/AudioPage';
 import MifaWarning from '@/app/components/pc/MifaWarning';
 import ReadingPage from '@/app/components/pc/ReadingPage';
 import VideoPage from '@/app/components/pc/VideoPage';
+import { shouldShowEbookDownload } from '@/app/utils/courseUtils';
 import { pxToVw } from '@/app/utils/mobileUtils';
 import { getDeviceTypeFromHeaders } from '@/app/utils/serverDeviceUtils';
 import { Box } from '@mui/material';
@@ -162,9 +163,7 @@ const refPage = async ({ params, searchParams }: refPageProps) => {
     }
     return <VideoPage topicMedia={bookMedia} />;
   };
-  const showEbookDownload =
-    selectedKey === 'article' ||
-    (excludeLabels?.includes('视频') && excludeLabels?.includes('音频'));
+  const showEbookDownload = shouldShowEbookDownload(selectedKey, excludeLabels);
 
   // 移动端渲染
   if (isMobile) {

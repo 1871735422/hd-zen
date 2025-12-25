@@ -38,6 +38,16 @@ export const getTopicContentTypes = (topic: CourseTopic) => {
   return contentTypes;
 };
 
+export const shouldShowEbookDownload = (
+  selectedKey: string | undefined,
+  excludeLabels?: string[]
+) => {
+  if (selectedKey === 'article') return true;
+  if (!excludeLabels) return false;
+
+  return excludeLabels.includes('视频') && excludeLabels.includes('音频');
+};
+
 // Generate course navigation breadcrumbs
 export const generateCourseBreadcrumbs = (
   course: {

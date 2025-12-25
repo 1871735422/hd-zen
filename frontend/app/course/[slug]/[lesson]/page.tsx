@@ -3,6 +3,7 @@ import AudioPage from '@/app/components/pc/AudioPage';
 import MifaWarning from '@/app/components/pc/MifaWarning';
 import ReadingPage from '@/app/components/pc/ReadingPage';
 import VideoPage from '@/app/components/pc/VideoPage';
+import { shouldShowEbookDownload } from '@/app/utils/courseUtils';
 import { pxToVw } from '@/app/utils/mobileUtils';
 import { Box } from '@mui/material';
 import { notFound } from 'next/navigation';
@@ -155,6 +156,8 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
       ? topicMedia[0]?.article_summary || topicMedia[0]?.media_summary || ''
       : topicMedia[0]?.media_summary || topicMedia[0]?.article_summary;
 
+  const showEbookDownload = shouldShowEbookDownload(selectedKey, excludeLabels);
+
   // console.log(!selectedKey, excludeLabels?.includes('视频'), media?.url_mp3);
   const TabRender = () => {
     if (
@@ -193,8 +196,8 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
         description={description}
         courseOrder={courseOrder}
         lessonOrder={lessonOrder}
-        pdfUrl={selectedKey === 'article' ? media?.url_downpdf : undefined}
-        epubUrl={selectedKey === 'article' ? media?.url_downepub : undefined}
+        pdfUrl={showEbookDownload ? media?.url_downpdf : undefined}
+        epubUrl={showEbookDownload ? media?.url_downepub : undefined}
         excludeLabels={excludeLabels}
       >
         <Box

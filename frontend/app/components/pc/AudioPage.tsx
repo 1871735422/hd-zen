@@ -71,6 +71,9 @@ export default function AudioPage({
         id: topicMedia[0]?.id,
       }));
 
+  const showBookDownloads = !showTitle && !!bookUrls;
+  const showAudioDownload = (url?: string | null) => showTitle && !!url;
+
   return (
     <Box
       sx={{
@@ -116,41 +119,37 @@ export default function AudioPage({
             ) : (
               <Stack flexGrow={1} />
             )}
-            {!isMobile && (
-              <Box display={'flex'}>
-                {bookUrls && (
-                  <>
-                    {bookUrls.pdf.length > 0 && (
-                      <MediaDownloadButton
-                        mediaType='pdf'
-                        downloadUrls={bookUrls.pdf}
-                      />
-                    )}
-                    {bookUrls.epub.length > 0 && (
-                      <>
-                        &nbsp;
+            {!isMobile &&
+              (showBookDownloads || showAudioDownload(item?.url_downmp3)) && (
+                <Box display={'flex'}>
+                  {showBookDownloads && bookUrls && (
+                    <>
+                      {bookUrls.pdf.length > 0 && (
                         <MediaDownloadButton
-                          mediaType='epub'
-                          downloadUrls={bookUrls.epub}
+                          mediaType='pdf'
+                          downloadUrls={bookUrls.pdf}
                         />
-                      </>
-                    )}
-                  </>
-                )}
-                {item?.url_downmp3 && (
-                  <>
-                    {bookUrls &&
-                      (bookUrls.pdf.length > 0 || bookUrls.epub.length > 0) && (
-                        <>&nbsp;</>
                       )}
-                    <MediaDownloadButton
-                      mediaType='audio'
-                      downloadUrls={[item.url_downmp3]}
-                    />
-                  </>
-                )}
-              </Box>
-            )}
+                      {bookUrls.epub.length > 0 && (
+                        <Box ml={1}>
+                          <MediaDownloadButton
+                            mediaType='epub'
+                            downloadUrls={bookUrls.epub}
+                          />
+                        </Box>
+                      )}
+                    </>
+                  )}
+                  {showAudioDownload(item?.url_downmp3) && (
+                    <Box ml={showBookDownloads && bookUrls ? 1 : 0}>
+                      <MediaDownloadButton
+                        mediaType='audio'
+                        downloadUrls={[item.url_downmp3!]}
+                      />
+                    </Box>
+                  )}
+                </Box>
+              )}
           </Box>
         </Fragment>
       ))}
