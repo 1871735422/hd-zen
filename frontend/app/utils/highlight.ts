@@ -3,9 +3,11 @@
 
 // 将 keywords 转为安全的 RegExp
 export const buildKeywordRegex = (keywords: string[]) => {
-  const escaped = keywords
-    .filter(Boolean)
-    .map(k => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+  const normalized = (keywords || [])
+    .flatMap(k => k.split(/[,\s，、]+/))
+    .map(k => k.trim())
+    .filter(Boolean);
+  const escaped = normalized.map(k => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
   if (escaped.length === 0) return null;
   return new RegExp(`(${escaped.join('|')})`, 'gi');
 };
