@@ -191,7 +191,7 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
       <MobileLessonPage
         hasSiderbar={excludeLabels.length < 3}
         title={topicMedia[0]?.article_title}
-        author={topicMedia[0]?.author || '慈诚罗珠堪布'}
+        author={`作者：${topicMedia[0]?.author}`}
         date={media?.created || ''}
         description={description}
         courseOrder={courseOrder}
@@ -227,7 +227,7 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
           topicTags?.length ? topicTags.map((tag: string) => tag.trim()) : []
         }
         description={description}
-        author={topicMedia[0]?.author || '慈诚罗珠堪布'}
+        author={`作者：${topicMedia[0]?.author}`}
         date={topicMedia[0]?.created}
       />
       <TabRender />

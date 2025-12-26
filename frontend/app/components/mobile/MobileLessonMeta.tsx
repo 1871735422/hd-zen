@@ -66,14 +66,14 @@ export function MobileLessonMeta({
           <Typography
             sx={{
               pl: refCourse ? 0 : pxToVw(30),
-              pr: pxToVw(90),
+              pr: refCourse ? 0 : pxToVw(90),
               pb: refCourse ? 0 : pxToVw(6),
               fontSize: pxToVw(12),
               color: 'rgba(153, 153, 153, 1)',
               lineHeight: 2.3,
             }}
           >
-            {author && `作者：${author} `}{' '}
+            {author}
             {date ? ` / ${formatDate(date)}` : ''}
           </Typography>
           {refCourse && (

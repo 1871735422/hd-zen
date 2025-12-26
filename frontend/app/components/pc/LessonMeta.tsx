@@ -64,7 +64,7 @@ export default function LessonMeta({
         }}
       >
         <Typography variant='subtitle1'>
-          作者：{author?.replace('作者：', '')} &nbsp;&nbsp; {formatDate(date)}
+          {author} &nbsp;&nbsp; {formatDate(date)}
         </Typography>
         {refCourse && (
           <Typography variant='subtitle1'>

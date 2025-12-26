@@ -115,20 +115,19 @@ const RefPage = async ({ params, searchParams }: RefPageProps) => {
   const chapterOrder = resolvedParams.lesson?.replace('lesson', '');
   const bookMedia = await getBookMediaByOrder(bookOrder, chapterOrder);
   const refBooks = await getReferenceBooks();
+  const media = bookMedia[0];
   // console.log('refBooks', refBooks);
   // 设备检测
   const deviceType = await getDeviceTypeFromHeaders();
   const isMobile = deviceType === 'mobile';
   // console.log('bookMedia', bookMedia);
-  const audioAuthor = refBooks.find(
-    book => book.id === bookMedia[0].bookId
-  )?.author;
+  const audioAuthor = refBooks.find(book => book.id === media.bookId)?.author;
   // console.log('audioAuthor', audioAuthor);
+  // console.log(media);
 
   if (!bookMedia) {
     notFound();
   }
-  const media = bookMedia[0];
   const bookTags = media?.tags;
   const excludeLabels = ['问答'];
   // console.log(media);
@@ -150,7 +149,7 @@ const RefPage = async ({ params, searchParams }: RefPageProps) => {
       ? bookMedia[0]?.article_summary
       : bookMedia[0]?.media_summary;
 
-  let author = bookMedia[0]?.author;
+  let author = `作者：${bookMedia[0]?.author}`;
 
   const TabRender = () => {
     if (
@@ -180,9 +179,10 @@ const RefPage = async ({ params, searchParams }: RefPageProps) => {
   if (
     excludeLabels.includes('视频') &&
     !excludeLabels.includes('音频') &&
-    selectedKey !== 'article'
+    selectedKey !== 'article' &&
+    media?.courseTitle !== '佛说稻秆经'
   ) {
-    author = audioAuthor;
+    author = audioAuthor + '';
   }
 
   // 移动端渲染
@@ -191,12 +191,11 @@ const RefPage = async ({ params, searchParams }: RefPageProps) => {
       () => import('@/app/components/mobile/MobileLessonPage'),
       { ssr: true }
     );
-    console.log('media', media);
     return (
       <MobileLessonPage
         hasSiderbar={excludeLabels.length < 3}
         title={media?.article_title || media?.title || ''}
-        author={author || ''}
+        author={author}
         date={media?.created || ''}
         description={description}
         courseOrder={bookOrder}
@@ -231,7 +230,7 @@ const RefPage = async ({ params, searchParams }: RefPageProps) => {
         title={bookMedia[0]?.article_title}
         tags={bookTags?.length ? bookTags.map((tag: string) => tag.trim()) : []}
         description={description}
-        author={author || ''}
+        author={author}
         date={bookMedia[0]?.created}
       />
       <TabRender />
