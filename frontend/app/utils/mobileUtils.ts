@@ -13,7 +13,7 @@
  * pxToVw(340) // '90.667vw'
  */
 export function pxToVw(px: number): string {
-  return `${(px / 375) * 100}vw`;
+  return `${(px / 375) * 100}vmin`;
 }
 
 /**

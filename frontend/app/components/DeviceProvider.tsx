@@ -64,26 +64,36 @@ export default function DeviceProvider({
     const checkDevice = (isInitialCheck = false) => {
       const ua = navigator.userAgent || '';
       const isMobileUA = MOBILE_UA_REGEX.test(ua);
+      if (isMobileUA) {
+        if (isInitialCheck) {
+          if (serverDeviceType === 'desktop') {
+            setDeviceType('mobile');
+          }
+        } else {
+          setDeviceType('mobile');
+        }
+        return;
+      }
       const viewportWidth = window.innerWidth;
       const viewportHeight = window.innerHeight;
       const isLandscape = viewportWidth > viewportHeight;
       const isMobileLike = isMobileUA;
 
-      // 移动端横屏时，只有当横屏宽度 <= 960px 才使用较短边（处理手机横屏）
-      // 如果横屏宽度 > 960px，说明设备足够大（如平板），应该直接使用宽度判断为 desktop
-      // 断点：960px，大于 960px 的平板（如 iPad Pro 1024px）视为 PC 端
+      // 移动端横屏时，只有当横屏宽度 <= 980px 才使用较短边（处理手机横屏）
+      // 如果横屏宽度 > 980px，说明设备足够大（如平板），应该直接使用宽度判断为 desktop
+      // 断点：980px，大于 980px 的平板（如 iPad Pro 1024px）视为 PC 端
       const effectiveWidth =
-        isMobileLike && isLandscape && viewportWidth <= 960
+        isMobileLike && isLandscape && viewportWidth <= 980
           ? Math.min(viewportWidth, viewportHeight)
           : viewportWidth;
 
       // 核心判断逻辑：与服务端完全一致
-      // 1. 有效宽度 > 960px → desktop
-      // 2. 有效宽度 <= 960px 且为触屏/移动设备 → mobile
-      // 3. 有效宽度 <= 960px 且非触屏且非移动 UA → desktop
+      // 1. 有效宽度 > 980px → desktop
+      // 2. 有效宽度 <= 980px 且为触屏/移动设备 → mobile
+      // 3. 有效宽度 <= 980px 且非触屏且非移动 UA → desktop
       // 注意：客户端 window.innerWidth 总是存在，所以 effectiveWidth 不会是 null
       let newDeviceType: 'mobile' | 'desktop';
-      if (effectiveWidth > 960) {
+      if (effectiveWidth > 980) {
         newDeviceType = 'desktop';
       } else {
         newDeviceType = isMobileLike ? 'mobile' : 'desktop';

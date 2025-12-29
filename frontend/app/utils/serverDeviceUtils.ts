@@ -86,6 +86,10 @@ export async function getDeviceTypeFromHeaders(): Promise<
     const isMobileHint = isMobileFromClientHints(headersList);
     const isMobileLike = isMobileUA || isMobileHint === true;
 
+    if (isMobileUA) {
+      return 'mobile';
+    }
+
     // 2. 读取视口宽度和高度（Client Hints），计算有效宽度
     // 优先使用视口宽度，因为这是最准确的判断依据
     // 注意：使用已获取的 headersList，避免重复调用 headers()
@@ -96,8 +100,8 @@ export async function getDeviceTypeFromHeaders(): Promise<
       ? null
       : getViewportHeightFromHeaders(headersList);
 
-    // 计算有效宽度：移动端横屏时，只有当横屏宽度 <= 960px 才使用较短边（处理手机横屏）
-    // 如果横屏宽度 > 960px，说明设备足够大（如平板），应该直接使用宽度判断为 desktop
+    // 计算有效宽度：移动端横屏时，只有当横屏宽度 <= 980px 才使用较短边（处理手机横屏）
+    // 如果横屏宽度 > 980px，说明设备足够大（如平板），应该直接使用宽度判断为 desktop
     // 与客户端逻辑完全一致
     let effectiveWidth: number | null = null;
     if (
@@ -105,9 +109,9 @@ export async function getDeviceTypeFromHeaders(): Promise<
       typeof viewportHeight === 'number'
     ) {
       const isLandscape = viewportWidth > viewportHeight;
-      // 横屏时：如果宽度 <= 960px（手机横屏），使用较短边；如果宽度 > 960px（平板横屏），使用宽度
+      // 横屏时：如果宽度 <= 980px（手机横屏），使用较短边；如果宽度 > 980px（平板横屏），使用宽度
       effectiveWidth =
-        isMobileLike && isLandscape && viewportWidth <= 960
+        isMobileLike && isLandscape && viewportWidth <= 980
           ? Math.min(viewportWidth, viewportHeight)
           : viewportWidth;
     } else if (typeof viewportWidth === 'number') {
@@ -115,15 +119,10 @@ export async function getDeviceTypeFromHeaders(): Promise<
       effectiveWidth = viewportWidth;
     }
 
-    // 3. 核心判断逻辑：与客户端保持一致
-    // 断点：960px，大于 960px 的平板（如 iPad Pro 1024px）视为 PC 端
     if (effectiveWidth !== null) {
-      // 有效宽度 > 960px → desktop
-      if (effectiveWidth > 960) {
+      if (effectiveWidth > 980) {
         return 'desktop';
       }
-      // 有效宽度 <= 960px 且为移动 UA / Client Hints 移动 → mobile
-      // 有效宽度 <= 960px 且二者均非移动 → desktop
       return isMobileLike ? 'mobile' : 'desktop';
     }
 
