@@ -12,7 +12,7 @@ export default function VideoPage({ topicMedia }: { topicMedia: Media[] }) {
           <Fragment key={media.id}>
             {media?.url_hd || media?.url_sd ? (
               <VideoPlayer
-                urlParamName={topicMedia.length > 1 ? 'showTitle' : ''}
+                urlParamName={topicMedia.length > 0 ? 'showTitle' : ''}
                 videoList={[
                   {
                     id: media?.id || '',

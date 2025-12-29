@@ -64,7 +64,7 @@ export default function LessonMeta({
         }}
       >
         <Typography variant='subtitle1'>
-          {author} &nbsp;&nbsp; {formatDate(date)}
+          {author} {date && `/ ${formatDate(date)}`}
         </Typography>
         {refCourse && (
           <Typography variant='subtitle1'>
