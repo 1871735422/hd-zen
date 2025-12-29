@@ -197,7 +197,7 @@ const RefPage = async ({ params, searchParams }: RefPageProps) => {
         title={media?.article_title || media?.title || ''}
         author={author}
         date={media?.created || ''}
-        description={description}
+        // description={description}
         courseOrder={bookOrder}
         lessonOrder={chapterOrder}
         pdfUrl={showEbookDownload ? media?.url_downpdf : undefined}
@@ -229,7 +229,7 @@ const RefPage = async ({ params, searchParams }: RefPageProps) => {
       <LessonMeta
         title={bookMedia[0]?.article_title}
         tags={bookTags?.length ? bookTags.map((tag: string) => tag.trim()) : []}
-        description={description}
+        // description={description} // 参考页不展示概述
         author={author}
         date={bookMedia[0]?.created}
       />
