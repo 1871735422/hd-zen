@@ -1,19 +1,29 @@
 'use client';
 
 import { STANDARD_TEXT_COLOR } from '@/app/constants/colors';
-import { clearCourseTitle } from '@/app/utils/courseUtils';
 import { pxToVw } from '@/app/utils/mobileUtils';
 import { Box, Button, Stack, Typography } from '@mui/material';
 import { useState } from 'react';
 import { useDevice } from '../DeviceProvider';
 import LuminousIcon from '../icons/LuminousIcon';
+import { MobileLessonDescription } from '../mobile/MobileLessonMeta';
 
 interface MifaProps {
   article_title: string;
+  author?: string;
+  date?: string;
+  description?: string;
   secret_level?: string;
   children: React.ReactNode;
 }
-const MifaWarning = ({ article_title, secret_level, children }: MifaProps) => {
+const MifaWarning = ({
+  article_title,
+  // author,
+  // date,
+  description,
+  secret_level,
+  children,
+}: MifaProps) => {
   const [show, setShow] = useState(false);
   const { deviceType } = useDevice();
   const isMobile = deviceType === 'mobile';
@@ -21,28 +31,30 @@ const MifaWarning = ({ article_title, secret_level, children }: MifaProps) => {
   return (
     <>
       {show ? (
-        <>{children}</>
+        <>
+          {/* {author && date && <MobileLessonAuthor author={author} date={date} />} */}
+          {description && <MobileLessonDescription description={description} />}
+          {children}
+        </>
       ) : (
         <Box>
-          <Typography
-            fontWeight={600}
-            px={0}
-            textAlign={'center'}
-            mt={{ lg: 6.4, xlg: 7, xl: 8 }}
-            mb={3}
-            fontSize={
-              isMobile
-                ? pxToVw(20)
-                : {
-                    lg: 30,
-                    xl: 36,
-                    xxl: 40,
-                  }
-            }
-            color={STANDARD_TEXT_COLOR}
-          >
-            {clearCourseTitle(article_title)}
-          </Typography>
+          {!isMobile && (
+            <Typography
+              fontWeight={600}
+              px={0}
+              textAlign={'center'}
+              mt={{ lg: 6.4, xlg: 7, xl: 8 }}
+              mb={3}
+              fontSize={{
+                lg: 30,
+                xl: 36,
+                xxl: 40,
+              }}
+              color={STANDARD_TEXT_COLOR}
+            >
+              {article_title}
+            </Typography>
+          )}
           <Box
             sx={{
               width: '100%',

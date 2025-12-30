@@ -191,9 +191,9 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
       <MobileLessonPage
         hasSiderbar={excludeLabels.length < 3}
         title={topicMedia[0]?.article_title}
-        author={`作者：${topicMedia[0]?.author}`}
+        author={topicMedia[0]?.author || ''}
         date={media?.created || ''}
-        description={description}
+        description={hasSecretWarn ? '' : description}
         courseOrder={courseOrder}
         lessonOrder={lessonOrder}
         pdfUrl={showEbookDownload ? media?.url_downpdf : undefined}
@@ -208,7 +208,10 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
           {hasSecretWarn && media.secret_level ? (
             <MifaWarning
               article_title={media.article_title}
+              author={topicMedia[0]?.author}
+              date={media?.created || ''}
               secret_level={media.secret_level[selectedKey ?? 'video']}
+              description={description}
             >
               <TabRender />
             </MifaWarning>
@@ -227,7 +230,7 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
           topicTags?.length ? topicTags.map((tag: string) => tag.trim()) : []
         }
         description={description}
-        author={`作者：${topicMedia[0]?.author}`}
+        author={`${topicMedia[0]?.author}`}
         date={topicMedia[0]?.created}
       />
       <TabRender />

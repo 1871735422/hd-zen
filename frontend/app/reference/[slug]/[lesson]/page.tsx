@@ -144,12 +144,12 @@ const RefPage = async ({ params, searchParams }: RefPageProps) => {
     excludeLabels.push('视频');
   }
   const hasSecretWarn = media?.secret_level !== null;
-  const description =
-    selectedKey === 'article'
-      ? bookMedia[0]?.article_summary
-      : bookMedia[0]?.media_summary;
+  // const description =
+  //   selectedKey === 'article'
+  //     ? bookMedia[0]?.article_summary
+  //     : bookMedia[0]?.media_summary;
 
-  let author = `作者：${bookMedia[0]?.author}`;
+  let author = `${bookMedia[0]?.author}`;
 
   const TabRender = () => {
     if (

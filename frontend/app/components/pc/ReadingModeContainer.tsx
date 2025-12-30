@@ -150,7 +150,7 @@ export default function ReadingModeContainer({
                 opacity: 0.7,
               }}
             >
-              {author && `作者: ${author}`}
+              {author && ` ${author}`}
               <span style={{ paddingLeft: '15px' }}>
                 {date && formatDate(date)}
               </span>
@@ -177,7 +177,7 @@ export default function ReadingModeContainer({
               textAlign: 'center',
             }}
           >
-            {author && `作者: ${author}`}
+            {author && ` ${author}`}
             <span style={{ paddingLeft: '15px' }}>
               {date && formatDate(date)}
             </span>
