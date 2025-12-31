@@ -122,6 +122,8 @@ export interface TopicMediaX extends Article, Omit<Media, 'summary'> {
   media_summary?: string;
   secret_level?: SecretText;
   hasQa?: boolean;
+  media_date?: string;
+  article_date?: string;
 }
 // API Response types
 export interface PaginatedResponse<T> {

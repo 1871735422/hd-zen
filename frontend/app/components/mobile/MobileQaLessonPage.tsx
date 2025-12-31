@@ -14,7 +14,8 @@ import MobileQaSidebar from './MobileQaSidebar';
 interface QuestionItem {
   questionOrder: number;
   questionTitle?: string;
-  questionCreated?: string;
+  media_author?: string;
+  media_date?: string;
   title?: string;
   url_sd?: string;
   url_hd?: string;
@@ -207,8 +208,8 @@ export default function MobileQaLessonPage({
             <MobileLessonMeta
               hasSiderbar
               title={`${currentIndex + 1}. ${currentQuestion.questionTitle}`}
-              author={'慈诚罗珠堪布'}
-              date={currentQuestion.questionCreated}
+              author={currentQuestion.media_author || ''}
+              date={currentQuestion.media_date || ''}
               refCourse={`${courseName} > ${lessonName}`}
               refUrl={`/course/${courseOrder}/lesson${lessonOrder}`}
             />

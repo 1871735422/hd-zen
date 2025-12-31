@@ -12,7 +12,8 @@ interface QuestionItem {
   questionOrder: number;
   questionTitle?: string;
   questionContent?: string;
-  created?: string;
+  media_author?: string;
+  media_date?: string;
   title?: string;
   url_sd?: string;
   url_hd?: string;
@@ -155,8 +156,8 @@ export default function QaClientWrapper({
           {currentQuestion?.questionTitle && (
             <LessonMeta
               title={`${currentIndex + 1}. ${currentQuestion?.questionTitle}`}
-              author='慈诚罗珠堪布'
-              date={currentQuestion?.created || ''}
+              author={currentQuestion?.media_author || ''}
+              date={currentQuestion?.media_date || ''}
               refCourse={`${courseName} > ${lessonName}`}
               refUrl={`/course/${courseOrder}/lesson${lessonOrder}`}
             />

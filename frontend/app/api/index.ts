@@ -306,9 +306,10 @@ export const getAnswerMediasByOrder = async (
   if (topicOrder) {
     filters.push('topicOrder = ' + topicOrder);
   }
+  // console.log({filters});
 
   let fileds =
-    'courseTitle,topicTitle,topicOrder,questionTitle,questionContent,questionOrder,questionCreated,description,isActive';
+    'courseTitle,topicTitle,topicOrder,questionTitle,questionContent,questionOrder,questionCreated,description,isActive,media_author,media_date';
   if (fetchMedia) {
     fileds +=
       ',url_image,url_hd,url_sd,mp4_duration,url_downmp4,mp4_size,url_mp3,mp3_duration,url_downmp3,mp3_size,summary';

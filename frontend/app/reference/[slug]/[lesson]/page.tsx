@@ -155,6 +155,11 @@ const RefPage = async ({ params, searchParams }: RefPageProps) => {
     ? bookMedia[0]?.media_author || ''
     : bookMedia[0]?.author || '';
 
+  const date =
+    resolvedTabForMeta === 'article'
+      ? media.article_date || ''
+      : media.media_date || '';
+
   const TabRender = () => {
     const resolvedTab = resolveLessonTab(selectedKey, excludeLabels, media);
 
@@ -185,7 +190,7 @@ const RefPage = async ({ params, searchParams }: RefPageProps) => {
         hasSiderbar={excludeLabels.length < 3}
         title={media?.article_title || media?.title || ''}
         author={author}
-        date={media?.created || ''}
+        date={date}
         // description={description}
         courseOrder={bookOrder}
         lessonOrder={chapterOrder}
@@ -220,7 +225,7 @@ const RefPage = async ({ params, searchParams }: RefPageProps) => {
         tags={bookTags?.length ? bookTags.map((tag: string) => tag.trim()) : []}
         // description={description} // 参考页不展示概述
         author={author}
-        date={bookMedia[0]?.created}
+        date={date}
       />
       <TabRender />
     </>

@@ -5,16 +5,19 @@
 测试已按功能模块拆分，可以单独运行或整体运行：
 
 ### 1. 首页、Ask、下载测试 (`home-ask-download.spec.ts`)
+
 - 首页测试：检查首页加载和主要导航链接
 - Ask 页面测试：测试问答收集页面
 - 下载页面测试：测试所有下载链接
 
 ### 2. QA 测试 (`qa.spec.ts`)
+
 - QA 列表页面测试
 - QA 详情页面测试
 - 所有相关链接测试
 
 ### 3. 课程和参考资料测试 (`course-reference.spec.ts`)
+
 - 课程列表页面测试
 - 课程详情页面测试
 - 参考资料列表页面测试
@@ -24,6 +27,7 @@
 > **注意**：课程和参考资料测试已合并为一个文件
 
 ### 4. 搜索测试 (`search.spec.ts`)
+
 - 搜索页面基本功能
 - 搜索功能测试
 - 搜索结果链接测试
@@ -105,10 +109,13 @@ $env:MAX_REFERENCE_LESSONS="3"; pnpm test:e2e:course-reference
 ```
 
 # 限制下载测试的下载数量
+
 $env:MAX_DOWNLOADS="5"; pnpm test:e2e:home
 
 # 限制搜索测试的结果数量
+
 $env:MAX_SEARCH_RESULTS="3"; pnpm test:e2e:search
+
 ```
 
 ## 测试功能特性
@@ -186,3 +193,4 @@ $env:MAX_SEARCH_RESULTS="3"; pnpm test:e2e:search
 2. **响应式测试**：测试不同设备尺寸
 3. **无障碍测试**：检查键盘导航、屏幕阅读器支持
 4. **多浏览器测试**：在 Firefox、WebKit 中运行
+```

@@ -165,7 +165,8 @@ const qaPage = async ({ params, searchParams }: qaPageProps) => {
   type QLite = {
     questionOrder: number;
     questionTitle?: string;
-    questionCreated?: string;
+    media_author?: string;
+    media_date?: string;
     title?: string;
     url_sd?: string;
     url_hd?: string;

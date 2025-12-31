@@ -128,7 +128,7 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
 
   // 总是需要获取 topicMedia 数据
   const topicMedia = await getTopicMediaByOrder(courseOrder, lessonOrder);
-  console.log('topicMedia', topicMedia);
+  // console.log('topicMedia', topicMedia);
 
   if (!topicMedia) {
     notFound();
@@ -164,6 +164,11 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
   const author = isMediaTab
     ? topicMedia[0]?.media_author || ''
     : topicMedia[0]?.author || '';
+
+  const date =
+    resolvedTabForMeta === 'article'
+      ? media.article_date || ''
+      : media.media_date || '';
 
   const hasSecretWarn = media?.secret_level !== null;
   const description =
@@ -202,7 +207,7 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
         hasSiderbar={excludeLabels.length < 3}
         title={topicMedia[0]?.article_title}
         author={author}
-        date={media?.created || ''}
+        date={date}
         description={hasSecretWarn ? '' : description}
         courseOrder={courseOrder}
         lessonOrder={lessonOrder}
@@ -219,7 +224,7 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
             <MifaWarning
               article_title={media.article_title}
               author={author}
-              date={media?.created || ''}
+              date={date}
               secret_level={media.secret_level[selectedKey ?? 'video']}
               description={description}
             >
@@ -241,7 +246,7 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
         }
         description={description}
         author={author}
-        date={topicMedia[0]?.created}
+        date={date}
       />
       <TabRender />
     </>

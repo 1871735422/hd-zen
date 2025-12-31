@@ -130,7 +130,10 @@ async function extractVideoUrls(page: Page): Promise<{
     console.error('Error extracting video URLs:', error);
   }
 
-  return { playUrls: [...new Set(playUrls)], downloadUrls: [...new Set(downloadUrls)] };
+  return {
+    playUrls: [...new Set(playUrls)],
+    downloadUrls: [...new Set(downloadUrls)],
+  };
 }
 
 /**
@@ -149,9 +152,7 @@ test.describe('Resource Consistency Tests', () => {
     expect(sidebarTitles.length).toBeGreaterThan(0);
 
     // 遍历每个标题，检查一致性
-    const sidebarItems = page.locator(
-      '[role="listitem"], a[href*="question"]'
-    );
+    const sidebarItems = page.locator('[role="listitem"], a[href*="question"]');
     const itemCount = await sidebarItems.count();
 
     const inconsistencies: Array<{
@@ -227,9 +228,7 @@ test.describe('Resource Consistency Tests', () => {
     await page.goto(testUrl);
     await page.waitForLoadState('networkidle');
 
-    const sidebarItems = page.locator(
-      '[role="listitem"], a[href*="question"]'
-    );
+    const sidebarItems = page.locator('[role="listitem"], a[href*="question"]');
     const itemCount = await sidebarItems.count();
 
     const inaccessibleResources: Array<{
@@ -279,7 +278,10 @@ test.describe('Resource Consistency Tests', () => {
           });
         }
       } catch (error) {
-        console.error(`Error checking resource accessibility for item ${i}:`, error);
+        console.error(
+          `Error checking resource accessibility for item ${i}:`,
+          error
+        );
       }
     }
 

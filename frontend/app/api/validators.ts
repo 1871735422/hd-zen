@@ -82,6 +82,8 @@ export const QuestionResultSchema = BaseModelSchema.extend({
   isActive: z.boolean().optional(),
   // Media fields
   title: z.string(),
+  media_author: z.string().optional(),
+  media_date: z.string().optional(),
   url_hd: z.string().optional(),
   url_sd: z.string().optional(),
   url_image: z.string().optional(),
