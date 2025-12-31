@@ -2,7 +2,6 @@
 import LessonMeta from '@/app/components/pc/LessonMeta';
 import QaSidebar from '@/app/components/pc/QaSidebar';
 import VideoPlayer, { VideoItem } from '@/app/components/pc/VideoPlayer';
-import { formatDate } from '@/app/utils/courseUtils';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Box, Button, Grid, Stack } from '@mui/material';
@@ -13,7 +12,7 @@ interface QuestionItem {
   questionOrder: number;
   questionTitle?: string;
   questionContent?: string;
-  questionCreated?: string;
+  created?: string;
   title?: string;
   url_sd?: string;
   url_hd?: string;
@@ -157,7 +156,7 @@ export default function QaClientWrapper({
             <LessonMeta
               title={`${currentIndex + 1}. ${currentQuestion?.questionTitle}`}
               author='慈诚罗珠堪布'
-              date={formatDate(currentQuestion?.questionCreated || '')}
+              date={currentQuestion?.created || ''}
               refCourse={`${courseName} > ${lessonName}`}
               refUrl={`/course/${courseOrder}/lesson${lessonOrder}`}
             />

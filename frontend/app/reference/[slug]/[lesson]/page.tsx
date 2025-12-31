@@ -2,18 +2,17 @@ import AudioPage from '@/app/components/pc/AudioPage';
 import MifaWarning from '@/app/components/pc/MifaWarning';
 import ReadingPage from '@/app/components/pc/ReadingPage';
 import VideoPage from '@/app/components/pc/VideoPage';
-import { shouldShowEbookDownload } from '@/app/utils/courseUtils';
+import {
+  resolveLessonTab,
+  shouldShowEbookDownload,
+} from '@/app/utils/courseUtils';
 import { pxToVw } from '@/app/utils/mobileUtils';
 import { getDeviceTypeFromHeaders } from '@/app/utils/serverDeviceUtils';
 import { Box } from '@mui/material';
 import dynamic from 'next/dynamic';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next/types';
-import {
-  getBookChapters,
-  getBookMediaByOrder,
-  getReferenceBooks,
-} from '../../../api';
+import { getBookChapters, getBookMediaByOrder } from '../../../api';
 import LessonMeta from '../../../components/pc/LessonMeta';
 import LessonSidebar from '../../../components/pc/LessonSidebar';
 import { BookChapter, SecretText } from '../../../types/models';
@@ -107,24 +106,18 @@ interface RefPageProps {
 const RefPage = async ({ params, searchParams }: RefPageProps) => {
   const resolvedParams = await params;
   const resolvedSearchParams = await searchParams;
-  let { tab: selectedKey } = resolvedSearchParams as {
+  const { tab: selectedKey } = resolvedSearchParams as {
     tab?: keyof SecretText;
   };
 
   const bookOrder = resolvedParams.slug;
   const chapterOrder = resolvedParams.lesson?.replace('lesson', '');
   const bookMedia = await getBookMediaByOrder(bookOrder, chapterOrder);
-  const refBooks = await getReferenceBooks();
   const media = bookMedia[0];
   // console.log('refBooks', refBooks);
   // 设备检测
   const deviceType = await getDeviceTypeFromHeaders();
   const isMobile = deviceType === 'mobile';
-  // console.log('bookMedia', bookMedia);
-  const audioAuthor = refBooks.find(book => book.id === media.bookId)?.author;
-  // console.log('audioAuthor', audioAuthor);
-  // console.log(media);
-
   if (!bookMedia) {
     notFound();
   }
@@ -149,21 +142,26 @@ const RefPage = async ({ params, searchParams }: RefPageProps) => {
   //     ? bookMedia[0]?.article_summary
   //     : bookMedia[0]?.media_summary;
 
-  let author = `${bookMedia[0]?.author}`;
+  const resolvedTabForMeta = resolveLessonTab(
+    selectedKey,
+    excludeLabels,
+    media
+  );
+
+  const isMediaTab =
+    resolvedTabForMeta === 'audio' || resolvedTabForMeta === 'video';
+
+  const author = isMediaTab
+    ? bookMedia[0]?.media_author || ''
+    : bookMedia[0]?.author || '';
 
   const TabRender = () => {
-    if (
-      selectedKey === 'audio' ||
-      (!selectedKey && excludeLabels?.includes('视频') && media?.url_mp3)
-    ) {
-      selectedKey = 'audio';
+    const resolvedTab = resolveLessonTab(selectedKey, excludeLabels, media);
+
+    if (resolvedTab === 'audio') {
       return <AudioPage topicMedia={bookMedia} />;
     }
-    if (
-      selectedKey === 'article' ||
-      (excludeLabels?.includes('视频') && !media?.mp3_duration)
-    ) {
-      selectedKey = 'article';
+    if (resolvedTab === 'article') {
       const resolvedSearchParamsTyped = resolvedSearchParams as {
         [key: string]: string | string[] | undefined;
       };
@@ -175,15 +173,6 @@ const RefPage = async ({ params, searchParams }: RefPageProps) => {
     return <VideoPage topicMedia={bookMedia} />;
   };
   const showEbookDownload = shouldShowEbookDownload(selectedKey, excludeLabels);
-
-  if (
-    excludeLabels.includes('视频') &&
-    !excludeLabels.includes('音频') &&
-    selectedKey !== 'article' &&
-    media?.courseTitle !== '佛说稻秆经'
-  ) {
-    author = audioAuthor + '';
-  }
 
   // 移动端渲染
   if (isMobile) {

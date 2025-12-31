@@ -115,6 +115,7 @@ export interface SecretText {
 
 export interface TopicMediaX extends Article, Omit<Media, 'summary'> {
   author?: string;
+  media_author?: string;
   bookId?: string;
   questionOrder?: string;
   summary?: string;

@@ -3,7 +3,10 @@ import AudioPage from '@/app/components/pc/AudioPage';
 import MifaWarning from '@/app/components/pc/MifaWarning';
 import ReadingPage from '@/app/components/pc/ReadingPage';
 import VideoPage from '@/app/components/pc/VideoPage';
-import { shouldShowEbookDownload } from '@/app/utils/courseUtils';
+import {
+  resolveLessonTab,
+  shouldShowEbookDownload,
+} from '@/app/utils/courseUtils';
 import { pxToVw } from '@/app/utils/mobileUtils';
 import { Box } from '@mui/material';
 import { notFound } from 'next/navigation';
@@ -113,7 +116,7 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
   const resolvedParams = await params;
   const resolvedSearchParams =
     (await (searchParams ?? Promise.resolve({}))) ?? {};
-  let { tab: selectedKey } = resolvedSearchParams as {
+  const { tab: selectedKey } = resolvedSearchParams as {
     tab?: keyof SecretText;
   };
   const courseOrder = resolvedParams.slug;
@@ -125,7 +128,7 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
 
   // 总是需要获取 topicMedia 数据
   const topicMedia = await getTopicMediaByOrder(courseOrder, lessonOrder);
-  // console.log('topicMedia', topicMedia);
+  console.log('topicMedia', topicMedia);
 
   if (!topicMedia) {
     notFound();
@@ -149,6 +152,19 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
     excludeLabels.push('文字');
   }
 
+  const resolvedTabForMeta = resolveLessonTab(
+    selectedKey,
+    excludeLabels,
+    media
+  );
+
+  const isMediaTab =
+    resolvedTabForMeta === 'audio' || resolvedTabForMeta === 'video';
+
+  const author = isMediaTab
+    ? topicMedia[0]?.media_author || ''
+    : topicMedia[0]?.author || '';
+
   const hasSecretWarn = media?.secret_level !== null;
   const description =
     selectedKey === 'article' ||
@@ -160,19 +176,13 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
 
   // console.log(!selectedKey, excludeLabels?.includes('视频'), media?.url_mp3);
   const TabRender = () => {
-    if (
-      selectedKey === 'audio' ||
-      (!selectedKey && excludeLabels?.includes('视频') && media?.url_mp3)
-    ) {
-      selectedKey = 'audio';
+    const resolvedTab = resolveLessonTab(selectedKey, excludeLabels, media);
+
+    if (resolvedTab === 'audio') {
       return <AudioPage topicMedia={topicMedia} />;
     }
 
-    if (
-      selectedKey === 'article' ||
-      (excludeLabels?.includes('视频') && !media?.mp3_duration)
-    ) {
-      selectedKey = 'article';
+    if (resolvedTab === 'article') {
       const resolvedSearchParamsTyped = resolvedSearchParams as {
         [key: string]: string | string[] | undefined;
       };
@@ -191,7 +201,7 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
       <MobileLessonPage
         hasSiderbar={excludeLabels.length < 3}
         title={topicMedia[0]?.article_title}
-        author={topicMedia[0]?.author || ''}
+        author={author}
         date={media?.created || ''}
         description={hasSecretWarn ? '' : description}
         courseOrder={courseOrder}
@@ -208,7 +218,7 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
           {hasSecretWarn && media.secret_level ? (
             <MifaWarning
               article_title={media.article_title}
-              author={topicMedia[0]?.author}
+              author={author}
               date={media?.created || ''}
               secret_level={media.secret_level[selectedKey ?? 'video']}
               description={description}
@@ -230,7 +240,7 @@ const LessonPage = async ({ params, searchParams }: LessonPageProps) => {
           topicTags?.length ? topicTags.map((tag: string) => tag.trim()) : []
         }
         description={description}
-        author={`${topicMedia[0]?.author}`}
+        author={author}
         date={topicMedia[0]?.created}
       />
       <TabRender />

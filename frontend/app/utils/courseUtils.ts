@@ -1,5 +1,5 @@
 import { ONE_TO_TEN_CHAR } from '../constants';
-import { CourseTopic } from '../types/models';
+import { CourseTopic, SecretText, TopicMediaX } from '../types/models';
 
 // Transform course topics to lesson items format for backward compatibility
 export const transformTopicsToLessonItems = (topics: CourseTopic[]) => {
@@ -46,6 +46,28 @@ export const shouldShowEbookDownload = (
   if (!excludeLabels) return false;
 
   return excludeLabels.includes('视频') && excludeLabels.includes('音频');
+};
+
+export const resolveLessonTab = (
+  selectedKey: keyof SecretText | undefined,
+  excludeLabels: string[],
+  media: Pick<TopicMediaX, 'url_mp3' | 'mp3_duration'>
+) => {
+  if (
+    selectedKey === 'audio' ||
+    (!selectedKey && excludeLabels.includes('视频') && media?.url_mp3)
+  ) {
+    return 'audio' as const;
+  }
+
+  if (
+    selectedKey === 'article' ||
+    (excludeLabels.includes('视频') && !media?.mp3_duration)
+  ) {
+    return 'article' as const;
+  }
+
+  return 'video' as const;
 };
 
 // Generate course navigation breadcrumbs
